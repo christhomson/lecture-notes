@@ -1,5 +1,5 @@
 # UW Course Notes
-This term, I've decided to start typesetting all of the notes I take during lectures with LaTeX.
+This term I've decided to start typesetting all of the notes I take during lectures (with LaTeX).
 
 I'm typing up these notes myself, and they're a combination from what was written on the board as well as things the professor has said verbally.
 
