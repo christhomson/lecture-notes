@@ -1,13 +1,135 @@
 \documentclass[]{article}
+\usepackage[margin = 1.5in]{geometry}
 \setlength{\parindent}{0in}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+
+\newtheorem{problem}{Problem}
+\newtheorem{proposition}{Proposition}
+\newtheorem{definition}{Definition}
+
 \begin{document}
 
-\title{\bf{MATH 239: Introduction to Combinatorics}}
-\date{Winter 2013, University of Waterloo \\ \center Notes written from Bertrand Guenin's lectures.}
-\author{Chris Thomson}
-\maketitle
-\newpage
+	\title{\bf{MATH 239: Introduction to Combinatorics}}
+	\date{Winter 2013, University of Waterloo \\ \center Notes written from Bertrand Guenin's lectures.}
+	\author{Chris Thomson}
+	\maketitle
+	\newpage
+	
+	% January 7, 2013
+	\section{Introduction, Permutations, and Combinations}
+		\subsection{Course Structure}
+			The grading scheme is 50\% final, 30\% midterm, 10\% quizzes, and 10\% assignments. There are ten quizzes and ten assignments. The quizzes will not be announced in advance, and each quiz consists of a single clicker question. Assignments are typically due on Friday mornings at 10 am. in the dropboxes outside of MC 4066. The midterm exam is scheduled for March 7, 2013, from 4:30 pm - 6:20 pm. There is no textbook for the course, but there are course notes available at Media.doc in MC, and they're \emph{highly} recommended.
+			\\ \\
+			MATH 239 is split into two parts: counting (weeks 1-5) and graph theory (weeks 6-12).
+			\\ \\
+			See the course syllabus for more information -- it's available on \href{https://learn.uwaterloo.ca/}{Waterloo LEARN}.
 
+		\subsection{Sample Counting Problems}
+			\begin{problem}
+				How many ways are there to cut a string of length 5 into parts of sizes 1 and 2?
+			\end{problem}
+		
+			Here are a few example cuts:
+			\\ \\
+			\begin{tabular}{|c|c|c|c|c|}
+				\hline
+				1 & 2 & 3 & 4 & 5 \\
+				\hline
+			\end{tabular}
+			5 cuts: size 1, size 1, size 1, size 1, size 1.
+
+			\begin{tabular}{|c|c|c|c|c|}
+				\hline
+				1 & 1 & 2 & 2 & 3 \\
+				\hline
+			\end{tabular}
+			3 cuts: size 2, size 2, size 1.
+		
+			\begin{tabular}{|c|c|c|c|c|}
+				\hline
+				1 & 2 & 2 & 3 & 3 \\
+				\hline
+			\end{tabular}
+			3 cuts: size 1, size 2, size 2.
+			\\ \\
+			This is a finite problem. You could count all of the possibilities manually in this case. However, this problem could be made more complicated to a point where manually counting all possibilities would become quite cumbersome, as is the case in the next problem.
+		
+			\begin{problem}[Cuts]
+				How many ways are there to cut a string of size 372,694 into parts of sizes 3, 17, 24, and 96?
+			\end{problem}
+		
+			\begin{definition}
+				A positive integer $n$ has a \textbf{composition} $(m_1, m_2, \ldots, m_k)$, where $m_1, \ldots, m_k$ are positive integers and where $n = m_1 + m_2 + \ldots + m_k$. $m_1, \ldots, m_k$ are the \textbf{parts} of the composition.
+			\end{definition}
+		
+			Problem 1 could be rephrased as looking for the number of compositions of 5 where all parts are 1 or 2.
+		
+			\begin{problem}
+				How many compositions of $n$ exist such that all parts are odd?
+			\end{problem}
+		
+			\begin{problem}[Binary Strings]
+				Let $S = a_1, a_2, \ldots, a_n$ where $a_i \in \{0, 1\}$. How many strings $S$ exist?
+			\end{problem}
+		
+			For each $a_i$, there is the choice between $0$ or $1$, and that choice is independent for each character of the string (for each $a_i$). So, there are $2^n$ binary strings of length $n$.
+		
+			\begin{problem}
+				How many binary strings of size $n$ exist that do not include the substring $1100$?
+			\end{problem}
+		
+			For example: $1010\underline{1100}101 \not \in S$.
+		
+			\begin{problem}
+				How many binary strings of size $n$ exist such that there is no odd-length sequences of zeroes? 
+			\end{problem}
+		
+			For example: $1001001\underline{000}11 \not \in S$.
+		
+			\begin{problem}[Recurrences]
+				How many times does a recursive function get called for a particular input $n$?
+			\end{problem}
+		
+		\subsection{Sample Graph Theory Problems}
+			\begin{problem}
+				For any arbitrary map of regions, color the regions such that no two touching boundaries do not have the same color, with the least number of colors possible.
+			\end{problem}
+		
+			The \textbf{four-color theorem} (proven later in the course) states that you can always do this with four colors. It's also always possible to color these regions with five colors. It's \emph{sometimes} possible to color the regions with three or fewer colors, depending on the layout of the regions and their boundaries.
+		
+		\subsection{Permutations and Combinations}
+			\subsubsection{Set Notation}
+				The usual set and sequence notation is used in this course. $(1, 2, 3)$ is a sequence (where order matters), and $\{1, 2, 3\}$ is a set (where order does not matter).
+				\\ \\
+				We will also be using one piece of notation you may not be familiar with: $[n] := \{1, 2, \ldots, n\}$.
+
+			\subsubsection{Permutations}
+				\begin{definition}
+					A \textbf{permutation} of $[n]$ is a rearrangement of the elements of $[n]$. The number of permutations of a set of $n$ objects is $n \times (n - 1) \times \ldots \times 1 = n!$. 
+				\end{definition}
+			
+				For example: the number of permutations of $6$ objects is $6 \times 5 \times 4 \times 3 \times 2 \times 1 = 6!$ permutations.
+				\\ \\
+				Why is this the case? Simple: there are $n$ choices for the first position, $(n - 1)$ choices for the second position, $(n - 2)$ choices for the third position, and so on, until there's $1$ choice for the $n$th position.
+
+				\begin{definition}
+					A \textbf{$k$-subset} is a subset of size $k$.
+				\end{definition}
+
+				\begin{problem}
+					How many $k$-subsets of $[n]$ exist?
+				\end{problem}
+
+				Let's consider a more specific case: how many 4-subsets of 6 are there? $\frac{6 \times 5 \times 4 \times 3}{4!}$.
+				\\ \\
+				For simplicity's sake, we will introduce notation for this, which we will refer to as a \textbf{combination}, denoted as 
+					${n \choose k} = \frac{n!}{k!(n-k)!}$ where $n, k \in \mathbb{Z} \ge 0$.
+				
+				\begin{proposition}
+					There are ${n \choose k}$ $k$-subsets of $[n]$.
+				\end{proposition}
 \end{document}
