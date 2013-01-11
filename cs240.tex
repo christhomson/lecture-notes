@@ -1,13 +1,125 @@
 \documentclass[]{article}
+\usepackage[margin = 1.5in]{geometry}
 \setlength{\parindent}{0in}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{pgfplots}
+
+\usepackage{hyperref}
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
 \begin{document}
 
-\title{\bf{CS 240: Data Structures and Data Management}}
-\date{Winter 2013, University of Waterloo \\ \center Notes written from Alejandro L\'opez-Ortiz's lectures.}
-\author{Chris Thomson}
-\maketitle
-\newpage
+	\title{\bf{CS 240: Data Structures and Data Management}}
+	\date{Winter 2013, University of Waterloo \\ \center Notes written from Alejandro L\'opez-Ortiz's lectures.}
+	\author{Chris Thomson}
+	\maketitle
+	\newpage
 
+	% January 8, 2013
+	\section{Introduction \& Code Optimization}
+		\subsection{Course Structure}
+			The grading scheme is 50\% final, 25\% midterm, and 25\% assignments. There are five assignments, usually due on Wednesday mornings at 9:30 am. There are several textbooks for the course, all of which are optional but recommended. The textbooks cover roughly 80\% of the course content. There are also some course notes published online from previous terms, however the lectures will not necessarily follow those notes strictly.
+			\\ \\
+			See the \href{https://www.student.cs.uwaterloo.ca/~cs240/w13/info.phtml}{course syllabus} for more information.
+			
+		\subsection{CS as the Science of Information}
+			So far in our undergraduate careers, computer science has meant programming. However, programming is only a subset of computer science. Computer science is the \textbf{science of information}.
+			\\ \\
+			What do we want to do with information? We want to:
+			\begin{itemize}
+				\item \textbf{Process it}. Programs $\equiv$ algorithms.
+				\item \textbf{Store it}. We want to encode it. This also leads to information theory. Storing information involves data structures, databases, (file) systems, etc., all of which are searchable in some way.
+				\item \textbf{Transmit it}. We want to transmit information over networks. This process involves coding theory.
+				\item \textbf{Search it}. First, we have to structure it with data structures and/or SQL databases. Information retrieval is the process of searching for textual information instead of numerical information.
+				\item \textbf{Mine it}. This involves artificial intelligence and machine learning.
+				\item \textbf{Display it}. Information needs to be displayed using computer graphics (CG) and user interfaces (UI, partially related to psychology).
+				\item \textbf{Secure it}. Encryption and cryptography are important. Information should also be stored redundantly to prevent harm from catastrophic events.
+			\end{itemize}
+	
+		\subsection{Objectives of the Course}
+			\begin{itemize}
+				\begin{item}
+					\textbf{Study efficient methods of storing, accessing, and performing operations on \underline{large} collections of data.} \\ \\
+					``Large" is subjective -- your data needs to be large enough to justify the additional mental complexity. \\ \\
+					Typical operations:
+					\begin{itemize}
+						\item Insert new item.
+						\item ``Deleting" data (flagging data as ``deleted", not actually deleting the data).
+						\item Searching for data.
+						\item Sorting the data. \\
+					\end{itemize}
+				
+					Examples of ``large data":
+					\begin{itemize}
+						\item The web.
+						\item Facebook data.
+						\item DNA data.
+						\item LHC (Large Hadron Collider) measurements (terabytes per day).
+						\item All the music from iTunes, for finding duplicate songs, etc.
+					\end{itemize}
+				\end{item}
+				
+				\begin{item}
+					\textbf{There is a strong emphasis on mathematical analysis.} \\ \\
+					The performance of algorithms will be analyzed using order notation.
+				\end{item}
+				
+				\begin{item}
+					\textbf{The course will involve abstract data types (objects) and data structures.} \\ \\
+					We will see examples that have to do with:
+					\begin{itemize}
+						\item Databases.
+						\item Geographic databases.
+						\item Text searching.
+						\item Text compression.
+						\item Web searching.
+					\end{itemize}
+				\end{item}
+			\end{itemize}
+			
+		\subsection{Code Optimization \& Measuring Performance}
+			Richard Feynman was in charge of the computer group on the Manhattan Project. He made his code run 10x faster.
+			\\ \\
+			The initial method to measure performance was to use a \textbf{wall clock}. Initial studies looked like this:
+
+			\begin{center}
+				\begin{tabular}{|c|c|c|}
+					\hline
+					Data size & A & B \\ \hline
+					3 & 1 & 3 \\
+					5 & 2 & 9 \\
+					10 & 4 & 10 \\
+					20 & 16 & 11 \\ \hline
+				\end{tabular}
+			\end{center}
+			
+			However, computers were getting better, so we couldn't use wall clocks anymore. Results were not robust enough due to the qucik progression of performance increases in terms of computing power. Moreover, because of the differences in architecture, the same program may have a different execution time on two different computer models.
+			\\ \\ 
+			\underline{Idea}: rather than comparing algorithms using seconds, we should compare algorithms using the number of operations required for the algorithm to run.
+			
+			\begin{itemize}
+				\item Express algorithm uisng pseudocode.
+				\item Count the number of primitive operations.
+				\item Plot the number of operations vs. the input size. \\
+			\end{itemize}
+			
+			\begin{center}
+				\begin{tikzpicture}[domain=0:10]
+					\begin{axis}[
+						xlabel = Input size (n),
+						ylabel = Number of operations,
+						legend entries = {A,B},
+						legend pos = south east]
+						\addplot{5*x};
+						\addplot{0.5*x+35};
+					\end{axis}
+				\end{tikzpicture}
+			\end{center}
+			
+			Note that $A$ and $B$ are plotted as continuous functions, however they are not actually continuous -- we join all of the points for readability purposes only.
+			\\ \\
+			In the long run, you may want to use algorithm $B$ even if algorithm $A$ is better in some cases, because the benefits of $A$ will be short lived as $n$ grows.
+			\\ \\
+			Hence, comparing the programs has been transformed into comparing functions. We use order notation to measure the long-term growth of functions, allowing us to choose the smaller function, which corresponds to the faster algorithm.
 \end{document}
