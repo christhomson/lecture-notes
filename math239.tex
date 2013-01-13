@@ -6,6 +6,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{hyperref}
+\usepackage{wasysym}
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
 
@@ -236,4 +237,104 @@
 						\underbrace{|S|}_{{q + r \choose q}} = \underbrace{\sum_{i = 0}^{r} |S_i|}_{{q + i - 1 \choose q - 1}}
 					\end{align*}
 				\end{proof}
+		
+		% January 11, 2013
+		\subsection{Injections, Bijections, and Onto}
+			Let's consider a function $f: S \to T$.
+			\\ \\
+			The function $f$ is an \textbf{injection} if for all $x_1, x_2 \in S, x_1 \ne x_2$ such that $f(x_1) \ne f(x_2)$. That is, no element in the codomain $T$ is the image of more than one element in $S$.
+			\\ \\
+			The function $f$ is \textbf{onto} (or a \textbf{surjection}) if for all $y \in T$, there exists $x \in S$ such that $f(x) = y$. That is, all elements in the codomain $T$ are the image of an element in $S$. Multiple elements in $S$ can map to the same element in $T$.
+			\\ \\
+			The function $f$ is a \textbf{bijection} if it is both injective and onto. That is, there is a one-to-one mapping between elements in $S$ and $T$, and vice versa.
+			
+			\begin{proposition}
+				If $S$ and $T$ are finite, $|S| = |T|$ if $f$ is bijective.
+			\end{proposition}
+			
+			\begin{defn}
+				$g$ is the inverse of $f$ if:
+				\begin{enumerate}
+					\item For all $x \in S, g(f(x)) = x$.
+					\item For all $y \in T, f(g(y)) = y$.
+				\end{enumerate}
+			\end{defn}
+			
+			In order to show that a function has a bijection, find the inverse function.
+			
+			\subsection{Application: Binomial Coefficients}
+				\begin{proposition}
+					$\displaystyle {n \choose k} = {n \choose n - k}$
+				\end{proposition}
+				
+				\begin{proof}
+					I will prove this proposition in a combinatorial using the bijection technique. We want to show that the cardinalities are the same. 
+					\\ \\
+					Let $S_1$ be the set of $k$-subsets of $[n]$, so $|S_1| = {n \choose k}$, as shown earlier. Let $S_2$ be the set of $(n-k)$-subsets of $[n]$, so $|S_2| = {n \choose n - k}$. We need to show that $|S_1| = |S_2|$, so we need to show that there is a bijection between $S_1$ and $S_2$, $f: S_1 \to S_2$.
+					\\ \\
+					\underline{Aside}: suppose $n = 5$ and $k = 2$. Then, the bijection could be $\{1, 3\} \to \{2, 4, 5\}$ (the complement function).
+					\\ \\
+					The bijective function is $f(A) = [n]\backslash A$ (the complement function). Check: $f$ is its own inverse (let $g = f$).
+				\end{proof}
+				
+	\section{Power Series and Generating Functions}
+		\subsection{Power Series}
+			\begin{defn}
+					Let $(a_0, a_1, \ldots)$ be a sequence of rational numbers. Then:
+					\begin{align*}
+						A(x) = \sum_{i \ge 0} a_i x^i
+					\end{align*}
+					
+					This is called a \textbf{power series}.
+			\end{defn}
+			
+			\begin{ex}
+				$a_i = 2^i \implies A(x) = 1 + 2x + 4x^2 + 8x^3 + \cdots$
+			\end{ex}
+
+			If the sequence is finite, it is just a polynomial.
+			
+			\subsubsection{A General Counting Problem}
+				Let $S$ be the the set of objects $\sigma$. Each object $\sigma$ has a weight $w(\sigma)$. We want to know how many objects of $S$ have some weight $k$.
+				
+				\begin{ex}
+					Let $\sigma \subseteq [n], w(\sigma) = |\sigma|$. The question becomes: how many $k$-subsets of $[n]$?
+				\end{ex}
+				
+				\begin{ex}
+					Let $\sigma$ be the set of coins (1\cent, 5\cent, 10\cent, 25\cent, \$1, \$2), and let $w(\sigma)$ be the total value of the coins in $\sigma$.
+					\\ \\
+					The question becomes: how many sets of coins have total value $k$? In other words, how many ways are there to give change on $k$ amount?
+				\end{ex}
+		\subsection{Generating Functions}
+			\begin{defn}
+				Given $S$ as the set of objects $\sigma$ and a weight function $w(\sigma)$:
+				\begin{align*}
+					\phi_S(x) = \sum_{\sigma \in S} x^{w(\sigma)}
+				\end{align*}
+				
+				This is called the \textbf{generating function for S, w}.
+			\end{defn}
+			
+			\begin{ex}
+				Let $S = \{ \sigma | \sigma \subseteq \{1, 2, 3\} \}, w(\sigma) = |\sigma|$.
+				
+				\begin{center}
+					\begin{tabular}{c|c|c}
+						$\sigma$ & $w(\sigma)$ & $x^{w(\sigma)}$ \\ \hline
+						$\emptyset$ & 0 & 1 \\
+						\{1\} & 1 & x \\
+						\{2\} & 1 & x \\
+						\{3\} & 1 & x \\
+						\{1, 2\} & 2 & $x^2$ \\
+						\{1, 3\} & 2 & $x^2$ \\
+						\{2, 3\} & 2 & $x^2$ \\
+						\{1, 2, 3\} & 3 & $x^3$ \\
+					\end{tabular}
+				\end{center}
+				
+				$\phi_S(x) = 1 + 3x + 3x^2 + x^3 = (1 + x)^3$ is the generating function. Notice the coefficients are the number of objects whose weight is equal to the exponent.
+			\end{ex}
+			
+			\textbf{Remember}: the generating function for $S$ with weights $w$ is $\phi_S(x) = \sum_{k \ge 0} a_k x^k$, where $a_k$ is the number of objects of size $k$ in $S$.
 \end{document}
