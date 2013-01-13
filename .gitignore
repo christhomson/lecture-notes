@@ -3,3 +3,5 @@
 *.log
 *.out
 *.synctex.gz
+*.tex.project.vim
+*_aux
