@@ -20,6 +20,9 @@
 \newcommand{\union}{\cup}
 \newcommand{\intersection}{\cap}
 
+\setlength{\marginparwidth}{1.5in}
+\newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
+
 \begin{document}
 
 	\title{\bf{MATH 239: Introduction to Combinatorics}}
@@ -28,8 +31,7 @@
 	\maketitle
 	\newpage
 	
-	% January 7, 2013
-	\section{Introduction, Permutations, and Combinations}
+	\section{Introduction, Permutations, and Combinations} \lecture{January 7, 2013}
 		\subsection{Course Structure}
 			The grading scheme is 50\% final, 30\% midterm, 10\% quizzes, and 10\% assignments. There are ten quizzes and ten assignments. The quizzes will not be announced in advance, and each quiz consists of a single clicker question. Assignments are typically due on Friday mornings at 10 am. in the dropboxes outside of MC 4066. The midterm exam is scheduled for March 7, 2013, from 4:30 pm - 6:20 pm. There is no textbook for the course, but there are course notes available at Media.doc in MC, and they're \emph{highly} recommended.
 			\\ \\
@@ -142,8 +144,7 @@
 					There are ${n \choose k}$ $k$-subsets of $[n]$.
 				\end{proposition}
 				
-				% January 9, 2013
-				\subsubsection{Application: Binomial Theorem}
+				\subsubsection{Application: Binomial Theorem} \lecture{January 9, 2013}
 					\begin{align*}
 						(1 + x)^n = \sum_{k = 0}^{n} {n \choose k} x^k
 					\end{align*}
@@ -238,8 +239,7 @@
 					\end{align*}
 				\end{proof}
 		
-		% January 11, 2013
-		\subsection{Injections, Bijections, and Onto}
+		\subsection{Injections, Bijections, and Onto} \lecture{January 11, 2013}
 			Let's consider a function $f: S \to T$.
 			\\ \\
 			The function $f$ is an \textbf{injection} if for all $x_1, x_2 \in S, x_1 \ne x_2$ such that $f(x_1) \ne f(x_2)$. That is, no element in the codomain $T$ is the image of more than one element in $S$.

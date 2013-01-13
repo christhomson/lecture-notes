@@ -6,6 +6,10 @@
 \usepackage{hyperref}
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
+
+\setlength{\marginparwidth}{1.5in}
+\newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
+
 \begin{document}
 
 	\title{\bf{CS 241: Foundations of Sequential Programs}}
@@ -14,8 +18,7 @@
 	\maketitle
 	\newpage
 	
-	%  January 7, 2013
-	\section{Introduction \& Character Encodings}
+	\section{Introduction \& Character Encodings} \lecture{January 7, 2013}
 	
 		\subsection{Course Structure}
 		The grading scheme is 50\% final, 25\% midterm, and 25\% assignments. There are eleven assignments. Don't worry about any textbook. See the \href{https://www.student.cs.uwaterloo.ca/~cs241/W2013.pdf}{course syllabus} for more information.
@@ -69,14 +72,14 @@
 				\end{tabular}
 			\end{center}
 			
-			In the latter case, $0111000$ represents the character '$8$', not the unsigned big- or little-endian number $8$.
+			In the latter case, $0111000$ represents the character `$8$', not the unsigned big- or little-endian number $8$.
 			\\ \\
 			ASCII was invented to communicate text. ASCII can represent characters such as A-Z, a-z, 0-9, and control characters like ();!. Since ASCII uses 7 bits, $2^7 = 128$ characters can be represented with ASCII. As a consequence of that, ASCII is basically only for Roman, unaccented characters, although many people have created their own variations of ASCII with different characters.
 	
 		\subsection{Unicode}
 			\textbf{Unicode} was created to represent more characters. Unicode is represented as a 32-bit binary number, although representing it using 20 bits would also be sufficient. The ASCII characters are the first 128, followed by additional symbols.
 			\\ \\
-			A 16-bit representation of Unicode is called \textbf{UTF-16}. However, there's a problem: we have \emph{many} symbols ($> 1M$) but only $2^16 = 65,536$ possibilities to represent them. Common characters are represented directly, and there is also a 'see attachment' bit for handling the many other symbols that didn't make the cut to be part of the $65,536$. Similarly, there is an 8-bit representation of Unicode called \textbf{UTF-8}, with the ASCII characters followed by additional characters and a 'see attachment' bit.
+			A 16-bit representation of Unicode is called \textbf{UTF-16}. However, there's a problem: we have \emph{many} symbols ($> 1M$) but only $2^16 = 65,536$ possibilities to represent them. Common characters are represented directly, and there is also a `see attachment' bit for handling the many other symbols that didn't make the cut to be part of the $65,536$. Similarly, there is an 8-bit representation of Unicode called \textbf{UTF-8}, with the ASCII characters followed by additional characters and a `see attachment' bit.
 			\\ \\
 			The bits themselves do not have meaning. Their meaning is in your head -- everything is up for interpretation.
 \end{document}

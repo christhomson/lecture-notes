@@ -15,6 +15,9 @@
 \newtheorem{defn}{Definition}[section]
 \newtheorem{ex}{Example}[section]
 
+\setlength{\marginparwidth}{1.5in}
+\newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
+
 \begin{document}
 
 	\title{\bf{CS 240: Data Structures and Data Management}}
@@ -23,8 +26,7 @@
 	\maketitle
 	\newpage
 
-	% January 8, 2013
-	\section{Introduction \& Code Optimization}
+	\section{Introduction \& Code Optimization} \lecture{January 8, 2013}
 		\subsection{Course Structure}
 			The grading scheme is 50\% final, 25\% midterm, and 25\% assignments. There are five assignments, usually due on Wednesday mornings at 9:30 am. There are several textbooks for the course, all of which are optional but recommended. The textbooks cover roughly 80\% of the course content. There are also some course notes published online from previous terms, however the lectures will not necessarily follow those notes strictly.
 			\\ \\
@@ -132,8 +134,7 @@
 			\\ \\
 			Hence, comparing the programs has been transformed into comparing functions. We use order notation to measure the long-term growth of functions, allowing us to choose the smaller function, which corresponds to the faster algorithm.
 	
-	% January 10, 2013
-	\section{Order Notation}
+	\section{Order Notation} \lecture{January 10, 2013}
 		The time for algorithm $A$ on input of size $n$ is:
 		
 		\begin{align*}
