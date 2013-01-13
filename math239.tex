@@ -1,15 +1,23 @@
 \documentclass[]{article}
 \usepackage[margin = 1.5in]{geometry}
 \setlength{\parindent}{0in}
+\usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
 
-\newtheorem{problem}{Problem}
-\newtheorem{proposition}{Proposition}
-\newtheorem{definition}{Definition}
+\newtheorem{proposition}{Proposition}[section]
+
+\theoremstyle{definition}
+\newtheorem{problem}{Problem}[section]
+\newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
+
+\newcommand{\union}{\cup}
+\newcommand{\intersection}{\cap}
 
 \begin{document}
 
@@ -62,9 +70,9 @@
 				How many ways are there to cut a string of size 372,694 into parts of sizes 3, 17, 24, and 96?
 			\end{problem}
 		
-			\begin{definition}
+			\begin{defn}
 				A positive integer $n$ has a \textbf{composition} $(m_1, m_2, \ldots, m_k)$, where $m_1, \ldots, m_k$ are positive integers and where $n = m_1 + m_2 + \ldots + m_k$. $m_1, \ldots, m_k$ are the \textbf{parts} of the composition.
-			\end{definition}
+			\end{defn}
 		
 			Problem 1 could be rephrased as looking for the number of compositions of 5 where all parts are 1 or 2.
 		
@@ -108,17 +116,17 @@
 				We will also be using one piece of notation you may not be familiar with: $[n] := \{1, 2, \ldots, n\}$.
 
 			\subsubsection{Permutations}
-				\begin{definition}
+				\begin{defn}
 					A \textbf{permutation} of $[n]$ is a rearrangement of the elements of $[n]$. The number of permutations of a set of $n$ objects is $n \times (n - 1) \times \ldots \times 1 = n!$. 
-				\end{definition}
+				\end{defn}
 			
 				For example: the number of permutations of $6$ objects is $6 \times 5 \times 4 \times 3 \times 2 \times 1 = 6!$ permutations.
 				\\ \\
 				Why is this the case? Simple: there are $n$ choices for the first position, $(n - 1)$ choices for the second position, $(n - 2)$ choices for the third position, and so on, until there's $1$ choice for the $n$th position.
 
-				\begin{definition}
+				\begin{defn}
 					A \textbf{$k$-subset} is a subset of size $k$.
-				\end{definition}
+				\end{defn}
 
 				\begin{problem}
 					How many $k$-subsets of $[n]$ exist?
@@ -132,4 +140,100 @@
 				\begin{proposition}
 					There are ${n \choose k}$ $k$-subsets of $[n]$.
 				\end{proposition}
+				
+				% January 9, 2013
+				\subsubsection{Application: Binomial Theorem}
+					\begin{align*}
+						(1 + x)^n = \sum_{k = 0}^{n} {n \choose k} x^k
+					\end{align*}
+					
+					Why is this true?
+					
+					\begin{align*}
+						(1 + x)^3 = \overbrace{(1 + x)}^1\overbrace{(1 + x)}^2\overbrace{(1 + x)}^3 = 1 + 3x + 3x^2 + x^3 = {3 \choose 0} + {3 \choose 1}x + {3 \choose 2}x^2 + {3 \choose 3}x^3
+					\end{align*}
+					
+					\begin{proof}
+						\begin{align*}
+							(1 + x)^n = \overbrace{(1 + x)}^1 \overbrace{(1 + x)}^2 \cdots \overbrace{(1 + x)}^n
+						\end{align*}
+						
+						In order to get $x^k$, we need to choose $x$ in $k$ of $\{1, \ldots, n \}$. There are ${n \choose k}$ ways of doing this.
+					\end{proof}
+		
+		\section{Simple Tools for Counting}
+			\subsection{Partitioning}
+				Sets $S_1, S_2$ partition the set $S$ if $S = S_1 \union S_2$ and $S_1 \intersection S_2 = \emptyset$.
+				
+				\begin{ex}
+					\begin{align*}
+						S &= [5] = \begin{cases} 
+							S_1 = \{1, 2 \} \\
+							S_2 = \{3, 4, 5\}
+						\end{cases} \\
+						|S| &= |S_1| + |S_2|
+					\end{align*}
+				\end{ex}
+				
+				\begin{proposition}
+					$\displaystyle 2^n = \sum_{k = 0}^{n} {n \choose k}$
+				\end{proposition}
+				
+				\begin{proof}
+					We will discuss two proof methods.
+					
+					\begin{enumerate}
+						\item \textbf{Algebraic proof}. Set $x = 1$ in the Binomial Theorem.
+						\item \textbf{Combinatorial proof}. We will count the left-hand side and the right-hand side in different ways to reach the same result.
+						
+						Let $S$ be the set of subsets of $[n]$. $|S| = 2^n$, since for every element of $[n]$ we have two possibilities: include or don't include the element in $S$.
+						
+						\underline{Aside}: suppose $n = 2$. Then $S = \{\emptyset, \{1\}, \{2\}, \{1, 2\}\}$. 
+						
+						Partition $S$ into $S_0, S_1, \ldots, S_n$, where $S_k$ is the set of $k$-subsets of $[n]$.
+						
+						\begin{align*}
+							\underbrace{|S|}_{2^n} = \underbrace{|S_0|}_{{n \choose 0}} + \underbrace{|S_1|}_{n \choose 1} + \cdots + \underbrace{|S_n|}_{n \choose n}
+						\end{align*}
+					\end{enumerate}
+				\end{proof}
+				
+				\begin{proposition}
+					$\displaystyle {n \choose k} = {n - 1 \choose k} + {n - 1 \choose k - 1}$
+				\end{proposition}
+				
+				\begin{proof}
+					Let $S$ be the set of $k$-subsets of $[n]$. Then $|S| = {n \choose k}$. Partitioning $S$, let $S_1$ be the subsets of $S$ containing $n$, and let $S_2$ be the subsets of $S$ not containing $n$.
+					\\ \\
+					It's easy to see that $|S_1| = {n - 1 \choose k - 1}$ ($n$ is already included in our choices) and $|S_2| = {n - 1 \choose k}$. We now have $|S| = |S_1| + |S_2| = {n - 1 \choose k - 1} + {n - 1 \choose k}$.
+				\end{proof}
+				
+			\subsection{Pascal's Triangle}
+				Pascal's Triangle is a triangle where each value is determined by the sum of its two direct parents. The uppermost value is 1.
+				\\ \\
+				\begin{center}
+					\begin{tabular}{rccccccccc}
+						$n = 0$:&    &    &    &    &  1\\\noalign{\smallskip\smallskip}
+						$n = 1$:&    &    &    &  1 &    &  1\\\noalign{\smallskip\smallskip}
+						$n = 2$:&    &    &  1 &    &  2 &    &  1\\\noalign{\smallskip\smallskip}
+						$n = 3$:&    &  1 &    &  3 &    &  3 &    &  1\\\noalign{\smallskip\smallskip}
+						$n = 4$:&  1 &    &  4 &    &  6 &    &  4 &    &  1\\\noalign{\smallskip\smallskip}
+					\end{tabular}
+				\end{center}
+				
+				\begin{proposition}
+					$\displaystyle {q + r \choose q} = \sum_{i = 0}^{r} {q + i - 1 \choose q - 1}$
+				\end{proposition}
+				
+				For example: let $q = 3, r = 2$. Then we have: $\displaystyle {5 \choose 3} = {2 \choose 2} + {3 \choose 2} + {4 \choose 2}$.
+				
+				\begin{proof}
+					Let $S$ be the set of $q$-subsets of $[q + r]$, so $|S| = {q + r \choose q}$. Partition $S$ such that $S_i$ is the set of $q$-subsets where the largest element is $q + i$ (where $i = 0, \ldots, r$).
+					\\ \\
+					We have: $|S| = |S_0| + |S_1| + \cdots + |S_r|$. Note that $|S_i| = {q + i - 1 \choose q - 1}$. That gives us:
+					
+					\begin{align*}
+						\underbrace{|S|}_{{q + r \choose q}} = \underbrace{\sum_{i = 0}^{r} |S_i|}_{{q + i - 1 \choose q - 1}}
+					\end{align*}
+				\end{proof}
 \end{document}
