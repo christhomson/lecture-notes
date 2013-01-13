@@ -9,9 +9,9 @@ If you simply want to view the notes, look at the PDFs. I've also included the o
 ### 2B - Winter 2013:
 * CS 240 - Data Structures and Data Management
 * CS 241 - Foundations of Sequential Programs
-* CS 251 - Computer Organization and Design
 * MATH 239 - Introduction to Combinatorics
 * PSYCH 207 - Cognitive Processes
+* ~~CS 251 - Computer Organization and Design~~ (Not covered because the slides and printed course notes seem more than sufficient.)
 
 ## Disclaimer
 I'm trying to make these notes as accurate as possible, however there might be some errors from things I've heard or seen incorrectly. If you're taking any of these courses, please rely on your own notes. Also, note that the format and content of a course can change drastically from term to term, or even between professors.
