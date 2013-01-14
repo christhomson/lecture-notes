@@ -12,6 +12,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
 
+\newtheorem{theorem}{Theorem}[section]
 \newtheorem{proposition}{Proposition}[section]
 
 \theoremstyle{definition}
@@ -339,4 +340,126 @@
 			\end{ex}
 			
 			\textbf{Remember}: the generating function for $S$ with weights $w$ is $\phi_S(x) = \sum_{k \ge 0} a_k x^k$, where $a_k$ is the number of objects of size $k$ in $S$.
+
+			\begin{ex}
+				\lecture{January 14, 2013}
+				Let $S$ be the set of subsets of [n], and $w(\sigma) = |\sigma|$.
+				\begin{align*}
+					\phi_S(x) = \sum_{k \ge 0} {n \choose k} x^k = (1 + x)^n
+				\end{align*}
+				
+				Note that ${n \choose k}$ is included because that's the number of $k$-subsets of $[n]$. $\phi_S(x) = (1 + x)^n$ by the binomial theorem.
+			\end{ex}
+
+			\begin{proposition}
+				Let $\phi_S(x)$ be the generating function for finite-size $S$ with weight $w$. Then:
+				\begin{enumerate}
+					\item $\phi_S(1) = |S|$
+					\item $\phi_S'(1) = $ sum of the weight of all the objects in $S$.
+				\end{enumerate}
+
+				Together, we get:
+				\begin{align*}
+					\frac{\phi_S'(1)}{\phi_S(1)} = \text{average weight of objects in } S
+				\end{align*}
+			\end{proposition}
+
+			Considering the previous example again, we know that $|S| = 2^n$ and the average weight is clearly $\frac{n}{2}$. We can verify that with this proposition.
+			\begin{align*}
+				\phi_S(x) = (1 + x)^n &\implies \phi_S(1) = (1 + 1)^n = 2^n \\
+				\phi_S'(x) = n(1 + x)^{n - 1} &\implies \phi_S'(1) = n2^{n - 1} \\
+				\text{average weight } &= \frac{\phi_S'(1)}{\phi_S(1)} = \frac{n2^{n - 1}}{2^n} = \frac{n}{2}
+			\end{align*}
+
+			We'll now prove the proposition more generally.
+			\begin{proof}
+				We will prove the two parts of the proposition separately. The average weight clearly follows from those two results.
+				\begin{enumerate}
+					\item 
+						\begin{align*}
+							\phi_S(x) = \sum_{\sigma \in S} x^{w(\sigma)}
+						\end{align*}
+						Choose $x = 1$. Then $\phi_S(1) = \sum_{\sigma \in S} 1 = |S|$.
+
+					\item 
+						\begin{align*}
+							\phi_S'(x) = \sum_{\sigma \in S} w(\sigma)x^{w(\sigma) - 1}
+						\end{align*}
+						Choose $x = 1$. Then $\phi_S'(1) = \sum_{\sigma \in S} w(\sigma) \cdot 1 = $ total weight of all objects in $S$.
+				\end{enumerate}
+			\end{proof}
+
+			In order to work further with generating functions, we'll first need to learn how to manipulate power series generally.
+		\subsection{Working With (Formal) Power Series}
+			For the following definitions, we will assume the following power series are defined:
+			\begin{align*}
+				A(x) &= a_0 + a_1x + a_2x^2 + \cdots \\
+				B(x) &= b_0 + b_1x + b_2x^2 + \cdots
+			\end{align*}
+
+			\begin{defn}[Addition of power series]
+				We define addition of power series as follows.
+				\begin{align*}
+					A(x) + B(x) := \sum_{n \ge 0} (a_n + b_n)x^n
+				\end{align*}
+
+				Note that this definition is consistent with the definition of addition for polynomials.
+			\end{defn}
+
+			\begin{defn}[Multiplication of power series]
+				We define multiplication of power series as follows.
+				\begin{align*}
+					A(x)B(x) := \sum_{n \ge 0} \sum_{k = 0}^{n} a_k b_{n - k}x^n
+				\end{align*}
+			\end{defn}
+
+			\begin{ex}
+				\begin{align*}
+					&(1 + x + x^2 + x^3 + \cdots)(1 - x) \\
+					&= 1 \cdot 1 + (1 \cdot -1 + 1 \cdot 1)x + (1 \cdot 1 + 1 \cdot -1)x^2 + \cdots \\
+					& = 1
+				\end{align*}
+			\end{ex}
+
+			\begin{defn}[Inverse of power series]
+				$B(x)$ is the \textbf{inverse} of $A(x)$ if $A(x)B(x) = 1$ (alternatively, $B(x)A(x) = 1$).
+				\\ \\
+				We will use the notation $B(x) = \frac{1}{A(x)}$ to indicate that $B(x)$ is the inverse of $A(x)$, and vice versa. 
+			\end{defn}
+
+			\begin{ex}
+				The inverse of $(1 + x + x^2 + \cdots)$ is $(1 - x)$, as shown in the previous example.
+			\end{ex}
+
+			\textbf{Question}: does every power series have an inverse? No. For example, $(x + x^2)$ does not have an inverse. But suppose for a moment that it does.
+			\begin{proof}
+				If $(x + x^2)$ has an inverse, there would exist constants $b_i$ such that
+				\begin{align*}
+					(x + x^2)(b_0 + b_1x + b_2x^2 + b_3x^3 + \cdots) = 1
+				\end{align*}
+				Clearly, this is impossible. In order to equal 1, $b_0$ must multiply by some constant term, however there is no other constant term. Therefore, our assumption was incorrect, meaning $(x + x^2)$ does not have an inverse.
+			\end{proof}
+
+			\textbf{Remark}: if a power series does not have a constant term then it has no inverse, and vice versa.
+			\begin{theorem}
+				If the constant term of $A(x)$ is non-zero, then $A(x)$ has an inverse, and we can find it.
+			\end{theorem}
+
+			\textbf{Notation}: given a power series $A(x)$, we say $[x^k]A(x)$ represents the coefficient of $x^k$.
+
+			\begin{ex}
+				Find the inverse of $1 - x + x^2 - x^3 + x^4 - \cdots$.
+				\begin{align*}
+					\underbrace{(1 - x + x^2 - x^3 + x^4 - \cdots)(b_0 + b_1x + b_2x^2 + \cdots)}_{(\star)} = 1
+				\end{align*}
+				
+				\begin{align*}
+					[x^0](\star) = 1 \implies 1 \cdot b_0 = 1 &\implies b_0 = 1 \\
+					[x^1](\star) = 0 \implies 1 \cdot b_1 - 1 \cdot b_0 = 0 &\implies b_1 = b_0 = 1 \\
+					[x^2](\star) = 0 \implies 1 \cdot b_2 - 1 \cdot b_1 + 1 \cdot b_0 = 0 &\implies b_2 = b_1 - b_0 = 0
+				\end{align*}
+				Similarly, $b_3 = b_4 = \cdots = 0$. Thus, the inverse if $(1 + x)$.
+			\end{ex}
+
+			It's clear that the inverse for a power series is \textbf{unique}. We made no choices when determining the inverse, therefore it must be unique.
 \end{document}
