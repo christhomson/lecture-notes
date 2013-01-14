@@ -4,6 +4,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{hyperref}
+\usepackage{amsmath}
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
 
@@ -11,13 +12,13 @@
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
 
 \begin{document}
-
+	
 	\title{\bf{CS 241: Foundations of Sequential Programs}}
 	\date{Winter 2013, University of Waterloo \\ \center Notes written from Gordon Cormack's lectures.}
 	\author{Chris Thomson}
 	\maketitle
 	\newpage
-	
+
 	\section{Introduction \& Character Encodings} \lecture{January 7, 2013}
 	
 		\subsection{Course Structure}
@@ -34,7 +35,7 @@
 			\item Pass / fail.
 		\end{itemize}
 		
-		Let's say we have four projector screens, each representing a bit of up/down, depending on if the screen has been pulled down or left up (ignoring states between up and down). These screens are up or down independently. There are sixteen possible combinations: \\
+		Let's say we have four projector screens, each representing a bit of up/down, depending on if the screen has been pulled down or left up (ignoring states between up and down). These screens are up or down independently. There are sixteen possible combinations:
 		\begin{center}
 			\begin{tabular}{cccc}
 				\underline{Screen 1} & \underline{Screen 2} &\underline{Screen 3} & \underline{Screen 4} \\
@@ -53,7 +54,7 @@
 				\item \textbf{Unsigned, big-endian}: $(0 \times 2^0) + (1 \times 2^1) + (0 \times 2^2) + (1 \times 2^3) = 2 + 8 = 10$.
 				\item \textbf{Two's complement, little-endian}: $5 - 16 = -10$.
 				\item \textbf{Two's complement, big-endian}: $10 - 16 = -6$.
-				\item \textbf{Computer terminal}: LF (line feed). \\
+				\item \textbf{Computer terminal}: LF (line feed).
 			\end{itemize}
 	
 			Note that a two's complement number $n$ will satisfy $-2^{k-1} \le n < 2^{k-1}$.
@@ -72,8 +73,7 @@
 				\end{tabular}
 			\end{center}
 			
-			In the latter case, $0111000$ represents the character `$8$', not the unsigned big- or little-endian number $8$.
-			\\ \\
+			In the latter case, $0111000$ represents the character `$8$', not the unsigned big- or little-endian number $8$. \\ \\
 			ASCII was invented to communicate text. ASCII can represent characters such as A-Z, a-z, 0-9, and control characters like ();!. Since ASCII uses 7 bits, $2^7 = 128$ characters can be represented with ASCII. As a consequence of that, ASCII is basically only for Roman, unaccented characters, although many people have created their own variations of ASCII with different characters.
 	
 		\subsection{Unicode}
@@ -82,4 +82,62 @@
 			A 16-bit representation of Unicode is called \textbf{UTF-16}. However, there's a problem: we have \emph{many} symbols ($> 1M$) but only $2^16 = 65,536$ possibilities to represent them. Common characters are represented directly, and there is also a `see attachment' bit for handling the many other symbols that didn't make the cut to be part of the $65,536$. Similarly, there is an 8-bit representation of Unicode called \textbf{UTF-8}, with the ASCII characters followed by additional characters and a `see attachment' bit.
 			\\ \\
 			The bits themselves do not have meaning. Their meaning is in your head -- everything is up for interpretation.
+		\subsection{A Message for Aliens} \lecture{January 9, 2013}
+			In a computer, meaning is in the eye of the beholder. We must agree on a common interpretation -- a convention. However, the English language and numbers also have their meaning determined by a set of conventions.
+			\\ \\
+			NASA wanted to be able to leave a message for aliens on a plaque on their spacecraft, however it was clear that aliens would not understand our language or even 0s and 1s. NASA wanted their message to be a list of prime numbers. They decided they would use binary to represent the numbers, but since 0s and 1s would be ambiguous to aliens, they used a dash (-) instead of 0, and 1 for 1. It's only a convention, but it's one that NASA determined aliens would have a higher chance of understanding.
+		\subsection{Hexadecimal}
+			Hexadecimal (hex) is base 16. It has sixteen case-insensitive digits: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, a, b, c, d, e, and f.
+			\\ \\
+			Why is hex useful? It makes conversions easy. We group bits into sequences of four:
+			\begin{align*}
+			  \underbrace{\underbrace{0011}_{3} \underbrace{1010}_{\text A}}_{\text{3A}}
+			\end{align*}
+
+			Conversions are made especially easy when the sequences of bits are lengthy:
+			\begin{align*}
+			  \underbrace{\underbrace{10}_{2} \underbrace{1110}_{\text E} \underbrace{0111}_{7} \underbrace{0011}_{3} \underbrace{1011}_{\text B} \underbrace{1001}_{9} \underbrace{1000}_{8} \underbrace{0011}_{3}}_{\text{2E73B983}}
+			\end{align*}
+	\section{Stored Program Computers}
+		Stored program computers are also known as the \textbf{Von Neumann architecture}. They group bits into standard-sized sequences. 
+		\\ \\
+		In modern times, standard-sized sequences of bits are:
+		\begin{itemize}
+			\item \textbf{Bytes}. A byte is 8-bits (256 possible values). Example: 00111010.
+			\item \textbf{Words}. A word is only guaranteed to be ``more than a byte.'' Words are often 16-bit ($2^{16} = 65,536$ possible values), 32-bit ($2^{32} \approx 4 \times 10^9$), or 64-bit ($2^{64} \approx 10^{19}$).
+		\end{itemize}
+		
+		\subsection{Storage Devices}
+			\subsubsection{Registers}
+				% Diagram: registers
+				There are typically a finite number of fixed-sized sequence of bits, called \textbf{registers}. You can put bits in, peek at them, and modify them. A ``64-bit CPU'' just means it's a CPU that uses 64-bit words. 
+				\\ \\
+				Calculators typically have 2-3 registers for recalling numbers and maintaining state.
+				\\ \\
+				There are a couple of downsides to registers. They're expensive to build, which is why there is a finite number of them. They're also difficult to keep track of.
+			\subsubsection{RAM (Random Access Memory)}
+				% Diagram: RAM
+				RAM is essentially a physical array that has \textbf{address lines}, \textbf{data lines}, and \textbf{control lines}. Data is fed into RAM using electrical lines. Data will remain in RAM until overwritten.
+				\\ \\
+				If you want to place a happy face character at address 100, you set the address lines to 100, the data lines to 10001110 (which is the Unicode representation of a happy face), and give the control lines a kick.
+				\\ \\ % Diagram: CRT. Diagram: core.
+				RAM could be implemented in several different ways. It could even be created with a \textbf{cathode ray tube}. The \textbf{core} method is synonymous with RAM, however. It involves a magnetic core, and the data remains magnetized after the magnet is removed. Bits are read by toggling the state (toggling the magnetic poles) and seeing if it was easier to toggle than expected (similar to unlocking an already-unlocked door), and then toggling back after. No one really uses magnetic cores anymore.
+				\\ \\ % Diagram: capacitive memory. Diagram: DRAM.
+				\textbf{Capacitive memory} (also known as dynamic RAM or \textbf{DRAM}) is still used today. It involves an insulator, and two conductive plates, one more negatively-charged than the other. The electrons will remain in their state even when the poles are removed. There is a problem, however. Insulators are not perfect -- electrons will eventually make their way through the insulator. In order to alieviate this, we have to refresh the charge fairly often (every second, for instance).
+				\\ \\ % Diagram: CPU <-> RAM
+				\textbf{Switches} are typically used only for registers and cache. They produce more heat, but are much faster.
+			\subsection{Control Unit Algorithm}
+				The CPU contains a \textbf{control unit}, several \textbf{registers}, PC (\textbf{program counter}), and IR (\textbf{instruction register}), and is connected to RAM with electrical lines.
+				\begin{verbatim}
+					PC <- some fixed value (e.g. 0)
+					loop
+					  fetch the word of RAM whose address is in PC, put it in IR
+					  increment PC
+					  decode and execute the machine instructon that's in IR
+					end loop
+				\end{verbatim}
+
+				IR would contain an instruction like ``add register 1 to register 2, and put the result into register 7.''
+	\section{MIPS}
+		The MIPS CPU uses 32-bit words, and it's big-endian. 
 \end{document}
