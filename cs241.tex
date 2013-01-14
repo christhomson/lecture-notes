@@ -204,4 +204,80 @@
 				\item \textbf{Jump and Link Register} (\verb+jalr+): assigns the program counter to register 31, then jumps to it.
 				\item \textbf{Branch on Equal} (\verb+beq+): if S is equal to T, it adds the specified number to the program counter (times 4). There is also \textbf{Branch on Unequal} (\verb+bne+) which does the opposite.
 			\end{enumerate}
+		\subsubsection{MIPS Program Workflow}
+			\lecture{January 14, 2013}
+			The MIPS CPU understands \textbf{binary machine language programs}, however we cannot write them directly. Instead, we write \textbf{assembly language programs} in text files. By convention, we name these text files with the extension \verb+.asm+. Assembly language contains instructions like \verb+.word 0x00221820+. We feed the assembly language program into \verb+cs241.wordasm+, which is an \textbf{assembler}. An assembler translates assembly language into binary machine code.
+			\\ \\
+			Assembly language can also look like this: \verb+add $3, $1, $2+. Assembly language in this form has to be fed into a different assembler (\verb+cs241.binasm+) that understands that flavor of assembly syntax.
+			\\ \\
+			There is a \href{https://www.student.cs.uwaterloo.ca/~cs241/mips/mipsasm.html}{MIPS reference manual} available on the course website. It might be useful in situations such as:
+			\begin{itemize}
+				\item When you want to be an assembler yourself. You'll need to lookup the mapping between assembly instructions like \verb+add $3, $1, $2+ and their binary equivalents.
+				\item When you need to know what's valid assembly code that an assembler will accept.
+				\item When you want to write your own assembler you'll need a specification of which instructions to handle.
+			\end{itemize}
+		\subsubsection{The Format of MIPS Assembly Language}
+			MIPS assembly code is placed into a Unix text file with the general format:
+			\begin{verbatim}
+			      labels instruction comment
+			\end{verbatim}
+			
+			\textbf{Labels} are any identifier followed by a colon. For example, \verb+fred:+, \verb+wilma:+, and \verb+x123:+ are some examples of valid labels.
+			\\ \\
+			\textbf{Instructions} are in the form \verb+add $3, $1, $2+. Consult the MIPS reference sheet for the syntax of each MIPS instruction.
+			\\ \\
+			\textbf{Comments} are placed at the end of lines and must be prefixed by a semicolon. Lines with only comments (still prefixed with a semicolon) are acceptable as well. For example: \verb+; hello world+.
+			\\ \\
+			It's important to note that there is a \textbf{one-to-one correspondence} between instructions in assembly and instructions in machine code. The same MIPS instructions will always produce the same machine code.
+		\subsubsection{More MIPS Instructions}
+			Here's a more comprehensive overview of the instructions available to you in the CS 241 dialect of MIPS. Note that for all of these instructions, $0 \le d, s, t \le 31$, since there are 32 registers in MIPS numbered from 0 to 31.
+			\begin{itemize}
+				\item \verb+.word+. This isn't really a MIPS instruction in and of itself. Words can be in several different forms. For example:
+					\begin{itemize}
+						\item \verb+.word 0x12345678+ (hex)
+						\item \verb+.word 123+ (decimal)
+						\item \verb+.word -1+ (negative decimals whose representation will eventually be represented in two's complement)
+					\end{itemize}
+				\item \verb+add $d, $s, $t+. Adds \$s to \$t and stores the result in \$d.
+				\item \verb+sub $d, $s, $t+. Subtracts \$t from \$s and stores the result in \$d (\$d = \$s - \$t).
+				\item \verb+mult $s, $t+. Multiplies \$s and \$t and stores the result in the \verb+HI+ and \verb+LO+ registers. Uses two's complement.
+				\item \verb+multu $s, $t+. Provides the same functionality as \verb+mult+, but uses unsigned numbers.
+				\item \verb+div $s, $t+. Divides \$s by \$t. The remainder is stored in \verb+HI+ and the quotient is stored in \verb+LO+.
+				\item \verb+divu $s, $t+. Provides the same functionality as \verb+div+, but uses unsigned numbers.
+				\item \verb+mflo $d+. Copies the contents of the \verb+LO+ register to \$d.
+				\item \verb+mfhi $d+. Copies the contents of the \verb+HI+ register to \$d.
+				\item \verb+lis $d+ (load immediate and skip). Copies the word from the program counter (PC), adds 4 to PC in order to skip the word you just loaded.
+				\item \verb+lw $t, i($s)+ (load word, $-32,768 \le i \le 32,767$). For example: \verb+lw $3, 100($5)+ will get the contents of \$5, add 100, treat the result as an address, fetch a word from RAM at that address, and put the result into \$3.
+				\item \verb+sw $t, i($s)+ (store word, $-32,768 \le i \le 32,767$). This works in a similar way to \verb+lw+, except it stores the contents of \$t at RAM at this address.
+				\item \verb+slt $d, $s, $t+ (set less than). Sets \$d to 1 if \$s < \$t, or to 0 otherwise.
+				\item \verb+sltu $d, $s, $t+ (set less than unsigned). Sets \$d to 1 if \$s < \$t, or to 0 otherwise. Interprets the numbers as unsigned numbers.
+				\item \verb+beq $s, $t, i+ (branch if equal, $-32,768 \le i \le 32,767$). Adds $4i$ to the program counter if \$s is equal to \$t. Note that 4 is still added (in addition to adding the $4i$ for this specific command) as you move to the next instruction, as with all instructions. 
+				\item \verb+bne $s, $t, i+ (branch if not equal, $-32,768 \le i \le 32,767$). Works the same way as \verb+beq+, except it branches if \$s is not equal to \$t.
+				\item \verb+jr $s+ (jump register). Copies \$s to the program counter.
+				\item \verb+jalr $s+ (jump and link register). Copies \$s to the program ocunter and copies the previous value of the program counter to \$31.
+			\end{itemize}
+		\subsubsection{Example Program: Sum from 1 to N}
+			We want a program that sums the numbers from 1 to $n$, where $n$ is the contents of \$1, and we want the result to be placed in \$3. \underline{Aside}: it's only a convention that we reserve \$1 and \$2 as registers for input parameters and \$3 as the register for the result -- the MIPS system itself does not treat these registers in a special way.
+			\begin{verbatim}
+				; $1 is N.
+				; $3 is the sum.
+				; $2 is temporary.
+
+				add $3, $0, $0  ; zero accumulator
+
+				; beginning of loop
+				add $3, $3, $1  ; add $1 to $3
+				lis $2          ; decrement $2
+				.word -1
+				add $1, $1, $2
+				bne $1, $0, -5  ; n = 0? If not, branch to beginning of loop
+
+				jr $31          ; return
+			\end{verbatim}
+			If we enter 10 for \$1 (to get the sum of the numbers from 1 to 10), we should get 55. But the actual result is \verb+0x00000037+. Note that $37_{16} = 55_{10}$, so the program works as expected. The end result is \$1 being \verb+0x00000000+ ($0_{10}$), \$2 being \verb+0xffffffff+ ($-1_{10}$), and \$3 being \verb+0x00000037+ ($55_{10}$).
+		\subsubsection{Housekeeping Notes}
+			\begin{itemize}
+				\item \verb+cs241.binasm+ will be available on Thursday after the assignment 1 deadline has passed. You can use this for future assignments as necessary.
+				\item You don't need to memorize the binary representation of MIPS commands for exams, or the ASCII representation of characters. You'll be provided with the MIPS reference sheet and an ASCII conversion chart for the exams.
+			\end{itemize}
 \end{document}
