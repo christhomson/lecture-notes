@@ -19,7 +19,8 @@
 	\maketitle
 	\newpage
 
-	\section{Introduction \& Character Encodings} \lecture{January 7, 2013}
+	\section{Introduction \& Character Encodings} 
+		\lecture{January 7, 2013}
 	
 		\subsection{Course Structure}
 		The grading scheme is 50\% final, 25\% midterm, and 25\% assignments. There are eleven assignments. Don't worry about any textbook. See the \href{https://www.student.cs.uwaterloo.ca/~cs241/W2013.pdf}{course syllabus} for more information.
@@ -139,5 +140,68 @@
 
 				IR would contain an instruction like ``add register 1 to register 2, and put the result into register 7.''
 	\section{MIPS}
-		The MIPS CPU uses 32-bit words, and it's big-endian. 
+		\lecture{January 11, 2013}
+
+		\subsection{Unix}
+			You'll need Unix to use MIPS in this course. Unix was originally created in the 1970s at AT\&T Bell Labs. Unix is still popular today, especially for servers. Linux is a Unix dialect, and Mac OS X is also based on Unix. 
+			\\ \\
+			Unix has three types of files:
+			\begin{itemize}
+				\item \textbf{Binary files}. A sequence of arbitrary bytes.
+				\item \textbf{Text files}. A sequence of ASCII characters, with lines terminated by a LF / newline.
+				\item \textbf{Tools}. These are programs, which are technically binary files.
+			\end{itemize}
+
+			\subsubsection{Getting Access to a Unix System}
+				If you use Linux or Mac OS X, you're in good shape. However, Windows is not Unix-based, so you'll have to pursue one of these alternative options:
+				\begin{itemize}
+				  	\item Install Linux. You can dual-boot it alongside Windows if you'd like, or you could install it inside a virtual machine.
+				  	\item Install Cygwin. When installing it, choose to install everything.
+					\item Login to the \verb+student.cs+ servers remotely. You can use PuTTY for that.
+				\end{itemize}
+
+			\subsubsection{Commands You Should Know}
+				\begin{itemize}
+					\item \verb+ssh username@linux.student.cs.uwaterloo.ca+ -- logs you into the student.cs systems remotely through SSH.
+					\item \verb+cat unix_text_file.txt+ -- copies the contents of the file to the current terminal. If a non-text file is given to \verb+cat+, incorrect output will result.
+					\item \verb+xxd -b unix_file.txt+ -- prints the binary representation of the file to the terminal. The numbers in the left column are the location in the file. If it's a Unix text file, the ASCII representation is presented on the right, with all non-printable characters printed as dots. \verb+xxd+ is not aware of newline characters -- it arbitrarily splits the file into 16 bytes per line.
+					\item \verb+xxd unix_file.txt+ -- prints the hex representation of the file to the terminal. Identical to the previous command (\verb+-b+) in every other way.
+					\item \verb+ls -l+ -- lists all files in the current directory in the long-listing form, which shows the number of bytes in the file, permissions, and more.
+				\end{itemize}
+		\subsection{Getting Started with MIPS}
+			The MIPS CPU uses 32-bit words since it's a 32-bit machine, and it's big-endian. You can use \verb+xxd+ to inspect MIPS files. MIPS has 32 registers (numbered 0 to 31).
+			\\ \\
+			At the end of our MIPS programs, we will copy the contents of register \$31 to the program counter (PC) to ``return''.
+
+			\subsubsection{Running MIPS Programs}
+				Upon logging in to the \verb+student.cs+ servers, run \verb+source ~cs241/setup+ in order to add the required executables to your \verb+PATH+. Then, when given a MIPS executable called \verb+eg0.mips+, you can run \verb+java mips.twoints eg0.mips+ in order to run the program.
+				\\ \\
+				\verb+mips.twoints+ is a Java program that requests values for registers \$1 and \$2 and then runs the given MIPS program.
+			\subsubsection{Creating MIPS Programs}
+			Start with \verb+vi thing.asm+ (or use your favorite editor). Inside this file, you'll create an \textbf{assembly language file}, which is a textual representation of the binary file you want to create. Each line in this file should be in the form \verb+.word 0xabcdef12+ (that is, each line should start with \verb+.word 0x+ -- the \verb+0x+ is a convention that indicates that hex follows). You can add comments onto the end of lines, starting with a semi-colon (Scheme style).
+			\\ \\
+			Next, you'll need to convert your assembly language file into a binary file. You can do that by running \verb+java cs241.wordasm < thing.asm > thing.bin+. You can then inspect \verb+thing.bin+ with \verb+xxd+ in hex, or in binary if you're masochistic.
+			\\ \\
+			A few important things you should know for developing MIPS programs:
+			\begin{itemize}
+				\item \$0 is a register that will always contain 0. It's special like that.
+				\item \$30 points to memory that could be used as a stack.
+				\item \$31 will be copied to the program counter at the end of execution in order to ``return''.
+				\item You can specify register values using base 10 values or as hex values (if prefixed by \verb+0x+). 
+				\item It takes 5-bits to specify a register, since $2^5 = 32$. 
+				\item It's convention to call S and T (as indicated in various documentation) \textbf{source registers}, and D is the \textbf{destination register}. 
+				\item MIPS uses two's complement numbers by default, unless specified otherwise.
+				\item Loops and conditionals are accomplished by adding or subtracting from the program counter.
+			\end{itemize}
+			
+			There is a MIPS reference sheet available on the course website that you'll find to be quite useful. It contains the binary representations for all MIPS instructions. Convert the binary into hex and put them into an assembly language file.
+		
+		\subsubsection{A Few Important MIPS Instructions}
+			\begin{enumerate}
+				\item \textbf{Load Immediate \& Skip} (\verb+lis+): loads word from the program counter. Loads the next word of memory into the D register. You specify a \verb+lis+ instruction followed by an arbitrary word next. You need to also skip the appropriate number of bytes by incrementing the program counter.
+				\item \textbf{Set Less Than [Unsigned]} (\verb+slt+): compares S to T. If S < T, 1 is put into the D register, otherwise 0 is put into the D register.
+				\item \textbf{Jump Register} (\verb+jr+): copies S to the program counter.
+				\item \textbf{Jump and Link Register} (\verb+jalr+): assigns the program counter to register 31, then jumps to it.
+				\item \textbf{Branch on Equal} (\verb+beq+): if S is equal to T, it adds the specified number to the program counter (times 4). There is also \textbf{Branch on Unequal} (\verb+bne+) which does the opposite.
+			\end{enumerate}
 \end{document}
