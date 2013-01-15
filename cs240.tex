@@ -235,4 +235,207 @@
 			We need to decide on a convention for these cases where we have multiple time values. In this course, we'll usually look at the worst case, however in some situations examining the best or average cases could be useful.
 			\\ \\
 			Finding the average case is hard. To produce an appropriate average, we need an input distribution.
+	\section{Formalism} \lecture{January 15, 2013}
+		\begin{defn}
+			A \textbf{problem} is a collection of questions and (correct) answer pairs.
+		\end{defn}
+
+		\begin{ex}
+			Informally, the problem is ``multiplying two numbers.'' More formally, the problem could be represented as: (2 x 3, 6), (3 x 4, 12), (1 x 5, 5), etc.
+		\end{ex}
+
+		\begin{defn}
+			An \textbf{instance} of a problem is a specific question and answer pair, (Q, A).
+		\end{defn}
+
+		\begin{defn}
+			The \textbf{input} of a problem is the question. Example: 3 x 4.
+		\end{defn}
+
+		\begin{defn}
+			The \textbf{output} is the only correct answer. Note: there is only one correct answer under this definition. ``Multiple'' correct answers can always be reduced to some canonical form that represents the one correct answer.
+		\end{defn}
+
+		\begin{defn}
+			An \textbf{algorithm} is a mechanical method to produce the answer to a given question of a problem.
+		\end{defn}
+		
+		\begin{defn}
+			The \textbf{size of the input} is the number of bits, characters, or elements in the question. This definition will vary depending on what's most appropriate for the given question.
+		\end{defn}
+
+		Long division in elementary school was the first time a problem's complexity was directly related to the input size. That's not always the case, however.
+
+		\begin{defn}
+			We say an algorithm \textbf{solves} a probem if for every question $Q$ it produces the correct answer, $A$.
+		\end{defn}
+
+		\begin{defn}
+			A \textbf{program} is an implementation of an algorithm using a specified computer language.
+		\end{defn}
+
+		\begin{ex}
+			We want to sort $n$ numbers. One instance of this problem $Q$ is:
+			\begin{align*}
+				(\underbrace{(5, 1, 3, 2, 4)}_\text{Q}, \underbrace{(1, 2, 3, 4, 5)}_\text{A})
+			\end{align*}
+
+			For a problem in this form, we'll say the size of $Q$ is $|I| = 5$. Why? Counting the number of elements is the most logical definition in this case.
+		\end{ex}
+
+		This course emphasizes algorithms rather than programs. We're computer scientists, so we care about the algorithm and the speed/efficiency of that algorithm.
+		\\ \\
+		A problem $\Pi$ can have several correct algorithms that solve it. Our goal is to find efficient solutions to $\Pi$. How do we do that?
+		\begin{enumerate}
+			\item \textbf{Algorithm design}. Find a solution(s) to $\Pi$.
+			\item \textbf{Algorithm analysis}. Assess the correctness and efficency of the algorithm.
+		\end{enumerate}
+
+		In this course, we're mostly interested in algorithm analysis. Algorithm design will be covered in more detail in CS 341.
+
+		\subsection{Timing Functions}
+			A timing function is a function $T_{\mathcal{A}}$ such that:
+			\begin{align*}
+				T_{\mathcal{A}}: \{ Q \} \to \mathbb{R}^{+}
+			\end{align*}
+			where $\mathbb{R}^{+}$ is the set of positive real numbers.
+			\\ \\
+			$T_{\mathcal{A}}(Q)$ is the time taken by algorithm $\mathcal{A}$ to compute the answer to $Q$.
+			\\ \\
+			We also want to define a general timing function for a particular problem, regardless of algorithm: 
+			\begin{align*}
+				T(n) &= max \{T_{ \mathcal{A}}(Q) \} \\ 
+				T_{avg}(n) &= avg \{ T_{\mathcal{A}}(Q) \} \\ 
+				T_{min}(n) &= min \{ T_{\mathcal{A}}(Q) \} \\
+				\vdots&
+			\end{align*}
+
+			If we had two solutions (algorithms) $T_A(n)$ and $T_B(n)$, we could use order notation to compare the quality of $A$ and $B$.
+			\\ \\
+			Note that some problem instances are easier than others to solve, even with the same input size. Most people find it easier to multiply $0 \times 7$ than $8 \times 7$, for instance, despite those two problems having the same input size.
+	\section{Analysis of Algorithms}
+		In order to analyze an algorithm, we count the number of \underline{basic} operations that the algorithm performs.
+		\begin{ex}
+			Let's say our algorithm is to compute $x^2 + 4x$ and assign it to a variable called \verb+result+. That involves seven basic operations:
+			\begin{enumerate}
+				\item Read $x$ from memory.
+				\item Compute $x \cdot x$.
+				\item Assign the result of $x \cdot x$ to a variable, \verb+pr1+.
+				\item Compute $4 \cdot x$.
+				\item Assign the result of $4 \cdot x$ to a variable, \verb+pr2+.
+				\item Compute \verb+pr1+ + \verb+pr2+.
+				\item Assign the result of \verb+pr1+ + \verb+pr2+ to a variable, \verb+result+.
+			\end{enumerate}
+		\end{ex}
+
+		The number of operations remains the same across machines, but the actual running time of an algorithm will differ from machine to machine (which one of the reasons why we use order notation).
+		\\ \\
+		We only count the number of \underline{basic} operations. There are various definitions of what a ``basic'' operation actually is (especially with regards to variable assignments), but these are some common operations that are considered to be basic:
+		\begin{itemize}
+			\item Add numbers of reasonable size (numbers that can be added primitively).
+			\item Multiply numbers of reasonable size (numbers that can multiplied primitively).
+			\item Access an index in an array.
+			\item Store a value in memory (variable assignments).
+			\item Read a value from memory.	
+		\end{itemize}
+		Be careful. Some languages disguise complexity well. Just because the syntax is simple doesn't necessarily mean it's a basic operation, and doesn't guarantee that the operation runs in constant time.
+
+		\subsection{Techniques for Algorithm Analysis}
+			\begin{itemize}
+				\item Straight line programs (no loops). Simply tally up the basic operation count.
+				\item Loops (\verb+for+/\verb+while+). You need to add the number of operations for each pass on the body of the loop.
+			\end{itemize}
+
+			\begin{ex}
+				Analyze the following algorithm. \\ \\
+				\verb+for i = a to be do+ \\
+				\bigg[ \verb+<straight line program>+ $T_L$ \bigg] \\ \\
+				This program will run with $\sum_{i = a}^{b} T_L(i)$ operations.
+			\end{ex}
+
+			Whenever you have a loop in your algorithm, you should expect to get a summation in your timing function.
+			\begin{ex}
+				Analyze the following algorithm.
+				\begin{verbatim}
+					for x = 0 to 10 do
+					  pr1 = x * x
+					  pr2 = 4 * x
+					  result = pr1 + pr2
+					  print result
+				\end{verbatim} 
+				
+				This program will run with $\sum_{i = 0}^{10} 4 = 44$ operations (depending on your definition of ``basic'' operations.
+			\end{ex}
+
+			Operations like addition and multiplication are primitive for numbers of a reasonable size. Once numbers get large enough to exceed certain limits, we have to resort to some trickery to perform those operations, which adds additional complexity, making them no longer ``basic'' operations.
+			\\ \\
+			We can be a bit sloppy and use the worst case, then say the actual algorithm is $\le$ what we calculated.
+			\begin{ex} 
+				Analyze the following algorithm. Test 1 ($n$).
+				\begin{verbatim}
+					sum = 0
+					for i = 1 to n do
+					  sum = sum + i
+					return sum
+				\end{verbatim}
+
+				This program will run with $1 + (\sum_{i = 1}^n 1) + 1 = 2 + n = \Theta(n)$ operations.
+			\end{ex}
+
+			\begin{ex}
+				Analyze the following algorithm. 
+				\begin{verbatim}
+					sum = 0
+					for i = 1 to n do
+					  sum = sum + (i - j)^2
+					  sum = sum^2
+					return sum
+				\end{verbatim}
+
+				This program will run with time:
+				\begin{align*}
+					& 1 + \sum_{i = 1}^{n} \bigg[ \sum_{j = 1}^{i} 4 \bigg] + 1 \\
+					&= 2 + \sum_{i = 1}^{n} 4i \\
+					&= 2 + 4 \sum_{i = 1}^{n} i \\
+					&= 2 + 4 \cdot \frac{n(n+1)}{2} \text{ (Gauss)} \\
+					&= 2 + 2n^2 + 2n \\
+					&= \Theta(n^2)
+				\end{align*}
+
+				We can be pessimistic, assume worst-case scenario, and say that it runs with time:
+				\begin{align*}
+					&2 + \sum_{i = 1}^{n} n \\
+					&= O(n^2)
+				\end{align*}
+
+				Note that $O(n^2)$ is a less precise result than $\Theta(n^2)$, but in some cases that's good enough.
+			\end{ex}
+
+			Order notation helps make algorithm analysis easier by allowing us to throw away any specific constants, as long as the order remains untouched. The entire analysis process happens within the context of order notation, so you can just start dropping constants immediately.
+			\\ \\
+			Keep in mind, it is possible to create a bad over-estimation. You have to be smart about it.
+
+			\begin{ex}
+				Analyze the following algorithm. Test 2 (A, n).
+				\begin{verbatim}
+					max = 0
+					for i = 1 to n do
+					  for j = 1 to n do
+					    sum = 0
+					    for k = i to j do
+					      sum <- A[k] + sum
+					      if sum > max then
+					        max = sum
+					return sum
+				\end{verbatim}
+
+				This is the \textbf{maximum subsequence problem}. The input is an array of integers $A[1\dots n]$, and the output is the consecutive run with the largest sum.
+				\\ \\
+				Sample sequence:
+				\begin{tabular}{|c|c|c|c|c|c|c|}
+					\hline 2 & -4 & 1 & 3 & -2 & 8 & -1 \\ \hline
+				\end{tabular}
+				\\ \\
+				The running time of this program is $max \bigg\{ \sum_{i = 1}^{j} A[k] \big| 1 \le i \le j \le n \bigg\}$.
+			\end{ex}
 \end{document}
