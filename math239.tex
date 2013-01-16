@@ -462,4 +462,138 @@
 			\end{ex}
 
 			It's clear that the inverse for a power series is \textbf{unique}. We made no choices when determining the inverse, therefore it must be unique.
+			\subsubsection{Finding Inverses} \lecture{January 16, 2013}
+				Given:
+				\begin{align*}
+					A(x) = \sum_{n \ge 0} a_nx^n \text{ where } (a_0 \ne 0)
+				\end{align*}
+				We want to find:
+				\begin{align*}
+					B(x) = \sum_{n \ge 0} b_nx^n
+				\end{align*}
+				We'll start by finding $b_0$:
+				\begin{align*}
+					[x^0]A(x)B(x) = a_0b_0 = 1 \implies b_0 = \frac{1}{a_0}
+				\end{align*}
+				Notice that if we didn't have the restriction on $a_0$, we would've run into trouble here. Now, suppose you found $b_0, b_1, \ldots, b_{n - 1}$ for $n \ge 1$. Find $b_n$.
+				\begin{align*}
+					b_n = \frac{1}{a_0} \cdot (-a_1b_{n - 1} - a_2b_{n - 2} - \ldots - a_nb_0)
+				\end{align*}
+
+				\begin{proposition}
+					Let $A(x)$ and $P(x)$ be formal power series.
+					Suppose the constant for $A(x)$ is not 0. Then there exists a unique $B(x)$ such that $A(x)B(x) = P(x)$.
+				\end{proposition}
+				\textbf{Some useful formul\ae}:
+					\begin{align*}
+						\frac{1}{1 - x} = 1 + x + x^2 + x_3 + \cdots &\text{ since } 1 = (1 + x + x^2 + \cdots)(1 - x) \\
+						\frac{1 - x^{k+1}}{1-x} = 1 + x + x^2 + \cdots + x^k &\text{ since } 1 - x^{k+1} = (1 + x + x^2 + \cdots + x^k)(1-x) 
+					\end{align*}
+			\subsubsection{Compositions}
+				\begin{defn}
+					Let $A(x)$ and $B(x)$ be formal power series defined by:
+					\begin{align*}
+						A(x) = \sum_{n \ge 0} a_n x^n \hspace{1cm} B(x) = \sum_{n \ge 0} b_n x^n
+					\end{align*}
+					We define the \textbf{composition} as:
+					\begin{align*}
+						A(B(x)) := \sum_{n \ge 0} a_n [B(x)]^n
+					\end{align*}
+				\end{defn}
+
+				\begin{ex}
+					Let $A(x) = 1 + x + x^2 + x^3 + \cdots$ and $B(x) = 2x$. Then the composition is $A(B(x)) = 1 + 2x + 4x^2 + 8x^3 + \cdots$.
+				\end{ex}
+
+				\textbf{Question}: is the composition of two formal power series a formal power series itself? No.
+				\begin{ex}
+					Suppose we pick $A(x) = 1 + x + x^2 + x^3 + \cdots$ and $B(x) = 1 + x$.
+					\\ \\
+					We have $A(B(x)) = 1 + (1 + x) + (1 + x)^2 + (1 + x)^3 + \cdots$. This cannot be a formal power series because a formal power series requires that all coefficients ($a_k$) need to be rational numbers, and in this case $a_0$ is infinite.
+				\end{ex}
+
+				\begin{ex}
+					Suppose we pick $A(x) = 1 + x + x^2 + x^3 + \cdots$ and $B(x) = x + x^2$.
+					\\ \\
+					We have $A(B(x)) = 1 + (x + x^2)^1 + (x + x^2)^2 + \cdots$. In order to show that this is a formal power series, we need to show that the coefficient of $x^k$ (which is $a_k$) is finite for all $k$.
+				\end{ex}
+				
+				\begin{theorem}
+					Let $A(x)$ and $B(x)$ be formal power series, and $[x^0]B(x) = 0$ ($B(x)$'s constant is zero). Then $A(B(x))$ is a formal power series.
+				\end{theorem}
+
+				\underline{Aside}:
+				\begin{align*}
+					a(b(x)) = 1 + (\underbrace{x + x^2}_{x(1+x)})^1 + (\underbrace{x + x^2}_{x(1+x)})^2 + (\underbrace{x + x^2}_{x(1+x)})^3 + \cdots
+				\end{align*}
+
+				\begin{proof}
+					We need to show that for any fixed $k$, $[x^k]A(B(x))$ is finite.
+					\\ \\
+					Let $R(x)$ be such that $B(x) = xR(x)$. Then we have:
+					\begin{align*}
+						[x^k]A(B(x)) &= [x^k] \sum_{n \ge 0} a_n[B(x)]^n \\
+						&= [x^k] \sum_{n \ge 0} a_n x^n R(x) \\
+						&= [x^k] \sum_{n \ge 0}^{k} a_n x^n (R(x))^n
+					\end{align*}
+
+					We made the last sum finite because we're interested in the coefficient of $x^k$ only. Note that this last line shows we can determine the coefficient in a finite number of steps, since $k$ is finite.
+				\end{proof}
+
+				\begin{ex}
+					Let $y \mapsto x^2$ (I will call $x^2$, $y$).
+					\begin{align*}
+						\frac{1}{1 - x^2} = \frac{1}{1 - y} &= 1 + y + y^2 + y^3 + \cdots \\
+					&= 1 + x^2 + x^4 + x^6 + \cdots
+					\end{align*}
+
+					We used composition with $A(x) = 1 + y + y^2 + \cdots$ and $B(x) = x^2$ (constant is zero). We were only allowed to do this because $[x^0]B(x) = 0$.
+				\end{ex}
+			\subsubsection{Cartesian Product}
+				\begin{defn}
+					Let $A$ and $B$ be sets. The \textbf{cartesian product} is defined as:
+					\begin{align*}
+						A \times B := \{ (a, b) \big| a \in A, b \in B \}
+					\end{align*}
+
+					Note that $(a, b)$ is an ordered pair.
+				\end{defn}
+
+				\begin{ex}
+					Let $A = \{1, 2, 3\}$ and $B = \{x, y\}$. Then $A \times B = \{ (1, x), (2, x), (3, x), (1, y), (2, y), (3, y) \}$.
+				\end{ex}
+
+				The cardinality of $A \times B$ is the product of the cardinalities of $A$ and $B$: $|A \times B| = |A||B|$.
+		\subsection{The Sum and Product Lemmas}
+			\subsubsection{Sum Lemma}
+			Let's consider a bin of two red marbles -- one large marble (denoted $R$), and one small marble (denoted $r$). We define $A$ to be the set of all selections of $\ge 1$ marbles. We know: 
+			\begin{align*}
+				A &= \{ \{r\}, \{R\}, \{r, R\} \} \\
+				w(\sigma) &= |\sigma| \\
+				\phi_A(x) &= x + x + x^2 = 2x + x^2
+			\end{align*}
+			Let's now consider a bin of green marbles -- two large marbles (denoted $G$). We define $B$ to be the set of all selections of $\ge 1$ marbles. We know:
+			\begin{align*}
+				B &= \{ \{G\}, \{G, G\} \} \\
+				w(\sigma) &= |\sigma| \\
+				\phi_B(x) &= x + x^2
+			\end{align*}
+			Let $S = A \union B = \{ \{r\}, \{R\}, \{r, R\}, \{G\}, \{G, G\} \}$, and note that $A \intersection B = \emptyset$. What is the generating function for $S$?
+			\begin{align*}
+				\phi_S(x) = \underbrace{(x + x + x^2)}_{\phi_A(x)} + \underbrace{(x  + x^2)}_{\phi_B(x)}
+			\end{align*}
+			This works in general.
+			
+			\begin{theorem}[Sum Lemma]
+				We have a set $S$ of objects with weight $w$. Let $A$ and $B$ be partitions of $S$. Then:
+				\begin{align*}
+					\phi_S(x) = \phi_A(x) + \phi_B(x)
+				\end{align*}
+			\end{theorem}
+
+			\begin{proof}
+				\begin{align*}
+					\phi_S(x) = \sum_{\sigma \in S} x^{w(\sigma)} = \underbrace{\sum_{\sigma \in A} x^w(\sigma)}_{\phi_A(x)} + \underbrace{\sum_{\sigma \in B} x^{w(\sigma)}}_{\phi_B(x)}
+				\end{align*}
+			\end{proof}
 \end{document}
