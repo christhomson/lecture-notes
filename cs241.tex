@@ -124,7 +124,7 @@
 				\\ \\ % Diagram: CRT. Diagram: core.
 				RAM could be implemented in several different ways. It could even be created with a \textbf{cathode ray tube}. The \textbf{core} method is synonymous with RAM, however. It involves a magnetic core, and the data remains magnetized after the magnet is removed. Bits are read by toggling the state (toggling the magnetic poles) and seeing if it was easier to toggle than expected (similar to unlocking an already-unlocked door), and then toggling back after. No one really uses magnetic cores anymore.
 				\\ \\ % Diagram: capacitive memory. Diagram: DRAM.
-				\textbf{Capacitive memory} (also known as dynamic RAM or \textbf{DRAM}) is still used today. It involves an insulator, and two conductive plates, one more negatively-charged than the other. The electrons will remain in their state even when the poles are removed. There is a problem, however. Insulators are not perfect -- electrons will eventually make their way through the insulator. In order to alieviate this, we have to refresh the charge fairly often (every second, for instance).
+				\textbf{Capacitive memory} (also known as dynamic RAM or \textbf{DRAM}) is still used today. It involves an insulator, and two conductive plates, one more negatively-charged than the other. The electrons will remain in their state even when the poles are removed. There is a problem, however. Insulators are not perfect -- electrons will eventually make their way through the insulator. In order to alleviate this, we have to refresh the charge fairly often (every second, for instance).
 				\\ \\ % Diagram: CPU <-> RAM
 				\textbf{Switches} are typically used only for registers and cache. They produce more heat, but are much faster.
 			\subsection{Control Unit Algorithm}
@@ -254,7 +254,7 @@
 				\item \verb+beq $s, $t, i+ (branch if equal, $-32,768 \le i \le 32,767$). Adds $4i$ to the program counter if \$s is equal to \$t. Note that 4 is still added (in addition to adding the $4i$ for this specific command) as you move to the next instruction, as with all instructions. 
 				\item \verb+bne $s, $t, i+ (branch if not equal, $-32,768 \le i \le 32,767$). Works the same way as \verb+beq+, except it branches if \$s is not equal to \$t.
 				\item \verb+jr $s+ (jump register). Copies \$s to the program counter.
-				\item \verb+jalr $s+ (jump and link register). Copies \$s to the program ocunter and copies the previous value of the program counter to \$31.
+				\item \verb+jalr $s+ (jump and link register). Copies \$s to the program counter and copies the previous value of the program counter to \$31.
 			\end{itemize}
 		\subsubsection{Example Program: Sum from 1 to N}
 			We want a program that sums the numbers from 1 to $n$, where $n$ is the contents of \$1, and we want the result to be placed in \$3. \underline{Aside}: it's only a convention that we reserve \$1 and \$2 as registers for input parameters and \$3 as the register for the result -- the MIPS system itself does not treat these registers in a special way.

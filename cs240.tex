@@ -109,7 +109,7 @@
 			\underline{Idea}: rather than comparing algorithms using seconds, we should compare algorithms using the number of operations required for the algorithm to run.
 			
 			\begin{itemize}
-				\item Express algorithm uisng pseudocode.
+				\item Express algorithm using pseudocode.
 				\item Count the number of primitive operations.
 				\item Plot the number of operations vs. the input size. \\
 			\end{itemize}
@@ -160,7 +160,7 @@
 			
 			Here's an easy way to remember the correspondence between a relation and its order notation symbol: the greedy operators, $\le$ and $\ge$, are uppercase letters $O$ and $\Omega$. The less greedy operators, $<$ and $>$, are the same letters but in lowercase ($o$ and $\omega$). \\
 			
-			Order notation only cares about the long run. An algorithm can violate the relation early -- we're interested in its asymptotic behaviour.
+			Order notation only cares about the long run. An algorithm can violate the relation early -- we're interested in its asymptotic behavior.
 			
 			\begin{defn}[$\le$]
 				$f(n) = O(g(n))$ if there exist constants $c > 0, n_0 > 0$ such that $f(n) \le c \cdot g(n)$ for all $n \ge n_0$.
@@ -268,7 +268,7 @@
 		Long division in elementary school was the first time a problem's complexity was directly related to the input size. That's not always the case, however.
 
 		\begin{defn}
-			We say an algorithm \textbf{solves} a probem if for every question $Q$ it produces the correct answer, $A$.
+			We say an algorithm \textbf{solves} a problem if for every question $Q$ it produces the correct answer, $A$.
 		\end{defn}
 
 		\begin{defn}
@@ -289,7 +289,7 @@
 		A problem $\Pi$ can have several correct algorithms that solve it. Our goal is to find efficient solutions to $\Pi$. How do we do that?
 		\begin{enumerate}
 			\item \textbf{Algorithm design}. Find a solution(s) to $\Pi$.
-			\item \textbf{Algorithm analysis}. Assess the correctness and efficency of the algorithm.
+			\item \textbf{Algorithm analysis}. Assess the correctness and efficiency of the algorithm.
 		\end{enumerate}
 
 		In this course, we're mostly interested in algorithm analysis. Algorithm design will be covered in more detail in CS 341.
