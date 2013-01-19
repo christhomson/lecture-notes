@@ -7,10 +7,10 @@ If you simply want to view the notes, look at the PDFs. I've also included the o
 
 ## Courses
 ### 2B - Winter 2013:
-* CS 240 - Data Structures and Data Management
-* CS 241 - Foundations of Sequential Programs
-* MATH 239 - Introduction to Combinatorics
-* PSYCH 207 - Cognitive Processes
+* [CS 240 - Data Structures and Data Management](/christhomson/lecture-notes/raw/master/cs240.pdf)
+* [CS 241 - Foundations of Sequential Programs](/christhomson/lecture-notes/raw/master/cs241.pdf)
+* [MATH 239 - Introduction to Combinatorics](/christhomson/lecture-notes/raw/master/math239.pdf)
+* [PSYCH 207 - Cognitive Processes](/christhomson/lecture-notes/raw/master/psych207.pdf)
 * ~~CS 251 - Computer Organization and Design~~ (Not covered because the slides and printed course notes seem more than sufficient.)
 
 ## Disclaimer
