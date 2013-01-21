@@ -565,7 +565,6 @@
 
 				The cardinality of $A \times B$ is the product of the cardinalities of $A$ and $B$: $|A \times B| = |A||B|$.
 		\subsection{The Sum and Product Lemmas}
-			\subsubsection{Sum Lemma}
 			Let's consider a bin of two red marbles -- one large marble (denoted $R$), and one small marble (denoted $r$). We define $A$ to be the set of all selections of $\ge 1$ marbles. We know: 
 			\begin{align*}
 				A &= \{ \{r\}, \{R\}, \{r, R\} \} \\
@@ -578,22 +577,112 @@
 				w(\sigma) &= |\sigma| \\
 				\phi_B(x) &= x + x^2
 			\end{align*}
-			Let $S = A \union B = \{ \{r\}, \{R\}, \{r, R\}, \{G\}, \{G, G\} \}$, and note that $A \intersection B = \emptyset$. What is the generating function for $S$?
-			\begin{align*}
-				\phi_S(x) = \underbrace{(x + x + x^2)}_{\phi_A(x)} + \underbrace{(x  + x^2)}_{\phi_B(x)}
-			\end{align*}
-			This works in general.
-			
-			\begin{theorem}[Sum Lemma]
-				We have a set $S$ of objects with weight $w$. Let $A$ and $B$ be partitions of $S$. Then:
+			\subsubsection{Sum Lemma}
+				Let $S = A \union B = \{ \{r\}, \{R\}, \{r, R\}, \{G\}, \{G, G\} \}$, and note that $A \intersection B = \emptyset$. What is the generating function for $S$?
 				\begin{align*}
-					\phi_S(x) = \phi_A(x) + \phi_B(x)
+					\phi_S(x) = \underbrace{(x + x + x^2)}_{\phi_A(x)} + \underbrace{(x  + x^2)}_{\phi_B(x)}
 				\end{align*}
-			\end{theorem}
+				This works in general.
+				
+				\begin{theorem}[Sum Lemma]
+					We have a set $S$ of objects with weight $w$. Let $A$ and $B$ be partitions of $S$. Then:
+					\begin{align*}
+						\phi_S(x) = \phi_A(x) + \phi_B(x)
+					\end{align*}
+				\end{theorem}
 
-			\begin{proof}
+				\begin{proof}
+					\begin{align*}
+						\phi_S(x) = \sum_{\sigma \in S} x^{w(\sigma)} = \underbrace{\sum_{\sigma \in A} x^w(\sigma)}_{\phi_A(x)} + \underbrace{\sum_{\sigma \in B} x^{w(\sigma)}}_{\phi_B(x)}
+					\end{align*}
+				\end{proof}
+			\subsubsection{Product Lemma} \lecture{January 18, 2013}
+				Let $S = A \times B = \{ (\{r\}, \{G\}), (\{R\}, \{G\}), (\{r, R\}, \{G\}), (\{r\}, \{G, G\}), (\{R\}, \{G, G\}), (\{r, R\}, \{G, G\}) \}$. $S$ is the number of ways of selecting marbles from both bins of marbles. Let $w(\sigma)$ be the number of marbles selected in total.
+				\\ \\
+				\textbf{Note}: you can think of a generating series as the sum of all objects' $x^{w(\sigma)}$, or you can think of it as the sum of all $a_k x^k$.
 				\begin{align*}
-					\phi_S(x) = \sum_{\sigma \in S} x^{w(\sigma)} = \underbrace{\sum_{\sigma \in A} x^w(\sigma)}_{\phi_A(x)} + \underbrace{\sum_{\sigma \in B} x^{w(\sigma)}}_{\phi_B(x)}
+					\phi_S(x) &= x^2 + x^2 + x^3 + x^3 + x^3 + x^4 \\
+					&= 2x^2 + 3x^3 + x^4 \\
+					&= (x + x + x^2)(x + x^2) \\
+					&= \phi_A(x) \cdot \phi_B(x)
 				\end{align*}
-			\end{proof}
+				This works in general.
+				\\ \\
+				Each term in $\phi_A(x)$ corresponds to an object in $A$, and each term in $\phi_B(x)$ corresponds to an object in $B$. When you find the product, it automatically does the counting for you, due to exponentiation laws.
+				\begin{theorem}[Product Lemma]
+					Let $A$ be a set where objects have weight $\alpha$, and let $B$ be a set where objects have weight $\beta$. Let $S = A \times B$ be a set of all objects $(a, b) \in S$, where $w[(a, b)] = \alpha(a) + \beta(b)$. Then:
+					\begin{align*}
+						\phi_S(x) = \phi_A(x) \cdot \phi_B(x)
+					\end{align*}
+				\end{theorem}
+
+				\begin{proof}
+					\begin{align*}
+						\phi_S(x) &= \sum{(a, b) \in S} x^{w[(a, b)]} \\
+						&= \sum_{(a, b) \in S} x^{\alpha(a) + \beta(b)} \\
+						&= \underbrace{\bigg[ \sum_{a \in A} x^{\alpha(a)} \bigg]}_{\phi_A(x)} \cdot \underbrace{\bigg[ \sum_{b \in B} x^{\beta(b)} \bigg]}_{\phi_B(x)}
+					\end{align*}
+				\end{proof}
+
+				\begin{ex}
+					Given integers $n \ge 0$ and $k \ge 0$, how many $k$-tuples $(m_1, m_2, \ldots, m_k)$ (where $m_i \ge 0, m_i \in \mathbb{Z}$) exist where $m_1 + m_2 + \ldots + m_k = n$?
+					\\ \\
+					Suppose $n = 3$ and $k = 2$. You'll have $(0, 3), (1, 2), (2, 1)$, and $(3, 0)$ \textendash{} four possibilities (notice order matters).
+					\\ \\
+					We have $\mathbb{N}_0 = \{0, 1, 2, 3, \ldots \}, w(a) = a$. Then:
+					\begin{align*}
+						\phi_{\mathbb{N}_0}(x) = \sum_{n \ge 0} a_n x^n = 1 + x + x^2 + x^3 + \ldots = \frac{1}{1-x}
+					\end{align*}
+
+					Now, let $S = \overbrace{\mathbb{N}_0 \times \mathbb{N}_0 \times \ldots \times \mathbb{N}_0}^{\mathbb{N}_0 \text{ appears } k \text{ times}}$. The objects in $S$ are sequences of form $(m_1, m_2, \ldots, m_k)$, where $m_i \ge 0, m_i \in \mathbb{Z}$. We define $w[(m_1, m_2, \ldots, m_k)] = m_1 + m_2 + \ldots + m_k$.
+					\begin{align*}
+						\phi_S(x) = [\phi_{\mathbb{N}_0}(x)]^k = \frac{1}{(1-x)^k} \text{ by the product lemma}
+					\end{align*}
+
+					Therefore, the number of $k$-tuples $(m_1, m_2, \ldots, m_k$ (where $m_i \ge 0, m_i \in \mathbb{Z}$) where $m_1 + m_2 + \ldots + m_k = n$ is given by $[x^n]\frac{1}{(1 - x)^k}$. But we cannot figure out the coefficient. Let's leave generating functions for now, and find a combinatorial proof for this.
+				\end{ex}
+
+				When you use the product lemma, you need to ensure:
+				\begin{enumerate}
+					\item Ensure it's used on something found by taking the cartesian product.
+					\item The weight is equal to the sum of the weights.
+				\end{enumerate}
+				
+				\begin{ex}
+					Let $n = 5$ and $k = 3$. We have:
+
+					\begin{center}
+						(1, 2, 2): \textbullet{} | \textbullet{} \textbullet{} | \textbullet{} \textbullet{} \\
+						(2, 3, 0): \textbullet{} \textbullet{} | \textbullet{} \textbullet{} \textbullet{} |
+					\end{center}
+
+					We have $n$ dots and $k-1$ intervals, which gives us:
+					\begin{align*}
+						{n + (k - 1) \choose k - 1} = {7 \choose 2} \text{ (in this case) }
+					\end{align*}
+
+					We always want two bars because $k = 3$. In general, we always want $k - 1$ bars. We want $n$ dots. The combination above is formed by the need to place $k - 1$ bars among all of the positions.
+				\end{ex}
+				By combining the previous two examples, we have proven the following theorem.
+				\begin{theorem}
+					\begin{align*}
+						[x^n] \frac{1}{(1 - x)^k} = {n + k - 1 \choose k - 1}
+					\end{align*}
+				\end{theorem}
+
+				\begin{defn}
+					Some integer $n$ has \textbf{composition} $(m_1, m_2, \ldots, m_k)$ if $m_1 + m_2 + \ldots + m_k = n$, where $m_i \ge 1, m_i \in \mathbb{Z}$. Note that the only difference from earlier is that $m_i \ge 1$ instead of $m_i \ge 0$.
+				\end{defn}
+
+				We have $\mathbb{N} = \{1, 2, 3, \ldots \}, w(a) = a$, which gives us:
+				\begin{align*}
+					\phi_{\mathbb{N}}(x) = x + x^2 + x^3 + \ldots = x(1 + x + x^2 + \ldots) = \frac{x}{1 - x}
+				\end{align*}
+
+				Note that $\phi_{\mathbb{N}}(x)$ is missing the object of size zero (the constant term).
+				\\ \\
+				Let $S = \overbrace{\mathbb{N} \times \mathbb{N} \times \ldots \times \mathbb{N}}^{k \text{ occurrences of } \mathbb{N} \text{ here}}$. We also define the weight as $w[(m_1, m_2, \ldots, m_k)] = m_1 + m_2 + \ldots + m_k$. Then:
+				\begin{align*}
+					\phi_S(x) = [\phi_{\mathbb{N}}(x)]^k = \frac{x^k}{(1 - x)^k}
+				\end{align*}
 \end{document}
