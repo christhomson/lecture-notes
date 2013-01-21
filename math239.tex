@@ -673,16 +673,96 @@
 				\begin{defn}
 					Some integer $n$ has \textbf{composition} $(m_1, m_2, \ldots, m_k)$ if $m_1 + m_2 + \ldots + m_k = n$, where $m_i \ge 1, m_i \in \mathbb{Z}$. Note that the only difference from earlier is that $m_i \ge 1$ instead of $m_i \ge 0$.
 				\end{defn}
+				
+				\begin{ex}
+					We have $\mathbb{N} = \{1, 2, 3, \ldots \}, w(a) = a$, which gives us:
+					\begin{align*}
+						\phi_{\mathbb{N}}(x) = x + x^2 + x^3 + \ldots = x(1 + x + x^2 + \ldots) = \frac{x}{1 - x}
+					\end{align*}
 
-				We have $\mathbb{N} = \{1, 2, 3, \ldots \}, w(a) = a$, which gives us:
-				\begin{align*}
-					\phi_{\mathbb{N}}(x) = x + x^2 + x^3 + \ldots = x(1 + x + x^2 + \ldots) = \frac{x}{1 - x}
-				\end{align*}
+					Note that $\phi_{\mathbb{N}}(x)$ is missing the object of size zero (the constant term).
+					\\ \\
+					Let $S = \overbrace{\mathbb{N} \times \mathbb{N} \times \ldots \times \mathbb{N}}^{k \text{ occurrences of } \mathbb{N} \text{ here}}$. We also define the weight as $w[(m_1, m_2, \ldots, m_k)] = m_1 + m_2 + \ldots + m_k$. Then:
+					\begin{align*}
+						\phi_S(x) = [\phi_{\mathbb{N}}(x)]^k = \frac{x^k}{(1 - x)^k}
+					\end{align*}
+					\lecture{January 21, 2013}
+					We're interested in finding $[x^k]x^k \frac{1}{(1 - x)^k}$.
+					\begin{align*}
+						[x^n]x^k \frac{1}{(1 - x)^k} &= [x^{n-k}] \frac{1}{(1 - x)^k} \\
+						&= {(n - k) + k - 1 \choose k - 1} \\
+						&= {n - 1 \choose k - 1}
+					\end{align*}
+				\end{ex}
 
-				Note that $\phi_{\mathbb{N}}(x)$ is missing the object of size zero (the constant term).
-				\\ \\
-				Let $S = \overbrace{\mathbb{N} \times \mathbb{N} \times \ldots \times \mathbb{N}}^{k \text{ occurrences of } \mathbb{N} \text{ here}}$. We also define the weight as $w[(m_1, m_2, \ldots, m_k)] = m_1 + m_2 + \ldots + m_k$. Then:
-				\begin{align*}
-					\phi_S(x) = [\phi_{\mathbb{N}}(x)]^k = \frac{x^k}{(1 - x)^k}
-				\end{align*}
+				\begin{ex}
+					We now want to know the number of compositions of $n$ (where $n \ge 1$) where we have an arbitrary number of parts. We have: $S = \mathbb{N} \union \mathbb{N}^2 \union \mathbb{N}^3 \union \mathbb{N}^4 \union \mathbb{N}^5 \union \ldots$. The weight function is the same as before \textendash{} the sum of the parts. That gives us:
+					\begin{align*}
+						\phi_S(x) = \sum_{k \ge 1} \phi_{\mathbb{N}^k}(x) = \sum_{k \ge 1} \bigg( \frac{x}{1 - x} \bigg)^k
+					\end{align*}
+
+					We want:
+					\begin{align*}
+						[x^n]\sum_{k \ge 1} \bigg( \frac{x}{1 - x} \bigg)^k
+					\end{align*}
+					Which is a composition of:
+					\begin{align*}
+						A(y) &= y + y^2 + y^3 + \ldots = y(1 + y + y^2 + \ldots) = \frac{y}{1 - y} \\
+						B(y) &= \frac{x}{1 - x}
+					\end{align*}
+					The composition is $A(B(x))$, but we need to be careful before using compositions. We can easily check that the constant of $B(x)$ is not zero, as required:
+					\begin{align*}
+						B(x) = \frac{x}{1 - x} = x(1 + x + x^2 + \ldots) \implies [x^0]B(x) = 0
+					\end{align*}
+					The composition is well-defined. So, we have:
+					\begin{align*}
+						\sum_{k \ge 1} \bigg( \frac{x}{1 - x} \bigg)^k = \frac{\frac{x}{1 - x}}{1 - \frac{x}{1 - x}} = \frac{x}{1 - 2x}
+					\end{align*}
+					We still need to figure out the coefficient $[x^n]\frac{x}{1 - 2x}$.
+					\begin{align}
+						[x^n] \frac{x}{1 - 2x} &= [x^{n - 1}] \frac{1}{1 - 2x} \\
+						&= [x^{n - 1}](1 + y + y^2 + \ldots) \\
+						&= [x^{n - 1}](1 + (2x) + (2x)^2 + \ldots) \\
+						&= 2^{n - 1}
+					\end{align}
+					(1) is a common, useful trick. We eliminate any instances of $x$ that are simply multiplied by something, by reducing the power of the coefficient we're looking for. (4) is true since every term is in the form $(2x)^k$.
+				\end{ex}
+
+				We might be able to avoid generating functions in some cases by using a combinatorial proof. Now, we'll look at an arbitrary, convoluted example where a combinatorial proof would not suffice. This aims to show that generating functions are solid and can apply in many more situations than combinatorial proofs.
+				
+				\begin{ex}
+					We want to find the number of compositions of $n$ with $2k$ parts, where the first $k$ parts are $\le 5$ and the last $k$ parts are $\ge 3$. 
+					\\ \\
+					A specific instance of this problem is when $n = 22$ and $k = 3$, we have:
+					\begin{align*}
+						(\underbrace{\dots}_{\le 5}&, \underbrace{\dots}_{\ge 3}) \\ \\
+						(\underbrace{1, 3, 5}_{\le 5}&, \underbrace{3, 6, 4}_{\ge 3})
+					\end{align*}
+					It's useful to think about what you're counting. In this case, you're counting the $k$-tuples, so this is the cartesian product of six sets (the first three being the set of positive integers $\le 5$ and the last three being the set of integers $\ge 3$).
+					\begin{align*}
+						\mathbb{N}_{\le 5} &= \{1, 2, 3, 4, 5\} \\
+						\mathbb{N}_{\ge 3} &= \{3, 4, 5, \ldots\}
+						\\ \\
+						S &= (\mathbb{N}_{\le 5})^k \times (\mathbb{N}_{\ge 3})^k
+					\end{align*}
+					The weight is the sum of the six individual numbers, since $\mathbb{N}_{\le 5}$ and $\mathbb{N}_{\ge 3}$'s weights are both defined by $w(a) = a$, which gives us:
+					\begin{align*}
+						\phi_{\mathbb{N}_{\le 5}}(x) &= x + x^2 + x^3 + x^4 + x^5 \\
+						\phi_{\mathbb{N}_{\ge 3}}(x) &= x^3 + x^4 + x^5 + \ldots
+					\end{align*}
+
+					We now apply the product lemma.
+				\end{ex}
+
+		
+	\newpage
+	\section{Clicker Questions}
+		\lecture{January 21, 2013}
+		\begin{itemize}
+			\item How many bijections are there from $\{1, \ldots, n\}$ to $\{1, \ldots, n\}$? $n!$, since you can't map two elements in the first set to the same one element in the second set.
+			\item Let $S$ be a set of objects with weight function $w$. Suppose that $S = A \union B$. Does $\phi_S(x) = \phi_A(x) + \phi_B(x)$? No, not always. The sum lemma only applies when $A$ and $B$ are partitions of $S$.
+			\item Let $S = \{(a, b) | a, b \ge 1 \in \mathbb{Z}\}, w[(a, b)] = a - b$. What is the generating function for $S$? There is no generating function for $S$, since it is not a power series. There are an infinite number of pairings \textendash{} that is, there are an infinite number of objects with the same weight.
+			\item Does $x^2 - x^4 + x^6 - x^8 + x^10 - \ldots$ have an inverse? No. There is no constant term that isn't equal to zero, therefore it does not have an inverse.
+			\item Is a composition of $A(x) = 1 + x + x^2 + x^3 + \ldots$ and $B(x) = \frac{1}{1 - x}$ a power series? No. $B(x)$ must have a constant term that is not zero in order for a composition to be acceptable.
+		\end{itemize}
 \end{document}
