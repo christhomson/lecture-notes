@@ -400,4 +400,115 @@
 				jr $31 
 				\end{verbatim}
 
+	\section{Procedures in MIPS} \lecture{January 18, 2013}
+		Recall the \verb+sum.asm+ program from earlier, which sums the numbers from 1 to $N$ (\$1), and puts the result in \$3:
+		
+		\begin{verbatim}
+			sum:             ; only needed for next example, sum10.asm
+			  add $3, $0, $0 ; $3 is the accumulator A.
+
+			loop:
+			  add $3, $3, $1 ; A = A + N
+			  lis $2
+			  .word -1
+			  add $1, $1, $2 ; A = A + (-1)
+			  bne $1, $0, loop
+
+			jr $31
+		\end{verbatim}
+
+		Now, let's create a program \verb+sum10.asm+ which sums the numbers from 1 to 10, and puts the result in \$3. We'll add the \verb+sum:+ label to the top of our \verb+sum.asm+ file, as indicated, so we have a way to jump to the \verb+sum.asm+ line (which is part of how procedures are called in MIPS).
+		
+		\begin{verbatim}
+			; PROLOGUE
+			sw $31, -4($30)  ; push word onto stack
+			lis $2
+			.word 4
+			sub $30, $30, $2
+			
+			; PROCEDURE CALL
+			lis $1
+			.word 10
+			lis $4
+			.word sum        ; address of sum procedure is in $4
+			jalr $4          ; puts old PC value into $31, jumps to $4
+
+			; EPILOGUE
+			lis $2
+			.word 4
+			add $30, $30, $2 ; restore stack pointer 
+			lw $31, -4($30)  ; restore $31
+			jr $31
+		\end{verbatim}
+
+		Note that if you ever get into an infinite loop while executing a MIPS program, you can push CTRL-C to forcefully end the process immediately.
+		\\ \\
+		We use \verb+jalr+ instead of \verb+jr+ so the \verb+sum+ routine knows how to get back. \verb+jalr+ is the only instruction that can access the contents of the \verb+PC+.
+		\\ \\
+		How do we actually run this program? We \verb+cat+ together the two programs! It really is that simple. You execute \verb+cat sum10.asm sum.asm | java cs241.binasm > foo.mips+ to get a MIPS program in binary.
+
+		\subsection{Recursion}
+			Recursion is nothing special. You need to save any local variables (which are stored in registers), including given parameters and the return address, onto the stack so we can change them back when we're done. We don't want subroutines (recursive calls) to mess with those values, so subroutines must preserve their own values. ``It's always good hygiene to save your registers.''
+			\\ \\
+			Let's build \verb+gcd.asm+, where \$1 = a, \$2 = b, and \$3 will hold the result. We will use the following algorithm:
+
+			\begin{align*}
+				gcd(a, b) = \begin{cases}
+					b & a = 0 \\
+					gcd(b \% a, a) & a \ne 0
+				\end{cases}
+			\end{align*}
+			
+			Here's \verb+gcd.asm+:
+
+			\begin{verbatim}
+				gcd:
+				  sw $31, -4($30)  ; save return address
+				  sw $1, -8($30)   ; and parameters
+				  sw $2, -12($30)
+				  lis $4
+				  .word 12
+				  sub $30, $30, $4
+
+				  add $3, $2, $0   ; tentatively, result = b
+				  beq $1, $0, done ; quit if a = 0
+				  div $2, $1       ; stores quotient in LO, remainder in HI
+				  add $2, $1, $0   ; copy a to $2
+				  mfhi $1          ; $1 <- b % a
+				  lis $4
+				  .word gcd
+				  jalr $4
+
+				done:
+				  lis $4
+				  .word 12
+				  add $30, $30, $4
+				  lw $31, -4($30)
+				  lw $31, -8($30)
+				  lw $2, -12($30)
+				  jr $31
+			\end{verbatim}
+
+			An \textbf{invariant} means if something is true as a pre-condition then it is always true as a post-condition.
+			\\ \\
+			Notice in the \verb+gcd.asm+ example, you aren't actually erasing the stack contents. If you're storing secret data, you should overwrite it with zeroes, or (ideally) garbage data. For assignment 2, at least, we can just leave our garbage lying around.
+		\subsection{Input and Output}
+			\verb+getchar+ and \verb+putchar+ simulate RAM, however they actually send the data to/from the user's keyboard/monitor. \verb+getchar+ is located at memory address \verb+0xffff0004+ and \verb+putchar+ is at address \verb+0xffff000c+. If you store or load a byte at either of these addresses, you will send or retrieve the byte to/from standard input (STDIN) or standard output (STDOUT). 
+			\\ \\
+			We will create an example program, \verb+cat.asm+, to copy input to output:
+
+			\begin{verbatim}
+			lis $1
+			.word 0xffff0004   ; address of setchar()
+			lis $3
+			.word -1           ; EOF signal
+
+			loop:
+			  lw $2, 0($1)     ; $2 = getchar()
+			  beq $2, $3, quit ; if $2 == EOF, then quit
+			  sw $2, 8($1)     ; putchar() since getchar() and putchar() are 8 apart
+			  beq $0, $0, loop
+
+			quit: jr $31
+			\end{verbatim}
 \end{document}
