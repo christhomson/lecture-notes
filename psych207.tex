@@ -298,4 +298,92 @@
 				fMRI machines can be setup with goggles for the subject or a prism to look through (at a screen) in order to show them stimuli for use in experiments. The same experiments are possible inside an fMRI -- the only difference is that the subject is lying in a large magnetic tube.
 				\\ \\
 				The level of brain activity in various regions is illustrated on results by a color scheme. The more yellow a region is, the more active it is. Red regions are less active. Results and statistics are often superimposed over an MRI image. Statistics could also be plotted, withe the \% change being plotted against time.
+	\section{Perception} \lecture{January 17, 2013}
+		\textbf{Housekeeping Note}: the first exam is next Thursday (January 24, 2013), and it will contain 30 multiple-choice questions and 2 short answer questions.
+		
+		\begin{itemize}
+			\item What our mind interprets is not a true representation of the world, but it's fairly close.
+			\item Our retinas are magical. They define edges and boundaries for the objects we see.
+			\item Fun fact: the retinal image is flipped left/right and upside down.
+			\item The brain fills in many gaps, and makes many assumptions. It simplifies our visual and auditory world, and helps to make sense of it.
+			\item The beauty of our cognitive architecture is we aren't actively aware of it.
+			\item The way we perceive size and other qualities depends on our past experiences with similar stimuli. Some inferences our brain makes based on past experiences can sometimes lead us astray.
+			\item Let's say you're looking at a book. The physical book is the \textbf{distal stimulus}, your retinal image of the book is the \textbf{proximal stimulus}, and your recognition of the object as a book is the \textbf{percept}.
+			\item The distal stimulus and percept are not precise copies of one another.
+			\item Perceived size, luminance, and color do not necessarily correspond in any simple way to the stimulus. Perception is not completely determined by the stimulus itself, it requires the perceiver's active participation.
+		\end{itemize}
+
+		\subsection{Bottom-Up Processes}
+			\begin{itemize}
+				\item Simple low-level functions that analyze for basic features, driven by stimuli.
+				\item Often referred to as \textbf{data-driven} or \textbf{stimulus-driven}.
+				\item Percepts are built from low-level features only.
+				\item There are three general classes of bottom-up processes: template matching, feature analysis, and prototype matching.
+			\end{itemize}
+			
+			\subsubsection{Template Matching}
+				\begin{itemize}
+					\item An external stimulus is matched with an internal template (a stored pattern in memory).
+					\item A pattern is compared to all templates in memory and identified by the template that best matches it.
+					\item Works well in machine vision applications, such as parsing the bank account/routing numbers on the bottom of cheques or the UPC code from a barcode.
+				\end{itemize}
+
+				There are a few problems with template matching, however.
+				\begin{itemize}
+					\item It needs lots of templates. You'd need an infinitely large cranium.
+					\item It does not explain how we recognize new objects, or create new templates in the first place.
+					\item It does not work well with surface variation of the stimuli (i.e. stimuli that are similar but not similar on the surface \textendash{} such as varying writing styles).
+				\end{itemize}
+
+			\subsubsection{Feature Analysis}
+				\begin{itemize}
+					\item Objects are composed of a combination of \underline{features}.
+					\item Features are small/local templates that can be combined in many ways.
+					\item The mind first recognizes individual features, then it recognizes the combination of them at a deeper level.
+					\item \underline{Examples}: pandemonium, recognition by components (RBC; involves complex features), and word reading.
+				\end{itemize}
+				
+				There are several advantages to feature analysis.
+				\begin{itemize}
+					\item It's more flexible than template matching.
+					\item It doesn't require nearly as many templates as in template matching (certainly not an infinite number of templates).
+				\end{itemize}
+
+				There is lots of evidence supporting feature analysis.
+				\begin{itemize}
+					\item \textbf{Visual search}. If you have a box filled with letters, most of which are curved letters, and you're asked to find the X in the box, it'll jump out quickly. If you're trying to find a target object within a group of objects, if the target object has the same basic features as the rest of the group, the search must happen \underline{serially} because the visual cortex can't process the question. The reaction time remains constant as the set size increases if parallel (automatic) processing is occurring, otherwise it grows linearly.
+					\item \textbf{Cortical feature detectors}. Recall these from the lecture on history.
+				\end{itemize}
+			\subsubsection{Prototype Matching}
+				\begin{itemize}
+					\item Matches a pattern to a stored, fuzzy representation called a \textbf{prototype}.
+					\item A prototype is an idealized representation of a class of objects.
+					\item Exact matching is not required.
+					\item When you pass the featural level, the representation is compared to a prototype.
+					\item The prototype for a class of objects differs from person to person based on their past experiences.
+					\item Back in the day, Palm Pilots used prototype matching to allow people to type letters by writing them out. They used fuzzy matching to match peoples' scribbles with the letters of the alphabet.
+				\end{itemize}
+		\subsection{Top-Down Processes}
+			\begin{itemize}
+				\item Often referred to as \textbf{theory-driven} or \textbf{conceptually-driven} processing.
+				\item Knowledge, theories, and expectations influence perception based on past experiences.
+				\item \underline{Examples}: context effect, and change blindness.
+			\end{itemize}
+
+			\subsubsection{Context Effect}
+				\begin{itemize}
+					\item Colors are influenced by their surrounding colors.
+					\item Dale Purves discovered that the way we perceive objects is determined by our historical success or failure with similar objects. This happens at the neural level as well.
+					\item A basic structure exists for the initial recognition, prior to any relevant experiences having occurred. This is the base case.
+					\item Lots of pruning occurs over time.
+					\item The gist of the context effect: context in which objects appear affects perception.
+					\item See \href{http://www.purveslab.net/seeforyourself/}{Dale Purves' website, Purves Lab} (read that out loud), for a demonstration of the context effect in action. In particular, take a look at the ``Brightness contrast with color: cube'' demo.
+				\end{itemize}
+
+			\subsubsection{Change Blindness}
+				\begin{itemize}
+					\item You won't perceive changes that don't change the meaning of what you're perceiving.
+					\item \underline{Flicker paradigm}: you need a break for the perceptual system to reset. You can't just go from the original image to a modified image (you'll notice the difference) \textendash{} you need a flicker between the images in order to not notice the difference.
+					\item We perceive objects for the gist of it. We don't perceive all of the little, minor details.
+				\end{itemize}
 \end{document}
