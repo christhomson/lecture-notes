@@ -437,7 +437,7 @@
 							}
 						}
 					}
-					\Return sum
+					\Return max
 				\end{algorithm}
 				
 				This is the \textbf{maximum subsequence problem}. The input is an array of integers $A[1\dots n]$, and the output is the consecutive run with the largest sum.
@@ -449,4 +449,215 @@
 				\\ \\
 				The running time of this program is $max \bigg\{ \sum_{i = 1}^{j} A[k] \big| 1 \le i \le j \le n \bigg\}$.
 			\end{ex}
+
+			\begin{ex}
+				\lecture{January 17, 2013}
+				Analyze the following algorithm.
+				\begin{algorithm}
+					\For{i = 1 to n}{
+						\For($L_1[i]$){j = 1 to i}{
+							\For($L_2[i, j]$){k = 1 to j}{
+								x = x + 1
+							}
+						}
+					}
+				\end{algorithm}
+
+				\begin{align*}
+					\sum_{i = 1}^{n} L_1(i) &= \sum_{i = 1}^{n} \bigg[\sum_{j = 1}^{i} L_2(i, j)\bigg] \\
+					&= \sum_{i = 1}^{n} \bigg[ \sum_{j = 1}^{i} \bigg[ \sum_{k = 1}^{j} \Theta(1) \bigg] \bigg] \\
+					&= \sum_{i = 1}^{n} \sum_{j = 1}^{i} \sum_{k = 1}^{j} 1 \\
+					&= \sum_{i = 1}^{n} \sum_{j = 1}^{i} j \\
+					&= \sum_{i = 1}^{n} \frac{i(i+1)}{2} \\
+					&= \frac{1}{2} \sum_{i = 1}^{n}(i^2 + i) \\
+					&= \frac{1}{2} \bigg[ \sum_{i = 1}^{n} i^2 + \sum_{i = 1}^{n} i \bigg] \\
+					&= \frac{1}{2} \bigg[ \frac{n(n+1)(2n+1)}{6} + \frac{n(n+1)}{2} \bigg] \\
+					&= \Theta(n^3)
+				\end{align*}
+
+				Alternatively, we could use a lazier process to determine that this algorithm is $O(n^3)$, wihch is less precise than saying the algorithm is $\Theta(n^3)$. The lazy way is to say each of the nested loops will run in $\le n$ operations in the worst case, which can be multiplied out to $n^3$.
+			\end{ex}
+
+		\subsection{Math Review}
+			\subsubsection{Exponentiation}
+				Exponents have a number of important properties, including:
+				\begin{align*}
+					b^0 &= 1 \\
+					b^1 &= b \\
+					b^{1/2} &= b^{0.5} = \sqrt{b} \\
+					b^{-1} &= \frac{1}{b} \\
+					b^a \cdot b^c &= b^{a + c} \\
+					(b^a)^c &= b^{ac}
+				\end{align*}
+
+			\subsubsection{Logarithms}
+				\begin{defn}
+					$\log_b a = c$ if and only if $a = b^c$. If $b = 2$, we write $\lg a$. 
+				\end{defn}
+
+				There are a number of log identities you should be aware of:
+				\begin{align}
+					\log_b (a \cdot c) &= \log_b a + \log_b c \\
+					\log \big( \frac{a}{c} \big) &= \log_b a - \log_b c \\
+					\log(a^c) &= c \cdot \log_b a \\
+					b^{\log_c a} &= a^{\log_c b} \\
+					\log_b a &= \frac{\log_c a}{\log_c b} 
+				\end{align}
+
+				Identity (1) is useful because it allows you to go from multiplication to addition. You can avoid nasty multiplication operations by using this identity.
+				\\ \\
+				Identity (4) is the prof's favorite. If $b$ and $c$ are constants, $\log_b n = \Theta(\log_c n)$ \textendash{} that is, we don't care about the base of the logarithm in the context of order notation.
+			\subsubsection{Recursive Definitions}
+				\begin{defn}
+					The \textbf{factorial} of a number $n$ is represented by $n!$. Informally, $n! = 1 \cdot 2 \cdot 3 \cdot \ldots \cdot n$. More formally:
+					\begin{align*}
+						n! = \begin{cases}
+							1 & n = 0 \\
+							n \cdot (n - 1)! & n > 0
+						\end{cases}
+					\end{align*}
+				\end{defn}
+
+				\begin{defn}
+					The \textbf{fibonacci numbers} are defined by:
+					\begin{align*}
+						F_i = \begin{cases}
+							0 & i = 0 \\
+							1 & i = 1 \\
+							F_{i - 2} + F_{i - 1} & i > 1
+						\end{cases}
+					\end{align*}
+				\end{defn}
+
+			\subsubsection{Summations}
+				There are a few common summations you should be aware of:
+				\begin{align*}
+					\sum_{i = 1}^{n} i &= \frac{n(n+1)}{2} \\
+					\sum_{i = 1}^{n} i^2 &= \frac{n(n+1)(2n+1)}{6} \\
+					\sum_{i = 1}^{n} i^k &\approx \frac{n^{k + 1}}{k + 1} = \Theta(n^{k + 1})
+				\end{align*}
+
+				You should also be familiar with the \textbf{geometric series}:
+				\begin{align*}
+					\sum_{i = 0}^{n} a_i &= \frac{a^{n + 1} - 1}{a - 1} \\
+					\sum_{i = 0}^{\infty} a_i &= \frac{1}{1 - a} \text{ where } a < 1
+				\end{align*}
+		\subsection{Useful Properties of Order Notation}
+			\begin{enumerate}
+				\item $f(n) = \Theta(a \cdot f(n))$ for $a > 0$.
+				\item Transitivity. If $f(n) = O(g(n))$ and $g(n) = O(h(n))$, then $f(n) = O(h(n))$.
+				\item $[f(n) + g(n)] = \Theta(\max\{ f(n), g(n) \})$
+				\item $a_0 + a_1 x^1 + a_2 x^2 + \ldots + a_n x^n = \Theta(x^n)$, where $a_i$ are constants, $x > 1$, and $a_n > 0$. This is just a common case of (3).
+				\item $n^k = O(a^n)$ for $a > 1$.
+				\item $\log^{k} n = O(b^b)$ for $k > 0$ and $b > 0$.
+			\end{enumerate}
+
+			You can use these properties in proofs \emph{unless} you're requested to write a proof from first principles.
+
+		\subsection{Orders We Aim For}
+			When we are designing an algorithm, we aim for:
+			\begin{enumerate}
+				\item Constant time: $\Theta(1)$
+				\item Logarithmic time: $\Theta(\lg n)$
+				\item Poly log: $\Theta((\lg n)^{k})$
+				\item Linear complexity: $\Theta(n)$
+				\item $n \log n$ complexity: $\Theta(n \lg n)$
+				\item Quadratic: $\Theta(n^2)$
+				\item Cubic: $\Theta(n^3)$
+				\item Polynomial: $\Theta(n^k)$
+				\item Exponential: $\Theta(b^n)$
+			\end{enumerate}
+
+		\subsection{Maximum Subsequence Problem}
+			Recall the maximum subsequence problem from earlier: \\
+			\begin{algorithm}[H]
+				max = $-\infty$\;
+				\For{i = 1 to n}{
+					\For{j = 1 to n}{
+						total = 0\;
+						\For{k = i to j}{
+							total = total + A[k]\;
+							\If{total > max}{
+								max = total\;
+							}
+						}
+					}
+				}
+				\Return max
+			\end{algorithm}
+			
+			Also, recall our sample sequence $A$:
+			\begin{tabular}{|c|c|c|c|c|c|c|}
+				\hline 2 & -4 & 1 & 3 & -2 & 8 & -1 \\ \hline
+			\end{tabular}
+			\\ \\	
+			Note that the longest run (the subsequence with the largest sum) in this sample sequence is from 1 to 8, which is a subsequence that sums to 10.
+			\\ \\
+			The maximum subsequence problem has many applications. It is used for DNA matching, for instance. There is a score for accuracy / closeness of the match. You get a score for various runs within a DNA sequence. If there is a long enough run(s) then you have probably identified the correct person. Google may also use the maximum subsequence problem as part of its algorithm for determining typos or other terms to match a particular search query (such as the word's plural form).
+			\\ \\
+			Our na\"ive solution is not good if $n$ is sufficiently large, such as $10,000$ or $1,000,000,000,000$. Notice that the innermost loop recalculates the sum unnecessarily every time $j$ is incremented. You really just need to add the new element to the previous result. That gives us this more efficient algorithm: \\
+			\begin{algorithm}[H]
+				max = $-\infty$\;
+				\For{i = 1 to n}{
+					total = 0\;
+					\For{j = i to n}{
+						total = total + A[j]\;
+						\If{total > max}{
+							max = total\;
+						}
+					}
+				}
+				\Return max
+			\end{algorithm}
+
+			This algorithm runs in $O(n^2)$ time. We could do better, but that's okay for now. Our code is now 10,000 times faster on an input of size 10,000.
+	\section{Abstract Data Types}
+		\subsection{Stack}
+			A \textbf{stack} is a collection of items, which supports the operations \verb+push+ (insert an item), \verb+pop+ (remove most recently inserted item), \verb+peek+ (look at the last item), and \verb+isEmpty+. \verb+push+ and \verb+pop+ are the most commonly supported operations.
+			\subsubsection{Stack Implementations}
+				Common ways to implement a stack are:
+				\begin{itemize}
+					\item \textbf{Linked List}. You maintain a pointer to the top of the stack. When you \verb+push+ or \verb+pop+, you change your pointer to the next or previously item as appropriate.
+					\item \textbf{Array}. You keep track of where the last item is in the array.
+				\end{itemize}
+		\subsection{Queue}
+			A \textbf{queue} is a data structure where you insert at the end and remove from the front, just like the way a queue (a lineup) works in real life. 
+			\\ \\
+			Implementations are similar to implementing a stack. You maintain pointers to the start and end of the array or linked list.
+
+	\section{Recursive Analysis}
+		We are going to analyze \textbf{mergesort}. Recall: mergesort involves sorting the two halves separately, then merging the sorted items into a single list again. We merge items $(1 \ldots n/2)$ and $(n/2 + 1 \ldots n)$ separately, then merge the two lists.
+		\\ \\
+		The number of operations mergesort requires is:
+		\begin{align*}
+			T_{ms}(n) &= T_{ms}\big( \frac{n}{2} \big) + T_{ms}\big( \frac{n}{2} \big) + n \\
+			&= 2T_{ms}\big( \frac{n}{2} \big) + n
+			\\ \\
+			T_{ms}(1) &= 1 \text{ (base case)}
+		\end{align*}
+		
+		The method you use here is \textbf{guess and check}. For example, for $n = 4$, we have:
+		\begin{align*}
+			T_{ms} (4) &= 2T_{ms}(2) + 4 \\
+			&= 2(2 T_{ms}(1) + 2) + 4 \\
+			&= 4T_{ms}(1) + 4 + 4 \\
+			&= 4 + 4 + 4
+			\\ \\
+			T_{ms}(8) &= 8 + 8 + 8 + 8
+			\\ \\
+			T_{ms}(n) &= n \cdot \lg n
+		\end{align*}
+
+		You can check this with induction. That is, assuming this holds for $n = 2$, show that it holds for any $n$. If $T_{ms}(n) = n \lg n$, then:
+		\begin{align*}
+			T_{ms}(n) &= 2 T_{ms}\big( \frac{n}{2} \big) + n \\
+			&= 2 \cdot \frac{n}{2} \cdot \lg \frac{n}{2} + n \\
+			&= n \cdot \lg \frac{n}{2} + n \\
+			&= n \cdot (\lg n - \log 2) + n \text{ by log identity} \\
+			&= n(\lg n - 1) + n \\
+			&= n \lg n - n + n \\
+			&= n \lg n
+		\end{align*}
+
+		Therefore, mergesort has time $\Theta(n \lg n)$.
 \end{document}
