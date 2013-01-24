@@ -176,7 +176,7 @@
 			\subsubsection{Running MIPS Programs}
 				Upon logging in to the \verb+student.cs+ servers, run \verb+source ~cs241/setup+ in order to add the required executables to your \verb+PATH+. Then, when given a MIPS executable called \verb+eg0.mips+, you can run \verb+java mips.twoints eg0.mips+ in order to run the program.
 				\\ \\
-				\verb+mips.twoints+ is a Java program that requests values for registers \$1 and \$2 and then runs the given MIPS program.
+				\verb+mips.twoints+ is a Java program that requests values for registers \$1 and \$2 and then runs the given MIPS program. There are other MIPS runner programs, such as \verb+mips.array+, which populate the 31 registers in different ways.
 			\subsubsection{Creating MIPS Programs}
 			Start with \verb+vi thing.asm+ (or use your favorite editor). Inside this file, you'll create an \textbf{assembly language file}, which is a textual representation of the binary file you want to create. Each line in this file should be in the form \verb+.word 0xabcdef12+ (that is, each line should start with \verb+.word 0x+ -- the \verb+0x+ is a convention that indicates that hex follows). You can add comments onto the end of lines, starting with a semi-colon (Scheme style).
 			\\ \\
