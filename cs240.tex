@@ -611,20 +611,6 @@
 			\end{algorithm}
 
 			This algorithm runs in $O(n^2)$ time. We could do better, but that's okay for now. Our code is now 10,000 times faster on an input of size 10,000.
-	\section{Abstract Data Types}
-		\subsection{Stack}
-			A \textbf{stack} is a collection of items, which supports the operations \verb+push+ (insert an item), \verb+pop+ (remove most recently inserted item), \verb+peek+ (look at the last item), and \verb+isEmpty+. \verb+push+ and \verb+pop+ are the most commonly supported operations.
-			\subsubsection{Stack Implementations}
-				Common ways to implement a stack are:
-				\begin{itemize}
-					\item \textbf{Linked List}. You maintain a pointer to the top of the stack. When you \verb+push+ or \verb+pop+, you change your pointer to the next or previously item as appropriate.
-					\item \textbf{Array}. You keep track of where the last item is in the array.
-				\end{itemize}
-		\subsection{Queue}
-			A \textbf{queue} is a data structure where you insert at the end and remove from the front, just like the way a queue (a lineup) works in real life. 
-			\\ \\
-			Implementations are similar to implementing a stack. You maintain pointers to the start and end of the array or linked list.
-
 	\section{Recursive Analysis}
 		We are going to analyze \textbf{mergesort}. Recall: mergesort involves sorting the two halves separately, then merging the sorted items into a single list again. We merge items $(1 \ldots n/2)$ and $(n/2 + 1 \ldots n)$ separately, then merge the two lists.
 		\\ \\
@@ -660,4 +646,17 @@
 		\end{align*}
 
 		Therefore, mergesort has time $\Theta(n \lg n)$.
+	\section{Abstract Data Types}
+		\subsection{Stack}
+			A \textbf{stack} is a collection of items, which supports the operations \verb+push+ (insert an item), \verb+pop+ (remove most recently inserted item), \verb+peek+ (look at the last item), and \verb+isEmpty+. \verb+push+ and \verb+pop+ are the most commonly supported operations.
+			\subsubsection{Stack Implementations}
+				Common ways to implement a stack are:
+				\begin{itemize}
+					\item \textbf{Linked List}. You maintain a pointer to the top of the stack. When you \verb+push+ or \verb+pop+, you change your pointer to the next or previously item as appropriate.
+					\item \textbf{Array}. You keep track of where the last item is in the array.
+				\end{itemize}
+		\subsection{Queue}
+			A \textbf{queue} is a data structure where you insert at the end and remove from the front, just like the way a queue (a lineup) works in real life. 
+			\\ \\
+			Implementations are similar to implementing a stack. You maintain pointers to the start and end of the array or linked list.
 \end{document}
