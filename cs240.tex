@@ -8,6 +8,9 @@
 \usepackage{pgfplots}
 \usepackage[lined]{algorithm2e}
 \usepackage{hyperref}
+\usepackage{qtree}
+\usepackage{float}
+\usepackage{cleveref}
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
 
@@ -20,6 +23,7 @@
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
 
 \begin{document}
+	\let\ref\Cref
 
 	\title{\bf{CS 240: Data Structures and Data Management}}
 	\date{Winter 2013, University of Waterloo \\ \center Notes written from Alejandro L\'opez-Ortiz's lectures.}
@@ -652,11 +656,82 @@
 			\subsubsection{Stack Implementations}
 				Common ways to implement a stack are:
 				\begin{itemize}
-					\item \textbf{Linked List}. You maintain a pointer to the top of the stack. When you \verb+push+ or \verb+pop+, you change your pointer to the next or previously item as appropriate.
-					\item \textbf{Array}. You keep track of where the last item is in the array.
+					\item \textbf{Linked List}. You maintain a pointer to the top of the stack. When you \verb+push+ or \verb+pop+, you change your pointer to the next or previously item as appropriate. This method is more flexible, but pointers can be a pain.
+					\item \textbf{Array}. You keep track of where the last item is in the array. You may need to re-size your array, but at least you don't have to worry about pointers.
 				\end{itemize}
 		\subsection{Queue}
-			A \textbf{queue} is a data structure where you insert at the end and remove from the front, just like the way a queue (a lineup) works in real life. 
+			A \textbf{queue} is a data structure where you \verb+insert+ at the end and remove (\verb+dequeue+) from the front, just like the way a queue (a lineup) works in real life. 
 			\\ \\
 			Implementations are similar to implementing a stack. You maintain pointers to the start and end of the array or linked list.
+		\subsection{Priority Queue} \lecture{January 22, 2013}
+			A priority queue is a collection of elements similar to a queue, except each element has a priority assigned to it and elements are \verb+pop+ped in order of priority (not in order of arrival).
+			\\ \\
+			A priority queue supports these operations:
+			\begin{itemize}
+				\item \verb+insert(x, p)+ \textendash{} inserts item $x$ with priority $p$.
+				\item \verb+deleteMin()+ \textendash{} deletes. Used when the queue is defined to be such that lower numbers indicate higher priority. This deletes the element with the lowest $p$.
+				\item \verb+deleteMax()+ \textendash{} deletes. Used when the queue is defined to be such that higher numbers indicate higher priority. This deletes the element with the highest $p$.
+				\item \verb+peek()+ \textendash{} view the top element without deleting it.
+			\end{itemize}
+
+			\subsubsection{Applications of Priority Queues}
+				\begin{itemize}
+					\item To-do lists in real life.
+					\item To-do lists in the operating system (used for multitasking; the processor can only really do one thing at a time, so it does a bit of each task as determined by priority).
+					\item Sorting. Insert the elements from an array $A$ and then when you delete them you'll get them back in sorted order.
+				\end{itemize}
+				
+				Priority queues can be used for sorting purposes. It allows us to sort without worrying about the underlying sorting implementation. However, if we want to know how good of a sorting algorithm it is, we would need to examine the implementation of \verb+insert+ and \verb+deleteMin+. Here's some pseudo-code for sorting with a priority queue: \\
+				\begin{algorithm}[H]
+					\For{i = 0 to n - 1}{
+						PQ.insert(A[i], A[i]); // key and priority are the same
+					}
+					\For{i = 0 to n - 1}{
+						A[i] = PQ.deleteMin();
+					}
+				\end{algorithm}
+
+			\subsubsection{Implementations of Priority Queues}
+				\begin{enumerate}
+					\item Use \textbf{unsorted arrays}.
+						\begin{itemize}
+							\item \verb+insert(x, p)+ takes O(1) time because you simply place the element at the end of the array.
+							\item \verb+deleteMin()+ takes O(n) time since you need to walk the array (keeping track of the current min you've seen so far), then replace the deleted element with the last element of the array. O(n) + O(1) = O(n) time.
+						\end{itemize}
+						Sorting with unsorted arrays takes O($n^2$) time, since for each element you're deleting you need to walk the entire array. Clearly, this is not a good sorting algorithm.
+					\item Use \textbf{heaps}. A heap is a \underline{complete} binary tree that has the \underline{heap property}.
+						\\ \\
+						Recall: a \textbf{complete (or perfect) binary tree} is defined as a binary tree such that:
+						\begin{itemize}
+							\item Every node has 0 or 2 children, except the rightmost leaf in the bottom level, which may have one only child.
+							\item All the leafs appear consecutively in the bottom two levels.
+							\item Deeper leaves are leftmost in the tree.
+						\end{itemize}
+
+						You can think of a complete binary tree as trying to fill the tree from left-to-right, going deeper and deeper as necessary.
+						\begin{figure}[H]
+							\Tree [.0 
+								[.1 [.3 [.7 ] [.8 ]].3 [.4 [.9 ] [.10 ] ].4 ].1 
+								[.2 [.5 [.11 ] ].5 [.6 ] ].2 ].0
+							\caption{A complete binary tree.}
+						\end{figure}
+						The \textbf{heap property} is the idea that the priority of a node is higher than that of all of its children (if any). In a min-PQ, this means the $p$ value of all children is a larger number than that of the parent. In a max-PQ, the childrens' $p$ values must all be smaller than that of their parent.
+
+						\begin{figure}[H]
+							\Tree [.5
+								[.10 [.12 ] [.14 ]].10
+								[.7 [.13 ] [.8 ]].7 ].5
+							\caption{\label{fig:minPQheap} A min-PQ tree that satisfies the heap property.}
+						\end{figure}
+
+						You can have multiple elements with the same priority. You settle those disputes arbitrarily.
+						\\ \\
+						This is \underline{not} a binary search tree, so the larger element does not need to be on the right. There is no order among siblings, as seen in \ref{fig:minPQheap}. There is also no relationship with the parent's siblings \textendash{} it's only a relationship with the parent.
+						\\ \\
+						Next, we'll look into \textbf{filling holes}. If you delete an element from the tree, you delete the element at the top, but then you have a hole that needs to be filled. But how? We take the last element in the tree (the rightmost element at the bottom level) and swap it into the top position, then we get it to \textbf{boogie down}.
+						\\ \\
+						The process of \textbf{booging down} is where an element (in this case, the top element) looks at its children and swaps with a child that has lower priority than itself (if any). It does this recursively. It continues to recurse until the child is of higher priority than its parent, or until you reach a leaf node.
+						\\ \\
+						This lecture is incomplete.	
+				\end{enumerate}
 \end{document}
