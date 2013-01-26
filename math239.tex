@@ -847,8 +847,112 @@
 				
 				\begin{ex}
 					Let $S_n$ be the set of compositions into odd numbers of $n$. $|S_n| = |S_{n - 1}| + |S_{n - 2}|$ for $n \ge 2$. $S_n$ is partitioned by $S_{n - 1}$ and $S_{n - 2}$. Is there a bijection between $S_n$ and $S_{n - 1} \cup S_{n - 2}$?
+					\\ \\
+					Let's look at the case where $n = 5$. We have: \lecture{January 25, 2013}
+					\begin{align*}
+						\overbrace{\{ (1, 1, 1, 1, 1), (3, 1, 1), (1, 3, 1), (1, 1, 3), (5) \}}^{S_n} \\
+						\{ \underbrace{(1, 1, 1, 1), (3, 1), (1, 3)}_{S_{n - 1}}, \underbrace{(1, 1, 1), (3)}_{S_{n - 2}} \} 
+					\end{align*}
+					Notice that each element in $S_{n - 1}$ and $S_{n - 2}$ can be obtained from $S_n$ by either removing the last element entirely, or by subtracting 2 from the last element. That's the bijection we're looking for, which we will now define more formally as $f : S_n \to S_{n - 1} \cup S_{n - 2}$:
+					\begin{align*}
+						f(a_1, \ldots, a_k) = \begin{cases}
+							(a_1, \ldots, a_{k - 1}) & a_k = 1 \\
+							(a_1, \ldots, a_k - 2) & a_k \ge 3
+						\end{cases}
+					\end{align*}
+					Note that $f(a_1, \ldots, a_k)$ is undefined for $1 < k < 3$, but that's okay because we're only interested in odd natural numbers. 
+					\\ \\
+					We have to somehow show that $f$ actually is a bijection. We can do that by constructing its inverse. In our case, the inverse is simply providing an inverse procedure.
+					\\ \\
+					Therefore, $|S_n| = |S_{n - 1}| + |S_{n - 2}|$, which is a general property of bijections.
 				\end{ex}
+	
+	\section{Binary Strings}
+		\begin{defn}
+		A \textbf{binary string} is a string composed of 0s and 1s. For example, $011001110011$ is a binary string.
+		\end{defn}
+
+		\begin{defn}
+			We define the operation of \textbf{concatenation of two binary strings} $a_1, a_2$ as $a_1 a_2$. For example, if $a_1 = 110$ and $a_2 = 011$, the concatenation $a_1 a_2 = 110011$.
+		\end{defn}
+
+		\begin{defn}
+			The \textbf{concatenation $AB$ of two sets} ($A$ and $B$) of binary strings is defined as all possible strings formed as concatenations of one string from set $A$ followed by one string of set $B$. For example, if $A = \{ 011, 11 \}$ and $B = \{10, 0\}$, then $AB = \{ 01110, 0110, 1110, 110 \}$.
+		\end{defn}
+
+		\begin{defn}
+			Suppose $A$ is a set of strings. Then $A^k = \underbrace{AAAAA \ldots A}_{k \text{ times}}$.
+		\end{defn}
+
+		\begin{defn}
+			We define $A^\star = \{ \epsilon \} \cup A \cup A^2 \cup A^3 \cup \ldots$, where $\epsilon$ represents the empty string.
+		\end{defn}
+
+		\begin{ex}
+			What is $\{ 0, 1 \}^\star$? It's the set of \emph{all} binary strings.
+		\end{ex}
+
+		\begin{ex}
+			What's $\{ 0, 1 \}^5$? $\{ 0, 1 \}^5 = \{ 0, 1 \} \{ 0, 1 \} \{ 0, 1 \} \{ 0, 1 \} \{ 0, 1 \}$. $\{0, 1\}^5$ is the set of all binary strings of length 5.
+		\end{ex}
+
+		\begin{ex}
+			Describe the set $S$ of all binary strings with no three consecutive 1s. For example: $a = 011000\underline{111}01001 \not \in S$, $b = 0\underline{111}10 \not \in S$, but $c = 0110010011011 \in S$. We aim to express $S$ using expression $\star$ concatenation.
+			\\ \\
+			Let's take a second look at $c$.
+			\begin{align*}
+				c = \underbrace{0,110,0,10,0,110}_{(1)},\underbrace{11}_{(2)} \in S
+			\end{align*}
+			
+			\begin{enumerate}
+				\item A sequence of at most two ones followed by zero, repeated: $\{ 0, 10, 110 \}^\star$
+				\item A sequence of zero, one, or two ones: $\{ \epsilon, 1, 11 \}$.
+			\end{enumerate}
+
+			Therefore, $S = \{0, 10, 110\}^\star \{ \epsilon, 1, 11 \}$. Note that $\epsilon$ is an element of $\{ \text{anything} \}^\star$.
+		\end{ex}
+
+		\begin{defn}
+			A \textbf{block} in a binary string is equal to the maximum sequence of 0s or 1s.
+		\end{defn}
 		
+		\begin{ex}
+			List all the blocks in the string $1100011110110101$.
+			\begin{align*}
+				\underbrace{11} \underbrace{000} \underbrace{1111} \underbrace{0} \underbrace{11} \underbrace{0} \underbrace{1} \underbrace{0} \underbrace{1}
+			\end{align*}
+		\end{ex}
+
+		\begin{ex}
+			Describe the set $S$ of strings with no blocks of length 2. For example, $a = 10\underline{11}000101 \not \in S$, but $b = 1110111000101000 \in S$.
+
+			Let's take another look at $b$.
+			\begin{align*}
+				b = \underbrace{111}_{(1)},\underbrace{0111,0001,01}_{(2)},\underbrace{000}_{(3)} \in S
+			\end{align*}
+
+			\begin{enumerate}
+				\item A sequence of ones, of any length other than length 2: $\{ \epsilon, 1, 111, 1111, 11111, \ldots \}$.
+				\item A sequence of zeroes (of any non-zero length other than length 2), followed by a sequence of ones (of any non-zero length other than length 2), repeated: $[ \{0, 000, 0000, \ldots \} \{1, 111, 1111, \ldots \} ]^\star$.
+				\item A sequence of zeroes, of any length other than length 2: $\{ \epsilon, 0, 000, 0000, 00000, \ldots \}$.
+			\end{enumerate}
+
+			It's important to note that $\{ 1, 111, 1111, \ldots, 0, 000, 0000, \ldots \}^\star$ does not work because you could pick two zeroes or two ones consecutively, which is not allowed. You have to be very careful that you don't generate strings that you don't want to generate.
+		\end{ex}
+
+		\subsection{Generating Functions for Strings}
+			We'd like to have something like the product lemma but for strings.
+			\\ \\
+			Let $S$ be the set of binary strings. Then the generating function for $S$ is defined as:
+			\begin{align*}
+				\phi_S(x) = \sum_{n \ge 0} a_n x^n \text{ where } a_n \text{ is the number of strings of length } n \in S
+			\end{align*}
+
+			\begin{ex}
+				Let $A = \{0, 01\}$ and $B = \{0, 10\}$. Their generating functions are $\phi_A(x) = \phi_B(x) = x + x^2$. What is the generating function for $AB$?
+				\\ \\
+				Next time.
+			\end{ex}
 	\newpage
 	\section{Clicker Questions}
 		\lecture{January 21, 2013}
