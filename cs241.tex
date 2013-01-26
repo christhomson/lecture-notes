@@ -5,6 +5,7 @@
 \usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage{amsmath}
+\usepackage[lined]{algorithm2e}
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
 
@@ -582,4 +583,91 @@
 				The scanner will check hex numbers to ensure their general format is correct. That is, it will let you know that \verb+0xg+ is not a valid hex number. However, it may or may not check the ranges of numbers.
 				\\ \\
 				One common hiccup is not to throw an error when you are given \verb+.word 10, $1+, which is not valid. \verb+.word+ commands can only take one number, in decimal, hex, or a label identifier.
+	\section{Outline of an Assembler} \lecture{January 23, 2013}
+		You'll be writing a two-pass assembler.
+		\begin{enumerate}
+			\item \textbf{Pass 1} \textendash{} analysis (build intermediate representation, construct symbol table).
+			\item \textbf{Pass 2} \textendash{} synthesis (construct equivalent MIPS binary machine code and output it).
+		\end{enumerate}
+
+				\subsection{Pass 1 \textendash{ } Analysis}
+			Pass 1 should generally follow this pseudocode: \\
+			\begin{algorithm}[H]
+				location\_counter = 0;\
+				\For{every line of input in source file}{
+					read the line\;
+					scan line into a sequence of tokens\;
+					\For{each LABEL at the start of the sequence}{
+						\If{LABEL is already in the symbol table}{
+							output ERROR to standard error\;
+							quit\;
+						}
+						add(label, location\_counter) to symbol table
+					}
+
+					\If{next token is an OPCODE}{
+						\If{remaining tokens are NOT exactly what is required by the OPCODE}{
+							output ERROR to standard error\;
+							quit\;
+						}
+						output a representation of the line to the intermediate representation (which can be text, a token sequence, etc.)\;
+						location\_counter += 4\;
+					}
+				}
+			\end{algorithm}
+			
+			\subsubsection{Efficient Symbol Tables}
+					\textbf{Scheme}:
+					\begin{verbatim}
+						(define st (make-hash))
+						(hash-set! st ``foo'' 42)
+						(hash-ref st ``foo'' #f) ; returns #f if key not found
+
+						(hash-ref st ``foo #f) => 42
+						(hash-ref st ''bar`` #f) => #f
+					\end{verbatim}
+				\textbf{C++}:
+					\begin{verbatim}
+						using namespace std;
+						#include <map>
+						#include <string>
+
+						map<string, int> st;
+						st[``foo''] = 42;
+
+						// Incorrect way of accessing elements:
+						x = st[``foo'']; // x gets 42
+						y = st[``bar'']; // y gets 0, (bar, 0) gets added to st.
+
+						// Correct way of accessing elements:
+						if (st.find(``biff'') &=&  st.end()) { ... not found ... }
+					\end{verbatim}
+
+					Why do we use \verb+map+s? It's more efficient because it converts strings into numbers in order to make lookups more performant.
+
+			\subsubsection{The Supplied Scanners}
+			The supplied scanners will find a sequence of tokens on the given line for you. For each token, you'll get a tuple (kind, lexene, value), where the lexene is the literal text of the token. For example, take the line \verb+foo: beq $3, $6, -2\verb+. The provided scanners will return a list with this data:
+			\begin{itemize}
+				\item (LABEL, ``for:'', ?)
+				\item (OPCODE, ``beq'', ?)
+				\item (REGISTER, ``\$3'', 3)
+				\item (COMMA, ``,'', ?)
+				\item (REGISTER, ``\$6'', 6)
+				\item (COMMA, ``,'', ?)
+				\item (INT, ``-2'', -2)
+			\end{itemize}
+				\subsection{Pass 2 \textendash{} Synthesis}
+					Pass 2 should generally follow this pseudocode:
+					\begin{algorithm}
+						location\_counter = 0\;
+						\For{each OPCODE in the intermediate representation}{
+							construct corresponding MIPS binary instruction (inside of an int variable)\;
+							output the instruction\;
+							location\_counter += 4;
+						}
+					\end{algorithm}
+
+					\subsubsection{Creating MIPS Binary Instructions}
+						We can form a MIPS binary instruction using a template and appropriate values for any variables in the command (usually denoted $s$, $t$, and $d$). \\ \\
+						TODO - finish discussing bitwise operators, etc.
 \end{document}
