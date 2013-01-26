@@ -623,7 +623,7 @@
 						&= \underbrace{\bigg[ \sum_{a \in A} x^{\alpha(a)} \bigg]}_{\phi_A(x)} \cdot \underbrace{\bigg[ \sum_{b \in B} x^{\beta(b)} \bigg]}_{\phi_B(x)}
 					\end{align*}
 				\end{proof}
-
+			
 				\begin{ex}
 					Given integers $n \ge 0$ and $k \ge 0$, how many $k$-tuples $(m_1, m_2, \ldots, m_k)$ (where $m_i \ge 0, m_i \in \mathbb{Z}$) exist where $m_1 + m_2 + \ldots + m_k = n$?
 					\\ \\
@@ -751,9 +751,103 @@
 						\phi_{\mathbb{N}_{\ge 3}}(x) &= x^3 + x^4 + x^5 + \ldots
 					\end{align*}
 
-					We now apply the product lemma.
+					\lecture{January 23, 2013}
+					We can expand the generating functions $\phi_{\mathbb{N}_{\le 5}}(x)$ and $\phi_{\mathbb{N}_{\ge 3}}(x)$.
+					\begin{align*}
+						\phi_{\mathbb{N}_{\le 5}}(x) &= x + x^2 + x^3 + x^4 + x^5 \\
+						&= x(1 + x + x^2 + x^3 + x^4) \\
+						&= x \bigg( \frac{1 - x^5}{1 - x} \bigg)
+						\\ \\
+						\phi_{\mathbb{N}_{\ge 3}}(x) &= x^3 + x^4 + x^5 + \ldots \\
+						&= x^3(1 + x + x^2 + \ldots) \\
+						&= \frac{x^3}{1 - x}
+					\end{align*}
+
+					Now, we have $S = (\mathbb{N}_{\le 5})^k \times (\mathbb{N}_{\ge 3})^k$ with weight function $w[(a_1, \ldots, a_2k)] = a_1 + a_2 + \ldots + a_{2k}$. By the product lemma, we get:
+					\begin{align*}
+						\phi_S(x) &= x^k \bigg(\frac{1 - x^5}{1 - x}\bigg)^k \bigg( \frac{x^3}{1 - x} \bigg)^k \\
+						&= x^{4k}(1 - x^5)^k (1-x)^{-2k}
+					\end{align*}
+					We're still interested in finding $[x^n]\phi_S(x)$. This becomes tedious, but the general idea is:
+					\begin{align*}
+						[x^n] \underbrace{x^{4k}}_{\text{collapse into } [x^n] \text{ to become } [x^{n - 4k}]} \cdot \underbrace{(1 - x^5)^k}_{\text{expand with binomial theorem}} \cdot \underbrace{(1 - x)^{-2k}}_{\text{ use formula } [x^n]\frac{1}{(1 - x)^k}}
+					\end{align*}
+					After much tedious work, you'll discover that the final result is:
+					\begin{align*}
+						[x^n] \phi_S(x) = \sum_{i = 0}^{\lfloor \frac{n - 4k}{5} \rfloor} (-1)^i {k \choose i} {n - 5i - 2k - 1 \choose 2k - 1}
+					\end{align*}
+
+					This couldn't have been found with a combinatorial proof. That's why generating functions are powerful \textendash{} they work even in convoluted situations like this one.
 				\end{ex}
 
+				\begin{ex}
+					We're interested in the number of compositions of $n$ where all parts are odd. There can be an arbitrary number of parts.
+					\\ \\
+					For example, with $n = 5$, the five solutions are:
+					\begin{align*}
+						\{ (1, 1, 1, 1, 1), (5), (3, 1, 1), (1, 3, 1), (1, 1, 3) \}
+					\end{align*}
+					We'll define $n = 0$ to have a unique composition (), the empty tuple.
+					\\ \\
+					We have $\mathbb{N}_{\text{odd}} = \{1, 3, 5, 7, \ldots\}$, with its weight function defined to be $w(a) = a$ for any $a \in \mathbb{N}_{\text{odd}}$. That gives us its generating function:
+					\setcounter{equation}{0}
+					\begin{align}
+						\phi_{\mathbb{N}_{\text{odd}}}(x) &= x + x^3 + x^5 + x^7 + \ldots \\
+						&= x(1 + x^2 + x^4 + x^6 + \ldots) \\
+						&= x(1 + y + y^2 + y^3 + \ldots) \text{ where } y = x^2 \\
+						&= \frac{x}{1 - y} \\
+						&= \frac{x}{1 - x^2}
+					\end{align}
+
+					(3) is an acceptable composition because $x^2$ has a constant term of zero.
+					\\ \\
+					Now, we have that $S = () \cup_{k \ge 1} \mathbb{N}_{\text{odd}}^k$. By the sum and product lemmas, the generating function for $S$ is:
+					\setcounter{equation}{0}
+					\begin{align}
+						\phi_S(x) &= 1 + \sum_{k \ge 1} \phi_{\mathbb{N}_{\text{odd}}}^k(x) \\
+						&= 1 + \sum_{k \ge 1} \bigg( \frac{x}{1 - x^2} \bigg)^k \\
+						&= \sum_{k \ge 0} \bigg( \frac{x}{1 - x} \bigg)^k \\
+						&= 1 + z + z^2 + z^3 + \ldots \text{ where } z = \frac{x}{1 - x^2} \\
+						&= \frac{1}{1 - z} \\
+						&= \frac{1}{1 - \frac{x}{1 - x^2}} \\
+						&= \frac{1 - x^2}{1 - x - x^2}
+					\end{align}
+
+					(4) is a valid composition because $\frac{x}{1 - x^2}$ has a constant term of zero.
+					\\ \\
+					What is $[x^n] \frac{1 - x^2}{1 - x - x^2}$? (Don't think of assigning values to $x$. Just focus on cancelling them out.)
+					\\ \\
+					\begin{align*}
+						\frac{1 - x^2}{1 - x - x^2} &= \sum_{n \ge 0} a_n x^n \\
+						1 - x^2 &= (1 - x - x^2)(a_0 + a_1x + a_2x^2 + \ldots) \\
+						&= a_0 + a_1x + a_2x^2 + a_3x^3 + \ldots - a_0x -a_1x^2 - a_2x^3 - a_3x^4 - \ldots -a_0x^2 - a_1x^3 - a_2x^4 - a_3x^5 - \ldots \\
+						&= a_0 + (a_1 - a_0)x + (a_2 - a_1 - a_0)x^2 + (a_3 - a_2 - a_1)x^3 + \ldots
+					\end{align*}
+
+					We know $a_0 = 1$ and $(a_1 - a_0) = 0$, and so on. We can express a recurrence relation for this.
+					
+					\begin{align*}
+						a_0 &= 1 \\
+						a_1 - a_0 = 0 \implies a_1 &= 1 \\
+						a_2 - a_1 - a_0 = -1 \implies a_2 &= -1 + a_1 + a_0 = 1 \\
+						a_3 - a_2 - a_1 = 0 \implies a_3 &= a_1 + a_2 = 2 \\
+						a_4 &= a_3 + a_2 = 3 \\
+						a_5 &= a_4 + a_3 = 5 \\
+						\vdots&
+					\end{align*}
+
+					For all $n \ge 3$, we have that $a_n = a_{n - 1} + a_{n - 2}$. This defines the \textbf{fibonacci numbers}.
+				\end{ex}
+				
+				\begin{defn}
+					The \textbf{golden ratio} is a pair of integers $a$ and $b$ such that $\frac{a + b}{a} = {a}{b}$. It's a ratio that comes up in nature a lot, and is aesthetically pleasing.
+				\end{defn}
+
+				You can approximate the golden ration with the Fibonacci numbers. $\frac{a_n}{a_{n - 1}}$ approaches the golden ratio as $n \to \infty$.
+				
+				\begin{ex}
+					Let $S_n$ be the set of compositions into odd numbers of $n$. $|S_n| = |S_{n - 1}| + |S_{n - 2}|$ for $n \ge 2$. $S_n$ is partitioned by $S_{n - 1}$ and $S_{n - 2}$. Is there a bijection between $S_n$ and $S_{n - 1} \cup S_{n - 2}$?
+				\end{ex}
 		
 	\newpage
 	\section{Clicker Questions}
