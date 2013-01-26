@@ -668,6 +668,39 @@
 					\end{algorithm}
 
 					\subsubsection{Creating MIPS Binary Instructions}
-						We can form a MIPS binary instruction using a template and appropriate values for any variables in the command (usually denoted $s$, $t$, and $d$). \\ \\
-						TODO - finish discussing bitwise operators, etc.
+						We can form a MIPS binary instruction using a template and appropriate values for any variables in the command (usually denoted $s$, $t$, and $d$). The template is the integer that represents the binary associated with a particular instruction, with all of the variables ($s$, $t$, and $d$) being zeroes. 
+						\\ \\
+						Bitwise operations compare integers bit by bit and perform the requested operation at that level. For example, given the numbers $a$ and $b$ that can represented in binary as 000111000 and 11011000, respectively, $a | b$ (a bit-wise OR) will result in 11011100 and \verb+a & b+ (a bit-wise AND) will result in 00011000. 
+						\\ \\
+						Suppose we want to zero out all but the last byte of $b$. We'd do \verb+b & 255+, which is the same as \verb+b & 0xff+.
+						\\ \\
+						In Scheme, \verb+(bitwise-and a b)+ and \verb+(bitwise-or a b)+ are the provided utilities for performing bit-wise operations. In C++, you use \verb+a & b+ and \verb+a | b+.
+						\\ \\
+						Shifting bits can also be useful. You can use \verb+a << n+ in C++ to perform a left-shift by $n$ bits (adding $n$ zeroes to the right, discarding from the left). C++ also supports \verb+a >> 5+, which adds $n$ zeroes to the left and discards from the right. Scheme supports left and right shifts using \verb+(arithmetic-shift a n)+, where positive $n$ shifts right and negative $n$ shifts left.
+						\\ \\
+						To fill our template with the appropriate $s$, $t$, and $d$ values, you would perform an operation like this:
+						\begin{verbatim}
+							template | (s << 21) | (t << 16) | (0xffff & i)
+						\end{verbatim}
+						Note that this adjusts $s$ to the proper position, which in this case is 21 bits from the end. The \verb+0xffff+ which is ANDed with $i$ is 16-bits, as required by $i$.
+						\\ \\
+						You can output bytes using shifts and several output calls. Here's some sample code for outputting a byte in C++:
+						\begin{verbatim}
+							void outbyte(int b) {
+							   putchar(b >> 24);
+							   putchar(b >> 16);
+							   putchar(b >> 8);
+							   putchar(b >> 4);
+							}
+						\end{verbatim}
+
+						Here's similar code for Scheme:
+						\begin{verbatim}
+							(define (outbyte b)
+							   (write-byte
+							      (bitwise-and (arithmetic-shift b -24) 255)
+							      (bitwise-and (arithmetic-shift b -16) 255)
+							      (bitwise-and (arithmetic-shift b -8) 255)
+							      (bitwise-and (arithmetic-shift b 0) 255)))
+						\end{verbatim}
 \end{document}
