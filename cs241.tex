@@ -703,4 +703,91 @@
 					      (bitwise-and (arithmetic-shift b -8) 255)
 					      (bitwise-and (arithmetic-shift b 0) 255)))
 				\end{verbatim}
+		\subsection{Assembler Requirements} \lecture{January 25, 2013}
+			Your assembler is a Scheme/C/C++/Java program. You could also submit it in Scala, if you like.
+			\\ \\
+			In the end, your assembler should be able to be run such that it takes a \verb+.asm+ file as standard input, and produces MIPS binary code as standard output. That is, you should be able to run it like so:
+			\begin{itemize}
+				\item Scheme: \verb+racket asm.ss < myprog.asm 1> myprog.mips 2>myprog.err+
+				\item C++:
+					\begin{verbatim}
+						g++ asm.cc
+						valgrind --log-file=foo ./a.out < myprog.asm 1> myprog.mips 2> myprog.err
+						grep ``ERROR SUMMARY'' foo
+					\end{verbatim}
+			\end{itemize}
+				
+			For C++, leak checking is turned off. You still shouldn't leak memory all over the place, though.
+			\\ \\
+			\verb+grep ``ERROR'' myprog.err+ should not match anything if your program is valid, or should match otherwise (if there's an error).
+			\\ \\
+			To check the accuracy of your assembler, you can compare it with \verb+cs241.binasm+:
+			\begin{verbatim}
+				java cs241.binasm < myprog.asm > myprog.ref.mips
+				diff myprog.mips myprog.ref.mips
+			\end{verbatim}
+			This should give no output. Remember: there is a one-to-one mapping of valid MIPS assembly code to valid MIPS binary machine code.
+			\\ \\
+			You're going to have to make a large test suite to test your assembler. For valid code, you only need a handful of test cases. However, for error cases, you'll need a separate test case for each error since our assembler will quit as soon as it encounters the first error. Write a test script to run all of these cases, because it'll become tedious otherwise. You can share test cases you make with others, however you are not allowed to share information about how Marmoset test cases Marmoset uses to test your code.
+			\\ \\
+			We're going to take a look at the \href{https://www.student.cs.uwaterloo.ca/~cs241/mips/mipsasm.html}{specification of the CS 241 dialect of MIPS}. You'll likely want to print this out and mark every statement/condition twice: once after you implement it and once after you test it. [Note: you should look at \href{https://www.student.cs.uwaterloo.ca/~cs241/mips/mipsasm.html}{the specification itself} rather than relying on the notes here.]
+			
+			\subsubsection{Locations and Labels}
+				Locations start at $0, 4, 8, \ldots$. The size of a program is the number of instructions multiplied by four. Locations are typically written in hex.
+				\\ \\
+				Each line may or may not contain labels, an instruction, and a comment. All three are optional. You can have none, one of these, two of these, or all three of these.
+				\\ \\
+				Lines without an instruction are known as \textbf{NULL lines}. Each non-NULL line has output into machine code.
+				\\ \\
+				Labels must occur at the beginning of the line. You may have zero of more labels on a line. Multiple labels are permitted on a single line. A label looks like this: \verb+foo: ...+
+				\\ \\
+				Any given label can only be given a single definition in a MIPS program. You cannot have a label defining multiple lines or locations.
+				\\ \\
+				The \textbf{location} of a line is simply $4 \times \text{(number of non-NULL lines that precede it)}$. For example:
+				\begin{verbatim}
+					; hello                       0
+					foo:                          0
+					  add $1, $8, $3              0
+					bar: bif:  ; hello again      4
+					  lw $7, 0($2)                4
+					jr $31                        8
+					.word 32                      12
+				\end{verbatim}
+				Note that all lines have a location (including NULL lines), however some lines may have the same location due to non-NULL lines. You are guaranteed that every line that contains an instruction (that is, every line that will be converted to machine code) will have a distinct location associated with it.
+				\\ \\
+				You should have a location counter variable which is incremented by 4 after you translate each instruction.
+				\\ \\
+				A \textbf{label} is simply a mapping between an identifier and a location.
+
+			\subsubsection{Comments}
+				Comments are ignored entirely. The provided scanners will throw away these comments for you.
+			\subsubsection{Instructions}
+				An \textbf{instruction} is an opcode (name of command) followed by zero or more operands.
+				\\ \\
+				After a label, you must either hit the end of the line (either it was a blank line, or a line with comments that were already stripped away) or an opcode.
+				\\ \\
+				For assignment 3, you can assume \verb+.word+ is the only opcode in existence.
+				\\ \\
+				If you do encounter a valid opcode, ensure it has the proper operands. The existence, types, and ranges of all operands must be verified for acceptability. Also, you must ensure there are no extra operands.
+				\\ \\
+				There are several types of operands:
+				\begin{itemize}
+					\item Registers.
+					\item Unsigned numbers.
+					\item Signed numbers.
+					\item Hex numbers (\verb+0x...+; the case of $a$ to $f$ does not matter).
+					\item Labels (the \emph{use} of labels, not a label definition).
+				\end{itemize}
+
+			\subsubsection{Operand Format}
+				Each instruction has specific requirements for its operands. Some instructions have the same requirements for their operands as other instructions, so they can be grouped together to remove duplication. In the second pass, you simply use a different template to fill different instructions from within the same grouping.
+				\begin{itemize}
+					\item \verb+add, sub, slt, slt+ \textendash{} \verb+add+, register, comma, register, comma, register, nothing else.
+					\item \verb+mult, div, multu, divu+ \textendash{} \verb+mult+, register, comma, register, nothing else.
+					\item \verb+mfhi, mflo, lis+ \textendash{} \verb+mfhi+, register, nothing else.
+					\item \verb+lw, sw+ \textendash{} lw, register, comma, $i$, bracket(, register, bracket), nothing else, where $i$ can be an unsigned, negative, or hex number within the 16-bit range. Test cases needed: in/valid with unsigned, in/valid with hex, etc. Note: there is no rule stating that you must load a multiple of four.
+					\item  \verb+beq, bne+ \textendash{} \verb+beq+, register, comma, register, $i$, nothing else. $i$ in this case can be an unsigned, negative, or hex number in the 16-bit range, or it could be the use of a label. In the case of a label, you calculate the numerical value by calculating: $\frac{\text{location(label)} - \text{location counter} - 4}{4}$.
+					\item \verb+jr, jalr+ \textendash{} \verb+jr+, register, nothing else.
+					\item \verb+.word+ \textendash{} \verb+.word+, $i$, nothing else, where $i$ can be an unsigned, negative, or hex number in the 16-bit range, or it could be the use of a label. 
+				\end{itemize}
 \end{document}
