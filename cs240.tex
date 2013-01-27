@@ -769,6 +769,60 @@
 						Both \verb+insert+ and \verb+deleteMin+ take O(lg n) time where $n$ is the number of elements in the tree. Bubble up and boogie down each take O(h) = O(lg n) time, where $h$ is the height of the tree.
 						\\ \\
 						Note that the number of elements in a tree is between $2^{h - 1}$ and $2^h$. PQ sort takes O(n lg n) time, which is the same as mergesort.
+						\\ \\
+						\lecture{January 24, 2013}
+						\textbf{Heap sort} is a specialization of PQ sort. We can actually insert things even faster into the heap, though.
+						\\ \\
+						\textbf{Claim}: if all the elements to be inserted are given at once we can build the heap in $\Theta(n)$ time, which is faster than $\Theta(n \lg n)$.
+
+						\begin{proof} We're going to show that we can run this algorithm in $\Theta(n)$ time. \\
+							\begin{algorithm}[H]
+								Heapify(A); // A is an array \\
+								n = size(A) - 1\;
+								\For{i = $\lfloor \frac{n - 1}{2} \rfloor$ down to 0}{
+									boogie\_down(A, i)\;
+								}
+							\end{algorithm}
+
+							The number of comparisons for boogie down is:
+							\begin{align*}
+								\frac{n}{2} + 1& + \frac{n}{4} \cdot 2 + \frac{n}{8} \cdot 3 + \ldots + 1 \cdot \lg n \\
+								&\sum_{i = 1}^{\lg n} \frac{n}{2^i} \cdot i
+							\end{align*}
+
+							The cost of boogieing down $n$ elements is:
+							\begin{align*}
+								T(n) &= T\bigg(\frac{n}{2}\bigg) + \frac{n}{4} = T\bigg(\frac{n}{4}\bigg) + \frac{n}{8} + \frac{n}{4}
+							\end{align*}
+							This is the case because there are $\frac{n}{4}$ elements that can go one level further down. So we have:
+							\begin{align*}
+								T\bigg(\frac{n}{2}\bigg) &= T\bigg(\frac{\frac{n}{2}}{2}\bigg) + \frac{\frac{n}{2}}{4} \\
+								&= T\bigg(\frac{n}{4}\bigg) + \frac{n}{8} \\
+								&= \frac{n}{4} + \frac{n}{8} + \frac{n}{16} + \frac{n}{32} + \ldots \\
+								&= n\bigg(\frac{1}{4} + \frac{1}{8} + \frac{1}{16} + \frac{1}{32} + \ldots\bigg)
+							\end{align*}
+							This is true because $\sum_{i = 0}^{\infty} \frac{1}{2^i} = 1 + \frac{1}{2} + \frac{1}{4} + \ldots = 2$ was proven by Zeno.
+							\\ \\
+							\underline{Aside}: Zeno's proof of this involved a human and a turtle walking. The human walked at a pace of 1 metre per hour and the turtle moved at a pace of a $\frac{1}{2}$ metre per hour. The turtle was given a head start. The human would catch up with the turtle at point 2, but not any sooner because both the human and the turtle will have made progress on their race by the time the human reaches a point where the turtle was previously. This is known as \textbf{Zeno's paradox}. Unrelated: someone has called the dust that you can never sweep into a dust pan zenodust.
+							\\ \\
+							An alternate way to prove this is as follows:
+							\begin{align*}
+								\sum_{i = 0}^{\lg n} \frac{n}{x^i} \cdot i &= n \sum_{i = 0}^{\lg n} \frac{1}{x^i} \cdot i \\
+								&= n \sum_{i = 0}^{\lg n} \tau^i \cdot i \text{ where } \tau = \frac{1}{x}
+							\end{align*}
+							What we now have looks a bit like a derivative. Differentiating gives:
+							\begin{align*}
+								n \cdot \tau \sum_{i = 0}^{\lg n} i \cdot 2 \tau^{i - 1}
+							\end{align*}
+
+							We can integrate and then differentiate.
+							\\ \\
+							Therefore, we can heapify in $\Theta(n)$ time, so heap sort is $\Theta(n \lg n)$ and the constant will be lower than other methods, which is preferable.
+						\end{proof}
+
+						In practice, it's better to insert one by one, because our analysis is in the worst-case. When comparing the average case, inserting one by one is faster than heapifying. The worst case is really rare, so you should insert one by one (and pay more attention to the average case analysis in this situation).
+						\\ \\
+						Heaps implemented using an array are called an \textbf{in-place implicit data structure}. You avoid pointers by using trickery in the organization of the data itself.
 				\end{enumerate}
 
 \end{document}
