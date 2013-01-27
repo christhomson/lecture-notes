@@ -681,7 +681,7 @@
 					\item Sorting. Insert the elements from an array $A$ and then when you delete them you'll get them back in sorted order.
 				\end{itemize}
 				
-				Priority queues can be used for sorting purposes. It allows us to sort without worrying about the underlying sorting implementation. However, if we want to know how good of a sorting algorithm it is, we would need to examine the implementation of \verb+insert+ and \verb+deleteMin+. Here's some pseudo-code for sorting with a priority queue: \\
+				Priority queues can be used for sorting purposes. It allows us to sort without worrying about the underlying sorting implementation. However, if we want to know how good of a sorting algorithm it is, we would need to examine the implementation of \verb+insert+ and \verb+deleteMin+. Here's some pseudocode for sorting with a priority queue: \\
 				\begin{algorithm}[H]
 					\For{i = 0 to n - 1}{
 						PQ.insert(A[i], A[i]); // key and priority are the same
@@ -713,7 +713,7 @@
 							\Tree [.0 
 								[.1 [.3 [.7 ] [.8 ]].3 [.4 [.9 ] [.10 ] ].4 ].1 
 								[.2 [.5 [.11 ] ].5 [.6 ] ].2 ].0
-							\caption{A complete binary tree.}
+							\caption{\label{fig:completeBinaryTree} A complete binary tree.}
 						\end{figure}
 						The \textbf{heap property} is the idea that the priority of a node is higher than that of all of its children (if any). In a min-PQ, this means the $p$ value of all children is a larger number than that of the parent. In a max-PQ, the childrens' $p$ values must all be smaller than that of their parent.
 
@@ -730,8 +730,45 @@
 						\\ \\
 						Next, we'll look into \textbf{filling holes}. If you delete an element from the tree, you delete the element at the top, but then you have a hole that needs to be filled. But how? We take the last element in the tree (the rightmost element at the bottom level) and swap it into the top position, then we get it to \textbf{boogie down}.
 						\\ \\
-						The process of \textbf{booging down} is where an element (in this case, the top element) looks at its children and swaps with a child that has lower priority than itself (if any). It does this recursively. It continues to recurse until the child is of higher priority than its parent, or until you reach a leaf node.
+						The process of \textbf{boogieing down} is where an element (in this case, the top element) looks at its children and swaps with a child that has lower priority than itself (if any). It does this recursively. It continues to recurse until the child is of higher priority than its parent, or until you reach a leaf node. Swap places with the child with the highest priority.
 						\\ \\
-						This lecture is incomplete.	
+						Insertion uses the process of \textbf{bubbling up}. We place the new element in the first available spot, which will be in the bottom level. The new element exchanges with their parent if the new element has higher priority than the parent, and that continues as far as needed, until it doesn't swap or until it reaches the top.
+						\\ \\
+						\textbf{Implementing a heap as an array} (also known as a \textbf{l33t hacking trick}):
+						\\ \\ 
+						You can actually implement a heap without pointers, using an array instead. The array indices follow the pattern as indicated in \ref{fig:completeBinaryTree} by inserting at the end of the array.
+						\\ \\
+						The parent of a node at index $m$ is $\lfloor \frac{m - 1}{2} \rfloor$. The children for a node at index $m$ are located at index $2 \cdot m + 1$ and $2 \cdot m + 2$.
+						\\ \\
+						To perform a \verb+deleteMin+, we erase element 0 and replace it with the last element in the array. We then perform a boogie down on element 0. Before computing children, we must perform boundary checking to ensure there actually are children (that is, we haven't run off the end of the array).
+						\\ \\
+						Here's the pseudocode for the bubble up process: \\
+						\begin{algorithm}[H]
+							\While( [parent exists and has higher priority] ){$\lfloor \frac{v - 1}{2} \rfloor \ge 0$ and A[$\lfloor \frac{v - 1}{2} \rfloor$].p > A[v].p}{ 
+								swap(v, $\lfloor \frac{v - 1}{2} \rfloor$)\;
+								v = $\lfloor \frac{v - 1}{2} \rfloor$\;
+							}
+						\end{algorithm}
+
+						Here's the pseudocode for the boogie down process: \\
+						\begin{algorithm}[H]
+							\While( [v has at least one child] ){$2v + 1 \le$ last}{
+								u = argmin\{A[2v + 1], A[2v + 2]\}; // argmin returns the array index of the min \\
+								\eIf{A[u].p < A[v].p}{
+									swap(u, v)\;
+									v = u\;
+								}{
+									break\;
+								}
+							}
+						\end{algorithm}
+						
+						When implementing boogieing down, you'll have to handle boundary cases where there is only one child, etc., which were not handled in this pseudocode.
+						\\ \\
+						\textbf{PQ Sort}: \\ \\
+						Both \verb+insert+ and \verb+deleteMin+ take O(lg n) time where $n$ is the number of elements in the tree. Bubble up and boogie down each take O(h) = O(lg n) time, where $h$ is the height of the tree.
+						\\ \\
+						Note that the number of elements in a tree is between $2^{h - 1}$ and $2^h$. PQ sort takes O(n lg n) time, which is the same as mergesort.
 				\end{enumerate}
+
 \end{document}
