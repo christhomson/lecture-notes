@@ -764,65 +764,136 @@
 						\end{algorithm}
 						
 						When implementing boogieing down, you'll have to handle boundary cases where there is only one child, etc., which were not handled in this pseudocode.
-						\\ \\
-						\textbf{PQ Sort}: \\ \\
-						Both \verb+insert+ and \verb+deleteMin+ take O(lg n) time where $n$ is the number of elements in the tree. Bubble up and boogie down each take O(h) = O(lg n) time, where $h$ is the height of the tree.
-						\\ \\
-						Note that the number of elements in a tree is between $2^{h - 1}$ and $2^h$. PQ sort takes O(n lg n) time, which is the same as mergesort.
-						\\ \\
-						\lecture{January 24, 2013}
-						\textbf{Heap sort} is a specialization of PQ sort. We can actually insert things even faster into the heap, though.
-						\\ \\
-						\textbf{Claim}: if all the elements to be inserted are given at once we can build the heap in $\Theta(n)$ time, which is faster than $\Theta(n \lg n)$.
-
-						\begin{proof} We're going to show that we can run this algorithm in $\Theta(n)$ time. \\
-							\begin{algorithm}[H]
-								Heapify(A); // A is an array \\
-								n = size(A) - 1\;
-								\For{i = $\lfloor \frac{n - 1}{2} \rfloor$ down to 0}{
-									boogie\_down(A, i)\;
-								}
-							\end{algorithm}
-
-							The number of comparisons for boogie down is:
-							\begin{align*}
-								\frac{n}{2} + 1& + \frac{n}{4} \cdot 2 + \frac{n}{8} \cdot 3 + \ldots + 1 \cdot \lg n \\
-								&\sum_{i = 1}^{\lg n} \frac{n}{2^i} \cdot i
-							\end{align*}
-
-							The cost of boogieing down $n$ elements is:
-							\begin{align*}
-								T(n) &= T\bigg(\frac{n}{2}\bigg) + \frac{n}{4} = T\bigg(\frac{n}{4}\bigg) + \frac{n}{8} + \frac{n}{4}
-							\end{align*}
-							This is the case because there are $\frac{n}{4}$ elements that can go one level further down. So we have:
-							\begin{align*}
-								T\bigg(\frac{n}{2}\bigg) &= T\bigg(\frac{\frac{n}{2}}{2}\bigg) + \frac{\frac{n}{2}}{4} \\
-								&= T\bigg(\frac{n}{4}\bigg) + \frac{n}{8} \\
-								&= \frac{n}{4} + \frac{n}{8} + \frac{n}{16} + \frac{n}{32} + \ldots \\
-								&= n\bigg(\frac{1}{4} + \frac{1}{8} + \frac{1}{16} + \frac{1}{32} + \ldots\bigg)
-							\end{align*}
-							This is true because $\sum_{i = 0}^{\infty} \frac{1}{2^i} = 1 + \frac{1}{2} + \frac{1}{4} + \ldots = 2$ was proven by Zeno.
-							\\ \\
-							\underline{Aside}: Zeno's proof of this involved a human and a turtle walking. The human walked at a pace of 1 metre per hour and the turtle moved at a pace of a $\frac{1}{2}$ metre per hour. The turtle was given a head start. The human would catch up with the turtle at point 2, but not any sooner because both the human and the turtle will have made progress on their race by the time the human reaches a point where the turtle was previously. This is known as \textbf{Zeno's paradox}. Unrelated: someone has called the dust that you can never sweep into a dust pan zenodust.
-							\\ \\
-							An alternate way to prove this is as follows:
-							\begin{align*}
-								\sum_{i = 0}^{\lg n} \frac{n}{x^i} \cdot i &= n \sum_{i = 0}^{\lg n} \frac{1}{x^i} \cdot i \\
-								&= n \sum_{i = 0}^{\lg n} \tau^i \cdot i \text{ where } \tau = \frac{1}{x}
-							\end{align*}
-							What we now have looks a bit like a derivative. Differentiating gives:
-							\begin{align*}
-								n \cdot \tau \sum_{i = 0}^{\lg n} i \cdot 2 \tau^{i - 1}
-							\end{align*}
-
-							We can integrate and then differentiate.
-							\\ \\
-							Therefore, we can heapify in $\Theta(n)$ time, so heap sort is $\Theta(n \lg n)$ and the constant will be lower than other methods, which is preferable.
-						\end{proof}
-
-						In practice, it's better to insert one by one, because our analysis is in the worst-case. When comparing the average case, inserting one by one is faster than heapifying. The worst case is really rare, so you should insert one by one (and pay more attention to the average case analysis in this situation).
-						\\ \\
-						Heaps implemented using an array are called an \textbf{in-place implicit data structure}. You avoid pointers by using trickery in the organization of the data itself.
 				\end{enumerate}
+	\section{Sorting}
+		\subsection{PQ Sort}
+			We can sort data using a priority queue. \\ \\
+			Both \verb+insert+ and \verb+deleteMin+ take O(lg n) time where $n$ is the number of elements in the tree. Bubble up and boogie down each take O(h) = O(lg n) time, where $h$ is the height of the tree.
+			\\ \\
+			Note that the number of elements in a tree is between $2^{h - 1}$ and $2^h$. PQ sort takes O(n lg n) time, which is the same as mergesort.
+		
+		\subsection{Heap Sort} \lecture{January 24, 2013}
+			Heap sort is a specialization of PQ sort. We can actually insert things even faster into the heap, though.
+			\\ \\
+			\textbf{Claim}: if all the elements to be inserted are given at once we can build the heap in $\Theta(n)$ time, which is faster than $\Theta(n \lg n)$.
 
+			\begin{proof} We're going to show that we can run this algorithm in $\Theta(n)$ time. \\
+				\begin{algorithm}[H]
+					Heapify(A); // A is an array \\
+					n = size(A) - 1\;
+					\For{i = $\lfloor \frac{n - 1}{2} \rfloor$ down to 0}{
+						boogie\_down(A, i)\;
+					}
+				\end{algorithm}
+
+				The number of comparisons for boogie down is:
+				\begin{align*}
+					\frac{n}{2} + 1& + \frac{n}{4} \cdot 2 + \frac{n}{8} \cdot 3 + \ldots + 1 \cdot \lg n \\
+					&\sum_{i = 1}^{\lg n} \frac{n}{2^i} \cdot i
+				\end{align*}
+
+				The cost of boogieing down $n$ elements is:
+				\begin{align*}
+					T(n) &= T\bigg(\frac{n}{2}\bigg) + \frac{n}{4} = T\bigg(\frac{n}{4}\bigg) + \frac{n}{8} + \frac{n}{4}
+				\end{align*}
+				This is the case because there are $\frac{n}{4}$ elements that can go one level further down. So we have:
+				\begin{align*}
+					T\bigg(\frac{n}{2}\bigg) &= T\bigg(\frac{\frac{n}{2}}{2}\bigg) + \frac{\frac{n}{2}}{4} \\
+					&= T\bigg(\frac{n}{4}\bigg) + \frac{n}{8} \\
+					&= \frac{n}{4} + \frac{n}{8} + \frac{n}{16} + \frac{n}{32} + \ldots \\
+					&= n\bigg(\frac{1}{4} + \frac{1}{8} + \frac{1}{16} + \frac{1}{32} + \ldots\bigg)
+				\end{align*}
+				This is true because $\sum_{i = 0}^{\infty} \frac{1}{2^i} = 1 + \frac{1}{2} + \frac{1}{4} + \ldots = 2$ was proven by Zeno.
+				\\ \\
+				\underline{Aside}: Zeno's proof of this involved a human and a turtle walking. The human walked at a pace of 1 metre per hour and the turtle moved at a pace of a $\frac{1}{2}$ metre per hour. The turtle was given a head start. The human would catch up with the turtle at point 2, but not any sooner because both the human and the turtle will have made progress on their race by the time the human reaches a point where the turtle was previously. This is known as \textbf{Zeno's paradox}. Unrelated: someone has called the dust that you can never sweep into a dust pan zenodust.
+				\\ \\
+				An alternate way to prove this is as follows:
+				\begin{align*}
+					\sum_{i = 0}^{\lg n} \frac{n}{x^i} \cdot i &= n \sum_{i = 0}^{\lg n} \frac{1}{x^i} \cdot i \\
+					&= n \sum_{i = 0}^{\lg n} \tau^i \cdot i \text{ where } \tau = \frac{1}{x}
+				\end{align*}
+				What we now have looks a bit like a derivative. Differentiating gives:
+				\begin{align*}
+					n \cdot \tau \sum_{i = 0}^{\lg n} i \cdot 2 \tau^{i - 1}
+				\end{align*}
+
+				We can integrate and then differentiate.
+				\\ \\
+				Therefore, we can heapify in $\Theta(n)$ time, so heap sort is $\Theta(n \lg n)$ and the constant will be lower than other methods, which is preferable.
+			\end{proof}
+
+			In practice, it's better to insert one by one, because our analysis is in the worst-case. When comparing the average case, inserting one by one is faster than heapifying. The worst case is really rare, so you should insert one by one (and pay more attention to the average case analysis in this situation).
+			\\ \\
+			Heaps implemented using an array are called an \textbf{in-place implicit data structure}. You avoid pointers by using trickery in the organization of the data itself.
+		\subsection{Quick Sort}
+			\textbf{Selection}: suppose we want to find the minimum or maximum element in an unsorted array. The easy solution is to scan the array and report the answer in $\Theta(n)$ time. However, if you're asked to find the $k$-th largest element? The na\"ive solution would be to sort the entire array, which would take $\Theta(n \lg n)$ time.
+			\\ \\
+			We can do better. We can find the $k$-th largest element in an array in linear time in the worst case, using a method called quick select.
+
+			\subsubsection{Quick Select}
+				Given an array $A$, we want to find the $k$-th smallest (or $k$-th largest) element. For example, let's say we're looking for the 3rd smallest element and we're given this array $A$: \\ \\
+				\begin{tabular}{|c|c|c|c|c|c|c|c|}
+					\hline 20 & 8 & 9 & 2 & 1 & 7 & 15 & 12 \\ \hline
+				\end{tabular}
+				\\ \\
+				We now want to partition the array into two smaller sets of elements. We will first sort the elements onto the proper side of 20 (the first element):
+				\\ \\
+				\begin{tabular}{|c|c|c|c|c|c|c|c|}
+					\hline 8 & 9 & 2 & 1 & 7 & 15 & 12 & 20 \\ \hline
+				\end{tabular}
+				\\ \\
+				Then, we'll continue on the side of 20 that happens to contain the element we're looking for. This time, we'll sort elements onto the proper side of 8 (which is the first element).
+				\\ \\
+				\begin{tabular}{|c|c|c|c|c|c|c|c|}
+					\hline 2 & 1 & 7 & 8 & 9 & 15 & 12 & 20 \\ \hline
+				\end{tabular}
+				\\ \\
+				If we were to continue further, we would proceed on the left side of 8 because there are fewer (or equal) to 3 elements on that side.
+				\\ \\
+				We use a random element from the array called the \textbf{pivot} to partition the elements into those smaller than the pivot and those larger than the pivot. In general: 
+				\begin{tabular}{|c|c|c|}
+					\hline < p & p & > p \\ \hline
+				\end{tabular}
+				\\ \\
+				Here's some pseudocode for quick select: \\
+				\begin{algorithm}[H]
+					p = choose random pivot in $A$\;
+					partition $(A, p)$ obtaining position $i$ of $p$\;
+					\uIf{k < i}{
+						quick\_select(A[0, i - 1], k)\;
+						\uElseIf{test}{ok}
+					}
+					\uElseIf{k > 1}{
+						quick\_select(A[i + 1, \ldots, n - 1], k - i - 1)\;
+					}
+					\Else{
+						return p\;
+					}
+				\end{algorithm}
+				In quick select, you only continue to recurse in the ``half'' that contains what we're looking for (unlike in quick sort where we continue to recurse on both sides).
+				\\ \\
+				In the worst case, this runs in $\Theta(n^2)$ time, since the random element chosen is always max($A$), and we are searching for $k$ = first element:
+				\begin{tabular}{|c|c|c|c|}
+					\hline $\ldots$ & $p_3$ & $p_2$ & $p_1$ \\ \hline
+				\end{tabular}
+				\\ \\
+				Partitioning with two arrays is easy (i.e. creating a new array and inserting). Partitioning within the existing array is a bit more complicated, however that is a key advantage to quick select. Here's the pseudocode for partitioning within the same array: \\
+				\begin{algorithm}
+					swap(A[0], A[p])\;
+					i = 1\;
+					j = n - 1\;
+					\While{true}{
+						\While{i < n and A[i] < A[0]}{
+							i = i + 1\;
+						}
+						\While{j $\ge$ 1 and A[j] > A[0]}{
+							j = j - 1\;
+						}
+						\eIf{j < i}{
+							break\;
+						}{
+							swap(A[i], A[j])\;
+						}
+					}
+				\end{algorithm}
 \end{document}
