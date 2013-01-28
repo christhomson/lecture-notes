@@ -948,11 +948,83 @@
 				\phi_S(x) = \sum_{n \ge 0} a_n x^n \text{ where } a_n \text{ is the number of strings of length } n \in S
 			\end{align*}
 
-			\begin{ex}
+			\begin{ex} \lecture{January 28, 2013}
 				Let $A = \{0, 01\}$ and $B = \{0, 10\}$. Their generating functions are $\phi_A(x) = \phi_B(x) = x + x^2$. What is the generating function for $AB$?
 				\\ \\
-				Next time.
+				It's easy to see that $AB = \{00, 010, 0110\}$, which gives us $\phi_{AB}(x) = x^2 + x^3 + x^4$. Also note that:
+				\begin{align*}
+					\phi_A(x) \cdot \phi_B(x) &= (x + x^2) \cdot (x + x^2) \\
+					&= x^2 + 2x^3 + x^4 \\
+				\end{align*}
+				Therefore, in this case, $\phi_{AB}(x) \not = \phi_A(x) \cdot \phi_B(x)$. Why is this? $A \times B = \{ (0, 0), (01, 0), (0, 10), (0110) \}$. Note that the string for $(01, 0)$ and $(0, 10)$ is the same ($010$), but it's only going to be included in $AB$ once. That's where the trouble is.
 			\end{ex}
+
+			\begin{defn}
+				$A, B$ is \textbf{ambiguous} if all three of these properties hold:
+				\begin{itemize}
+					\item $(a_1, b_1), (a_2, b_2) \in A \times B$
+					\item $(a_1, b_1) \not = (a_2, b_2)$
+					\item $a_1b_1 = a_2b_2$
+				\end{itemize}
+			\end{defn}
+			In the previous example, $(0, 10) (01, 0) \in A \times B$ and $(0, 10) \not = (10, 0)$, but $010 = 010$.
+			\\ \\
+			Note that the definition of ambiguity is equivalent to saying that $|A \times B| \not = |AB|$.
+
+			\begin{theorem}[Product Lemma for Strings]
+				Let $A, B$ be sets of binary strings. If $A, B$ are unambiguous, then $\phi_{AB}(x) = \phi_A(x) \cdot \phi_B(x)$.
+			\end{theorem}
+
+			\begin{proof}
+				In order to prove this theorem, we need to show that under the given assumptions, $|AB| = |A \times B|$, which we can show by showing there is a bijection.
+				\\ \\
+				Let $S_n$ be the set of strings of length $n$ of $AB$, and let $T_n$ be the set of pairs $(a, b) \in A \times B$ such that $length(a) + length(b) = n$. Our claim is that $f[(a, b)] = ab, f : T_n \to S_n$ is a bijection. 
+				\\ \\
+				In order to prove that $T_n \to S_n$ is a bijection, two things must be proven. We have to show that it is both onto and injective.
+				\begin{enumerate}
+					\item Onto. Every set in $S_n$ is in the form $ab$ where $a \in A$ and $b \in B$ such that $ab = f[(a, b)]$.
+					\item Injective. Let $(a_1, b_1), (a_2, b_2) \in T_n$. Suppose:
+						\begin{align*}
+							\underbrace{f[(a_1, b_1)]}_{a_1b_1} = \underbrace{f[(a_2, b_2)]}_{a_2b_2}
+						\end{align*}
+						Then since $A,B$ is unambiguous, $(a_1, b_1) = (a_2, b_2)$.
+				\end{enumerate}
+
+				Using the claim we just proved, $|S_n| = |T_n|$. By the product lemma (on generating functions in general), we have:
+				\begin{align*}
+					|S_n| = |T_n| = [x^n] \phi_{A \times B}(x) = [x^n] \phi_A(x) \cdot \phi_B(x)
+				\end{align*}
+			\end{proof}
+
+			\begin{theorem}[Sum Lemma for Strings]
+				Let $S$ be a set of binary strings. Let $A, B$ be partitions of $S$. Then $\phi_S(x) = \phi_A(x) + \phi_B(x)$.
+			\end{theorem}
+
+			The proof of the sum lemma for strings is the same as the proof of the sum lemma for sets in general.
+
+			\begin{defn}
+				An expression is \textbf{unambiguous} if there exists a unique way of writing the string according to the expression.
+			\end{defn}
+
+			For example: $\{0, 10, 110\}^\star \{\epsilon, 1, 11\}$ is the set of strings with no more than two consecutive ones. Let's examine the arbitrary string $0001101011001$. If we split the string after every zero, we get $0,0,0,110,10,110,0,1$, which is a unique way of breaking down the string.
+
+			\begin{proposition}
+				Suppose $A^\star$ is unambiguous and $\epsilon \not \in A$. Then $\phi_A(x) = \frac{1}{1 - \phi_A(x)}$.
+			\end{proposition}
+
+			\begin{proof}
+				We have $A^\star = \{\epsilon\} \cup A \cup A^2 \cup A^3 \cup A^4 \cup \ldots$. What is $\phi_{A^k}(x)$?
+				\begin{align*}
+					\phi_{A^k}(x) &= [\phi_A(x)]^k \text{ by the product lemma for strings} \\
+					&= 1 + \phi_A(x) + \phi_{A^2}(x) + \phi_{A^3}(x) + \ldots \text{ by the sum lemma} \\
+					&= 1 + \phi_A(x) + [\phi_A(x)]^2 + [\phi_A(x)]^3 + \ldots \\
+					&= 1 + y + y^2 + y^3 \text{ by letting } y = \phi_A(x) \\
+					&= \frac{1}{1 - y} \\
+					&= \frac{1}{1 - \phi_A(x)}
+				\end{align*}
+
+				Note that the composition used in this proof is valid because $\epsilon \not \in A$, so the constant of $\phi_A(x)$ is zero as required. That is, $[x^0]\phi_A(x) = 0$ makes the composition acceptable.
+			\end{proof}
 	\newpage
 	\section{Clicker Questions}
 		\lecture{January 21, 2013}
