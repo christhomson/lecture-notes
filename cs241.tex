@@ -593,7 +593,7 @@
 		\subsection{Pass 1 \textendash{ } Analysis}
 			Pass 1 should generally follow this pseudocode: \\
 			\begin{algorithm}[H]
-				location\_counter = 0;\
+				location\_counter = 0\;
 				\For{every line of input in source file}{
 					read the line\;
 					scan line into a sequence of tokens\;
@@ -640,13 +640,13 @@
 						y = st[``bar'']; // y gets 0, (bar, 0) gets added to st.
 
 						// Correct way of accessing elements:
-						if (st.find(``biff'') &=&  st.end()) { ... not found ... }
+						if (st.find(``biff'') != st.end()) { ... not found ... }
 					\end{verbatim}
 
 					Why do we use \verb+map+s? It's more efficient because it converts strings into numbers in order to make lookups more performant.
 
 			\subsubsection{The Supplied Scanners}
-			The supplied scanners will find a sequence of tokens on the given line for you. For each token, you'll get a tuple (kind, lexene, value), where the lexene is the literal text of the token. For example, take the line \verb+foo: beq $3, $6, -2\verb+. The provided scanners will return a list with this data:
+			The supplied scanners will find a sequence of tokens on the given line for you. For each token, you'll get a tuple (kind, lexeme, value), where the lexene is the literal text of the token. For example, take the line \verb+foo: beq $3, $6, -2\verb+. The provided scanners will return a list with this data:
 			\begin{itemize}
 				\item (LABEL, ``for:'', ?)
 				\item (OPCODE, ``beq'', ?)
