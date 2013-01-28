@@ -790,4 +790,65 @@
 					\item \verb+jr, jalr+ \textendash{} \verb+jr+, register, nothing else.
 					\item \verb+.word+ \textendash{} \verb+.word+, $i$, nothing else, where $i$ can be an unsigned, negative, or hex number in the 16-bit range, or it could be the use of a label. 
 				\end{itemize}
+	\section{Loaders, Relocation, and Linkers} \lecture{January 28, 2013}
+		\subsection{Loaders}
+			For the use of this section, we have \verb+ft.asm+:
+			\begin{verbatim}
+				ASSEMBLY            RAM          LOCATION          BINARY
+				lis $3              0            0                 00001814
+				.word ft            4            4                 00000010
+				lw $3, 0($3)        8            8                 8c630000
+				jr $31              c            c                 03e00008
+				ft: .word 42        10           10                0000002a
+			\end{verbatim}
+
+			After assembling \verb+ft.asm+, you'll have a MIPS binary machine program (say, \verb+ft.mips+). But how does the program get into the CPU? The program is sent to the IO registers of RAM, which sends it to a loader, which stores it in RAM and executes it for you.
+			\\ \\
+			The \textbf{loader} is itself a MIPS program. It has exist in the MIPS CPU (or in RAM accessible from the MIPS CPU). A loader is a program in RAM that:
+			\begin{itemize}
+				\item Figures out the length ($n$ words) of a binary MIPS program.
+				\item Finds $n$ words of available RAM at some address $\alpha$.
+				\item Reads the file into RAM starting at $\alpha$.
+				\item Puts $\alpha$ (the address) into some register (let's say \verb+$5+).
+				\item Executes the program (\verb+jalr $5+).
+				\item Does something else afterwards (\verb+mips.twoints+ prints the values of all the registers and ends, for instance).
+			\end{itemize}
+			This raises another question: how does the loader itself get into RAM? In the old days, there were hardware switches on RAM that allowed you to physically punch words into RAM. Today, we have manufacturing processes that do this for us. Regardless, we still want our loader to be \emph{really} small (in terms of the number of words).
+			\\ \\
+			Instead of hard-coding the loader into RAM, a mini-loader is written (with less code than a full loader would require) to load the loader. This process is known by various names, including:
+			\begin{itemize}
+				\item Initial Program Loader (IPI) in IBM mainframe land.
+				\item Bootstrapping (bootstrap) in mini/micro.
+			\end{itemize}
+
+			The mini-loader is permanently stored in a portion of RAM that is read-only. The mini-loader is actually manufactured into RAM.
+			\\ \\
+			\underline{Exercise}: write the smallest file \verb+mini.mips+ such that you can write an arbitrary program and run it like this: \verb+java mips.twoints mini.mips < program.mips+.
+
+		\subsection{Relocation}
+			Up until this point, we have assumed that $\alpha = 0$. That is, the location in the program has been equal to its address in RAM. Suppose instead that $\alpha = 8$. In fact, we can test this with \verb+mips.twoints+ like so: \verb+java mips.twoints ft.mips 8+ (the last parameter is the value for $\alpha$, which must be a multiple of 4).
+			\\ \\
+			In the case where $\alpha = 8$, the \verb+ft.mips+ program would set \verb+$3+ to \verb+0x8c63000+, which isn't correct. We need to offset our label values when $\alpha \not = 0$.
+			\\ \\
+			We use ``sticky notes'' to indicate where $\alpha$ needs to be added. We encode these sticky notes using a \textbf{MERL file} (MIPS executable relocatable linkable file). A MERL file is a binary file with three components:
+			\begin{enumerate}
+				\item \textbf{Header}. A MERL header is three words. The first word is a cookie, which is an arbitrary identifier that indicates that this is a MERL file. In this course, we'll use \verb+0x10000002+ as our cookie. Note that \verb+0x10000002+ is the hex representation of \verb+beq $0, $0, 2+, which means our program will execute normally if the MERL file is itself run directly where $\alpha = 0$. The second word is the size of the header and MIPS code (indicates where the sticky notes begin). The third word is the size of the header, MIPS code, and sticky notes (indicates end/length of file).
+				\item \textbf{MIPS code}. This is regular binary MIPS code, starting at location \verb+0c+.
+				\item \textbf{Sticky notes}. A sticky note is two words: a sticky-note-type indicator (in this case it's 1 to indicate the sticky note means to add $\alpha$), and the location in MERL to add $\alpha$ to.
+			\end{enumerate}
+
+			Here's an example MERL file:
+			\begin{verbatim}
+				ASSEMBLY            RAM          LOCATION          BINARY
+				.word 0x10000002    8            0                 10000002
+				.word 32            c            4                 00000020
+				.word 40            10           8                 00000028
+				lis $3              14           c                 00001814
+				.word ft            18           10                00000010
+				lw $3, 0($3)        1c           14                8c630000
+				jr $31              20           18                03e00008
+				ft: .word 42        24           1c                0000002a
+				.word 1             28           20                00000001
+				.word 0x10          2c           24                00000010
+			\end{verbatim}
 \end{document}
