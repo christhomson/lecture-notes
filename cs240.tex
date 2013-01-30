@@ -896,4 +896,74 @@
 						}
 					}
 				\end{algorithm}
+				A sample run of this algorithm is as follows:
+				\lecture{January 29, 2013} \begin{verbatim}
+					44 4 10 52 86 57 97 19 18 88 31 82 59 39
+					19 i -->>           44           <<-- j
+					19 4 10 18 86 57 97 44 52 88 31 82 59 39
+					         i -->>-<>-<<--  j
+					4 10 18 19 86 57 97 44 52 88 31 82 59 39 (final output)
+				\end{verbatim}
+
+				In-place partitioning is one the reasons why quick sort (and quick select) is so good. Recall the selection problem, where we have to find a way to return the $k$-th element in the sorted order. Quick select is one solution to this problem.
+				\\ \\
+				\textbf{Worst case}: quick select runs in $T(n) = n + T(n - 1) = n + (n - 1) + (n - 2) + \ldots + 1 = \Theta(n^2)$ time.
+				\\ \\
+				\textbf{Average case}: assume all permutations are equally likely. This is a probabilistic assumption on the input. The probability of choosing a ``good'' pivot is $\frac{1}{2}$. After $r$ recursive calls, about half the pivots are good, which means the array was halved approximately $\frac{r}{2}$ times. After $4 \lg n$ recursive calls, we must be left with an array of size 1. Note that this is $4 \lg n$ and not $2 \lg n$ because we aren't dividing perfectly in half each time. We're also assuminng that randomness is somehow preserved on recursive calls.
+				\\ \\
+				\textbf{Expected case}: probabilities come from the algorithm itself. For example: select $p$ at random in A[0\ldots n - 1], which preserves randomness. Regardless of the input distribution or partition algorithm, a pivot is ``good'' with probability $\approx \frac{1}{2}$. The expected case is that this algorithm runs in $T(n, k)$ time as follows:
+				\begin{align*}
+					T(n, k) &= cn + \frac{1}{n} T(n - 1, k) + \frac{1}{n} T(n - 2, k) + \frac{1}{n} T(n - 3, k) + \ldots + \frac{1}{n}T(n + 1, k - 1) + \frac{1}{n}T(n + 2, k - 2) + \ldots  \\
+					&= cn + \frac{1}{n} \bigg[ \sum_{i = 0}^{k - 1} T(n - i - 1, k - i - 1) + \sum_{i = k + 1}^{n - 1} T(i, k) \bigg]
+				\end{align*}
+				We could hand-wave and say:
+				\begin{align*}
+					T(n) &\le \frac{1}{2} T(n) + \frac{1}{2} T\big(\frac{3n}{4}\big) + cn \\
+					&\le 2cn + 2cn\big(\frac{3n}{4}\big) + 2c\big(\frac{9n}{16}\big) + \ldots + T(1) \\
+					&\le \frac{1}{2} \bigg[\frac{1}{2}T(n) + \frac{1}{2}T\big(\frac{3n}{4}\big) + cn \bigg] + \frac{1}{2}\bigg[ \frac{1}{2} T\big(\frac{3n}{4}\big) + \frac{1}{2}T\big(\frac{9n}{16}\big) + c \frac{3n}{4} \bigg] \\
+					&\le \frac{1}{4}T(n) + \frac{1}{2}T\big(\frac{3n}{4}\big) + \frac{1}{2} cn + \frac{1}{4}T\big(\frac{9n}{16}\big) + c\frac{3n}{8} + cn \\
+					&\le \underbrace{T(1)}_{\text{constant}} + 2cn \underbrace{\sum_{i = 0}^{\infty} \big(\frac{3}{4}\big)^i}_{\text{constant}} \\
+					&= \Theta(n)
+				\end{align*}
+				$\therefore$ We can quick select in linear time in the expected case.
+				\\ \\
+				We really don't need highly random bits for quick select \textendash{} at least nowhere near as random as in cryptography. You generally need a good random source, however for this application (since security is not an issue), the current time may suffice as a random seed. If we can \emph{easily} produce a sequence mechanically with a program, then it is not considered random. True randomness cannot be compressed.
+			\subsubsection{Quick Sort Algorithm and Analysis}
+				The general algorithm for quick sort is as follows. \\
+				\begin{algorithm}[H]
+					\lIf{n = 0}{\Return}\;
+					p = choose random\_pivot(0 \ldots n - 1)\;
+					i = partition(A, p)\;
+					QS(A[0 \ldots i - 1])\;
+					QS(A[i + 1 \ldots n])\;
+				\end{algorithm}
+
+				In quick select, we only recursed on the side containing the target, but in quick sort, we want to recurse continuously on both sides until we every side contains only one element.
+				\\ \\
+				\textbf{Worst case}: $T(n) = n + T(n - 1) = n + (n - 1) + T(n - 2) + \ldots = \Theta(n^2)$.
+				\\ \\
+				\textbf{Best case}: $T(n) = n + 2T\big(\frac{n}{2}\big) = \Theta(n \lg n)$.
+				\\ \\
+				\textbf{Average case}:
+				\begin{align*}
+					T(n) &= cn + \frac{1}{n}(T(n - 1) + T(1)) + \frac{1}{n}(T(n - 2) + T(2)) + \ldots + \frac{1}{n}(T(1) + T(n - 1)) \\
+					&= \frac{1}{n} \sum_{i = 0}^{n - 1}(T(i) + T(n - i - 1)) + \underbrace{\Theta(n)}_{\text{partition step}} \\
+					&\le \frac{1}{n} \sum_{i = 0}^{n - 1} 2 \max \{T(i), T(n - i - 1) \} + \Theta(n) \\
+					&= \frac{1}{n} \cdot \frac{1}{2}(T\big(\frac{3i}{4}\big)) + \frac{1}{n} \cdot \frac{1}{2} T(i) + cn
+				\end{align*}
+
+				Take note of two important observations here:
+				\begin{enumerate}
+					\item At each level of the recursion, the total work adds up to $n$ (roughly).
+					\item This continues until we reach the end of the recursion at $n = 1$.
+				\end{enumerate}
+
+				Every two levels, every block is half of its original size or less.
+				\\ \\
+				The worst case of quick sort is \emph{extremely} rare. Alejandro ran an experiment, and out of one billion runs, the worst case took just twice the time of the average case.
+				\\ \\
+				Bubblesort is really bad. It's only taught because it has a cool name.
+				\\ \\
+				Mergesort cannot be improved upon, but quick sort can be improved by optimizing the algorithms in selecting pivots.
+
 \end{document}
