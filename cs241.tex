@@ -697,11 +697,10 @@
 				Here's similar code for Scheme:
 				\begin{verbatim}
 					(define (outbyte b)
-					   (write-byte
-					      (bitwise-and (arithmetic-shift b -24) 255)
-					      (bitwise-and (arithmetic-shift b -16) 255)
-					      (bitwise-and (arithmetic-shift b -8) 255)
-					      (bitwise-and (arithmetic-shift b 0) 255)))
+					   (write-byte (bitwise-and (arithmetic-shift b -24) 255))
+					   (write-byte (bitwise-and (arithmetic-shift b -16) 255))
+					   (write-byte (bitwise-and (arithmetic-shift b -8) 255))
+					   (write-byte (bitwise-and b 255)))
 				\end{verbatim}
 		\subsection{Assembler Requirements} \lecture{January 25, 2013}
 			Your assembler is a Scheme/C/C++/Java program. You could also submit it in Scala, if you like.
