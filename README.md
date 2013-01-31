@@ -15,3 +15,6 @@ If you simply want to view the notes, look at the PDFs. I've also included the o
 
 ## Disclaimer
 I'm trying to make these notes as accurate as possible, however there might be some errors from things I've heard or seen incorrectly. If you're taking any of these courses, please rely on your own notes. Also, note that the format and content of a course can change drastically from term to term, or even between professors.
+
+## License
+You can do what you want with these notes with two restrictions: you may not profit from them in any way, and you must leave my name in them somewhere. Don't be evil. Thanks! :)
