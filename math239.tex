@@ -8,7 +8,7 @@
 \usepackage{hyperref}
 \usepackage{wasysym}
 \usepackage{soul}
-
+\usepackage{cleveref}
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
 
@@ -27,7 +27,7 @@
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
 
 \begin{document}
-
+	\let\ref\Cref
 	\title{\bf{MATH 239: Introduction to Combinatorics}}
 	\date{Winter 2013, University of Waterloo \\ \center Notes written from Bertrand Guenin's lectures.}
 	\author{Chris Thomson}
@@ -1010,6 +1010,7 @@
 
 			\begin{proposition}
 				Suppose $A^\star$ is unambiguous and $\epsilon \not \in A$. Then $\phi_A(x) = \frac{1}{1 - \phi_A(x)}$.
+				\label{proposition:unambiguousstar}
 			\end{proposition}
 
 			\begin{proof}
@@ -1025,14 +1026,88 @@
 
 				Note that the composition used in this proof is valid because $\epsilon \not \in A$, so the constant of $\phi_A(x)$ is zero as required. That is, $[x^0]\phi_A(x) = 0$ makes the composition acceptable.
 			\end{proof}
+		\subsection{Counting Strings} \lecture{January 30, 2013}
+			\begin{ex}
+				Let $S$ be the set of binary strings with no three consecutive ones (111). We can express $S$ as $S = \{ 0, 10, 110 \}^\star \{\epsilon, 1, 11\}$. You can verify that this is unambiguous.
+				\\ \\
+				We have:
+				\begin{align*}
+					\phi_{\{0, 10, 110\}}(x) &= x + x^2 + x^3 \\
+					\phi_{\{0, 10, 110\}^\star}(x) &= \frac{1}{1 - x - x^2 - x^3} \text{ by \ref{proposition:unambiguousstar}} \\
+					\phi_{\{\epsilon, 1, 11\}}(x) &= 1 + x + x^2 \\ \\
+					\phi_S(x) &= \phi_{\{0, 10, 110\}^\star}(x) \cdot \phi_{\{\epsilon, 1, 11\}}(x) \text{ by the product lemma for strings} \\
+					&= \frac{1 + x + x^2}{1 - x - x^2 - x^3}
+				\end{align*}
+			\end{ex}
+
+			\begin{ex}
+				Let $S$ be the set of binary strings where no block has length 2. Recall from before:
+				\begin{align*}
+					S &= ABC \\
+					A &= \{\epsilon, 1, 111, 1111, \ldots\} \\
+					B &= (\{0, 000, 0000, \ldots\}\{1, 111, 1111, \ldots\})^\star
+				\end{align*}
+
+				For the sake of convenience, we'll define $f$ as follows.
+				\begin{align*}
+					f &= x + x^3 + x^4 + x^5 + \ldots \\
+					&= x + x^2 + x^4 + x^5 + \ldots - x^2 \text{ by adding and removing } x^2 \\
+					&= x(1 + x + x^2 + \ldots) - x^2 \\
+					&= \frac{x}{1 - x} - x^2
+				\end{align*}
+
+				Now, we can easily state the generating functions for $A$, $B$, and $C$:
+				\begin{align*}
+					\phi_A(x) &= 1 + f \\
+					\phi_B(x) &= \frac{1}{1 - f^2} \\
+					\phi_C(x) &= 1 + f
+				\end{align*}
+
+				We can now use the product lemma on $ABC$ to find $\phi_S(x)$.
+				\begin{align*}
+					\phi_S(x) &= \phi_A(x) \cdot \phi_B(x) \cdot \phi_C(x) \\
+					&= \frac{(1 + f)^2}{1 - f^2} \\
+					&= \frac{(1 + f)(1 + f)}{(1 + f)(1 - f)} \\
+					&= \frac{1 + f}{1 - f} \\
+					& \text{\vdots} \\ 
+					&= \frac{1 - x^2 + x^3}{1 - 2x + x^2 - x^3}
+				\end{align*}
+			\end{ex}
+			\subsubsection{Recursive String Definitions}
+				There's another way of constructing binary strings: recursive definitions.
+				\begin{ex}
+					Let $S$ be the set of all binary strings. We can define $S$ recursively as $S = \{0, 1\} \cup \{ \epsilon \}$. Whenever you write an expression like this, you should take great care to ensure that both sides are actually equal.
+					\\ \\
+					One might attempt to describe $S$ as $\{ \epsilon, 0, 1 \}S$, however that is ambiguous. $S = \{ 0, 1 \} \cup \{ \epsilon \}$ is unambiguous. Since there are two terms of length 1, and applying the sum \& product lemmas, we get:
+					\begin{align*}
+						\phi_S(x) &= 2x \cdot \phi_S(x) + 1 = \frac{1}{1 - 2x} \\
+						[x^n]\phi_S(x) &= [x^n] \frac{1}{1 - 2x} \\
+						&= [x^n](1 + 2x + (2x)^2 + (2x)^3 + \ldots
+					\end{align*}
+				\end{ex}
 	\newpage
 	\section{Clicker Questions}
-		\lecture{January 21, 2013}
 		\begin{itemize}
-			\item How many bijections are there from $\{1, \ldots, n\}$ to $\{1, \ldots, n\}$? $n!$, since you can't map two elements in the first set to the same one element in the second set.
+			\item \lecture{January 21, 2013} How many bijections are there from $\{1, \ldots, n\}$ to $\{1, \ldots, n\}$? $n!$, since you can't map two elements in the first set to the same one element in the second set.
 			\item Let $S$ be a set of objects with weight function $w$. Suppose that $S = A \union B$. Does $\phi_S(x) = \phi_A(x) + \phi_B(x)$? No, not always. The sum lemma only applies when $A$ and $B$ are partitions of $S$.
 			\item Let $S = \{(a, b) | a, b \ge 1 \in \mathbb{Z}\}, w[(a, b)] = a - b$. What is the generating function for $S$? There is no generating function for $S$, since it is not a power series. There are an infinite number of pairings \textendash{} that is, there are an infinite number of objects with the same weight.
 			\item Does $x^2 - x^4 + x^6 - x^8 + x^10 - \ldots$ have an inverse? No. There is no constant term that isn't equal to zero, therefore it does not have an inverse.
 			\item Is a composition of $A(x) = 1 + x + x^2 + x^3 + \ldots$ and $B(x) = \frac{1}{1 - x}$ a power series? No. $B(x)$ must have a constant term that is not zero in order for a composition to be acceptable.
+			\item \lecture{January 30, 2013} What is the power series $x^2 + x^3 + x^4 + x^5 + \ldots$ equal to? It is equal to $\frac{x^2}{1 - x}$, since:
+				\begin{align*}
+					x^2 + x^3 + x^4 + x^5 + \ldots &= x^2(1 + x + x^2 + \ldots) = x^2 \bigg(\frac{1}{1 - x}\bigg) = \frac{x^2}{1 - x}
+				\end{align*}
+			\item Is $A(B(x))$ a power series for $A(x) = 1 + x + x^2 + \ldots$ and $B(x) = \frac{1}{1 - x}$? No! We can only get a power series if $[x^0]B(x) = 0$, but $B(x) = \frac{1}{1 - x} = 1 + x + x^2 + \ldots$.
+			\item What is the coefficient of $x^3$ for $\frac{1}{(1 - x)^7}$? The coefficient is ${9 \choose 2}$. This could be found using the formula:
+				\begin{align*}
+					[x^n] \frac{1}{(1 - x)^k} = { n + k - 1 \choose k - 1 }
+				\end{align*}
+			\item The number of ways of spending exactly \$237 to buy oranges (\$1 each) and/or mangos (\$2 each) is\dots? It's $[x^{237}](1 + x + x^2 + x^3 + \ldots)(1 + x^2 + x^4 + x^6 + \ldots)$.
+				\\ \\
+				You can represent this as a pair, $(a, b)$, where $a$ is the number of oranges and $b$ is the number of mangos. Define a weight function $w[(a, b)] = a + 2b$. We also have $S = \{ (a, b) \}, A = \{ 0, 1, \ldots \}, B = \{ 0, 1, \ldots \}$. Also, define weight functions for $A$ and $B$: $w(a) = a, w(b) = 2b$. The generating series are $\phi_A(x) = 1 + x + x^2 + \ldots$ and $\phi_B(x) = 1 + x^2 + x^4 + \ldots$. Finally, use the product lemma on $\phi_A(x) \cdot \phi_B(x)$.
+
+			\item The set of binary strings without consecutive zeroes can be described as\dots? The set can be described as $(\{\epsilon, 0\}\{ 1 \})^\star \{ \epsilon, 0 \}$.
+				\\ \\
+				We have to make sure this expression does not generate anything that is not in the set. Then we think about how to generate any arbitrary string contained in the set we're trying to express. There is a unique way to generate each string with the expression.
 		\end{itemize}
 \end{document}
