@@ -17,6 +17,7 @@
 \theoremstyle{definition}
 \newtheorem{defn}{Definition}[section]
 \newtheorem{ex}{Example}[section]
+\newtheorem{theorem}{Theorem}[section]
 
 \setlength{\marginparwidth}{1.5in}
 \setlength{\algomargin}{0.75em}
@@ -965,5 +966,72 @@
 				Bubblesort is really bad. It's only taught because it has a cool name.
 				\\ \\
 				Mergesort cannot be improved upon, but quick sort can be improved by optimizing the algorithms in selecting pivots.
+				\lecture{January 31, 2013}
+				\\ \\
+				To review, quick sort operates with the following runtimes:
+				\begin{itemize}
+					\item Average case: $\Theta(n \lg n)$, with a constant $\approx 1.4$, on a uniform input distribution. However, we know the input is \emph{not} uniform. One type of typical distribution would be an array containing the old customer list (sorted) followed by a new customer list, and we'd want to merge the two lists. That is not a uniform distribution.
+					\item Expected case: $\Theta(n \lg n)$ if we choose the pivot position at random. This is the best option in general.
+					\item Worst case: $\Theta(n \lg n)$, with a constant $\approx \in [7, 10]$, if you select the median in $\Theta(n)$ time. This constant is relatively large, which is why we typically avoid this algorithm.
+				\end{itemize}
+				Note that the constants only matter when we can't improve the order any further, as is the case here.
+				\\ \\
+				Can we do better than $\Theta(n \lg n)$? It depends on what you're sorting. But in general, no, regardless of the algorithm (even considering other sorting algorithms other than quick sort). There is a lower bound for the performance of \emph{all} sorting algorithms by $\Omega(n \lg n)$.
+				\\ \\
+				Finding the minimum (or maximum) element in a list or unsorted array of numbers has a lower bound of $\Omega(n)$ because you need to look at all $n$ numbers. We can find a similar lower bound (and rationale) for sorting.
+		\subsection{Sorting in the Comparison Model}
+			Elements to be sorted can be compared but no other operations are allowed.
+			\begin{theorem}
+				In the comparison model, it takes $\Omega(n \lg n)$ operations to sort $n$ objects.
+			\end{theorem}
+			Recall the 20 questions game from childhood. If you're unaware, 20 questions is a game where:
+			\begin{itemize}
+				\item A mineral, plant, or animal is selected.
+				\item The other person asks 20 yes/no questions.
+				\item The other person aims to guess the mineral/plant/animal that was selected, within those 20 questions.
+			\end{itemize}
+			For the guess to be correct, it can only be made in nodes where the set of candidates is of size 1. That is, you must narrow the number of possibilities down to 1 prior to making a guess in order for your guess to be correct.
+			\\ \\
+			If the tree of questions is balanced, we could distinguish $2^{20}$ objects since there are $2^{20}$ leaves (maximum) on a tree of height 20. If you have a completely unbalanced tree, you can only distinguish between 20 objects in a tree of height 20. This is one of the reasons why mergesort is good.
+			\\ \\
+			Fundamentally, shuffling and sorting are the same operation, just backwards. Every sorting sequence corresponds to a unique shuffle sequence. How many different shuffles do we have for a set that contains $n$ elements? $n!$.
+			\\ \\
+			Let's consider a comparison-based sorting algorithm on a set where all the keys are distinct. We get a tree where the root is $a_i : a_j$ and the two child nodes are $a_i < a_j$ and $a_i > a_j$. As we get further down the tree, these comparisons all compound to narrow down the set. The algorithm determines the next question to ask. 
+			\\ \\
+			$a_i : a_j$ is just one way of representing that we're doing a general comparison. Sometimes we also use the notation $a_i ? a_j$ or $a_i \gtreqless a_j$.
+			\\ \\
+			At the end of the comparisons, we \emph{must} have a single unique candidate shuffle, namely the sequence that is unshuffled by the algorithm as a result of those comparisons.
+			\\ \\
+			We need a tree with $n!$ leaves that is as shallow as possible. More specifically:
+			\begin{align*}
+				h = \log(n!) = \log\big(\frac{n^n}{e^n}) = \log n^n - \log e^n = n \log n - n \log e = \Theta\big(\big(\frac{n}{e}\big)^n\big)
+			\end{align*}
+			This is true because of Stirling's approximation.
+			\\ \\
+			$\therefore$ As long as your sorting algorithm only uses comparison operators, $\Omega(n \lg n)$ is the best you can do.
+			\\ \\
+			When making an argument like this, you need to make arguments that apply across \emph{all} algorithms, even ones that no one has seen or thought of yet. That's what we did here. When you're discussing lower bounds, you need to be extremely clear which operations are and aren't allowed.
+			\subsection{Examples of Sorting Faster Than n lg n}
+				\begin{itemize}
+					\item You are given a permutation of the numbers $1 \ldots n$. This runs in $\Theta(n)$ or $\Theta(1)$ time, depending on which operations you're allowed to use. If we're given the correct operations, we don't even need to look at the input in this case.
+					\item Keys given belong to a set of size $O(n)$, allowing possible repetition.
+				\end{itemize}
+
+				Here's an algorithm for \verb+counting_sort(A, k)+, where $A$ is an array and $k$ is the size of the universe (not the number of elements). \\
+				\begin{algorithm}[H]
+					c[0 \ldots k - 1] = $\vec 0$; // $\Theta(n) = O(k)$ \\
+					\For{i = 0 to n - 1}{ // $\Theta(n)$ \\
+						c[A[i]]++\;
+					}
+					\For{i = 1 to k - 1}{ // $\Theta(n) < \Theta(k)$ \\
+						c[i] = c[i] + c[i - 1]\;
+					}
+					B = (copy A); // $\Theta(n)$ \\
+					\For{i = n - 1 down to 0}{ // $\Theta(n)$ \\
+						decrement C[B[i]]\;
+						A[c[B[i]]] = B[i]
+					}
+				\end{algorithm}
+				This works well when you have a dense set such as student IDs or street addresses.
 
 \end{document}
