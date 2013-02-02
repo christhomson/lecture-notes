@@ -926,5 +926,39 @@
 
 						When the ESRs are all gone, you can run your program.
 				\end{itemize}
-
+			\subsection{Assemblers, Linkers, and Loaders on Linux} \lecture{February 1, 2013}
+				In this course, we've been using tools designed for a MIPS CPU. We'll now take a brief look at how assemblers, linkers, and loaders work on Linux machines instead of on MIPS CPUs.
+				\\ \\
+				The \textbf{ELF format} is the Linux equivalent to MERL for MIPS. ELF means executable linkable format. ELF is a \emph{really} complicated format. You can learn more about the ELF format by running \verb+man elf+ on a Linux machine.
+				\\ \\
+				The assembler on Linux is called \verb+as+. Linux uses a different assembly language than MIPS because your CPU is probably an Intel or AMD CPU, not a MIPS CPU, so the assembly language differs.
+				\\ \\
+				The linker is called \verb+ld+.
+				\\ \\
+				The loader is implicit. Fun fact: \verb+a.out+ was a format like ELF (but simpler), and it literally meant ``the \textbf{out}put from the \textbf{a}ssembler.''
+			\subsection{Libraries}
+				You may have a bunch of procedures that you want to use in many \verb+asm+ files. You can package these in a \textbf{library} so the linker can search the sticky notse for the ESD (external symbol definition) for the procedures it needs. Think of it as a match.com for MERLs.
+				\\ \\
+				How do you create an archive? It could be just a folder. But on Linux, you use \verb+ar+ (which is an abbreviation for ``archive'') which produces an archive similar to a zip file.
+				\\ \\
+				The standard libraries on Linux systems are stored at \verb+/usr/lib+.
+				\\ \\
+				So far, we've been discussing \textbf{static linking}, where all external symbol references are resolved by combining with external symbol definitions to create REL entries. There are several shortcomings to static linking, however.
+				\begin{itemize}
+					\item If many programs use the same procedures/libraries, you get many copies of the procedures which wastes file space and RAM.
+					\item If you change a library procedure, you have to find and relink every program that uses it.
+				\end{itemize}
+				An alternative to static linking is \textbf{dynamic linking}. Dynamic linking defers the resolution of ESRs until execution time. The library is searched when the ESR-referenced routine is called. Dynamic linking is implemented by statically linking a \textbf{stub} for each external symbol reference. The stub is effectively a pointer to the (external) dynamic library, which can be updated without changing references to the stub (i.e. without relinking). 
+				\\ \\
+				Importantly, if multipe programs are running at once that use the same dynamically-linked library, the procedure will still only exist once in RAM. There won't be a separate instance of the library in RAM for each running program that needs it.
+				\\ \\
+				On Windows, a dynamic (link) library is called a \textbf{DLL}. If you're on Windows and have two programs that need the same DLL, but different versions of that DLL, you're in for a bad time. Windows also requires restarting in order to update DLLs, which is a fundamental design flaw. Linux, on the other hand, preserves old versions of dynamic link libraries even after newer versions are installed.
+	\section{Formal Languages}
+		A mathematical definition of what is and is not in a language. Formal language is useful for:
+		\begin{itemize}
+			\item Automation (if possible).
+			\item Recognizers (human recognizers, too).
+			\item Parsers (prove that $X$ is valid per a mathematical definition).
+			\item Translators (translate to an equivalent representation in another language).
+		\end{itemize}
 \end{document}
