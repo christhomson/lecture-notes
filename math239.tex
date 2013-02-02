@@ -1075,15 +1075,59 @@
 			\end{ex}
 			\subsubsection{Recursive String Definitions}
 				There's another way of constructing binary strings: recursive definitions.
-				\begin{ex}
-					Let $S$ be the set of all binary strings. We can define $S$ recursively as $S = \{0, 1\} \cup \{ \epsilon \}$. Whenever you write an expression like this, you should take great care to ensure that both sides are actually equal.
+				\begin{ex} \lecture{February 1, 2013}
+					Let $S$ be the set of all binary strings. We can define $S$ recursively as $S = \{ \epsilon \} \cup \{0, 1\}$. Whenever you write an expression like this, you should take great care to ensure that both sides are actually equal.
 					\\ \\
-					One might attempt to describe $S$ as $\{ \epsilon, 0, 1 \}S$, however that is ambiguous. $S = \{ 0, 1 \} \cup \{ \epsilon \}$ is unambiguous. Since there are two terms of length 1, and applying the sum \& product lemmas, we get:
+					One might attempt to describe $S$ as $\{ \epsilon, 0, 1 \}S$, however that is ambiguous. $S = \{ \epsilon \} \cup \{ 0, 1 \}$ is unambiguous. Since there are two terms of length 1, and applying the sum \& product lemmas, we get:
 					\begin{align*}
-						\phi_S(x) &= 2x \cdot \phi_S(x) + 1 = \frac{1}{1 - 2x} \\
-						[x^n]\phi_S(x) &= [x^n] \frac{1}{1 - 2x} \\
-						&= [x^n](1 + 2x + (2x)^2 + (2x)^3 + \ldots
+						\phi_S(x) &= \phi_{\{\epsilon\}}(x) + \phi_{\{0, 1\}}(x) \cdot \phi_S(x) \text{ by the sum lemma} \\
+						&= 1 + 2x \cdot \phi_S(x) \\
+						&= \frac{1}{2 - x} \\
+						&= 1 + 2x + 4x^2 + 8x^3 + \ldots \text{ by composition}
 					\end{align*}
+					Note that $[x^n]\phi_S(x) = 2^n$ because the number of strings with length $n$ is $2^n$.
+				\end{ex}
+
+				\begin{ex}
+					Let $S$ be the set of all binary strings with no three consecutive ones (111).
+					\\ \\
+					Consider the arbitrary string $110000100110100011 \in S$. There are no three consecutive ones in that string. We can prefix this string with 0, 10, or 110 while maintaining the constraint that the string cannot have three consecutive ones. With this recursive definition, we're building the string from right to left.
+					\\ \\
+					We can express $S$ as $S = \{ \epsilon, 1, 11 \} \cup S\{0, 01, 011\}$.
+					\\ \\
+					In order to check this, we must verify that the two sides of the union are disjoint. That's easy to confirm: the elements on the left have no zeroes in them, and all elements on the right have a zero. Therefore, the sum lemma applies.
+					\begin{align*}
+						\phi_S(x) &= \phi_{\{\epsilon, 1, 11\}}(x) + \phi_{\{0, 10, 110\}}(x) \cdot \phi_S(x) \\
+						&= 1 + x + x^2 + (x + x^2 + x^3) \cdot \phi_S(x) \\
+						&= \frac{1 + x + x^2}{1 - x - x^2 - x^3}
+					\end{align*}
+				\end{ex}
+
+				\begin{ex}[A harder problem]
+					Let $S$ b ethe set of all strings not containing 11010. That is, 11010 is the forbidden string. Let $F$ be the set of all strings ending in 11010, where the entire string except the last character is an element in $S$. That is, $F$ is the set of strings where 11010 is at the end of the string but nowhere else in the string.
+					\\ \\
+					\underline{Idea}:
+					\begin{enumerate}
+						\item Write two equations relating $S$ and $F$. This is the trickiest part.
+						\item Write two equations relating $\phi_S(x)$ and $\phi_F(x)$.
+						\item Solve and get an expression for $\phi_S(x)$.
+					\end{enumerate}
+
+					The first equation relating $S$ and $F$ is $\{ \epsilon \} \cup S \{ 0, 1 \} = S \cup F$. We need to verify this by showing both directions of the equality.
+					\\ \\
+					\underline{Showing $\{\epsilon \} \cup S \{ 0, 1 \} \subseteq S \cup F$}: let $a \in \{ \epsilon \} \cup S \{ 0, 1 \}$. We need to show that $a \in S$ or $a \in F$.
+					\\ \\
+					If $a = \epsilon$, then $a \in S$ since $\epsilon \in S$. If $a = a'0$ or $a = a'1$ where $a' \in S$, then either:
+					\begin{itemize}
+						\item $a$ does not have the forbidden string in it, so $a \in S$.
+						\item $a'$ has the forbidden string at the end, since $a' \in S$, so $a \in F$.
+					\end{itemize}
+
+					\underline{Showing $\{ \epsilon \} \cup S \{ 0, 1 \} \supseteq S \cup F$}: let $a \in S \cup F$. We need to show that $a \in \{ \epsilon \} \cup S \{ 0, 1 \}$.
+					\\ \\
+					Suppose $a \in S$, or $a = \epsilon$. Then clearly, $a \in S \{ 0, 1 \}$. Suppose $a \in F$, then $a \in S \{ 0, 1 \}$.
+					\\ \\
+					We'll finish this example next time.
 				\end{ex}
 	\newpage
 	\section{Clicker Questions}
