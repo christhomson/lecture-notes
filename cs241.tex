@@ -674,7 +674,7 @@
 				\\ \\
 				Suppose we want to zero out all but the last byte of $b$. We'd do \verb+b & 255+, which is the same as \verb+b & 0xff+.
 				\\ \\
-				In Scheme, \verb+(bitwise-and a b)+ and \verb+(bitwise-or a b)+ are the provided utilities for performing bit-wise operations. In C++, you use \verb+a & b+ and \verb+a | b+.
+				In Scheme, \verb+(bitwise-and a b)+ and \verb+(bitwise-ior a b)+ are the provided utilities for performing bit-wise operations. In C++, you use \verb+a & b+ and \verb+a | b+.
 				\\ \\
 				Shifting bits can also be useful. You can use \verb+a << n+ in C++ to perform a left-shift by $n$ bits (adding $n$ zeroes to the right, discarding from the left). C++ also supports \verb+a >> 5+, which adds $n$ zeroes to the left and discards from the right. Scheme supports left and right shifts using \verb+(arithmetic-shift a n)+, where positive $n$ shifts right and negative $n$ shifts left.
 				\\ \\
