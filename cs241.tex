@@ -5,9 +5,12 @@
 \usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage{amsmath}
+\usepackage{tikz}
 \usepackage[lined]{algorithm2e}
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
+
+\newtheorem{defn}{Definition}[section]
 
 \setlength{\marginparwidth}{1.5in}
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
@@ -961,4 +964,115 @@
 			\item Parsers (prove that $X$ is valid per a mathematical definition).
 			\item Translators (translate to an equivalent representation in another language).
 		\end{itemize}
+
+		\lecture{February 4, 2013}
+		We need mathematical notions of what's in and not in a language.
+
+		\begin{defn}
+		A \textbf{formal language} $L$ is a set of strings on a finite alphabet $\Sigma$.
+		\end{defn}
+
+		\begin{defn}
+			An \textbf{alphabet} $\Sigma$ is a finite set of symbols.
+		\end{defn}
+		For example, $\Sigma = \{0, 1, 2, 3, 4, 5, 6, 7, 8, 9\}$ or $\Sigma = \{ \text{dog}, \text{cat}, \text{monkey} \}$. Note that an alphabet can contain any arbitrary symbols \textendash{} it does not need to consist of just single Roman characters.
+
+		\begin{defn}
+			A \textbf{string} is a sequence whose elements are symbols. The \textbf{empty string} is a sequence with zero elements, typically denoted $\epsilon$ or $\lambda$.
+		\end{defn}
+		In this course, we'll denote the empty string as $\epsilon$.
+		\\ \\
+		Language $L$ is a set of strings. $L_1 = \{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, \ldots \}$, $L_2 = \{0, 1, 00, 11, 000, 111, 0000, 1111, \ldots\}$, and $L_3 = \{ \text{dogcat}, \text{catdog}, \text{dogdogmonkey} \}$ are three examples of languages. It's important to note that unlike an alphabet, a language can be infinite in size.
+		\\ \\
+		There is a certain imprecision in the definitions of $L_1$ and $L_2$. ``$\ldots$'' is not mathematically precise. For example, does $L_1$ contain counting numbers with no extra (padding) zeroes \ldots{} except zero? It gets complicated. There are also some even more complicated languages:
+		\begin{itemize}
+			\item $L_1 = \{ \text{set of coded messages sent by NASA on probes} \}$. We could ask NASA, but it still gets complicated. What if a probe had a coded message on-board but the probe blew up on the launchpad? We need to be more precise in our definition.
+			\item $L_2 = \{ \text{set of coded messages that aliens will understand} \}$. This involves mind-reading.
+			\item $L_3 = \{ \text{set of all MIPS binary programs that halt for all inputs} \}$. You can't write a program to determine membership in this language.
+		\end{itemize}
+		Some languages are clearly easier to specify (precisely) than others.
+		\\ \\	
+		Noam Chomsky came up with a hierarchy that expressed four different types of formal languages.
+		\begin{itemize}
+			\item Regular languages (easiest, nice mathematical properties, but limited).
+			\item Context-free languages (more general, tools are available to work with these but they're harder to use).
+			\item Context-sensitive languages (even more broad, harder to work with).
+			\item Unrestricted languages (you can specify what you want to be in the language but you cannot build a computer to specify it).
+		\end{itemize}
+
+		\subsection{Regular Languages}
+			There are two equivalent definitions for regular languages: a generative definition (a method for building languages) and an analytic definition (how you can build a recognizer for the language).
+			\begin{defn}
+				A language $L$ on alphabet $\Sigma$ is regular if \emph{any} of the following are true:
+				\begin{itemize}
+					\item $L$ is finite.
+					\item $L = L_1 \cup L_2$ (that is, $L$ is the union of regular languages $L_1$ and $L_2$).
+					\item $L = L_1 L_2$ (that is, $L$ is the concatenation of regular languages $L_1$ and $L_2$). More precisely, $L_1 L_2 = \{ xy | x \in L_1, y \in L_2 \}$.
+					\item $L = L_1^\star$ of a regular language $L_1$. This is known as repetition or a Kleene closure. That is, $L = \{ \epsilon \} \cup L L_1$. Note that $L$ contains $\epsilon, L_1$, and every element of $L$ being concatenated with $L_1$ continuously. Alternatively, this could be expressed as $L^\star = \{ \epsilon \} \cup L_1 \cup L_1 L_1 \cup L_1 L_1 L_1 \cup \ldots$.
+				\end{itemize}
+			\end{defn}
+
+			\begin{defn}
+				A language $L$ is regular if it can be recognized by a computer with finite memory. If you need a stack or another unbounded data structure, then it is not regular.
+			\end{defn}
+
+			For the analytic definition, we use an abstraction known as \textbf{finite state machines} or {finite automaton} to represent \emph{any} machine with finite memory.
+			\subsubsection{Deterministic Finite Automaton (DFA)}
+				You have an alphabet $\Sigma$, a finite set of states $S$, an initial state $i \in S$, a set of final states $f \subseteq S$, and a transition function $T: S \times \Sigma \to S$.
+				\\ \\
+				For example: $\Sigma = \{ 0, 1 \}$, $S = \{ \text{wilma}, \text{fred}, \text{pebbles} \}$, $i = \text{wilma}$, $f = \{ fred, pebbles \}$, and $T$ is defined by the table:
+
+				\begin{center}
+					\begin{tabular}{|c|c|}
+						\hline $S \times \Sigma$ & $S$ \\ \hline
+						wilma, 0 & fred \\
+						wilma, 1 & pebbles \\
+						pebbles, 0 & pebbles \\
+						pebbles, 1 & pebbles \\ \hline
+					\end{tabular}
+				\end{center}
+
+				This is a partial function $T$. It's tedious to construct a table like this, and it doesn't easily convey the information to us in a visual way. Instead, we could use a bubble diagram.
+				\\ \\
+				A bubble diagram is more visual way to illustrate a finite state machine / finite automaton. You draw a circle for each state, an arrow for the initial state, and arrows between the circles to represent the transition function. You indicate the final states in some way, such as a double circle.
+
+				
+				\begin{center}
+					\begin{tikzpicture}[scale=0.2]
+						\tikzstyle{every node}+=[inner sep=0pt]
+						\draw [black] (16.8,-17.2) circle (3);
+						\draw (16.8,-17.2) node {wilma};
+						\draw [black] (38,-24.5) circle (3);
+						\draw (38,-24.5) node {fred};
+						\draw [black] (38,-24.5) circle (2.4);
+						\draw [black] (19.7,-31.8) circle (3);
+						\draw (19.7,-31.8) node {pebbles};
+						\draw [black] (19.7,-31.8) circle (2.4);
+						\draw [black] (55.7,-18.5) circle (3);
+						\draw (55.7,-18.5) node {barney};
+						\draw [black] (19.64,-18.18) -- (35.16,-23.52);
+						\fill [black] (35.16,-23.52) -- (34.57,-22.79) -- (34.24,-23.74);
+						\draw (26.5,-21.38) node [below] {$0$};
+						\draw [black] (17.38,-20.14) -- (19.12,-28.86);
+						\fill [black] (19.12,-28.86) -- (19.45,-27.98) -- (18.47,-28.17);
+						\draw (17.51,-24.81) node [left] {$1$};
+						\draw [black] (21.846,-29.721) arc (161.81889:-126.18111:2.25);
+						\draw (26.89,-29.07) node [right] {$0,\mbox{ }1$};
+						\fill [black] (22.66,-32.24) -- (23.26,-32.96) -- (23.57,-32.01);
+						\draw [black] (40.84,-23.54) -- (52.86,-19.46);
+						\fill [black] (52.86,-19.46) -- (51.94,-19.25) -- (52.26,-20.19);
+						\draw (48.65,-22.07) node [below] {$0,\mbox{ }1$};
+						\draw [black] (40.84,-23.54) -- (52.86,-19.46);
+						\fill [black] (52.86,-19.46) -- (51.94,-19.25) -- (52.26,-20.19);
+						\draw [black] (11.1,-11.9) -- (14.6,-15.16);
+						\draw (10.57,-10.44) node [left] {$i$};
+						\fill [black] (14.6,-15.16) -- (14.36,-14.25) -- (13.68,-14.98);
+					\end{tikzpicture}
+				\end{center}
+
+				You follow the arrows through the states, as necessary, and if you end up on a final state then the element is in the language.
+				\\ \\
+				We prefer total functions to partial functions. We add a new state, which we'll call ``barney'', that acts as a black hole. A finite automaton only needs one black hole, where all states loop back to itself. We can always make $T$ total by directing transitions that are not otherwise specified to the black hole. The black hole state is \emph{not} a final state.
+				\\ \\
+				We can name our states whatever we'd like on our bubble diagram. Intelligent names should be chosen, like ``start'', ``zero'', ``nonzero'', and ``fail'', for instance.
 \end{document}
