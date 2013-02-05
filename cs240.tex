@@ -825,7 +825,7 @@
 
 			In practice, it's better to insert one by one, because our analysis is in the worst-case. When comparing the average case, inserting one by one is faster than heapifying. The worst case is really rare, so you should insert one by one (and pay more attention to the average case analysis in this situation).
 			\\ \\
-			Heaps implemented using an array are called an \textbf{in-place implicit data structure}. You avoid pointers by using trickery in the organization of the data itself.
+			A heap implemented using an array is called an \textbf{in-place implicit data structure}. You avoid pointers by using trickery in the organization of the data itself.
 		\subsection{Quick Sort}
 			\textbf{Selection}: suppose we want to find the minimum or maximum element in an unsorted array. The easy solution is to scan the array and report the answer in $\Theta(n)$ time. However, if you're asked to find the $k$-th largest element? The na\"ive solution would be to sort the entire array, which would take $\Theta(n \lg n)$ time.
 			\\ \\
