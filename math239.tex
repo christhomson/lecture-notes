@@ -298,7 +298,7 @@
 			If the sequence is finite, it is just a polynomial.
 			
 			\subsubsection{A General Counting Problem}
-				Let $S$ be the the set of objects $\sigma$. Each object $\sigma$ has a weight $w(\sigma)$. We want to know how many objects of $S$ have some weight $k$.
+				Let $S$ be the set of objects $\sigma$. Each object $\sigma$ has a weight $w(\sigma)$. We want to know how many objects of $S$ have some weight $k$.
 				
 				\begin{ex}
 					Let $\sigma \subseteq [n], w(\sigma) = |\sigma|$. The question becomes: how many $k$-subsets of $[n]$?
@@ -1127,7 +1127,56 @@
 					\\ \\
 					Suppose $a \in S$, or $a = \epsilon$. Then clearly, $a \in S \{ 0, 1 \}$. Suppose $a \in F$, then $a \in S \{ 0, 1 \}$.
 					\\ \\
-					We'll finish this example next time.
+					The second equation relating $S$ and $F$ is $S\{11010\} = F$. As before, we need to verify this by showing both directions of the equality. \lecture{February 4, 2013} 
+					\\ \\
+					\underline{Showing $S\{11010\} \supseteq F$}: let $a \in F$. Then we know that the string $a$ with its last character truncated off is an element of $S$ (it no longer can contain the forbidden string). Therefore, the prefix to $11010$ is also an element of $S$, as required.
+					\\ \\
+					\underline{Showing $S\{11010\} \subseteq F$}: let $a \in S\{11010\}$. We need to show that the string ends in 11010, and that the forbidden string does not occur elsewhere. But what if the forbidden string is partially in the $\in S$ part and partially in the 11010 part? Shifting the forbidden string to the left by one character several times shows that it is not possible to construct the forbidden string partially from the prefix and partially from the suffix (11010), for all shifts.
+					\\ \\
+					Now, let's find the generating functions of both sides of these two equations.
+					\\ \\
+					The intersection of $\{ \epsilon \}$ and $S\{0, 1\}$ is empty, so the sum lemma applies. We'll also apply the product lemma to $S\{ 0, 1 \}$. The generating function for $\{ \epsilon \} \cup S\{0, 1\}$ is therefore $1 + \phi_S(x) 2x$. On the other side of equation 1, we get $\phi_F(x) + \phi_S(x)$ by the sum lemma, since it's a partition ($F$ only contains elements ending in the forbidden string, and $S$ does not contain the forbidden string at all). So, for the first equation we have $1 + \phi_S(x) 2x = \phi_F(x) + \phi_S(x)$.
+					\\ \\
+					By the product lemma, we get the generating function for $S\{11010\}$ to be $\phi_S(x) x^5$. The other side of equation 2 has a generating function of $\phi_F(x)$. So, for equation 2 we have $\phi_S(x) x^5 = \phi_F(x)$.
+					\\ \\
+					Next, we'll substitute $\phi_F(x)$ from equation 2 into the generating function for equation 1:
+					\begin{align*}
+						1 + \phi_S(x) 2x &= \phi_S(x) x^5 + \phi_S(x) \\
+						\vdots& \\
+						\phi_S(x) &= \frac{1}{1 - 2x + x^5}
+					\end{align*}
+				\end{ex}
+
+				\begin{ex}
+					Let $S$ be the set of strings not containing 1010, and let $F$ be the set of strings that end in 1010, but if the last character of $f \in F$ is removed, $f \in S$. We'll apply a similar method as in the previous example.
+					\\ \\
+					The first equation is $\{ \epsilon \} \cup S\{0, 1\} = S \cup F$, as before. There is nothing about this specific forbidden string in this equation, so it applies generally.
+					\\ \\
+					The second equation we'd logically like to try is $S \{ 1010 \} \stackrel{?}{=} F$. Let's see if that works. Let $A \in S\{1010\}$. If we're unlucky, then the prefix of 1010 will be 10, which means the forbidden string will occur with 10 in the prefix and 10 in the suffix (forming 1010). So, $S\{1010\} \not = F$.
+					\\ \\
+					We could instead use $S\{1010\} = F \cup F\{10\}$. Note that in the case where the forbidden string occurs partially in the prefix and partially in the suffix, we could say that is an instance of a forbidden string followed by an additional 10, which is what this equation is expressing. We would also need to check the opposite direction, $\in F \cup F\{10\} \implies \in S\{1010\}$, but we'll omit that here.
+					\\ \\
+					Finding the generating functions, we get $1 + \phi_S(x) 2x = \phi_S(x) + \phi_F(x)$ (for equation 1) and $\phi_S(x) x^4 = \phi_F(x) + \phi_F(x) x^2$ (for equation 2), which gives us:
+					\begin{align*}
+						\phi_F(x) = \frac{x^4}{1 + x^2} \cdot \phi_S(x)
+					\end{align*}
+					Substituting $\phi_F(x)$ into the generating function for equation 1 gives us:
+					\begin{align*}
+						\phi_S(x) = \bigg(1 - 2x + \frac{x^4}{1 + x^2}\bigg)^{-1}
+					\end{align*}
+				\end{ex}
+
+				\begin{ex}
+					Let $S$ be the set of strings where there is no odd block of 0s that is immediately followed by an odd block of 1s. For example, $01\underline{000}\underline{1}011 \not \in S$, but $111011000 \in S$.
+					\\ \\
+					First, let $A$ be the set of a block of zeroes followed by a block of ones. That is, strings in $A$ are composed of at least one 0 followed by at least one 1. We can express $A$ by $A = \{0\}\{0\}^\star\{1\}\{1\}^\star$.
+					\\ \\
+					Next, let $B$ be the set of an odd block of zeroes followed by an odd block of ones. We can express $B$ as $B = \{0\}\{00\}^\star\{1\}\{11\}^\star$.
+					\\ \\
+					Next, let $C$ be the set of a block of zeroes followed by a block of ones where both blocks cannot be odd simultaneously (one can be odd, but not both of them). $C$ can be expressed as $C = A \mathbin{\backslash} B$.
+					\\ \\
+					We then have that $S = \{1\}^\star(A \mathbin{\backslash} B)^\star \{0\}^\star$.
+
 				\end{ex}
 	\newpage
 	\section{Clicker Questions}
