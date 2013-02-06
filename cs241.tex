@@ -1298,6 +1298,91 @@
 
 				\begin{ex}
 					Let $\Sigma = \{a, b, c\}$ and $L$ = all strings with at least one $a$, one $b$, and one $c$. For example: $abaaaaaca \in L$, but $bcbcbccc \not \in L$.
+
+					\begin{center}
+						\begin{tikzpicture}[scale=0.2]
+							\tikzstyle{every node}+=[inner sep=0pt]
+							\draw [black] (8.5,-13.7) circle (3);
+							\draw (8.5,-13.7) node {no abc};
+							\draw [black] (24.8,-11.9) circle (3);
+							\draw (24.8,-11.9) node {a};
+							\draw [black] (24.8,-27.6) circle (3);
+							\draw (24.8,-27.6) node {b};
+							\draw [black] (24.8,-43.9) circle (3);
+							\draw (24.8,-43.9) node {c};
+							\draw [black] (44.3,-11.9) circle (3);
+							\draw (44.3,-11.9) node {ab};
+							\draw [black] (67.1,-34.2) circle (3);
+							\draw (67.1,-34.2) node {ac};
+							\draw [black] (69.7,-11.9) circle (3);
+							\draw (69.7,-11.9) node {abc};
+							\draw [black] (69.7,-11.9) circle (2.4);
+							\draw [black] (37.7,-34.2) circle (3);
+							\draw (37.7,-34.2) node {bc};
+							\draw [black] (4.7,-7.2) -- (6.99,-11.11);
+							\draw (3.9,-6.7) node [above] {$i$};
+							\fill [black] (6.99,-11.11) -- (7.01,-10.17) -- (6.15,-10.67);
+							\draw [black] (11.48,-13.37) -- (21.82,-12.23);
+							\fill [black] (21.82,-12.23) -- (20.97,-11.82) -- (21.08,-12.81);
+							\draw (16.86,-13.38) node [below] {$a$};
+							\draw [black] (10.78,-15.65) -- (22.52,-25.65);
+							\fill [black] (22.52,-25.65) -- (22.23,-24.75) -- (21.58,-25.51);
+							\draw (15.64,-21.14) node [below] {$b$};
+							\draw [black] (9.92,-16.34) -- (23.38,-41.26);
+							\fill [black] (23.38,-41.26) -- (23.44,-40.32) -- (22.56,-40.79);
+							\draw (15.98,-29.98) node [left] {$c$};
+							\draw [black] (23.477,-9.22) arc (234:-54:2.25);
+							\draw (24.8,-4.65) node [above] {$a$};
+							\fill [black] (26.12,-9.22) -- (27,-8.87) -- (26.19,-8.28);
+							\draw [black] (23.477,-24.92) arc (234:-54:2.25);
+							\draw (24.8,-20.35) node [above] {$b$};
+							\fill [black] (26.12,-24.92) -- (27,-24.57) -- (26.19,-23.98);
+							\draw [black] (23.477,-41.22) arc (234:-54:2.25);
+							\draw (24.8,-36.65) node [above] {$c$};
+							\fill [black] (26.12,-41.22) -- (27,-40.87) -- (26.19,-40.28);
+							\draw [black] (27.72,-43.23) -- (64.18,-34.87);
+							\fill [black] (64.18,-34.87) -- (63.28,-34.56) -- (63.51,-35.54);
+							\draw (46.58,-39.62) node [below] {$a$};
+							\draw [black] (68.377,-9.22) arc (234:-54:2.25);
+							\draw (69.7,-4.65) node [above] {$a,\mbox{ }b,\mbox{ }c$};
+							\fill [black] (71.02,-9.22) -- (71.9,-8.87) -- (71.09,-8.28);
+							\draw [black] (27.2,-42.1) -- (35.3,-36);
+							\fill [black] (35.3,-36) -- (34.36,-36.08) -- (34.96,-36.88);
+							\draw (32.25,-39.55) node [below] {$b$};
+							\draw [black] (27.47,-28.97) -- (35.03,-32.83);
+							\fill [black] (35.03,-32.83) -- (34.54,-32.02) -- (34.09,-32.91);
+							\draw (30.31,-31.4) node [below] {$c$};
+							\draw [black] (27.45,-13.3) -- (64.45,-32.8);
+							\fill [black] (64.45,-32.8) -- (63.97,-31.99) -- (63.51,-32.87);
+							\draw (45.01,-23.55) node [below] {$c$};
+							\draw [black] (27.8,-11.9) -- (41.3,-11.9);
+							\fill [black] (41.3,-11.9) -- (40.5,-11.4) -- (40.5,-12.4);
+							\draw (34.55,-12.4) node [below] {$b$};
+							\draw [black] (42.977,-9.22) arc (234:-54:2.25);
+							\draw (44.3,-4.65) node [above] {$a,\mbox{ }b$};
+							\fill [black] (45.62,-9.22) -- (46.5,-8.87) -- (45.69,-8.28);
+							\draw [black] (36.377,-31.52) arc (234:-54:2.25);
+							\draw (37.7,-26.95) node [above] {$b,\mbox{ }c$};
+							\fill [black] (39.02,-31.52) -- (39.9,-31.17) -- (39.09,-30.58);
+							\draw [black] (27.14,-25.72) -- (41.96,-13.78);
+							\fill [black] (41.96,-13.78) -- (41.03,-13.89) -- (41.65,-14.67);
+							\draw (35.51,-20.24) node [below] {$a$};
+							\draw [black] (47.3,-11.9) -- (66.7,-11.9);
+							\fill [black] (66.7,-11.9) -- (65.9,-11.4) -- (65.9,-12.4);
+							\draw (57,-12.4) node [below] {$c$};
+							\draw [black] (67.45,-31.22) -- (69.35,-14.88);
+							\fill [black] (69.35,-14.88) -- (68.76,-15.62) -- (69.76,-15.73);
+							\draw (69.06,-23.17) node [right] {$b$};
+							\draw [black] (40.16,-32.48) -- (67.24,-13.62);
+							\fill [black] (67.24,-13.62) -- (66.3,-13.66) -- (66.87,-14.48);
+							\draw (54.65,-23.55) node [below] {$a$};
+							\draw [black] (69.78,-32.877) arc (144:-144:2.25);
+							\draw (74.35,-34.2) node [right] {$a,\mbox{ }c$};
+							\fill [black] (69.78,-35.52) -- (70.13,-36.4) -- (70.72,-35.59);
+						\end{tikzpicture}
+					\end{center}
+
+					$T$ in this case is a total function. It has eight states because we need to keep track of three binary facts, which requires three bits of information ($2^3 = 8$). 
 				\end{ex}
-				[This lecture is incomplete. Will finish typesetting later today.]
+				Similarly, if we had a DFA to determine if every letter in the English alphabet is included in a particular string, we would need $2^{26}$ states because we would need to store 26 bits of information. At some point, we say a number is large enough that \emph{in practice} we can treat it as an infinite number, despite it being finite. We wouldn't solve this problem with a DFA because $2^{26}$ is a number large enough that we wouldn't want to create a state for each of them. 
 \end{document}
