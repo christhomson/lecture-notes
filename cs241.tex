@@ -5,12 +5,15 @@
 \usepackage{amssymb}
 \usepackage{hyperref}
 \usepackage{amsmath}
+\usepackage{amsthm}
 \usepackage{tikz}
 \usepackage[lined]{algorithm2e}
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
 
+\theoremstyle{definition}
 \newtheorem{defn}{Definition}[section]
+\newtheorem{ex}{Example}[section]
 
 \setlength{\marginparwidth}{1.5in}
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
@@ -1075,4 +1078,160 @@
 				We prefer total functions to partial functions. We add a new state, which we'll call ``barney'', that acts as a black hole. A finite automaton only needs one black hole, where all states loop back to itself. We can always make $T$ total by directing transitions that are not otherwise specified to the black hole. The black hole state is \emph{not} a final state.
 				\\ \\
 				We can name our states whatever we'd like on our bubble diagram. Intelligent names should be chosen, like ``start'', ``zero'', ``nonzero'', and ``fail'', for instance.
+				\\ \\
+				Fun fact: regular languages have been proven to be closed under intersection and set difference. \lecture{February 6, 2013}
+				\\ \\
+				We sometimes denote a DFA as $\text{DFA} = < \Sigma, S, i, f, T >$.
+				\\ \\
+				For simplicity's sake, we'll setup some notation we'll be using to discuss DFAs. This is by convention only.
+				\begin{itemize}
+					\item $a, b, c, d$ (and other letters at the beginning of the standard alphabet) represent symbols in $\Sigma = \{a, b, c, d\}$.
+					\item Particular strings are a concatenation of symbols from $\Sigma$. Some examples are $abca, bbca,$ and $\epsilon$ (the empty string).
+					\item $x, y, z$ (and other letters near the end of the standard alphabet) are variables that represent strings. For example, let $x = abc$, then $x = x_0 x_1 x_2 \ldots x_{n - 1}$ where $n = |x|$.
+				\end{itemize}
+				The \textbf{DFA algorithm} is pretty simple. Given an input $x$ (which is implicitly a DFA = $< \Sigma, S, i, f, T >$, where $T$ is a total function), the output of the algorithm will be:
+				\begin{align*}
+					\begin{cases}
+						\text{``accept''} & x \in L \\
+						\text{``reject''} & x \not \in L
+					\end{cases}
+				\end{align*}
+				The DFA algorithm is as follows: \\ \\
+				\begin{algorithm}[H]
+					state = i\;
+					\For{$a = x_0, x_1, x_2, \ldots, x_{n - 1}$}{
+						state = T[state, a]\;
+					}
+					\lIf{state $\in $ f}{accept}
+					\lElse{reject}
+				\end{algorithm}
+				\vspace{0.5cm}
+				The bonus question on A5 involves implementing this algorithm. You may want to use an array or map. It's the easiest bonus question all term.
+
+				\begin{ex}
+					We're given the binary integers, $\Sigma = \{ 0, 1 \}, S = \{ \text{start}, \text{zero}, \text{nonzero}, \text{error} \}, i = \text{start}, f = \{ \text{zero}, \text{nonzero} \}$, and function $T$ defined by: \\
+					\begin{center}
+						\begin{tabular}{|c|c|}
+							\hline $S \times \Sigma$ & $S$ \\ \hline
+							start, 0 & zero \\
+							start, 1 & nonzero \\
+							zero, 0 & error \\
+							zero, 1 & error \\
+							nonzero, 0 & nonzero \\
+							nonzero, 1 & nonzero \\
+							error, 0 & error \\
+							error, 1 & error \\ \hline
+						\end{tabular}
+					\end{center}
+					This table for $T$ isn't very intuitive. Let's look at the bubble diagram representing this DFA for a clearer picture.
+					
+					\begin{center}
+						\begin{tikzpicture}[scale=0.2]
+							\tikzstyle{every node}+=[inner sep=0pt]
+							\draw [black] (13,-15.7) circle (3);
+							\draw (13,-15.7) node {start};
+							\draw [black] (38,-12.7) circle (3);
+							\draw (38,-12.7) node {zero};
+							\draw [black] (38,-12.7) circle (2.4);
+							\draw [black] (59.9,-16.5) circle (3);
+							\draw (59.9,-16.5) node {error};
+							\draw [black] (31,-27.7) circle (3);
+							\draw (31,-27.7) node {nonzero};
+							\draw [black] (31,-27.7) circle (2.4);
+							\draw [black] (15.5,-17.36) -- (28.5,-26.04);
+							\fill [black] (28.5,-26.04) -- (28.12,-25.18) -- (27.56,-26.01);
+							\draw (21,-22.2) node [below] {$1$};
+							\draw [black] (33.075,-25.549) arc (163.75996:-124.24004:2.25);
+							\draw (38.11,-24.64) node [right] {$0,\mbox{ }1$};
+							\fill [black] (33.97,-28.04) -- (34.6,-28.74) -- (34.88,-27.78);
+							\draw [black] (15.98,-15.34) -- (35.02,-13.06);
+							\fill [black] (35.02,-13.06) -- (34.17,-12.66) -- (34.29,-13.65);
+							\draw (25.76,-14.79) node [below] {$0$};
+							\draw [black] (40.96,-13.21) -- (56.94,-15.99);
+							\fill [black] (56.94,-15.99) -- (56.24,-15.36) -- (56.07,-16.34);
+							\draw (48.02,-15.29) node [below] {$0,\mbox{ }1$};
+							\draw [black] (60.547,-13.583) arc (195.22332:-92.77668:2.25);
+							\draw (66.13,-10.74) node [above] {$0,\mbox{ }1$};
+							\fill [black] (62.61,-15.24) -- (63.51,-15.51) -- (63.25,-14.55);
+							\draw [black] (8.1,-8.6) -- (11.3,-13.23);
+							\draw (7.3,-8.1) node [above] {$i$};
+							\fill [black] (11.3,-13.23) -- (11.25,-12.29) -- (10.43,-12.86);
+						\end{tikzpicture}
+					\end{center}
+
+					Let's look at \underline{x = 10}. x = 10 will execute the following: \\
+					\begin{algorithm}[H]
+						state = start\;
+						state = T[start, 1]; // state = nonzero \\
+						state = T[nonzero, 0]; // state = nonzero \\
+						(end loop) \\
+						nonzero $\in $ f? Yes, accept.
+					\end{algorithm}
+					\vspace{0.5cm}
+					Next, let's look at \underline{x = 01}. x = 01 will execute the following: \\
+					\begin{algorithm}[H]
+						state = start\;
+						state = T[start, 0]; // state = zero \\
+						state = T[zero, 1]; // state = error \\
+						(end loop) \\
+						error $\in $ f? No, reject.
+					\end{algorithm}
+				\end{ex}
+
+				\begin{ex}
+					Let's construct a finite automaton that represents the MIPS assembly notation for registers.
+					\\ \\
+					Given $\Sigma = \{ \$, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 \}, L = $ MIPS assembly notation for registers (i.e. $\{ \$0, \$1, \$2, \ldots, \$31 \}$).
+					\\ \\
+					It's useful to name your DFA states with what you've learned so far based on the conditions that led to that state, because that's the only way we know what we've determined in the past. These names don't matter, but it'll make the finite automaton much easier for you to understand.
+					\\ \\
+					We're going to assume there is an error state that all undefined transitions lead to. We'll make this assumption in general in this course. You need to draw the error state only when you need a \emph{total} function $T$ (such as when you intend to run the DFA algorithm), or when you're explicitly asked to draw it.
+					\\ \\
+					Let's look at the bubble diagram for this finite automaton that represents the notation of MIPS registers.
+					\begin{center}
+						\begin{tikzpicture}[scale=0.2]
+							\tikzstyle{every node}+=[inner sep=0pt]
+							\draw [black] (11.8,-10.2) circle (3);
+							\draw (11.8,-10.2) node {start};
+							\draw [black] (27.7,-17.8) circle (3);
+							\draw (27.7,-17.8) node {dollar};
+							\draw [black] (62,-38.5) circle (3);
+							\draw (62,-38.5) node {ok};
+							\draw [black] (62,-38.5) circle (2.4);
+							\draw [black] (59.4,-13.7) circle (3);
+							\draw (59.4,-13.7) node {\$1-\$2};
+							\draw [black] (59.4,-13.7) circle (2.4);
+							\draw [black] (7.1,-37.9) circle (3);
+							\draw (7.1,-37.9) node {\$3};
+							\draw [black] (7.1,-37.9) circle (2.4);
+							\draw [black] (5.7,-4.4) -- (9.63,-8.13);
+							\draw (5.17,-2.93) node [left] {$i$};
+							\fill [black] (9.63,-8.13) -- (9.39,-7.22) -- (8.7,-7.94);
+							\draw [black] (14.51,-11.49) -- (24.99,-16.51);
+							\fill [black] (24.99,-16.51) -- (24.49,-15.71) -- (24.06,-16.61);
+							\draw (18.76,-14.51) node [below] {\$};
+							\draw [black] (59.71,-16.68) -- (61.69,-35.52);
+							\fill [black] (61.69,-35.52) -- (62.1,-34.67) -- (61.11,-34.77);
+							\draw (60.05,-26.2) node [left] {$0,\mbox{ }1,\mbox{ }\dots,\mbox{ }9$};
+							\draw [black] (10.1,-37.93) -- (59,-38.47);
+							\fill [black] (59,-38.47) -- (58.21,-37.96) -- (58.19,-38.96);
+							\draw (34.54,-38.72) node [below] {$0,\mbox{ }1$};
+							\draw [black] (25.55,-19.9) -- (9.25,-35.8);
+							\fill [black] (9.25,-35.8) -- (10.17,-35.6) -- (9.47,-34.89);
+							\draw (16.38,-27.37) node [above] {$3$};
+							\draw [black] (30.68,-17.42) -- (56.42,-14.08);
+							\fill [black] (56.42,-14.08) -- (55.57,-13.69) -- (55.7,-14.68);
+							\draw (44.14,-16.43) node [below] {$1,\mbox{ }2$};
+							\draw [black] (30.27,-19.35) -- (59.43,-36.95);
+							\fill [black] (59.43,-36.95) -- (59,-36.11) -- (58.49,-36.96);
+							\draw (37.86,-28.66) node [below] {$0,\mbox{ }4,\mbox{ }5,\mbox{ }6,\mbox{ }7,\mbox{ }8,\mbox{ }9$};
+						\end{tikzpicture}
+					\end{center}
+					
+					Every MIPS register must start with the dollar sign (\$). Keep in mind that only $\$0, \ldots, \$31$ are valid MIPS registers. So, if the next number is a 1 or a 2, we can have any second digit (from 0-9) to form a valid MIPS register. If the number is 3, we can only follow that up by a 0 or 1 (\$30 and \$31). We also need to handle all other single digit registers (\$0, \$4, \$5, \$6, \$7, \$8, \$9).
+					\\ \\
+					We could've made this differently by having multiple ``ok'' states, but those aren't necessary so all valid registers point to the same ``ok'' state in this diagram. We can point all complete paths to a single complete state because what happens from the complete state onwards does not differ. In this case, all complete states have no further path (except to an implied black hole), and all complete states are final states, so having one complete state (denoted ``ok'' on the bubble diagram) is acceptable.
+					\\ \\
+					In general, you can combine two states if everything that follows from that point is the same among all of the states you're combining.
+				\end{ex}
 \end{document}
