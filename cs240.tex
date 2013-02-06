@@ -862,7 +862,6 @@
 					partition $(A, p)$ obtaining position $i$ of $p$\;
 					\uIf{k < i}{
 						quick\_select(A[0, i - 1], k)\;
-						\uElseIf{test}{ok}
 					}
 					\uElseIf{k > 1}{
 						quick\_select(A[i + 1, \ldots, n - 1], k - i - 1)\;
