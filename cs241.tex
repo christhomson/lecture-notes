@@ -1234,5 +1234,70 @@
 					\\ \\
 					In general, you can combine two states if everything that follows from that point is the same among all of the states you're combining.
 				\end{ex}
+
+				\begin{ex}
+					Let $\Sigma = \{a, b, c\}, L = $ any string with an odd number of $a$'s. For example: $a, abaa, babbc, \ldots$.
+					\begin{center}
+						\begin{tikzpicture}[scale=0.2]
+							\tikzstyle{every node}+=[inner sep=0pt]
+							\draw [black] (21.7,-12.5) circle (3);
+							\draw (21.7,-12.5) node {even};
+							\draw [black] (39.7,-12.5) circle (3);
+							\draw (39.7,-12.5) node {odd};
+							\draw [black] (39.7,-12.5) circle (2.4);
+							\draw [black] (15.4,-5.2) -- (19.74,-10.23);
+							\draw (14.59,-4.71) node [above] {$i$};
+							\fill [black] (19.74,-10.23) -- (19.6,-9.3) -- (18.84,-9.95);
+							\draw [black] (21.499,-9.518) arc (211.59369:-76.40631:2.25);
+							\draw (26.15,-5.73) node [above] {$b,\mbox{ }c$};
+							\fill [black] (23.94,-10.53) -- (24.89,-10.53) -- (24.36,-9.68);
+							\draw [black] (24.7,-12.5) -- (36.7,-12.5);
+							\fill [black] (36.7,-12.5) -- (35.9,-12) -- (35.9,-13);
+							\draw (30.7,-12) node [above] {$a$};
+							\draw [black] (36.7,-12.5) -- (24.7,-12.5);
+							\fill [black] (24.7,-12.5) -- (25.5,-13) -- (25.5,-12);
+							\draw (30.7,-12) node [above] {$a$};
+							\draw [black] (40.66,-9.67) arc (189:-99:2.25);
+							\draw (45,-6.25) node [right] {$b,\mbox{ }c$};
+							\fill [black] (42.53,-11.54) -- (43.4,-11.91) -- (43.24,-10.92);
+						\end{tikzpicture}
+					\end{center}
+					(Note that there are two arrows between those nodes: one for each direction.)
+					\\ \\
+					We can keep track of one binary bit of information with a state. In this case, that bit is ``do I have an even number of $a$'s?''
+					\\ \\
+					Suppose instead we want $L = $ any string with an even number of $a$'s. That's the complement of $L$ from before.
+					\\ \\
+					To find the complement of a DFA, you make all non-finish states into finish states, and vice versa. That means the error (black hole) state will become a finish state as well.
+					\begin{center}
+						\begin{tikzpicture}[scale=0.2]
+							\tikzstyle{every node}+=[inner sep=0pt]
+							\draw [black] (21.7,-12.5) circle (3);
+							\draw (21.7,-12.5) node {even};
+							\draw [black] (21.7,-12.5) circle (2.4);
+							\draw [black] (39.7,-12.5) circle (3);
+							\draw (39.7,-12.5) node {odd};
+							\draw [black] (15.4,-5.2) -- (19.74,-10.23);
+							\draw (14.59,-4.71) node [above] {$i$};
+							\fill [black] (19.74,-10.23) -- (19.6,-9.3) -- (18.84,-9.95);
+							\draw [black] (21.499,-9.518) arc (211.59369:-76.40631:2.25);
+							\draw (26.15,-5.73) node [above] {$b,\mbox{ }c$};
+							\fill [black] (23.94,-10.53) -- (24.89,-10.53) -- (24.36,-9.68);
+							\draw [black] (24.7,-12.5) -- (36.7,-12.5);
+							\fill [black] (36.7,-12.5) -- (35.9,-12) -- (35.9,-13);
+							\draw (30.7,-12) node [above] {$a$};
+							\draw [black] (36.7,-12.5) -- (24.7,-12.5);
+							\fill [black] (24.7,-12.5) -- (25.5,-13) -- (25.5,-12);
+							\draw (30.7,-12) node [above] {$a$};
+							\draw [black] (40.66,-9.67) arc (189:-99:2.25);
+							\draw (45,-6.25) node [right] {$b,\mbox{ }c$};
+							\fill [black] (42.53,-11.54) -- (43.4,-11.91) -- (43.24,-10.92);
+						\end{tikzpicture}
+					\end{center}
+				\end{ex}
+
+				\begin{ex}
+					Let $\Sigma = \{a, b, c\}$ and $L$ = all strings with at least one $a$, one $b$, and one $c$. For example: $abaaaaaca \in L$, but $bcbcbccc \not \in L$.
+				\end{ex}
 				[This lecture is incomplete. Will finish typesetting later today.]
 \end{document}
