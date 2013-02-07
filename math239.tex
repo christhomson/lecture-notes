@@ -1178,6 +1178,108 @@
 					We then have that $S = \{1\}^\star(A \mathbin{\backslash} B)^\star \{0\}^\star$.
 
 				\end{ex}
+	
+	\section{Coefficients from Rational Functions} \lecture{February 6, 2013}
+		We're interested in finding $[x^n]\frac{f(x)}{g(x)}$ where $f(x)$ and $g(x)$ are polynomials.
+		\\ \\
+		Suppose $\deg(f) \ge \deg(g)$, which implies $f(x) = q(x) \cdot g(x) + r(x)$, where $q(x)$ is a polynomial and $r(x)$ is a polynomial of a lower degree than $f$. Dividing both sides by $g(x)$ gives:
+		\begin{align*}
+			\frac{f(x)}{g(x)} &= q(x) + \frac{r(x)}{g(x)} \\
+			[x^n] \frac{f(x)}{g(x)} &= [x^n] q(x) + [x^n] \frac{r(x)}{g(x)}
+		\end{align*}
+
+		\begin{ex}
+			\begin{align*}
+				\frac{6x^4 - 5x^3 - 5x^2}{1 - 5x + 6x^2} = (x^2 - 1) + \frac{1 - 5x}{1 - 5x + 6x^2} \text{ by long division of polynomials}
+			\end{align*}
+
+			Now, we may assume that $\deg(f) < \deg(g)$. We will have to apply a partial fraction expansion. For example:
+			\begin{align*}
+				\frac{1 - 5x}{1 - 5x + 6x^2} &= \frac{1 - 5x}{(1 - 2x)(1 - 3x)} = \frac{A}{1 - 2x} + \frac{B}{1 - 3x} \\
+				\implies 1 - 5x &= A(1 - 3x) + B(1 - 2x) \\
+				1 - 5x &= (A + B) + x(-3A - 2B)
+			\end{align*}
+			We need $A + B = 1$ and $-3A -2B = -5$. After solving this system of two equations in two unknowns, you'll get $A = 3$ and $B = -2$. So, we now have:
+			\begin{align*}
+				\frac{1 - 5x}{1 - 5x + 6x^2} &= 3[x^n] \underbrace{\frac{1}{1 - 2x}}_{1 + (2x)^1 + (2x)^2 + \ldots} - 2 [x^n] \underbrace{\frac{1}{1 - 3x}}_{1 + (3x)^1 + (3x)^2 + \ldots} \\
+				&= 3 \cdot 2^n - 2 \cdot 3^n
+			\end{align*}
+		\end{ex}
+
+		We can generalize this result.
+		\\ \\
+		\textbf{Generalize}: we want $[x^n] \frac{f(x)}{g(x)}$ where $\deg(f) < \deg(g)$, where $g(x) = (1 - a_1 x)(1 - a_2 x) \ldots (1 - a_k x)$ where $a_1, \ldots, a_k$ are distinct. We can only apply this partial fractions method if all the roots are distinct (there are subtle differences if the roots aren't distinct). We know that:
+		\begin{align*}
+			\frac{f(x)}{g(x)} &= \frac{c_1}{1 - a_1 x} + \frac{c_2}{1 - a_2 x} + \ldots + \frac{c_k}{1 - a_k x}
+		\end{align*}
+
+		However, note that $\frac{1}{1 - a_1 x} = 1 + (a_1 x) + (a_1 x)^2 + \ldots$. So, we have:
+		\begin{align*}
+			[x^n] \frac{f(x)}{g(x)} = c_1 a_1^n + c_2 a_2^n + \ldots + c_k a_k^n
+		\end{align*}
+		
+		The previous example used this generalized form but with $k = 2$, $c_1 = A = 3$, and $c_2 = B = -2$, which made $a_1 = 2$ and $a_2 = 3$ (from the denominators).
+		
+		\begin{ex}
+			Suppose we want to find the $n$-th coefficient of:
+			\begin{align*}
+				(\star) &= \frac{1 + 4x^2}{1 - 6x + 12x^2 - 8x^3} \\
+					&= \frac{1 + 4x^2}{1 + 3(-2x) + 3(-2x)^2 + 1(-2x)^3} \\
+					&= \frac{1 + 4x^2}{(1 - 2x)^3} \text{ (binomial coefficients)}
+			\end{align*}
+
+			So, we're interested in finding:
+			\begin{align*}
+				[x^n](\star) &= [x^n] \frac{1 + 4x^2}{(1 - 2x)^3} \\
+				&= [x^n] \bigg[ \frac{A}{1 - 2x} + \frac{B}{(1 - 2x)^2} + \frac{C}{(1 - 2x)^3} \bigg]
+			\end{align*}
+			After solving for $A$, $B$, and $C$, you'll discover that $A = 1, B = -2$, and $C = 2$. Therefore, we're now looking for:
+			\begin{align*}
+				[x^n](\star) &= [x^n] \underbrace{\frac{1}{1 - 2x}}_{(1)} - \underbrace{2[x^n]\frac{1}{(1 - 2x)^2}}_{(2)} + \underbrace{2[x^n] \frac{1}{(1 - 2x)^3}}_{(3)}
+			\end{align*}
+
+			\begin{enumerate}
+				\item $2^n$, as before.
+				\item Recall:
+					\begin{align*}
+						\frac{1}{(1 - y)^p} = \sum_{n \ge 0} {n + p - 1 \choose p - 1} y^n
+					\end{align*}
+
+					Let $y = 2x$. Then we get:
+					\begin{align*}
+						2^n { n + 2 - 1 \choose 2 - 1} &= 2^n {n + 1 \choose 1} = (n + 1)2^n
+					\end{align*}
+				\item Consider $y = 2x$ again. We get:
+					\begin{align*}
+						2^n {n + 3 - 1 \choose 3 - 1} = {n + 2 \choose 2} 2^n
+					\end{align*}
+			\end{enumerate}
+
+			Putting (1), (2), and (3) together gives us:
+			\begin{align*}
+				[x^n](\star) = 2^n - 2(n + 1)2^n + 2 { n + 2 \choose 2} 2^n = 2^n[\underbrace{1 - 2(n + 1) + {n + 2 \choose 2}}_{\text{degree 2}}]
+			\end{align*}
+		\end{ex}
+
+		We can generalize this result.
+		\\ \\
+		\textbf{Generalize}: we're interested in $[x^n] \frac{f(x)}{g(x)}$ where $\deg(f) < \deg(g)$, and where $g(x) = (1 - ax)^k$. We know that:
+		\begin{align*}
+			[x^n] \frac{1}{(1 - ax)^p} = a^n {n + p - 1 \choose p - 1} \\
+		\end{align*}
+		
+		Which gives us:
+		\begin{align*}
+			[x^n]\frac{f(x)}{g(x)} = \sum_{p = 1}^{k} C_p {n + p - 1 \choose p - 1} a^n
+		\end{align*}
+
+		(where $C_p$ is the coefficient determined from the partial fraction expansion)
+		\\ \\
+		\textbf{Remark}:
+		\begin{align*}
+			[x^n] \frac{f(x)}{g(x)} = a^n \times (\text{polynomial of } n \text{ of degree } k - 1)
+		\end{align*}
+
 	\newpage
 	\section{Clicker Questions}
 		\begin{itemize}
