@@ -12,12 +12,12 @@
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
 
-\newtheorem{theorem}{Theorem}[section]
-\newtheorem{proposition}{Proposition}[section]
+\newtheorem*{theorem}{Theorem}
+\newtheorem*{proposition}{Proposition}
 
 \theoremstyle{definition}
 \newtheorem{problem}{Problem}[section]
-\newtheorem{defn}{Definition}[section]
+\newtheorem*{defn}{Definition}
 \newtheorem{ex}{Example}[section]
 
 \newcommand{\union}{\cup}
@@ -1033,7 +1033,7 @@
 				We have:
 				\begin{align*}
 					\phi_{\{0, 10, 110\}}(x) &= x + x^2 + x^3 \\
-					\phi_{\{0, 10, 110\}^\star}(x) &= \frac{1}{1 - x - x^2 - x^3} \text{ by \ref{proposition:unambiguousstar}} \\
+					\phi_{\{0, 10, 110\}^\star}(x) &= \frac{1}{1 - x - x^2 - x^3} \text{ by proposition} \\
 					\phi_{\{\epsilon, 1, 11\}}(x) &= 1 + x + x^2 \\ \\
 					\phi_S(x) &= \phi_{\{0, 10, 110\}^\star}(x) \cdot \phi_{\{\epsilon, 1, 11\}}(x) \text{ by the product lemma for strings} \\
 					&= \frac{1 + x + x^2}{1 - x - x^2 - x^3}
