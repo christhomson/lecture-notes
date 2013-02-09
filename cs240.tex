@@ -1010,7 +1010,8 @@
 			$\therefore$ As long as your sorting algorithm only uses comparison operators, $\Omega(n \lg n)$ is the best you can do.
 			\\ \\
 			When making an argument like this, you need to make arguments that apply across \emph{all} algorithms, even ones that no one has seen or thought of yet. That's what we did here. When you're discussing lower bounds, you need to be extremely clear which operations are and aren't allowed.
-			\subsection{Examples of Sorting Faster Than n lg n}
+			\subsection{Counting Sort}
+				Counting sort is an example of a sorting algorithm that runs faster than $n \lg n$, however it only applies in certain circumstances.
 				\begin{itemize}
 					\item You are given a permutation of the numbers $1 \ldots n$. This runs in $\Theta(n)$ or $\Theta(1)$ time, depending on which operations you're allowed to use. If we're given the correct operations, we don't even need to look at the input in this case.
 					\item Keys given belong to a set of size $O(n)$, allowing possible repetition.
@@ -1031,6 +1032,136 @@
 						A[c[B[i]]] = B[i]
 					}
 				\end{algorithm}
-				This works well when you have a dense set such as student IDs or street addresses.
+				This works well when you have a dense set such as student IDs or street addresses. It would not work well for student names because there are too many possible values. \lecture{February 5, 2013}
+				\\ \\
+				You may be interested in \href{http://www.personal.kent.edu/~rmuhamma/Algorithms/MyAlgorithms/Sorting/countingSort.htm}{this webpage from Kent State University about counting sort}.
+				\\ \\
+				Counting sort works by walking the array $A$, and for each element increment $c[A[i]]$, where $c$ is an array of counters. $c$ is then updated to be the number of elements that are less than or equal to the index of $c$.
+				\\ \\
+				Counting sort is \underline{stable}. That means that when there is a tie between two keys, they appear in the order of the input. This intuitively makes sense in a lot of circumstances because if you have two people with the same priority in a queue (a lineup), you want to process them in the order they arrived. That's the motivation for the concept of stability. Straight-forward quick sort algorithms, as seen in class, are not stable.
+				\\ \\
+				Counting sort takes time $\Theta(n + k) = \Theta(n)$ if $k = O(n)$.
+			\subsection{Radix Sort}
+				There are situations where you want to sort larger numbers. For example: you have 20 students, but student IDs are ten digits long. Counting sort would be a terrible application in this case because you'd need a huge array, so we'll use \textbf{radix sort} instead. Radix sort is good when you have a fixed-length key space.
+				\subsection{MSD Radix Sort}
+					Most significant digit radix sort, also known as RSD radix sort, is a sorting algorithm where the elements are sorted into buckets based on their most significant digit first. That is, elements are sorted into buckets (using bucket sort) containing elements starting with 1, elements starting with 2, and so on, up until the bucket with elements starting with 9.
+					\\ \\
+					You can recursively apply bucket sort to complete the sort.
+					\begin{ex}
+						Let's say you have the following student IDs: \begin{tabular}{|c|c|c|c|c|c|c|} \hline 15 & 25 & 12 & 45 & 99 & 66 & 21 \\ \hline \end{tabular}
+						\\ \\
+						Using bucket sort on the most significant digit, these IDs will be sorted into the following buckets: \\
+						\begin{center}
+							\begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+								\hline
+								\underline{1}2 & \underline{2}5 & & \underline{4}5 & & \underline{6}6 & & & \underline{9}9 \\
+								\underline{1}5 & \underline{2}1 & & & & & & & \\ \hline
+							\end{tabular}
+						\end{center}
+					\end{ex}
 
+				\subsection{LSD Radix Sort}
+					Least significant digit radix sort, also known as LSD radix sort, is a sorting algorithm where the elements are sorted into buckets based on their least significant digit first. That is, elements are sorted into buckets (using bucket sort) containing elements ending with 1, elements ending with 2, and so on, up until the bucket with elements ending with 9. LSD radix sort is so common that it's often referred to simply as ``radix sort''.
+					\\ \\
+					You can recursively apply bucket sort to complete the sort.
+					\\ \\
+					You may be interested in \href{http://www.personal.kent.edu/~rmuhamma/Algorithms/MyAlgorithms/Sorting/radixSort.htm}{this webpage about radix sort from Kent State University}.
+					\begin{ex}
+						Once again, let's say you have the following student IDs: \begin{tabular}{|c|c|c|c|c|c|c|} \hline 15 & 45 & 12 & 25 & 99 & 66 & 21 \\ \hline \end{tabular}
+						\\ \\
+						Using bucket sort on the least significant digit, these IDs will be sorted into the following buckets: \\
+						\begin{center}
+							Pass 1: \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+									\hline
+									2\underline{1} & 1\underline{2} & & & 1\underline{5} & 6\underline{6} & & 9\underline{9} \\
+									& & & & 4\underline{5} & & & \\
+									& & & & 2\underline{5} & & & \\ \hline
+								\end{tabular}
+
+							Pass 2: \begin{tabular}{|c|c|c|c|c|c|c|c|c|}
+									\hline
+									\underline{1}2 & \underline{2}1 & & \underline{4}5 & & \underline{6}6 & & \underline{9}9 \\
+									\underline{1}5 & \underline{2}5 & & & & & & \\ \hline
+								\end{tabular}
+						\end{center}
+					\end{ex}
+					With LSD radix sort, each subsequent application occurs on the entire input in the order of the previous pass of bucket sort.
+					\\ \\
+					The time to sort $d$-digit numbers numbers using LSD is $\Theta(n \cdot d)$.
+					\\ \\
+					LSD radix sort only works when used in conjunction with a stable sort like counting sort. The reason this works is because at the last step, the first digits are tied. Ties are settled by the order of the next-most significant digit, since counting sort is stable and preserved the order from the previous pass.
+					\begin{ex} Here's another example of LSD radix sort. \\
+						\begin{center}
+							\begin{tabular}{|c|c|c|c|}
+								\hline
+								INPUT & 1st pass & 2nd pass & 3rd pass \\ \hline
+								329 & 720 & 720 & 329 \\
+								457 & 355 & 329 & 355 \\
+								657 & 436 & 436 & 436 \\
+								839 & 457 & 839 & 457 \\
+								436 & 657 & 355 & 657 \\
+								720 & 329 & 457 & 720 \\
+								355 & 839 & 657 & 839 \\ \hline
+							\end{tabular}
+						\end{center}
+					\end{ex}
+					MSD radix sort operates at approximately the same complexity as LSD radix sort, but LSD is easier to implement, so it's more widely used. 
+					\\ \\
+					LSD radix sort requires fixed key lengths. It's not always safe to assume that key lengths will be fixed. For example, phone numbers were created under the assumption that there would be one per household. But now, everyone has at least one cell phone (maybe multiple cell phones for different countries), and multiple mobile data devices like tablets or mobile data USB sticks. Similarly, it's not safe to assume that surnames can only be $n$ characters long.
+					\\ \\
+					Earlier, we said LSD radix sort takes $\Theta(n \cdot d)$ time to sort. If you have $n$ distinct numbers, $d = \Omega(\log_b n)$. So, if your numbers are distinct, you end up complexity $\Theta(n \cdot d) = \Theta(n \log_{10} n) = \Theta(n \lg n)$.
+					\\ \\
+					It would appear as if no progress has been made, at least if all numbers are distinct. However, note that $\Theta(n \lg n)$ is the \emph{best case} for quick sort, but it's the worst case here. So, we have made some progress.
+					\\ \\
+					\underline{Aside}: if you think about comparing two or more elements at a time (like a bitwise comparison), it could be possible to sort in $\Theta(n \lg \lg n)$ time.
+	\section{More Abstract Data Types}
+		\subsection{Dictionaries}
+			The dictionary abstract data type is the most important and most commonly used abstract data type of all time.
+			\\ \\
+			A dictionary is a collection of items, each consisting of a key and some data. The \verb+(key, data)+ construct is called a \textbf{key-value pair}. Keys can be compared and are usually unique (unless explicitly stated otherwise). A database is essentially a collection of dictionaries.
+
+			\subsubsection{Supported Operations of Dictionaries}
+				A dictionary must support these operations:
+				\begin{itemize}
+					\item \verb+search(key)+. Returns the data associated with the \verb+key+, if the \verb+key+ is present in the dictionary.
+					\item \verb+insert(key, data)+. Inserts the \verb+(key, data)+ key-value pair into the dictionary.
+					\item \verb+delete(key)+. Deletes the \verb+key+ from the dictionary.
+				\end{itemize}
+
+			\subsubsection{Implementations of Dictionaries}
+				There are many different ways that dictionaries could be implemented.
+				\begin{enumerate}
+					\item \textbf{Unordered array}.
+						\begin{itemize}
+							\item \verb+search+ takes $\Theta(n)$ time.
+							\item \verb+insert+ takes $\Theta(1)$ time, by inserting at the end of the array.
+							\item \verb+delete+ takes $\Theta(n)$ time, by searching, removing, then compacting the array.
+						\end{itemize}
+					
+					\item \textbf{Ordered array}.
+						\begin{itemize}
+							\item \verb+search+ takes $\Theta(\lg n)$ time by using binary search.
+							\item \verb+insert+ takes $\Theta(n)$ time.
+							\item \verb+delete+ takes $\Theta(n)$ time, by compacting and possibly searching, too.
+						\end{itemize}
+
+					\item \textbf{Linked list}.
+						\begin{itemize}
+							\item \verb+search+ takes $\Theta(n)$ time.
+							\item \verb+insert+ takes $\Theta(1)$ time.
+							\item \verb+delete+ takes $\Theta(n)$ time if it needs to find and delete the element, or $\Theta(1)$ time if it already has a pointer to the element.
+						\end{itemize}
+				\end{enumerate}
+				There is a trade-off with all of these implementations. If one operation is slow, the other is fast.
+				\\ \\
+				People thought it should be possible to achieve:
+				\begin{itemize}
+					\item \verb+search+ in $\Theta(\lg n)$ time (with a bigger constant than with an ordered array).
+					\item \verb+insert+ in $\Theta(\lg n)$ time.
+					\item \verb+delete+ in $\Theta(\lg n)$ time.
+				\end{itemize}
+				These operations are possible in those complexities with binary search trees. The main property of binary search trees is that if $k_1$ is the root/parent element of $k_2$ and $k_3$, then $k_2 \le k_1 \le k_3$.
+				\begin{figure}[H]
+					\Tree [.k_1 [.k_2 ] [.k_3 ]].k_1
+				\end{figure}
 \end{document}
