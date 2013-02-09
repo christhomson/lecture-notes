@@ -1160,8 +1160,178 @@
 					\item \verb+insert+ in $\Theta(\lg n)$ time.
 					\item \verb+delete+ in $\Theta(\lg n)$ time.
 				\end{itemize}
-				These operations are possible in those complexities with binary search trees. The main property of binary search trees is that if $k_1$ is the root/parent element of $k_2$ and $k_3$, then $k_2 \le k_1 \le k_3$.
+				These operations are possible in those complexities with binary search trees in the worst case. The main property of binary search trees is that if $k_1$ is the root/parent element of $k_2$ and $k_3$, then $k_2 \le k_1 \le k_3$.
 				\begin{figure}[H]
 					\Tree [.k_1 [.k_2 ] [.k_3 ]].k_1
 				\end{figure}
+
+				\lecture{February 7, 2013}
+				\subsubsection{Binary Search Trees and AVL Trees}
+					Binary search trees take $\Theta(\lg n)$ time for \verb+insert+ and \verb+delete+ in the average case. However, we can achieve those complexities in the worst case if we get nicely balanced trees as seen in \ref{figure:balancedtree}.
+
+					\begin{figure}[H]
+						\Tree [.o [.o [.o ] [.o ]] [.o [.o ] [.o ]]]
+						\caption{A balanced binary tree. \label{figure:balancedtree}}
+					\end{figure}
+					
+					An example of an unbalanced tree was if we inserted 7, then 6, then 5, then 4, then 3, then 2, then 1, which would produce a single path of length 7.
+					\\ \\
+					In 1962, a group of Russian mathematicians came up with \textbf{AVL trees}. AVL stood for Adelson-Velski and Landis, the two Russian guys who came up with AVL trees. They were trying to build a chess program and had a need for balanced binary search trees.
+					\\ \\
+					They succeeded because they were tolerable of slight imperfections in their balanced trees. They had a relaxed attitude.
+					\begin{defn}
+						The \textbf{height of a tree} is the length of the longest path from the root to a leaf.
+					\end{defn}
+					They demanded height-balanced trees.
+					\begin{defn}
+						AVL trees were binary search trees where the difference between the height of the left and right subtrees is at most 1.
+					\end{defn}
+
+					\begin{figure}[H]
+						\Tree [.o [.o [.o [.o ] [.o ] [.o ]] [.o ]] !{\qframesubtree} [.o [.o ]] !{\qframesubtree} ]
+						\caption{A tree with the left subtree having $h = 2$ and the right subtree having $h = 1$ \label{figure:avlfreakouttree}}
+					\end{figure}
+
+					The people in the West would have freaked out at the tree as seen in \ref{figure:avlfreakouttree}.
+					\\ \\
+					In an AVL tree, at each non-empty node we store the result of the expression $\text{height}(R) - \text{height}(L)$, so that:
+					\begin{itemize}
+						\item -1 means the tree is left-heavy.
+						\item 0 means the tree is ``balanced''.
+						\item +1 means the tree is right-heavy. 
+					\end{itemize}
+
+					If the difference is some other value ($\pm 2$, etc.), then the tree is skewed enough that the tree is no longer an AVL tree. It needs to be re-balanced slightly in order to become an AVL tree again.
+					\\ \\
+					\textbf{Insertion on an AVL tree}: first, do a standard BST insertion. Then, recompute all of the height (balance) expressions. If the expressions are all still $\in \{ -1, 0, 1 \}$, then do nothing. Otherwise, we need to rebalance.
+					\\ \\
+					\textbf{Right rotation}: if the balance of a particular subtree is -2, then a right rotation should be applied to that subtree.
+					\begin{figure}[H]
+						\qroofx=2
+						\qroofy=2
+						\Tree [.z [.y [.x \qroof{A}. \qroof{B}. ].x \qroof{C}. ].y \qroof{D}. ].z
+						\caption{A right rotation needs to be applied to this entire tree. \label{figure:rrotationneeded}}
+					\end{figure}
+
+					\begin{figure}[H]
+						\qroofx=2
+						\qroofy=2
+						\Tree [.y [.x [\qroof{A}. ] [\qroof{B}. ]].x [.z [\qroof{C}. ] [\qroof{D}. ]]].y
+						\caption{After a right rotation has been applied to the tree in \ref{figure:rrotationneeded}. \label{figure:rrotationapplied}}
+					\end{figure}
+
+					Note that the BST property has been maintained in \ref{figure:rrotationapplied}. Imagine a pulley sitting under $z$ in \ref{figure:rrotationneeded}, and $C$ got caught in the pulley and landed on the other side (under $z$).
+					\\ \\
+					We can use a constant number of operations (a few pointer changes) to rebalance the tree.
+					\\ \\
+					A right rotation of a tree has the following pseudocode: \\
+					\begin{algorithm}
+						new\_root = z.left\;
+						z.left = new\_root.right\;
+						new\_root.right = z\;
+						return new\_root\;
+					\end{algorithm}
+
+					Similarly, we have left rotations.
+					\\ \\
+					\textbf{Left rotation}: if the balance of a particular subtree is +2, then a left rotation should be applied to that subtree.
+					\begin{figure}[H]
+						\qroofx=2
+						\qroofy=2
+						\Tree [.z \qroof{A}. [.y \qroof{B}. [.x \qroof{C}. \qroof{D}. ].x ].y ].z
+						\caption{A left rotation needs to be applied to this entire tree. \label{figure:lrotationneeded}}
+					\end{figure}
+
+					\begin{figure}[H]
+						\qroofx=2
+						\qroofy=2
+						\Tree [.y [.z \qroof{A}. \qroof{B}. ] [.x \qroof{C}. \qroof{D}. ].x ].y
+						\caption{After a left rotation has been applied to the tree in \ref{figure:lrotationneeded} \label{figure:lrotationapplied}.}.
+					\end{figure}
+
+					\textbf{Double-right rotation}: if the inner-left side is heavy (and the balance for the tree is -2), a double-right rotation should be applied to that subtree. A normal right rotation does not property rebalance the tree.
+					\begin{figure}[H]
+						\qroofx=2
+						\qroofy=2
+						\Tree [.z [.y \qroof{A}. [.x \qroof{X}. \qroof{C}. ].x ].y \qroof{D}. ].z
+						\caption{A double-right rotation needs to be applied to this entire tree. \label{figure:drrotationneeded}}
+					\end{figure}
+
+					\begin{figure}[H]
+						\qroofx=2
+						\qroofy=2
+						\Tree [.z [.x [.y \qroof{A}. \qroof{B}. ].y \qroof{C}. ].x \qroof{D}. ].z
+						\caption{After a left rotation has been applied on the left subtree of the tree in \ref{figure:drrotationneeded}. \label{figure:drrotationleftrapplied}}
+					\end{figure}
+
+					\begin{figure}[H]
+						\qroofx=2
+						\qroofy=2
+						\Tree [.x [.y \qroof{A}. \qroof{B}. ].y [.z \qroof{C}. \qroof{D}. ].z ].x
+						\caption{After right rotation has been applied to the tree in \ref{figure:drrotationleftrapplied}. The double-right rotation is now complete. \label{figure:drrotationapplied}}
+					\end{figure}
+
+					Essentially, a double-right rotation involves a left rotation of the left subtree, then a right rotation of the entire tree.
+					\\ \\
+					\textbf{Double-left rotation}: if the inner-right side is heavy (and the balance for the tree is +2), a double-left rotation should be applied to that subtree. A normal left rotation does not properly rebalance the tree.
+					\begin{figure}[H]
+						\qroofx=2
+						\qroofy=2
+						\Tree [.z \qroof{A}. [.y [ \qroof{X}. \qroof{B}. \qroof{C}. ].X \qroof{D}. ].y ].z
+						\caption{A double-left rotation needs to be applied to this entire tree. \label{figure:dlrotationneeded}}
+					\end{figure}
+
+					\begin{figure}[H]
+						\qroofx=2
+						\qroofy=2
+						\Tree [.x [.z \qroof{A}. \qroof{B}. ].z [.y \qroof{C}. \qroof{D}. ].y ].x
+						\caption{After a double-left rotation has been applied to the tree in \ref{figure:dlrotationneeded}. \label{figure:dlrotationapplied}}
+					\end{figure}
+
+					Note that for all of these rotations, you only perform the rotation at the node level where the balance has been broken.
+
+					\begin{ex}
+						Let's say you just did a BST insertion of element 4.5, and now need to rebalance. A double-left rotation must be used because the tree is inner-right heavy.
+						\begin{figure}[H]
+							\qroofx=2
+							\qroofy=2
+							\Tree [.4 [.2 [.1 ] [.3 ]].2 [.7 [.6 [.5 [.4.5 ] ].5 [.6.5 ]].6 [.15 [.14 ] [.16 ]].15 ].7 ].4
+							\caption{A double-left rotation needs to be applied to this entire tree. \label{figure:dlrotationexneeded}}
+						\end{figure}
+
+						\begin{figure}[H]
+							\qroofx=2
+							\qroofy=2
+							\Tree [.4 [.2 [.1 ] [.3 ]] [.6 [.5 [.4.5 ] ].5 [.7 [.6.5 ] [.15 [.14 ] [.16 ]].15 ].7 ].6 ].4
+							\caption{A right rotation was applied on the right subtree of the tree in \ref{figure:dlrotationexneeded}. \label{figure:dlrotationexrrapplied}}
+						\end{figure}
+
+						\begin{figure}[H]
+							\qroofx=2
+							\qroofy=2
+							\Tree [.6 [.4 [.2 [.1 ] [.3 ]].2 [.5 [.4.5 ] ].5 ].4 [.7 [.6.5 ] [.15 [.14 ] [.16 ]].15 ].7 ].6
+							\caption{A left rotation was applied on the entire tree in \ref{figure:dlrotationexrrapplied}. The double-left rotation is now complete. \label{figure:dlrotationexapplied}}
+						\end{figure}
+					\end{ex}
+					What is the relationship between the longest path in an AVL tree and the number of elements in it, in the worst case? We would like the path length to be $\lg n$ for a tree of $n$ elements. We want to avoid long paths with few elements (where height = number of elements, for instance).
+					\\ \\
+					\textbf{Observation}: the skinniest AVL tree $T_h$ of depth $h$ looks like this:
+					\begin{figure}[H]
+						\qroofx=2
+						\qroofy=2
+						\Tree [.o \qroof{$T_{h - 2}$}. \qroof{$T_{h - 1}$}. ]
+					\end{figure}
+					That is, the left subtree has depth $h - 2$ and the right subtree has depth $h - 1$. We get that $T_h = 1 + T_{h - 2} + T_{h - 1} = 1 + T_{h - 1} + T_{h - 2}$, which looks similar to the definition of the fibonacci numbers ($F_n = 1 + F_{n - 1} + F_{n - 2}$).
+					\\ \\
+					The smallest item in the left subtree is $T_{h - 2}$ because it satisfies the AVL property. $T_{h - 3}$ would be smaller, but it would not satisfy the AVL property as necessary.
+					\\ \\
+					Mathematicians discovered that $F_n = (\varphi)^n$ (the golden ratio $\varphi$ to the $n$-th power), so we can say that $T_h \approx (\varphi)^n$.
+					\\ \\
+					The number of nodes $n = c^h$ (where $c$ is some constant) in the skinniest AVL tree is:
+					\begin{align*}
+						\lg n &= \lg c^h = h \lg c \\
+						h &= \frac{\lg n}{\lg c} = \Theta(\lg n)	
+					\end{align*}
+
+					In practice, you probably won't implement an AVL tree. There are easier implementations, such as left red black trees and AA trees, however we look at AVL trees because they are more interesting theoretically. People also don't use any sort of binary tree in practice. It's more common to use a tree with more than two children.
 \end{document}
