@@ -109,7 +109,7 @@
 				\end{tabular}
 			\end{center}
 			
-			However, computers were getting better, so we couldn't use wall clocks anymore. Results were not robust enough due to the qucik progression of performance increases in terms of computing power. Moreover, because of the differences in architecture, the same program may have a different execution time on two different computer models.
+			However, computers were getting better, so we couldn't use wall clocks anymore. Results were not robust enough due to the quick progression of performance increases in terms of computing power. Moreover, because of the differences in architecture, the same program may have a different execution time on two different computer models.
 			\\ \\ 
 			\underline{Idea}: rather than comparing algorithms using seconds, we should compare algorithms using the number of operations required for the algorithm to run.
 			
@@ -909,7 +909,7 @@
 				\\ \\
 				\textbf{Worst case}: quick select runs in $T(n) = n + T(n - 1) = n + (n - 1) + (n - 2) + \ldots + 1 = \Theta(n^2)$ time.
 				\\ \\
-				\textbf{Average case}: assume all permutations are equally likely. This is a probabilistic assumption on the input. The probability of choosing a ``good'' pivot is $\frac{1}{2}$. After $r$ recursive calls, about half the pivots are good, which means the array was halved approximately $\frac{r}{2}$ times. After $4 \lg n$ recursive calls, we must be left with an array of size 1. Note that this is $4 \lg n$ and not $2 \lg n$ because we aren't dividing perfectly in half each time. We're also assuminng that randomness is somehow preserved on recursive calls.
+				\textbf{Average case}: assume all permutations are equally likely. This is a probabilistic assumption on the input. The probability of choosing a ``good'' pivot is $\frac{1}{2}$. After $r$ recursive calls, about half the pivots are good, which means the array was halved approximately $\frac{r}{2}$ times. After $4 \lg n$ recursive calls, we must be left with an array of size 1. Note that this is $4 \lg n$ and not $2 \lg n$ because we aren't dividing perfectly in half each time. We're also assuming that randomness is somehow preserved on recursive calls.
 				\\ \\
 				\textbf{Expected case}: probabilities come from the algorithm itself. For example: select $p$ at random in A[0\ldots n - 1], which preserves randomness. Regardless of the input distribution or partition algorithm, a pivot is ``good'' with probability $\approx \frac{1}{2}$. The expected case is that this algorithm runs in $T(n, k)$ time as follows:
 				\begin{align*}
@@ -1246,7 +1246,7 @@
 						\qroofx=2
 						\qroofy=2
 						\Tree [.y [.z \qroof{A}. \qroof{B}. ] [.x \qroof{C}. \qroof{D}. ].x ].y
-						\caption{After a left rotation has been applied to the tree in \ref{figure:lrotationneeded} \label{figure:lrotationapplied}.}.
+						\caption{After a left rotation has been applied to the tree in \ref{figure:lrotationneeded}. \label{figure:lrotationapplied}}.
 					\end{figure}
 
 					\textbf{Double-right rotation}: if the inner-left side is heavy (and the balance for the tree is -2), a double-right rotation should be applied to that subtree. A normal right rotation does not property rebalance the tree.
