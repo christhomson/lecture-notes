@@ -1279,7 +1279,139 @@
 		\begin{align*}
 			[x^n] \frac{f(x)}{g(x)} = a^n \times (\text{polynomial of } n \text{ of degree } k - 1)
 		\end{align*}
+		
+		\lecture{February 11, 2013}
+		\begin{align*}
+			[x^n] \frac{f(x)}{(x - 3)^2(x + 2)} &= [x^n] \frac{A}{(x - 3)} + [x^n] \frac{B}{(x - 3)^2} + [x^n] \frac{C}{x + 2} \\
+			&= (\text{polynomial of } n \text{ of degree } \le 1) \cdot 3^n + (\text{constant}) \cdot (-2)^n
+		\end{align*}
 
+		(for $f(x)$ of degree 2)
+		
+	\section{Solving Recurrence Relations}
+		\begin{ex}
+			We're given:
+			\begin{align*}
+				(\star) &= a_n - 3a_{n - 1} + 2a_{n - 2} = 0 \text{ for } n \ge 2 \\
+				a_0 &= 1 \\
+				a_1 &= 4
+			\end{align*}
+
+			Let's take the coefficients of $a_n, a_{n - 1}$, and $a_{n - 2}$ to guess:
+			\begin{align*}
+				(1 - 3x + 2x^2)(a_0 + a_1x + a_2x^2 + \ldots) =c_0 + c_1x
+			\end{align*}
+
+			We want a polynomial of degree at most 1 on the right-hand side.
+			\\ \\
+			We know that $[x^n] LHS = [x^n] RHS$, so for $n \ge 2, [x^n]RHS = 0$. Multiplying out, we get $(\star)$. We can say that for $n \ge 2$, $(1 - 3x + 2x^2)(a_0 + a_1x + \ldots) = c_0 + c_1x$ encodes $(\star)$.
+			\\ \\
+			Let's continue:
+			\begin{align*}
+				(1 - 3x + 2x^2)(a_0 + a_1x + a_2x^2 + \ldots) &= c_0 + c_1x \text{ from earlier} \\
+				\sum_{n \ge 0} a_n x^n &= \frac{c_0 + c_1}{1 - 3x + 2x^2} \\
+				&= \frac{A}{1 - 2x} + \frac{B}{1 - x} \text{ by partial fraction expansion}
+			\end{align*}
+
+			This holds when the roots are distinct, otherwise the partial fraction expansion would work out differently.
+			\\ \\
+			So, we have that $a_n = A \cdot 2^n + B \cdot 1^n$. We can solve for $A$ and $B$ using the given values for $a_0$ and $a_1$.
+			\begin{align*}
+				a_0 = 1 &\implies A \cdot 2^0 + B \cdot 1^0 = 1 \\
+				a_1 = 4 &\implies A \cdot 2^1 + B \cdot 1^1 = 4 \\ \\
+				&\implies A = 3, B = -2
+			\end{align*}
+
+			Substituting the values for $A$ and $B$ back into our equation from eralier, we get $a_n = 3 \cdot 2^n - 2$.
+		\end{ex}
+
+		Let's now look at a more efficient (lazy) approach to this.
+		\begin{align*}
+			q(x) &= 1 - 3x + 2x^2 \\
+			&= (1 - \underline{2}x)(1 - \underline{1}x)
+		\end{align*}
+
+		Now, we will define $p(x)$ such that it is a polynomial with roots 2 and 1.
+		\begin{align*}
+			p(x) &= x^2 q\bigg(\frac{1}{x}\bigg) \\
+			&= x^2 \bigg( 1 - 2 \frac{1}{x}\bigg) \bigg(1 - \frac{1}{x}\bigg) \\
+			&= (x - 2)(x - 1)
+		\end{align*}
+		Now, we're just interested in the roots of $p(x)$ instead of coefficients within the factored form of $q(x)$, which is much cleaner.
+
+		\begin{defn}
+			A \textbf{homogeneous recurrence relation} is $a_n + c_1 a_{n - 1} + c_2 a_{n - 2} + \ldots + c_m a_{n - m} = 0$ with initial conditions $a_0, a_1, \ldots, a_{m - 1}$ ($m$ initial terms).
+		\end{defn}
+
+		\underline{Strategy}:
+		\begin{enumerate}
+			\item Find the general form for $a_n$.
+			\item Use the initial conditions $a_0, a_1, \ldots, a_{m - 1}$.
+		\end{enumerate}
+
+		We have the characteristic polynomial:
+		\begin{align*}
+			p(x) &= x^m + c_1 x^{m - 1} + \ldots + c_m x^0
+		\end{align*}
+
+		\begin{theorem}
+			If $p(x)$ has $m$ distinct roots $\beta_1, \ldots, \beta_m$ then the general form for $a_n$ is:
+			\begin{align*}
+				A_1 \beta_1^n + A_2 \beta_2^n + \ldots + A_m \beta_m^n
+			\end{align*}
+		\end{theorem}
+
+		\begin{ex}
+			We have the Fibonacci sequence $a_n - a_{n - 1} - a_{n - 2} = 0$ for $n \ge 2$. The initial conditions are $a_0 = 0$ and $a_1 = 1$.
+			\\ \\
+			We have:
+			\begin{align*}
+				p(x) &= x^2 - x - 1 = 0 \\
+				\implies x &= \frac{1 \pm \sqrt{5}}{2}
+			\end{align*}
+
+			The general form is:
+			\begin{align*}
+				(\star) &= A_1 \bigg( \frac{1 + \sqrt{5}}{2} \bigg)^n + A_2 \bigg( \frac{1 - \sqrt{5}}{2} \bigg)^n
+			\end{align*}
+
+			Using the initial conditions $a_0 = 0$ and $a_1 = 1$, we get:
+			\begin{align*}
+				n = 0 &\implies A_1 + A_2 = 0 \\
+				n = 1 &\implies A_1 \bigg( \frac{1 + \sqrt{5}}{2} \bigg) + A_2 \bigg( \frac{1 - \sqrt{5}}{2} \bigg) = 1 \\ \\
+				&\implies A_1 = \frac{1}{\sqrt{5}} \\
+				&\implies A_2 = - \frac{1}{\sqrt{5}}
+			\end{align*}
+
+			Substituting these values for $A_1$ and $A_2$ into $(\star)$ we get:
+			\begin{align*}
+				\frac{1}{\sqrt{5}} \bigg( \frac{1 + \sqrt{5}}{2} \bigg)^n - \frac{1}{\sqrt{5}} \bigg( \frac{1 - \sqrt{5}}{2} \bigg)^n \\ \\
+				\implies a_{20} = 4181
+			\end{align*}
+		\end{ex}
+			We have the recurrence relation $a_n + 3a_{n - 1} - 4a_{n - 3} = 0$ for $n \ge 3$. The initial conditions are $a_0 = 0, a_1 = 4$, and $a_2 = 2$.
+			\\ \\
+			We have:
+			\begin{align*}
+				p(x) &= x^2 + 3x^2 - 4 \\
+				&= (x + 2)^2 (x - 1)
+			\end{align*}
+
+			Note that we cannot use the previous theorem here. Instead, let's pick:
+			\begin{align*}
+				(1 + 3x - 4x^3)(a_0 + a_1x + a_2x^2 + \ldots) = f(x)
+			\end{align*}
+
+			(for $n \ge 3$ where $f(x)$ is of degree 2)
+			\\ \\
+			We know that $[x^n]LHS = [x^n]RHS = 0$, and we know that the LHS is $a_n + 3a_{n - 1} - 4a_{n - 3}$. So, we get:
+			\begin{align*}
+				\sum_{n \ge 0} a_n x^n &= \frac{f(x)}{1 + 3x - 4x^3} \\
+				&= \frac{f(x)}{(1 + 2x)^2 (1 - x)}
+			\end{align*}
+
+			We know that $a_n = (A + Bn) \cdot (-2)^n + C \cdot 1^n$. Solving, we get that $A = -2, B = 1$, and $C = 2$.
+	
 	\newpage
 	\section{Clicker Questions}
 		\begin{itemize}
