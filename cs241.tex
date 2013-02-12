@@ -1385,4 +1385,210 @@
 					$T$ in this case is a total function. It has eight states because we need to keep track of three binary facts, which requires three bits of information ($2^3 = 8$). 
 				\end{ex}
 				Similarly, if we had a DFA to determine if every letter in the English alphabet is included in a particular string, we would need $2^{26}$ states because we would need to store 26 bits of information. At some point, we say a number is large enough that \emph{in practice} we can treat it as an infinite number, despite it being finite. We wouldn't solve this problem with a DFA because $2^{26}$ is a number large enough that we wouldn't want to create a state for each of them. 
+			\subsubsection{Searching and Scanning with DFAs} \lecture{February 11, 2013}
+				\begin{itemize}
+					\item \textbf{Recognition} answers the question ``is $x \in L$?'' This is what we've used DFAs for so far.
+					\item \textbf{Search} answers the question ``does $x$ contain $y \in L$?''. More formally, Does $\exists w, y, z . x = wyz$ and $y \in L$?
+					\item \textbf{Find} answers the question ``where in $x$ is $y \in L$'' (where $x = x_0 x_1 \ldots x_{|x|-1}$)? This question could have multiple answers, depending on what you're asked for, such as:
+						\begin{itemize}
+							\item $y$ begins at $x_i$.
+							\item $y$ ends at $x_j$.
+							\item $y$ begins at $x_i$ and ends at $x_j$. This can be expressed as the pair $(i, j)$.
+						\end{itemize}
+
+						Find is a more general result than search.
+					\item \textbf{Scan} partitions $x$ into $x = y_0 y_1 y_2 y_3 \ldots y_n$ and $\forall i y_i \in L$.
+				\end{itemize}
+
+				\begin{ex}
+					Let $\Sigma = \{a, b, c, 0, 1, 2, !\}$ be an alphabet. We're interested in $L_{\text{id}}$ \textendash{} that is, the language of identifiers.
+					\\ \\
+					We can determine a \underline{recognizer} for $L_{\text{id}}$:
+					\begin{center}
+						\begin{tikzpicture}[scale=0.2]
+							\tikzstyle{every node}+=[inner sep=0pt]
+							\draw [black] (18.5,-22.9) circle (3);
+							\draw (18.5,-22.9) node {start};
+							\draw [black] (37.5,-22.9) circle (3);
+							\draw (37.5,-22.9) node {ok};
+							\draw [black] (37.5,-22.9) circle (2.4);
+							\draw [black] (12,-16.6) -- (16.35,-20.81);
+							\draw (11.47,-15.13) node [left] {$i$};
+							\fill [black] (16.35,-20.81) -- (16.12,-19.9) -- (15.42,-20.61);
+							\draw [black] (21.5,-22.9) -- (34.5,-22.9);
+							\fill [black] (34.5,-22.9) -- (33.7,-22.4) -- (33.7,-23.4);
+							\draw (28,-23.4) node [below] {$a,\mbox{ }b,\mbox{ }c$};
+							\draw [black] (39.624,-20.798) arc (162.43495:-125.56505:2.25);
+							\draw (44.67,-20.06) node [right] {$a,\mbox{ }b,\mbox{ }c,\mbox{ }0,\mbox{ }1,\mbox{ }2$};
+							\fill [black] (40.46,-23.31) -- (41.07,-24.03) -- (41.37,-23.07);
+						\end{tikzpicture}
+					\end{center}
+
+					\underline{Searching} for $L_{\text{id}}$ in $x$, where $x = !abc!cba!$ yields the vacuous result of ``yes!''. There is an identifier in $x$, somewhere.
+					\\ \\
+					Some possible answers for \underline{find} include:
+					\begin{itemize}
+						\item $i = 1$ is the start of $y \in L$.
+						\item $i = 5$ is the start of $y \in L$.
+						\item $i = 3$ is the end of $y \in L$.
+						\item $i = 7$ is the end of $y \in L$.
+						\item $(i, j) = (1, 3)$ is $y \in L$.
+						\item $(i, j) = (5, 7)$ is $y \in L$.
+					\end{itemize}
+
+					Those are not the only answers for find, however. ``bc'' is a valid identifier, and it's contained within $x$. So, we have a number of additional solutions:
+					\begin{itemize}
+						\item $i = 2$ is the start of $y \in L$.
+						\item $i = 3$ is the start of $y \in L$.
+						\item $i = 1$ is the end of $y \in L$.
+						\item $i = 2$ is the end of $y \in L$.
+						\item etc.
+					\end{itemize}
+
+					There are $O(|x|)$ possible solutions that indicate where $y \in L$ either begins or ends. There are also many additional pair solutions for the same reason:
+					\begin{itemize}
+						\item $(i, j) = (1, 1)$ is $y \in L$.
+						\item $(i, j) = (1, 2)$ is $y \in L$.
+						\item $(i, j) = (1, 3)$ is $y \in L$.
+						\item $(i, j) = (5, 5)$ is $y \in L$.
+						\item $(i, j) = (5, 6)$ is $y \in L$.
+						\item $(i, j) = (6, 7)$ is $y \in L$.
+						\item etc.
+					\end{itemize}
+
+					There are $O(|x^2|)$ possible $(i, j)$ pair solutions.
+				\end{ex}
+				We would like to specify a \underline{unique} solution. How could we do this? First, you have to choose whether you want $i$, $j$, or $(i, j)$ as the format of your solution. If you want just $i$ or $j$, then simply pick the first solution. But if you want the pair $(i, j)$, ``first'' is ill-defined. For example: does $(10, 20)$ come before $(5, 25)$? There's no correct answer, it's all about definitions.
+				\\ \\
+				The most common choice for a unique solution is to use the leftmost longest match.
+				\begin{defn}
+					The \textbf{leftmost longest match} is found by finding $(i, j)$ such that $x_i x_{i + 1} \ldots x_j \in L$, $i$ is minimized, and given $i$, $j$ is maximized.
+				\end{defn}
+				A subproblem of the leftmost longest match algorithm is the longest prefix problem.
+				\begin{defn}
+					The \textbf{longest prefix problem} is when given $x$, find the longest prefix (of $x$), $y \in L$.
+				\end{defn}
+
+				For example, if $x = abc123!abc$, the longest prefix is $abc123$. This can be identified by $j$, where $x_j$ is the end of the prefix of $y$.
+				\begin{ex}
+					Suppose $L = \{a, aaa\}$. Let's find the longest match.
+					\\ \\
+					If we have $x = aa\ldots$, after we examine the first $a$, we have no idea if that's the longest match or not. Only after examining more of the string can we be sure that it is. In $aab$, $a$ is the longest match. In $aaa$, $aaa$ is the longest match and so $a$ is not the longest match.
+				\end{ex}
+
+				\begin{ex}
+					Suppose $L = \{a\} \cup \{ \text{ any string beginning with } a \text{ and ending in } b\}$. We can determine a recognizer for this:
+					\begin{center}
+						\begin{tikzpicture}[scale=0.2]
+							\tikzstyle{every node}+=[inner sep=0pt]
+							\draw [black] (18.5,-22.9) circle (3);
+							\draw (18.5,-22.9) node {start};
+							\draw [black] (35.9,-22.9) circle (3);
+							\draw (35.9,-22.9) node {a};
+							\draw [black] (35.9,-22.9) circle (2.4);
+							\draw [black] (57.4,-22.9) circle (3);
+							\draw (57.4,-22.9) node {b};
+							\draw [black] (57.4,-22.9) circle (2.4);
+							\draw [black] (46.8,-33.7) circle (3);
+							\draw (46.8,-33.7) node {error};
+							\draw [black] (12,-16.6) -- (16.35,-20.81);
+							\draw (11.47,-15.13) node [left] {$i$};
+							\fill [black] (16.35,-20.81) -- (16.12,-19.9) -- (15.42,-20.61);
+							\draw [black] (49.489,-35.003) arc (91.87498:-196.12502:2.25);
+							\draw (53.05,-39.52) node [below] {else};
+							\fill [black] (47.4,-36.63) -- (46.93,-37.44) -- (47.93,-37.41);
+							\draw [black] (38.03,-25.01) -- (44.67,-31.59);
+							\fill [black] (44.67,-31.59) -- (44.45,-30.67) -- (43.75,-31.38);
+							\draw (39.23,-28.78) node [below] {else};
+							\draw [black] (48.9,-31.56) -- (55.3,-25.04);
+							\fill [black] (55.3,-25.04) -- (54.38,-25.26) -- (55.1,-25.96);
+							\draw (52.63,-29.77) node [right] {else};
+							\draw [black] (21.5,-22.9) -- (32.9,-22.9);
+							\fill [black] (32.9,-22.9) -- (32.1,-22.4) -- (32.1,-23.4);
+							\draw (27.2,-23.4) node [below] {$a$};
+							\draw [black] (38.9,-22.9) -- (54.4,-22.9);
+							\fill [black] (54.4,-22.9) -- (53.6,-22.4) -- (53.6,-23.4);
+							\draw (46.65,-23.4) node [below] {$b$};
+						\end{tikzpicture}
+					\end{center}
+
+					If we have $x = acc012cca12\ldots$ and we're examining $a$ at the beginning, we're unsure if that's the longest prefix $y \in L$ yet. We have to continue looking to be sure.
+				\end{ex}
+
+				Here's the pseudocode for determining the longest prefix using a DFA, given an input $x = x_0 x_1 \ldots x_{|x|-1}$. \\
+				\begin{algorithm}
+					state = start\;
+					j = -1\;
+					\For{i = 0 to |x| - 1}{
+						\lIf{state $\in$ final}{j = i}\;
+						state = T[state, $x_i$]\;
+						\lIf{state is blackhole}{reject}; // You could always hope\dots this is optional though. \\
+					}
+					\lIf{$j \ge 0$}{accept, $y = x_0 \ldots x_{j - 1} \in L$}
+					\lElse{reject}
+				\end{algorithm}
+
+				Next, let's take a deeper look at \underline{scanning}. With scanning, we want to partition $x$ using the longest prefix. This is also called leftmost longest, or more colloquially, the \textbf{maximal munch} scanning algorithm. \\
+				\begin{algorithm}
+					start with $x$\;
+					\While{$x \ne \epsilon$}{
+						find leftmost longest match of $L$\;
+						report result $y$, remove $y$ from $x$\;
+					}
+				\end{algorithm}
+				
+				In this algorithm, $L$ is the language of all tokens and separators. That is, $L = L_{\text{id}} \cup L_{\text{int}} \cup L_{\text{!}}$, where $L_{\text{int}}$ has this recognizer:
+				\begin{center}
+					\begin{tikzpicture}[scale=0.2]
+						\tikzstyle{every node}+=[inner sep=0pt]
+						\draw [black] (18,-21.8) circle (3);
+						\draw (18,-21.8) node {start};
+						\draw [black] (34.9,-27.4) circle (3);
+						\draw (34.9,-27.4) node {$0$};
+						\draw [black] (34.9,-27.4) circle (2.4);
+						\draw [black] (34.9,-16.5) circle (3);
+						\draw (34.9,-16.5) node {nat};
+						\draw [black] (34.9,-16.5) circle (2.4);
+						\draw [black] (11.5,-15.5) -- (15.85,-19.71);
+						\draw (10.97,-14.03) node [left] {$i$};
+						\fill [black] (15.85,-19.71) -- (15.62,-18.8) -- (14.92,-19.51);
+						\draw [black] (20.86,-20.9) -- (32.04,-17.4);
+						\fill [black] (32.04,-17.4) -- (31.12,-17.16) -- (31.42,-18.11);
+						\draw (28.17,-19.74) node [below] {$1,\mbox{ }2$};
+						\draw [black] (36.987,-14.361) arc (163.44003:-124.55997:2.25);
+						\draw (42.03,-13.5) node [right] {$0,\mbox{ }1,\mbox{ }2$};
+						\fill [black] (37.87,-16.86) -- (38.49,-17.56) -- (38.78,-16.6);
+						\draw [black] (20.85,-22.74) -- (32.05,-26.46);
+						\fill [black] (32.05,-26.46) -- (31.45,-25.73) -- (31.14,-26.68);
+						\draw (25.56,-25.14) node [below] {$0$};
+					\end{tikzpicture}
+				\end{center}
+
+				And $L_{\text{!}}$ has this recognizer:
+				\begin{center}
+					\begin{tikzpicture}[scale=0.2]
+						\tikzstyle{every node}+=[inner sep=0pt]
+						\draw [black] (18,-21.8) circle (3);
+						\draw (18,-21.8) node {start};
+						\draw [black] (34.9,-21.8) circle (3);
+						\draw (34.9,-21.8) node {!};
+						\draw [black] (34.9,-21.8) circle (2.4);
+						\draw [black] (11.5,-15.5) -- (15.85,-19.71);
+						\draw (10.97,-14.03) node [left] {$i$};
+						\fill [black] (15.85,-19.71) -- (15.62,-18.8) -- (14.92,-19.51);
+						\draw [black] (21,-21.8) -- (31.9,-21.8);
+						\fill [black] (31.9,-21.8) -- (31.1,-21.3) -- (31.1,-22.3);
+						\draw (26.45,-22.3) node [below] {$!$};
+					\end{tikzpicture}
+				\end{center}
+
+				There is a problem with maximal munch \textendash{} efficiency.
+				\\ \\
+				\textbf{Runtime of Maximal Munch}: the loop executes $|x|$ times, and for each iteration, it uses the ``find largest prefix'' algorithm (which itself takes $O(|x|)$ time). $|x| \cdot O(|x|) \in O(|x|^2)$.
+				\\ \\
+				In order to improve efficiency and readability, we'll use a ``total hack'' called \textbf{simplified maximal munch}. This involves finding the longest prefix $y$ of $x$ such that $ya$ could not possibly be a prefix of $L$ where $x = yaz$.
+				\\ \\
+				Suppose you have $L_{\text{int}} = \{0, 1, 2, 3, \ldots\}, L_{\text{id}} = \{x\}$, and $L_{\text{hex}} = \{0x1, \ldots\}$. If you have $x = 0x$, you can't determine if that's the integer zero followed by an identifier, or the beginning of a hex symbol. However, if you can look ahead and see $0x1$, you know it's a hex symbol. If you see something like $0xx$ (a hex prefix followed by an identifier), simplified maximal munch will not allow this.
+				\\ \\
+				The scanner we were given (which implements simplified maximal munch) will see $0xx$ as an error. It's an error because the scanner made the assumption that it was a hex constant, but that didn't work out (didn't see an integer after 0x), so it gave up and produced an error.
 \end{document}
