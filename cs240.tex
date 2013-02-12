@@ -23,6 +23,8 @@
 \setlength{\algomargin}{0.75em}
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
 
+\pgfplotsset{compat=newest,compat/show suggested version=false}
+
 \begin{document}
 	\let\ref\Cref
 
@@ -1333,5 +1335,154 @@
 						h &= \frac{\lg n}{\lg c} = \Theta(\lg n)	
 					\end{align*}
 
-					In practice, you probably won't implement an AVL tree. There are easier implementations, such as left red black trees and AA trees, however we look at AVL trees because they are more interesting theoretically. People also don't use any sort of binary tree in practice. It's more common to use a tree with more than two children.
+					In practice, you probably won't implement an AVL tree. There are easier implementations, such as left red black trees and AA trees, however we look at AVL trees because they are more interesting theoretically. People also don't use any sort of binary tree in practice. It's more common to use a tree with more than two children. \lecture{February 12, 2013}
+					\\ \\
+					You may be interested in looking at \href{http://cs-study.blogspot.ca/2012/11/cases-of-rotation-of-avl-tree.html}{this webpage on the cases of rotation for AVL trees}. Note that after performing a BST insertion on the leftmost subtree then rotating right, the height will not change. Its ancestors will not see any change.
+					\\ \\
+					Upon insertion, after the first rebalancing operation the entire AVL tree is once again balanced. In contrast, after a deletion you might have to rotate every node in the path up to the root node in the worst case. In the best case, just a few rotations may suffice. This can be proven by the diagrams on \href{http://cs-study.blogspot.ca/2012/11/cases-of-rotation-of-avl-tree.html}{the webpage about the cases of rotation for AVL trees}.
+				\subsubsection{Handling RAM Constraints}
+					To many, a computer is a screen and a big box. To us, a computer is really an array $M$, which is RAM, plus a CPU and a hard drive.
+					\\ \\
+					When we write programs in a language like C++, our code is converted to machine instructions that operate on that array $M$.
+					\begin{verbatim}
+						C++:       Machine instructions:
+						int x;     
+						x = 8;     MOVE 8, 435
+						x++;       INC 1, 435
+					\end{verbatim}
+
+					Reading from a hard drive (or any secondary storage device) is much slower than reading from RAM. Hard drives operate at approximately 14,400 rpm, which is 240 rps. If we are looking for some data on a hard drive and just missed it as it was rotating, we have to wait for a full revolution to get the data. Each revolution takes $\approx 4 ms$. The head moves even slower than that.
+					\\ \\
+					Hard drives are made up of several platters on an axle, plus a head. Each platter is divided into tracks (rings) and sectors (pie slices). When reading from a hard drive, we must read an \emph{entire} sector at once, even if we aren't interested in all of the data on that sector.
+					\\ \\
+					As a rule of thumb, hard drives are 10,000x slower than RAM. This ratio has remained fairly constant because as hard drives have been improving at a similar progression as RAM. So, you want to avoid interacting with the hard drive as much as possible. There is some good news: solid state drives (SSDs). SSDs are ``only'' 100s of times slower than RAM, so dropping down to a SSD isn't as tragic as a traditional hard drive, but it still isn't as efficient as RAM.
+					\\ \\
+					If you're building a binary search tree over a \underline{large} amount of data, a hard drive must come into play. We define ``large'' here as being an amount of data that is large enough that it cannot fit into RAM in its entirety. 
+					\\ \\
+					Mergesort has efficiency $O(n \lg n)$. In reality, the performance is $n \lg n$ until the input size $n$ hits the RAM limit, then the performance spikes. After this performance spike, mergesort continues to operate in $O(n \lg n)$ time, but with a much larger constant like $10000n \lg n$. This performance hit is a result of having to drop down to the performance of a hard drive. Some machines will have multiple spikes, between L1 and L2 cache, L2 cache and RAM, and RAM and a hard drive (from the fastest storage to the slowest storage). 
+					\\ \\
+					When defining data structures, it's important to think about what will happen in terms of RAM and hard drive usage.
+					\\ \\
+					Let's say you have a binary search tree, stored in memory. When you insert a new element, let's say no more RAM is available, so the element needs to be placed on disk instead. This new element may contain pointers to other elements which are stored on other sectors of the hard drive. In order to follow this path, we would have to read several entire sectors, despite only being interested in a very small portion of each of those sectors. 
+					\\ \\
+					For reference: the size of a sector is typically between 512 bytes and 4,000 bytes, and this size has remained fairly constant as time has progressed.
+					\\ \\
+					\underline{Idea}: make the nodes exactly the size of the sector by changing the binary search tree into a multi-way tree (to utilize the extra space).
+					\begin{figure}[H]
+						\qroofx=2
+						\qroofy=2
+						\Tree [.k \qroof{$T_1$}. \qroof{$T_2$}. ]
+						\caption{A typical binary search tree. \label{figure:typicalbst}}
+					\end{figure}
+
+					In \ref{figure:typicalbst}, $T_1 \in (- \infty, k)$ and $T_2 \in (k, +\infty)$. In any given BST, we need 1 key and 1 or 2 children. We could extend this to a multi-way tree.
+					\begin{figure}[H]
+						\qroofx=2
+						\qroofy=2
+						\Tree [.{$k_1 < k_2 < k_3$} \qroof{$T_1$}. \qroof{$T_2$}. \qroof{$T_3$}. \qroof{$T_4$}. ]
+						\caption{A multi-way tree. \label{figure:typicalmultiwaytree}}
+					\end{figure}
+
+					In \ref{figure:typicalmultiwaytree}, there are 3 keys and 4 children. However, to generalize, a multi-way tree with $k$ keys needs $k + 1$ or $k + 2$ children.
+					\\ \\
+					In a binary search tree, we have $O(\log_2 n)$ complexity. In a multi-way tree (with $k$ keys), we have $O(\log_{k + 1})$ complexity. For a 20-way tree, for example, $\log_{20} n \ge \log_2 n$, but the constant will be much smaller for $\log_{20} n$. This smaller constant means we will hit the hard drive fewer times, which is a net win.
+					\\ \\
+					CD-ROMs used to take as long to read as music CDs did. They implemented an indexing system using a binary search tree, which was too slow. It was relatively easy to make CD-ROMs quicker (2x, 4x, \ldots) by overclocking the spinning mechanism. However, the queries were not being processed any faster because the head was slow. For music CD players, heads didn't need to be very fast. In fact, heads really haven't improved much since then.
+					\\ \\
+					The index was being developed for the Oxford English Dictionary (OED). They wanted OED on a CD-ROM and they wanted it to be fast. They aimed to be able to store all levels of the tree in RAM except for the deepest level, which meant you'd only need to hit the hard drive once for each query ($\approx 250$ ms hard drive delay per query). A full dictionary lookup could occur in $< 1$ second, whereas before it took one and a half minutes.
+					\\ \\
+					To be cute, they also added ``queried in 0.3 seconds'' to their interface. Frank Tompa, a UW professor, worked on this project. The OED technology effectively enabled the first search engines.
+
+				\subsubsection{2-3 Trees}
+					2-3 trees were based on several key principles:
+					\begin{itemize}
+						\item Every node contains one or two keys and two or three children.
+						\item All the leaves are at the same level (like a heap).
+						\item The sloppiness permitted was the variable number of keys.
+					\end{itemize}
+
+					If we were to perform a BST insertion into the deepest leftmost position, we'd end up with the tree in \ref{figure:leftmostbstinsertion}.
+					\begin{figure}[H]
+						\Tree [.o [.o [.o [.N ] ] [.o ]] [.o [.o ] [.o ] ]]
+						\caption{A binary search tree with leaves at different levels. \label{figure:leftmostbstinsertion}}
+					\end{figure}
+					Performing the same insertion on a 2-3 tree would result in the tree as seen in \ref{figure:leftmost23insertion}.
+					\begin{figure}[H]
+						\Tree [.o [.o [.N ] [.o ] [.o ]] [.o [.o ] [.o ] ] ]
+						\caption{A 2-3 tree. \label{figure:leftmost23insertion}}
+					\end{figure}
+
+					\textbf{Insertion}:
+						\begin{enumerate}
+							\item Follow the path down the tree according to key ranges until you find the parent of the leaves.
+							\item Insert there.
+							\item Fix your free, if needed.
+						\end{enumerate}
+						
+						Let's try inserting two elements. After step 1, we end up with the tree as seen in \ref{figure:23needsfix2insertions}.
+
+						\begin{figure}[H]
+							\Tree [.o [.o [.o ] [.N_1 ] [.o ]] [.o [.o ] [.o ] [.o ] [.N_2 ]]]
+							\caption{A 2-3 tree that needs fixing after two insertions. \label{figure:23needsfix2insertions}}
+						\end{figure}
+
+						Notice that the right subtree has four children, which is not allowed. We can fix this by splitting that node into two, each with two children. Then the root node will have three children (which is acceptable), and each subtree will have 2 or 3 children. The resulting tree is shown in \ref{figure:23fixed2insertions}.
+
+						\begin{figure}[H]
+							\Tree [.o [.o [.o ] [.N_1 ] [.o ]] [.o [.o ] [.o ]] [.o [.o ] [.N_2 ] ] ]
+							\caption{The 2-3 tree from \ref{figure:23needsfix2insertions} after its right subtree was fixed. \label{figure:23fixed2insertions}}
+						\end{figure}
+
+						We continue to split our parents up as necessary, and create a root node if necessary (if the root node was split).
+					\\ \\
+					\textbf{Deletion}:
+						If we remove a node that causes one subtree to only have one child, we ask the sibling subtrees how many children they have. If the sibling we ask has just two children, we shove our single child onto the sibling. Otherwise, the sibling must have three children, in which case we take one of those children.
+						\\ \\
+						Let's look at an example where we delete an element and the sibling has just two children. Immediately after deleting the node, we're left with \ref{figure:23needsfixdeletion}, whose right subtree needs adjusting.
+
+						\begin{figure}[H]
+							\Tree [.o [.o [.o ] [.o ]] [.o [.o ] [.o ]] [.o [.o ] ] ]
+							\caption{A 2-3 tree that needs fixing after the deepest rightmost element was deleted. \label{figure:23needsfixdeletion}}
+						\end{figure}
+
+						The right subtree of \ref{figure:23needsfixdeletion} needs adjusting because no subtree in a 2-3 tree is allowed to only have one child. So, we shove this child onto our sibling, as seen in \ref{figure:23fixeddeletion}.
+
+						\begin{figure}[H]
+							\Tree [.o [.o [.o ] [.o ]] [.o [.o ] [.o ] [.o ]]]
+							\caption{The 2-3 tree from \ref{figure:23needsfixdeletion} after its right subtree has been fixed. \label{figure:23fixeddeletion}}
+						\end{figure}
+
+						After a deletion, you need to recursve upwards ensuring that are all parents still satisfy all requirements of 2-3 trees. At the very top of the tree, you may have a case like in \ref{figure:23rootgone1}.
+
+						\begin{figure}[H]
+							\Tree [.o [.o [.o ] [.o ] ] [.o [.o ] ] ]
+							\caption{A 2-3 tree with the deepest rightmost node removed (needs fixing). \label{figure:23rootgone1}}
+						\end{figure}
+
+						We can push the child of the right subtree onto the left subtree, as seen in \ref{figure:23rootgone2}.
+
+						\begin{figure}[H]
+							\Tree [.o [.o [.o ] [.o ] [.o ]]]
+							\caption{The 2-3 tree as seen in \ref{figure:23rootgone1} with its right subtree merged into the left subtree (still needs fixing). \label{figure:23rootgone2}}
+						\end{figure}
+
+						We still need to adjust this further, however. The root node now only has one child, so we can get rid of it, as seen in \ref{figure:23rootgone3}.
+
+						\begin{figure}[H]
+							\Tree [.o [.o ] [.o ] [.o ]]
+							\caption{The 2-3 tree as seen in \ref{figure:23rootgone1} and \ref{figure:23rootgone2}, after it has been fully adjusted. \label{figure:23rootgone3}}
+						\end{figure}
+
+						We want to conserve RAM by storing only the keys in the internal nodes, instead of a key-value pair. All data resides in the leaves, which is the only layer that will be accessed on the hard drive. We're doing this to avoid the hard drive by storing as many levels as possible in RAM. In order to do this, we would have a many-way tree like the one seen in \ref{figure:manywayconservation}.
+
+						\begin{figure}[H]
+							\qroofx=2
+							\qroofy=2
+							\Tree [.{$k_1 < k_2 < k_3$} \qroof{$T_1$}. \qroof{$T_2$}. \qroof{$T_3$}. \qroof{$T_4$}. ]
+							\caption{A many-way tree that stores all data in its leaves. \label{figure:manywayconservation}}
+						\end{figure}
+
+						In \ref{figure:manywayconservation}, $T_1$ is a subtree with range $(- \infty, k_1]$, $T_2$ has range $(k_1, k_2]$, $T_3$ has range $(k_2, k_3]$, and $T_4$ has range $(k_3, + \infty)$. Note that these ranges are all inclusive now, whereas before they were exclusive.
+						\\ \\
+						In a tree like the one in \ref{figure:manywayconservation}, if you find the key you're looking for, you know you're on the right path. The data lies further down the path \textendash{} not at the node you already found.
 \end{document}
