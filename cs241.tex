@@ -584,7 +584,7 @@
 				\\ \\
 				When an error is encountered, we must write to an error file. It our case, we'll write our output (the binary file) to standard output (STDOUT) and any error messages to standard error (STDERR). Ensure the assembler does not crash when it runs into an invalid program.
 				\\ \\
-				If there's an error, it doesn't matter what you've already written to standard output \textendash{} it'll be ignored. You could have written half a program or nothing, but it doesn't matter if an error messasge has been written to standard error.
+				If there's an error, it doesn't matter what you've already written to standard output \textendash{} it'll be ignored. You could have written half a program or nothing, but it doesn't matter if an error message has been written to standard error.
 				\\ \\
 				The scanner will check hex numbers to ensure their general format is correct. That is, it will let you know that \verb+0xg+ is not a valid hex number. However, it may or may not check the ranges of numbers.
 				\\ \\
@@ -956,7 +956,7 @@
 				\end{itemize}
 				An alternative to static linking is \textbf{dynamic linking}. Dynamic linking defers the resolution of ESRs until execution time. The library is searched when the ESR-referenced routine is called. Dynamic linking is implemented by statically linking a \textbf{stub} for each external symbol reference. The stub is effectively a pointer to the (external) dynamic library, which can be updated without changing references to the stub (i.e. without relinking). 
 				\\ \\
-				Importantly, if multipe programs are running at once that use the same dynamically-linked library, the procedure will still only exist once in RAM. There won't be a separate instance of the library in RAM for each running program that needs it.
+				Importantly, if multiple programs are running at once that use the same dynamically-linked library, the procedure will still only exist once in RAM. There won't be a separate instance of the library in RAM for each running program that needs it.
 				\\ \\
 				On Windows, a dynamic (link) library is called a \textbf{DLL}. If you're on Windows and have two programs that need the same DLL, but different versions of that DLL, you're in for a bad time. Windows also requires restarting in order to update DLLs, which is a fundamental design flaw. Linux, on the other hand, preserves old versions of dynamic link libraries even after newer versions are installed.
 	\section{Formal Languages}
