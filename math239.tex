@@ -1389,6 +1389,7 @@
 				\implies a_{20} = 4181
 			\end{align*}
 		\end{ex}
+		\begin{ex}
 			We have the recurrence relation $a_n + 3a_{n - 1} - 4a_{n - 3} = 0$ for $n \ge 3$. The initial conditions are $a_0 = 0, a_1 = 4$, and $a_2 = 2$.
 			\\ \\
 			We have:
@@ -1410,8 +1411,101 @@
 				&= \frac{f(x)}{(1 + 2x)^2 (1 - x)}
 			\end{align*}
 
-			We know that $a_n = (A + Bn) \cdot (-2)^n + C \cdot 1^n$. Solving, we get that $A = -2, B = 1$, and $C = 2$.
-	
+			We know that $a_n = (A + Bn) \cdot (-2)^n + C \cdot 1^n$. Solving, we get that $A = -2, B = 1$, and $C = 2$. \lecture{February 13, 2013}
+			\\ \\
+			We do the same transformation as we did before.
+			\begin{align*}
+				q(x) &= (1 + 2x)^2 (1 - x) \\
+				p(x) &= x^3 q\bigg(\frac{1}{x}\bigg) \\
+				&= x^3\bigg( 1 + 2\frac{1}{x} \bigg)^2 \bigg(1 - \frac{1}{x} \bigg) \\
+				&= (x + 2)^2 (x - 1)
+			\end{align*}
+		\end{ex}
+
+		\begin{theorem}
+			If we have:
+			\begin{align*}
+				a_n + c_1a_{n - 1} +c_2a_{n - 2} + \ldots + c_ma_{n - m} = 0 \text{ where } c_m \ne 0
+			\end{align*}
+
+			The characteristic polynomial would be:
+			\begin{align*}
+				p(x) &= x^m + c_1x^{m - 1} + c_2x^{m - 2} + \ldots + c_mx^{m - m} \\
+				&= x^m + c_1x^{m - 1} + c_2x^{m - 2} + \ldots + c_m
+			\end{align*}
+
+			Suppose $p(x)$ has root $\beta_i$ with multiplicity $m_i$, for $i = 1, \ldots, k$. That is, $\sum_{i = 1}^{k} m_i = m$.
+			\\ \\
+			The general form for $a_n$ is:
+			\begin{align*}
+				\sum_{i = 1}^{k} Q(m_i) \beta_i^n
+			\end{align*}
+			where $Q$ is a polynomial of degree $m_i - 1$.
+		\end{theorem}
+
+		This result generalizes the result from last time, except now the roots don't need to be distinct.
+
+		\begin{ex}
+			We have the recurrence relation $a_n + 3a_{n - 1} + 3a_{n - 2} + a_{n - 3} = 0$ for $n \ge 3$, with initial conditions that we don't care about. Find the general form.
+			\\ \\
+			First, we'll write the characteristic polynomial, which will be of degree 3 since we have $a_{n - 3}$ included as one of the terms:
+			\begin{align*}
+				p(x) = x^3 + 3x^2 + 3x + 1 = (1 + x)^3 \text{ by binomial theorem}
+			\end{align*}
+
+			There is one root of $p(x)$, -1, with multiplicity 3. The general form of $a_n$ is: 
+			\begin{align*}
+				a_n = (A + Bn + Cn^2)(-1)^n
+			\end{align*}
+		\end{ex}
+
+		\subsection{Non-homogeneous Recurrences}
+			\begin{ex}
+				Suppose we have the recurrence relation $(\star_1) = a_n + 3a_{n - 1} + 4a_{n - 3} = 6 \times 2^n$ for $n \ge 3$. The initial conditions are $a_0 = 5, a_1 = 3$, and $a_3 = 25$.
+				\\ \\
+				Let's ignore the initial conditions for now. Let's take a guess and pick $a_n = \alpha 2^n$, where $\alpha$ is some constant that we'll decide on later.
+				\begin{align*}
+					\alpha 2^n + 3 \alpha 2^{n - 1} - 4 \alpha 2^{n - 3} &= 6 \times 2^n \\
+					2^n(\alpha + \frac{3}{2} \alpha - \frac{4}{8} \alpha) &= 6 \times 2^n \\
+					2 \alpha &= 6 \\
+					\alpha = 3
+				\end{align*}
+
+				We still haven't satisfied the initial conditions though. We want to find $b_n$ such that $(\star_2) = b_n + 3b_{n - 1} - 4b_{n - 3} = 0$ (which is the same relation as before, but $= 0$). Then:
+				\begin{align*}
+					(a_n + b_n) + 3(a_{n - 1} + b_{n - 1}) - 4(a_{n - 3} + b_{n - 3}) = 6 \times 2^n
+				\end{align*}
+
+				$a_n$ is a solution to $(\star_1)$, ignoring the initial conditions. If $b_n$ is a solution to $(\star_2)$, then $a_n + b_n$ is a solution to $(\star_1)$.
+				\\ \\
+				We previously showed the general form for $(\star_2)$ to be:
+				\begin{align*}
+					b_n = (A + B_n)(-2)^n + C
+				\end{align*}
+
+				Therefore, the general form for $(\star_1)$ is:
+				\begin{align*}
+					a_n + b_n = (A + B_n) - 2^n + C + 3 \times 2^n
+				\end{align*}
+
+				Using the initial conditions, we can solve to get $A = 1, B = 1$, and $C = 1$. \\
+			\end{ex}
+
+			\begin{ex}
+				Suppose we have the recurrence relation $a_n + a_{n - 1} - 2a_{n - 2} = 9$, with initial conditions $a_0 = 2$ and $a_1 = 2$. 
+				\\ \\
+				We'll guess that $a_n = \alpha$ (a constant). We'd then have that $\alpha + \alpha - 2 \alpha \stackrel{?}{=} 9$, but $0 \ne 9$, so this won't work for any value of $\alpha$. It was a bad guess.
+				\\ \\
+				That guess didn't work, so we'll try a higher degree. Our second guess is $a_n = \alpha n$ for some constant $\alpha$, which would give us:
+				\begin{align*}
+					\alpha n + alpha(n - 1) - 2 \alpha(n - 2) &= 9 \\
+					\alpha &= 3
+				\end{align*}
+				
+				So, $a_n = 3n$ will satisfy $a_n + a_{n - 1} - 2a_{n - 2} = 9$ for any $n$.
+			\end{ex}
+
+			This concludes the counting portion of the course.
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
