@@ -1485,4 +1485,77 @@
 						In \ref{figure:manywayconservation}, $T_1$ is a subtree with range $(- \infty, k_1]$, $T_2$ has range $(k_1, k_2]$, $T_3$ has range $(k_2, k_3]$, and $T_4$ has range $(k_3, + \infty)$. Note that these ranges are all inclusive now, whereas before they were exclusive.
 						\\ \\
 						In a tree like the one in \ref{figure:manywayconservation}, if you find the key you're looking for, you know you're on the right path. The data lies further down the path \textendash{} not at the node you already found.
+
+			\subsubsection{Comparison of Trees} \lecture{February 14, 2013} % Today's notes were taken from Kevin Cho's handwritten notes (thanks!).
+				\textbf{Binary Search Trees}:
+				\begin{itemize}
+					\item Each node has 0, 1, or 2 children.
+					\item Every node contains one key and some data, called a key-value pair.
+					\item If the BST is an AVL tree, then the children are balanced (their height does not differ by more than one).
+				\end{itemize}
+
+				\textbf{2-3 Trees}:
+				\begin{itemize}
+					\item Each node has 0, 2, or 3 children.
+					\item Every node has one or two key-value pairs.
+					\item All leaves are at the same level.
+				\end{itemize}
+
+				\textbf{B-Trees}:
+				\begin{itemize}
+					\item Similar to 2-3 trees, but they contain between $\frac{m}{2}$ and $m - 1$ key-value pairs per node.
+					\item Each node can contain up to $m$ children.
+				\end{itemize}
+
+				\textbf{$B^+$-Trees}:
+				\begin{itemize}
+					\item The internal nodes only have keys.
+					\item Key-value pairs are present in the leaf nodes only.
+					\item The root node of a subtree is a marker for which subtree to navigate to.
+					\item Pointers to siblings are just for convenience.
+					\item This is an example of an ``algorithm for external memory'' (hard drives and other secondary storage). 
+				\end{itemize}
+
+				In a B-tree of height $h$, what is the minimum number of nodes in the tree? $2 + 2 \cdot 2 + 2 \cdot 2 \cdot 2 + \ldots$, since the root has two children, and each of those has two children, and so on. This leaves us with the minimum number of nodes in the tree being:
+				\begin{align*}
+					2 + 2 \cdot 2 + 2 \cdot 2 \cdot 2 + \ldots &= \sum_{i = 1}^{h} \bigg(\frac{m}{2}\bigg)^i \approx \bigg(\frac{m}{2}\bigg)^{h + 1} \\
+					\bigg(\frac{m}{2}\bigg)^{h + 1} &\ge n \\
+					(h + 1) \lg\frac{m}{2} &\le \lg n \\
+					h + 1 &= \frac{\lg n}{\lg \frac{m}{2}} \\
+					h &\approx \frac{\lg n}{\lg m - 1} - 1
+				\end{align*}
+
+				In a B-tree of height $h$, what is the maximum number of nodes in the tree? $4 + 4 \cdot 4 + 4 \cdot 4 \cdot 4 + \ldots$, following the same logic as before. This leaves us with:
+				\begin{align*}
+					4 + 4 \cdot 4 + 4 \cdot 4 \cdot 4 + \ldots &= \sum_{i = 0}^{h} m^i \approx m^{h + 1} \\
+					m^{h + 1} &= n \\
+					(h + 1) \lg m &= \lg n \\
+					h &\approx \frac{\lg n}{\lg m} - 1 \approx \log_m n
+				\end{align*}
+			
+			\subsubsection{Hashing}
+				Hashing is another dictionary implementation. It also has the same operations as a typical dictionary, including \verb+search(k)+, \verb+insert(k, data)+, and \verb+delete(k)+.
+
+				\begin{theorem}
+					In the comparison model for keys, $\Omega(\lg n)$ comparisons are required to search a dictionary of size $n$.
+				\end{theorem}
+
+				\underline{Assumption}: every key $k$ is an integer $k$ with $0 \le k < m$ for some fixed constant $m$.
+				\\ \\
+				We implement this dictionary using an array $A$ as our data structure, containing all of the dictionary's data values.
+				\\ \\
+				The na\"ive approach is to use direct addressing by making the array of size $m$. The operations would be implemented in the expected way:
+				\begin{itemize}
+					\item \verb+insert(k, data)+ would simply set the $k$-th index of the array to the \verb+data+.
+					\item \verb+search(k)+ would check the $k$-th index of the array, returning empty if the array's $k$-th index is empty (NULL), or returning the $k$-th element if it's found.
+					\item \verb+delete(k)+ would set the $k$-th index of the array to be empty.
+				\end{itemize}
+
+				This approach is okay if $n \approx m$, but if $n$ is sufficiently less than $m$, we should use hashing instead.
+				\\ \\
+				We define a hash function $h: \{0, 1, \ldots, m - 1\} \to \{1, 2, \ldots, \Theta(n)\}$. That is, we define $h: U \to 0 \ldots |A| = 0 \ldots m - 1$, where $U$ is the key universe.
+				\\ \\
+				Using the hashing method, we use the same code as before except instead of using the $k$-th index of the array, we use the $h(k)$-th index for insertion, searching, and deletion.
+				\\ \\
+				We say there is a \textbf{collision} in a hash function if two different keys $k_1$ and $k_2$ exist such that $k_1 \ne k_2$ but $h(k_1) = h(k_2)$. Even if you have a nice hash function, collisions \emph{will} happen, so we need to deal with them in some way. For example, with the birthday paradox, $\sqrt{m}$ keys have a collision.
 \end{document}
