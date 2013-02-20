@@ -1929,4 +1929,90 @@
 						\end{tikzpicture}
 					\end{center}
 				\end{ex}
+		\subsection{Regular Expressions} \lecture{February 15, 2013}
+			Regular expressions are a textual notation to specify regular languages, based on a generative definition. Every regular expression can be translated into an $\epsilon$-NFA. Any regular language can be expressed as a regular expression, but it's not always simple. However, it's a more intuitive way to express a language in typed form than using a typed bubble diagram.
+
+			\begin{center}
+				\begin{tabular}{c|c|c}
+					Regular Expression $R$ & Language $L(R)$ & Comments / Examples \\ \hline
+					$a$ & $\{ a \}$ & $a \in \Sigma$ \\
+					$\epsilon$ & $\{ \epsilon \}$ &  NULL string \\
+					$R_1 R_2$ & $L(R_1) L(R_2)$ & Concatenation. e.g.:  \\
+					& & $L(ab) = \{ab\}$ \\
+					& & $L(abc) = \{abc\}$ \\
+					& & $L(\epsilon a) = \{a\}$ \\
+					$R_1 | R_2$ & $L(R_1) \cup L(R_2)$ & e.g. $L(abc | def) = \{abc, def\}$ \\
+					$R \star$ & $L(R)^\star$ & Kleene closure. e.g.: \\
+					& & $(abc) \star = \{ \epsilon, abc, abcabc, \ldots \}$ \\
+					$\emptyset$ & $\{ \}$ & Empty language.
+				\end{tabular}
+			\end{center}
+
+			\begin{ex}
+				Given the alphabet $\Sigma = \{ 0, 1 \}$, we're interested in the language $L(R)$ of all binary integers. The regular expression $R$ would be defined as $R = 0 | 1(0 | 1)^\star$.
+			\end{ex}
+
+			\begin{ex}
+				Given the alphabet $\Sigma = \{ a, b \}$, we're interseted in the language $L(R)$ of all strings with an even number of $a$'s. Note that $L = \epsilon, babbab, \ldots \}$. We could define the regular expression for this language in several different ways:
+				\begin{align*}
+					R &= (b^\star{} ab^\star{} ab^\star{})^\star \\
+					&= b^\star{}(b^\star{}ab^\star{}ab^\star{})^\star \\
+					&= b^\star{}(ab^\star{}ab^\star{})^\star \\
+					&= (b^\star{}ab^\star{}a)b^\star \\
+					&= b^\star{}(b^\star{}ab^\star{}ab^\star{})^\star{} b^\star \\
+					&\vdots
+				\end{align*}
+
+				This illustrates an important point: there are many ways to express every regular language with regular expressions. There is not necessarily a unique minimal regular expression for a language. Also, we don't care if the regular expression is ambiguous or not.
+			\end{ex}
+			
+			\begin{ex}
+				Let $\Sigma = \{ 0, 1, + \}$, and $L(R)$ be the sum of one or more integers. We can express this as the regular expression $R$:
+				\begin{align*}
+					R &= 0 | 1 (0 | 1)^\star{} (+ 0|1(0|1)^\star{})^\star
+				\end{align*}
+
+				Note that + is an extended regular expression, but we'll assume it isn't for now. We'll talk more about that shortly.
+			\end{ex}
+
+			\begin{ex}
+				Let $\Sigma = \{ 0, 1, + \}$ (as before), but now let $L(R)$ be the sum of two or more integers. We can express this as the regular expression $R$:
+				\begin{align*}
+					R = 0|1(0|1)^\star{} + 0|1(0|1)^\star{} (+ 0|1(0|1)^\star{})^\star
+				\end{align*}
+
+				As you can see, this becomes tedious. There are some regular expressions that grow exponentially as you make minor changes like these.
+			\end{ex}
+
+			\subsubsection{Extensions}
+				Extensions give a more terse (sometimes exponentially) notation but they still only specify the regular languages.
+				
+				\begin{center}
+					\begin{tabular}{c|c}
+						Extended RE & Meaning \\ \hline
+						$R^+$ & $RR^\star$ \\
+						$\{R_1 \text{\textbf{|}} R_2\}$ & $R_1(R_2R_1)^\star$ \\
+						$\{R_1 \text{\textbf{||}} R_2\}$ & $R_1(R_2R_1)^\star$
+					\end{tabular}
+				\end{center}
+				(the vertical bars in the above table are fatter than normal)
+				\\ \\
+				The $R^+$ case is where we would see an exponential increase in notation if we weren't using extensions, if there were nested expressions containing +.
+				\\ \\
+				We could have expressed the earlier expression as $\{0|1(0|1)^\star{} \text{\textbf{|}} +\}$.
+				\\ \\
+				In practice, many people call regexps ``regular expressions'', but they aren't true regular expressions because they can express more than just the regular languages. When \emph{we} say ``regular expressions'', we really mean true regular expressions (expressions that can only represent regular languages).
+			
+			\subsubsection{Regular Expressions to Finite Automata}
+				Any regular expression can be converted to an $\epsilon$-NFA that recognizes the language. In fact, that $\epsilon$-NFA will always have exactly one final state. In addition, recall that any $\epsilon$-NFA can be converted to a DFA using subset construction.
+				\\ \\
+				If you have the regular expression $a$, or a regular expression $\epsilon$, we can express that as an $\epsilon$-NFA by creating a start state that is joined to the final state by either $a$ or $\epsilon$, respectively.
+				\\ \\
+				If we have a regular expression $R_1 R_2$ (where $R_1$ and $R_2$ are also regular expressions), we will have $\epsilon$-NFAs for $R_1$ and $R_2$ already. We simply make the final state from $R_1$ no longer a final state, and connect it with $\epsilon$ to the start state of $R_2$.
+				\\ \\
+				If we have a regular expression $R_1 | R_2$ (where $R_1$ and $R_2$ are also regular expressions), we will have $\epsilon$-NFAs for $R_1$ and $R_2$ already. We create a new final state, and we make the final states of $R_1$ and $R_2$ connected to the new final state through $\epsilon$. The final states of $R_1$ and $R_2$ are no longer final states themselves. We also create a new start state that connects to the start states of both $R_1$ and $R_2$ through $\epsilon$.
+				\\ \\
+				If we have a regular expression $R^\star$ (where $R$ is a regular expression), we will have an $\epsilon$-NFA for $R$ already. We add a new start state and a new final state, and make the final state of $R$ no longer a final state. We connect the new start state to both the start state of $R$ and the new final state, both through $\epsilon$. The previously-final state of $R$ is also connected to the new final state through $\epsilon$.
+				\\ \\
+				If we have $\emptyset$, we create a start state and a final state and provide no path between the two.
 \end{document}
