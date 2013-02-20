@@ -4,6 +4,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{hyperref}
+\usepackage{cleveref}
 \usepackage{amsmath}
 \usepackage{amsthm}
 \usepackage{tikz}
@@ -13,13 +14,17 @@
 
 \theoremstyle{definition}
 \newtheorem*{defn}{Definition}
+\newtheorem*{theorem}{Theorem}
 \newtheorem{ex}{Example}[section]
+
+\crefname{ex}{Example}{Example}
 
 \setlength{\marginparwidth}{1.5in}
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
 
 \begin{document}
-	
+	\let\ref\Cref
+
 	\title{\bf{CS 241: Foundations of Sequential Programs}}
 	\date{Winter 2013, University of Waterloo \\ \center Notes written from Gordon Cormack's lectures.}
 	\author{Chris Thomson}
@@ -1591,4 +1596,337 @@
 				Suppose you have $L_{\text{int}} = \{0, 1, 2, 3, \ldots\}, L_{\text{id}} = \{x\}$, and $L_{\text{hex}} = \{0x1, \ldots\}$. If you have $x = 0x$, you can't determine if that's the integer zero followed by an identifier, or the beginning of a hex symbol. However, if you can look ahead and see $0x1$, you know it's a hex symbol. If you see something like $0xx$ (a hex prefix followed by an identifier), simplified maximal munch will not allow this.
 				\\ \\
 				The scanner we were given (which implements simplified maximal munch) will see $0xx$ as an error. It's an error because the scanner made the assumption that it was a hex constant, but that didn't work out (didn't see an integer after 0x), so it gave up and produced an error.
+			\subsubsection{Nondeterministic Finite Automata (NFA)} \lecture{February 13, 2013}
+				\begin{ex}
+					Let's say we have the alphabet $\Sigma = \{a, b, c\}$ and the language $L = \{ abc, abaca \}$. A recognizer for this NFA could be drawn as:
+					\begin{center}
+						\begin{tikzpicture}[scale=0.2]
+							\tikzstyle{every node}+=[inner sep=0pt]
+							\draw [black] (8,-18.9) circle (3);
+							\draw (8,-18.9) node {start};
+							\draw [black] (21.7,-12.1) circle (3);
+							\draw (21.7,-12.1) node {$1$};
+							\draw [black] (36.7,-12.1) circle (3);
+							\draw (36.7,-12.1) node {$3$};
+							\draw [black] (66.1,-12.1) circle (3);
+							\draw (66.1,-12.1) node {$5$};
+							\draw [black] (66.1,-12.1) circle (2.4);
+							\draw [black] (21.7,-25.5) circle (3);
+							\draw (21.7,-25.5) node {$2$};
+							\draw [black] (36.7,-25.5) circle (3);
+							\draw (36.7,-25.5) node {$4$};
+							\draw [black] (51.3,-25.5) circle (3);
+							\draw (51.3,-25.5) node {$6$};
+							\draw [black] (66.1,-25.5) circle (3);
+							\draw (66.1,-25.5) node {$7$};
+							\draw [black] (10.7,-20.2) -- (19,-24.2);
+							\fill [black] (19,-24.2) -- (18.49,-23.4) -- (18.06,-24.3);
+							\draw (13.91,-22.71) node [below] {$a$};
+							\draw [black] (24.7,-25.5) -- (33.7,-25.5);
+							\fill [black] (33.7,-25.5) -- (32.9,-25) -- (32.9,-26);
+							\draw (29.2,-26) node [below] {$b$};
+							\draw [black] (39.7,-25.5) -- (48.3,-25.5);
+							\fill [black] (48.3,-25.5) -- (47.5,-25) -- (47.5,-26);
+							\draw (44,-26) node [below] {$a$};
+							\draw [black] (54.3,-25.5) -- (63.1,-25.5);
+							\fill [black] (63.1,-25.5) -- (62.3,-25) -- (62.3,-26);
+							\draw (58.7,-26) node [below] {$c$};
+							\draw [black] (66.1,-22.5) -- (66.1,-15.1);
+							\fill [black] (66.1,-15.1) -- (65.6,-15.9) -- (66.6,-15.9);
+							\draw (66.6,-18.8) node [right] {$a$};
+							\draw [black] (10.69,-17.57) -- (19.01,-13.43);
+							\fill [black] (19.01,-13.43) -- (18.07,-13.34) -- (18.52,-14.24);
+							\draw (15.79,-16) node [below] {$a$};
+							\draw [black] (24.7,-12.1) -- (33.7,-12.1);
+							\fill [black] (33.7,-12.1) -- (32.9,-11.6) -- (32.9,-12.6);
+							\draw (29.2,-12.6) node [below] {$b$};
+							\draw [black] (39.7,-12.1) -- (63.1,-12.1);
+							\fill [black] (63.1,-12.1) -- (62.3,-11.6) -- (62.3,-12.6);
+							\draw (51.4,-12.6) node [below] {$c$};
+							\draw [black] (4.5,-12.9) -- (6.49,-16.31);
+							\draw (3.7,-12.4) node [above] {$i$};
+							\fill [black] (6.49,-16.31) -- (6.52,-15.37) -- (5.65,-15.87);
+						\end{tikzpicture}
+					\end{center}
+
+					This is \underline{not} a DFA because T[start, a] = 1 and T[start, a] = 2, which is not allowed in a DFA. It is acceptable for an NFA, though. 
+					\label{ex:nfa}
+				\end{ex}
+					
+				The transition function $T$ no longer has to be a function \textendash{} it can have multiple values for the same inputs.
+				The rule is the same as before: if there is \underline{any} path that is followed to a finish state, then the string is considered to be in the language. With DFAs, we used the ``one-finger algorithm'', but now we can't do that because there could be multiple paths we need to follow.
+				\\ \\
+				An \textbf{oracle} is a magic function that sees the future. In CS theory, if we have an oracle then you can resolve the proper path and use the same process as a DFA. However, we don't have an oracle. When we see multiple paths, we clone our finger and follow each path as far as we can. This is more operationally satisfactory than looking into the future.
+				\\ \\
+				More formally, an $NFA = (\Sigma, S, i, f, T)$, where $\Sigma, S, i$, and $f$ follow the same definitions as with DFAs. However, $T: S \times \Sigma \to 2^S$ (where $2^S$ is the number of subsets of $S$). In \ref{ex:nfa}, we have that $T$ is defined by the table:
+				\begin{center}
+					\begin{tabular}{|c|c|}
+						\hline
+						start, a & \{ 1, 2 \} \\
+						1, b & \{ 3 \} \\
+						2, b & \{ 4 \} \\
+						3, c & \{ 5 \} \\
+						4, a & \{ 6 \} \\
+						6, c & \{ 7 \} \\
+						7, a & \{ 5 \} \\
+						3, a & \{  \} \\ \hline
+					\end{tabular}
+				\end{center}
+				Additionally, we have $\Sigma = \{a, b, c\}, i = start, S = \{start, 1, 2, 3, 4, 5, 6, 7\}$, and $f = \{ 5 \}$.
+				\\ \\
+				Note that we no longer need an error state because we are no longer required to make $T$ a total function, since it is doesn't need to be a function at all. 
+					
+				\textbf{NFA recognizer}: given an input string $x$, we expect output to be:
+				\begin{align*}
+					\text{output} &= \begin{cases}
+						\text{``accept''} & x \in L \\
+						\text{``reject''} & x \not \in L
+					\end{cases}
+				\end{align*}
+
+				The pseudocode for an NFA recognizer is as follows. \\
+				\begin{algorithm}[H]
+					states = \{ start \}\;
+					\For{a in $x_0x_1x_2 \ldots x_{|x|-1}$}{
+						states = $\displaystyle \bigcup_{s \in \text{states}}$ T[s, a]\;
+					}
+					\lIf{$\text{states} \cap f \ne \{ \}$}{``accept''}
+					\lElse{``reject''}
+				\end{algorithm}
+
+				\begin{theorem}
+					Any language recognized by an NFA can be recognized by a DFA.
+				\end{theorem}
+
+				\underline{Proof outline}: subset construction. For an $NFA = \{ \Sigma, S_{NFA}, i_{NFA}, f_{NFA}, T_{NFA} \}$, we can construct a $DFA = \{ \Sigma, S_{DFA}, i_{DFA}, f_{DFA}, T_{DFA} \}$. Why does this work?
+				\begin{enumerate}
+					\item $S_{NFA}$ is finite.
+					\item The number of subsets of a finite set is finite. There are $2^{|S|}$ subsets of a finite set $S$.
+					\item Each state in $S_{DFA}$ represents a subset of the states in $S_{NFA}$.
+				\end{enumerate}
+
+				From the NFA in \ref{ex:nfa}, we can create this corresponding DFA:
+				\begin{center}
+					\begin{tikzpicture}[scale=0.2]
+						\tikzstyle{every node}+=[inner sep=0pt]
+						\draw [black] (12.7,-17.8) circle (3);
+						\draw (12.7,-17.8) node {\{start\}};
+						\draw [black] (27.2,-17.8) circle (3);
+						\draw (27.2,-17.8) node {\{ 1, 2 \}};
+						\draw [black] (41.5,-17.8) circle (3);
+						\draw (41.5,-17.8) node {\{ 3, 4 \}};
+						\draw [black] (56.8,-17.8) circle (3);
+						\draw (56.8,-17.8) node {\{ 5 \}};
+						\draw [black] (56.8,-17.8) circle (2.4);
+						\draw [black] (41.5,-30.4) circle (3);
+						\draw (41.5,-30.4) node {\{ 6 \}};
+						\draw [black] (56.8,-30.4) circle (3);
+						\draw (56.8,-30.4) node {\{ 7 \}};
+						\draw [black] (7.4,-13.1) -- (10.46,-15.81);
+						\draw (6.86,-11.65) node [left] {$i$};
+						\fill [black] (10.46,-15.81) -- (10.19,-14.9) -- (9.53,-15.65);
+						\draw [black] (15.7,-17.8) -- (24.2,-17.8);
+						\fill [black] (24.2,-17.8) -- (23.4,-17.3) -- (23.4,-18.3);
+						\draw (19.95,-18.3) node [below] {$a$};
+						\draw [black] (30.2,-17.8) -- (38.5,-17.8);
+						\fill [black] (38.5,-17.8) -- (37.7,-17.3) -- (37.7,-18.3);
+						\draw (34.35,-18.3) node [below] {$b$};
+						\draw [black] (44.5,-17.8) -- (53.8,-17.8);
+						\fill [black] (53.8,-17.8) -- (53,-17.3) -- (53,-18.3);
+						\draw (49.15,-18.3) node [below] {$c$};
+						\draw [black] (41.5,-20.8) -- (41.5,-27.4);
+						\fill [black] (41.5,-27.4) -- (42,-26.6) -- (41,-26.6);
+						\draw (41,-24.1) node [left] {$a$};
+						\draw [black] (44.5,-30.4) -- (53.8,-30.4);
+						\fill [black] (53.8,-30.4) -- (53,-29.9) -- (53,-30.9);
+						\draw (49.15,-30.9) node [below] {$c$};
+						\draw [black] (56.8,-27.4) -- (56.8,-20.8);
+						\fill [black] (56.8,-20.8) -- (56.3,-21.6) -- (57.3,-21.6);
+						\draw (57.3,-24.1) node [right] {$a$};
+					\end{tikzpicture}
+				\end{center}
+			\subsubsection{Epsilon Nondeterministic Finite Automata ($\epsilon$-NFA)}
+				\begin{ex}
+					This is an example of an $\epsilon$-NFA:
+					\begin{center}
+						\begin{tikzpicture}[scale=0.2]
+							\tikzstyle{every node}+=[inner sep=0pt]
+							\draw [black] (12.6,-17.6) circle (3);
+							\draw (12.6,-17.6) node {start};
+							\draw [black] (25.3,-13.5) circle (3);
+							\draw (25.3,-13.5) node {$1$};
+							\draw [black] (37.1,-13.5) circle (3);
+							\draw (37.1,-13.5) node {$3$};
+							\draw [black] (49.8,-13.5) circle (3);
+							\draw (49.8,-13.5) node {$5$};
+							\draw [black] (74,-13.5) circle (3);
+							\draw (74,-13.5) node {$7$};
+							\draw [black] (74,-13.5) circle (2.4);
+							\draw [black] (25.3,-22.9) circle (3);
+							\draw (25.3,-22.9) node {$2$};
+							\draw [black] (37.1,-22.9) circle (3);
+							\draw (37.1,-22.9) node {$4$};
+							\draw [black] (49.8,-22.9) circle (3);
+							\draw (49.8,-22.9) node {$6$};
+							\draw [black] (62.1,-22.9) circle (3);
+							\draw (62.1,-22.9) node {$8$};
+							\draw [black] (74,-22.9) circle (3);
+							\draw (74,-22.9) node {$9$};
+							\draw [black] (6.1,-12.3) -- (10.27,-15.7);
+							\draw (5.54,-10.87) node [left] {$i$};
+							\fill [black] (10.27,-15.7) -- (9.97,-14.81) -- (9.34,-15.59);
+							\draw [black] (15.45,-16.68) -- (22.45,-14.42);
+							\fill [black] (22.45,-14.42) -- (21.53,-14.19) -- (21.84,-15.14);
+							\draw [black] (15.37,-18.76) -- (22.53,-21.74);
+							\fill [black] (22.53,-21.74) -- (21.99,-20.98) -- (21.6,-21.9);
+							\draw [black] (28.3,-22.9) -- (34.1,-22.9);
+							\fill [black] (34.1,-22.9) -- (33.3,-22.4) -- (33.3,-23.4);
+							\draw (31.2,-23.4) node [below] {$a$};
+							\draw [black] (28.3,-13.5) -- (34.1,-13.5);
+							\fill [black] (34.1,-13.5) -- (33.3,-13) -- (33.3,-14);
+							\draw (31.2,-14) node [below] {$a$};
+							\draw [black] (40.1,-13.5) -- (46.8,-13.5);
+							\fill [black] (46.8,-13.5) -- (46,-13) -- (46,-14);
+							\draw (43.45,-14) node [below] {$b$};
+							\draw [black] (52.8,-13.5) -- (71,-13.5);
+							\fill [black] (71,-13.5) -- (70.2,-13) -- (70.2,-14);
+							\draw (61.9,-14) node [below] {$c$};
+							\draw [black] (74,-19.9) -- (74,-16.5);
+							\fill [black] (74,-16.5) -- (73.5,-17.3) -- (74.5,-17.3);
+							\draw (74.5,-18.2) node [right] {$a$};
+							\draw [black] (65.1,-22.9) -- (71,-22.9);
+							\fill [black] (71,-22.9) -- (70.2,-22.4) -- (70.2,-23.4);
+							\draw (68.05,-23.4) node [below] {$c$};
+							\draw [black] (52.8,-22.9) -- (59.1,-22.9);
+							\fill [black] (59.1,-22.9) -- (58.3,-22.4) -- (58.3,-23.4);
+							\draw (55.95,-23.4) node [below] {$a$};
+							\draw [black] (40.1,-22.9) -- (46.8,-22.9);
+							\fill [black] (46.8,-22.9) -- (46,-22.4) -- (46,-23.4);
+							\draw (43.45,-23.4) node [below] {$b$};
+						\end{tikzpicture}
+					\end{center}
+
+					The difference between $\epsilon$-NFAs and standard NFAs is that the transitions from the start state to states 1 and 2 have no symbol. That means you can spontaneously move your finger along those paths. We generally label those transitions as $\epsilon$ to prevent confusion between mistakes (omissions in labeling the transitions) and $\epsilon$ transitions. This recognizer is for the same language as the NFAs and DFAs in \ref{ex:nfa}.
+				\end{ex}
+
+				More formally, an $\epsilon-NFA = (\Sigma, S, i, f, T)$ where $\Sigma, S, i$, and $f$ are defined the same way they were for DFAs and NFAs. The transition function is now defined as $T: S \times (\Sigma \cup \{ \epsilon \} )$.
+				\\ \\
+				\textbf{$\epsilon$-NFA recognizer}:
+				\\ \\
+				We'll need a helper function called $\epsilon$-closure, which accepts a parameter $S$ (a set of states), and returns a set of all states that can be reached from a state in $S$ by following $\epsilon$-transitions. For instance, the $\epsilon$-closure(\{start\}) from earlier would return \{start, 1, 2\}.
+				\begin{ex}
+					What is the $\epsilon$-closure(\{a, e\}) of the following $\epsilon$-NFA?
+					\begin{center}
+						\begin{tikzpicture}[scale=0.2]
+							\tikzstyle{every node}+=[inner sep=0pt]
+							\draw [black] (12.8,-14) circle (3);
+							\draw (12.8,-14) node {$a$};
+							\draw [black] (27.2,-14) circle (3);
+							\draw (27.2,-14) node {$b$};
+							\draw [black] (42.4,-14) circle (3);
+							\draw (42.4,-14) node {$c$};
+							\draw [black] (27.2,-26.7) circle (3);
+							\draw (27.2,-26.7) node {$d$};
+							\draw [black] (50.8,-26.7) circle (3);
+							\draw (50.8,-26.7) node {$e$};
+							\draw [black] (61.6,-14) circle (3);
+							\draw (61.6,-14) node {$f$};
+							\draw [black] (7.4,-8.2) -- (10.76,-11.8);
+							\draw (6.58,-7.72) node [above] {$i$};
+							\fill [black] (10.76,-11.8) -- (10.58,-10.88) -- (9.84,-11.56);
+							\draw [black] (15.8,-14) -- (24.2,-14);
+							\fill [black] (24.2,-14) -- (23.4,-13.5) -- (23.4,-14.5);
+							\draw (20,-14.5) node [below] {$\epsilon$};
+							\draw [black] (15.05,-15.98) -- (24.95,-24.72);
+							\fill [black] (24.95,-24.72) -- (24.68,-23.81) -- (24.02,-24.56);
+							\draw (18.59,-20.84) node [below] {$\epsilon$};
+							\draw [black] (40.1,-15.92) -- (29.5,-24.78);
+							\fill [black] (29.5,-24.78) -- (30.44,-24.65) -- (29.8,-23.88);
+							\draw (33.39,-19.86) node [above] {$\epsilon$};
+							\draw [black] (30.2,-14) -- (39.4,-14);
+							\fill [black] (39.4,-14) -- (38.6,-13.5) -- (38.6,-14.5);
+							\draw (34.8,-14.5) node [below] {$\epsilon$};
+							\draw [black] (52.74,-24.41) -- (59.66,-16.29);
+							\fill [black] (59.66,-16.29) -- (58.76,-16.57) -- (59.52,-17.22);
+							\draw (56.75,-21.79) node [right] {$\epsilon$};
+						\end{tikzpicture}
+					\end{center}
+
+					$\epsilon$-closure(\{a, e\}) = \{a, b, c, d, e, f\}.
+				\end{ex}
+
+				$\epsilon$-closure(S) is actually a graph algorithm called \textbf{reachability}. The pseudocode of $\epsilon$-closure(S) is as follows. \\
+				\begin{algorithm}[H]
+					S' = S\;
+					W = S; // work list \\
+					\While{$w \ne \{\}$}{
+						select some element $s \in W$\;
+						W = W \textbackslash{} \{ s \}; // remove s from work list \\
+						\For{all $s' \in T[s, \epsilon]$}{
+							\If{$s' \not \in S$}{
+								// New state we've never reached before. \\
+								$S' = S' \cup \{s'\}$\;
+								$W = W \cup \{s'\}$\;
+							}
+						}
+					}
+				\end{algorithm}
+
+				More formally, $\epsilon$-closure($S$) = $S'$ where $S'$ is the smallest solution to:
+				\begin{align*}
+					S' = S \cup \{s' | \exists s \in S', T[s, \epsilon] = s'\}
+				\end{align*}
+
+				The inclusion of $\epsilon$-closure is the only difference between the NFA and $\epsilon$-NFA recognizers. Here's the pseudocode for an $\epsilon$-NFA recognizer: \\
+				\begin{algorithm}[H]
+					states = $\epsilon$-closure(\{ start \})\;
+					\For{a in $x_0x_1x_2 \ldots x_{|x|-1}$}{
+						states = $\epsilon$-closure($\displaystyle \bigcup_{s \in \text{states}}$ T[s, a])\;
+					}
+					\lIf{$\text{states} \cap f \ne \{ \}$}{``accept''}
+					\lElse{``reject''}
+				\end{algorithm}
+
+				DFAs, NFAs, and $\epsilon$-NFAs can all express recognizers for all regular languages, however sometimes one method is more straightforward than the others.
+
+				\begin{ex}
+					Let $L$ be the language containing all strings that contain ``abaca'' as a substring, where the alphabet is defined as $\Sigma = \{a, b, c\}$. This language can be recognized by a much simpler NFA recognizer than a DFA recognizer. Here's the NFA recognizer for this language $L$:
+					\begin{center}
+						\begin{tikzpicture}[scale=0.2]
+							\tikzstyle{every node}+=[inner sep=0pt]
+							\draw [black] (11.3,-16.7) circle (3);
+							\draw (11.3,-16.7) node {start};
+							\draw [black] (22.3,-16.7) circle (3);
+							\draw [black] (33.2,-16.7) circle (3);
+							\draw [black] (43.7,-16.7) circle (3);
+							\draw [black] (54.3,-16.7) circle (3);
+							\draw [black] (65.1,-16.7) circle (3);
+							\draw [black] (65.1,-16.7) circle (2.4);
+							\draw [black] (6,-12.5) -- (8.95,-14.84);
+							\draw (5.44,-11.08) node [left] {$i$};
+							\fill [black] (8.95,-14.84) -- (8.63,-13.95) -- (8.01,-14.73);
+							\draw [black] (9.977,-14.02) arc (234:-54:2.25);
+							\draw (11.3,-9.45) node [above] {$a,\mbox{ }b,\mbox{ }c$};
+							\fill [black] (12.62,-14.02) -- (13.5,-13.67) -- (12.69,-13.08);
+							\draw [black] (67.78,-15.377) arc (144:-144:2.25);
+							\draw (72.35,-16.7) node [right] {$a,\mbox{ }b,\mbox{ }c$};
+							\fill [black] (67.78,-18.02) -- (68.13,-18.9) -- (68.72,-18.09);
+							\draw [black] (14.3,-16.7) -- (19.3,-16.7);
+							\fill [black] (19.3,-16.7) -- (18.5,-16.2) -- (18.5,-17.2);
+							\draw (16.8,-17.2) node [below] {$a$};
+							\draw [black] (25.3,-16.7) -- (30.2,-16.7);
+							\fill [black] (30.2,-16.7) -- (29.4,-16.2) -- (29.4,-17.2);
+							\draw (27.75,-17.2) node [below] {$b$};
+							\draw [black] (36.2,-16.7) -- (40.7,-16.7);
+							\fill [black] (40.7,-16.7) -- (39.9,-16.2) -- (39.9,-17.2);
+							\draw (38.45,-17.2) node [below] {$a$};
+							\draw [black] (46.7,-16.7) -- (51.3,-16.7);
+							\fill [black] (51.3,-16.7) -- (50.5,-16.2) -- (50.5,-17.2);
+							\draw (49,-17.2) node [below] {$c$};
+							\draw [black] (57.3,-16.7) -- (62.1,-16.7);
+							\fill [black] (62.1,-16.7) -- (61.3,-16.2) -- (61.3,-17.2);
+							\draw (59.7,-17.2) node [below] {$a$};
+						\end{tikzpicture}
+					\end{center}
+				\end{ex}
 \end{document}
