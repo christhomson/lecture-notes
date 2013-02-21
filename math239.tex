@@ -11,6 +11,7 @@
 \usepackage{cleveref}
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
+\usepackage{tikz}
 
 \newtheorem*{theorem}{Theorem}
 \newtheorem*{proposition}{Proposition}
@@ -25,6 +26,10 @@
 
 \setlength{\marginparwidth}{1.5in}
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
+
+\tikzset{
+	dot/.style 2 args={circle,inner sep=2.5pt,fill,label=#1:{#2},name=#2}
+}
 
 \begin{document}
 	\let\ref\Cref
@@ -1506,6 +1511,307 @@
 			\end{ex}
 
 			This concludes the counting portion of the course.
+	\section{Introduction to Graph Theory} \lecture{February 15, 2013} % Today's notes were taken from Kevin Cho's handwritten notes (thanks!). 
+		\begin{defn}
+			A \textbf{graph} $G$ is defined as $G = (V, E)$, where $V$ is a finite set of vertices and $E$ is a set of edges, in the form of a set of unordered pairs of $V$.
+		\end{defn}
+
+		\begin{ex}
+			Let's say we have the graph $G = (V, E)$, where $V = \{ 1, 2, 3, 4, 5 \}$ and $E = \{ 12, 13, 14, 23, 34, 25, 45 \}$. Note that for edges, we're using the shorthand of $xy$ to mean $\{ x, y \}$ (for example: edge $12 = \{ 1, 2 \}$).
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={180}{1}] at (0,2) {};
+					\node [dot={0}{2}] at (2,2) {};
+					\node [dot={0}{3}] at (1,1) {};
+					\node [dot={180}{4}] at (0,0) {};
+					\node [dot={0}{5}] at (2,0) {};
+
+					\draw[line width=1pt]
+						(0,0) -- (0,2) -- (2,2) -- (2,0) -- (0,0) -- (1,1) -- (2,2) -- (0,2) -- (1,1);
+				\end{tikzpicture}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={90}{1}] at (1,0) {};
+					\node [dot={90}{2}] at (0,1) {};
+					\node [dot={90}{3}] at (3,0) {};
+					\node [dot={90}{4}] at (4,1) {};
+					\node [dot={90}{5}] at (2,2) {};
+
+					\draw[line width=1pt]
+						(0,1) -- (1,0) -- (3,0) -- (4,1) -- (2,2) -- (0,1) -- (3,0) -- (1,0) -- (4,1);	
+				\end{tikzpicture}
+			\end{center}
+
+			These are two different illustrations that both represent $G$.
+		\end{ex}
+		
+		\begin{defn}
+			Given the following graph:
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={90}{i}] at (0,0) {};
+					\node [dot={90}{j}] at (1,0) {};
+
+					\draw[line width=1pt]
+						(0,0) -- (1,0);
+				\end{tikzpicture}
+			\end{center}
+			If $ij \in E$, we say $i$ and $j$ are \textbf{endpoints} of $ij$. We also say that $i, j$ are \textbf{adjacent}, and that edge $ij$ is \textbf{incident} to $i$ and $j$.
+			\\ \\
+			The neighbours of $v \in V$ are defined as $\{v \in V | v u \in E\}$.
+		\end{defn}
+
+		\begin{ex}
+			Given the following graph:
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={180}{1}] at (0,0) {};
+					\node [dot={-90}{2}] at (1,0) {};
+					\node [dot={0}{3}] at (2,0) {};
+					\node [dot={180}{4}] at (0,1) {};
+					\node [dot={90}{5}] at (1,1) {};
+					\node [dot={0}{6}] at (2,1) {};
+					\node [dot={90}{7}] at (1,2) {};
+
+					\draw (0,1) -- (1,2) node [midway,fill=white] {a};
+					\draw (1,2) -- (2,1) node [midway,fill=white] {b};
+					\draw (2,1) -- (1,1) node [midway,fill=white] {c};
+					\draw (1,1) -- (0,1) node [midway,fill=white] {d};
+					\draw (0,1) -- (0,0) node [midway,fill=white] {e};
+					\draw (1,0) -- (1,1) node [midway,fill=white] {f};
+					\draw (2,0) -- (2,1) node [midway,fill=white] {g};
+					\draw (0,0) -- (2,0);
+				\end{tikzpicture}
+			\end{center}
+			The endpoints of $f$ are $2$ and $5$. $1$ and $2$ are adjacent. $c, d,$ and $f$ are the edges incident to $5$. The neighbours of 2 are 1, 3, and 5.
+		\end{ex}
+
+		\begin{ex}
+			If we were to represent a street map as a graph, $V$ would be the set of intersections and $E$ would be the set of streets.
+		\end{ex}
+
+		\begin{ex}
+			If we were to represent a network of people, $V$ would be a set of individuals and $E$ would be the various relationships between those people (sets of friends).
+		\end{ex}
+
+		\begin{ex}
+			Let $V$ be the set of binary strings of length $n$.
+			\\ \\
+			$uv \in E$ if $u$ and $v$ differ in exactly $k$ positions. We have $n = 3$ (since at most 3 differ) and $k = 1$. We get the following graph:
+
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={-90}{000}] at (0,0) {};
+					\node [dot={-90}{001}] at (3,0) {};
+					\node [dot={90}{010}] at (0,3) {};
+					\node [dot={90}{011}] at (3,3) {};
+					\node [dot={180}{100}] at (1,1) {};
+					\node [dot={0}{101}] at (2,1) {};
+					\node [dot={180}{110}] at (1,2) {};
+					\node [dot={0}{111}] at (2,2) {};
+
+					\draw (0,0) -- (3,0) -- (3,3) -- (0,3) -- (0,0);
+					\draw (1,1) -- (1,2) -- (2,2) -- (2,1) -- (1,1);
+					\draw (0,0) -- (1,1);
+					\draw (0,3) -- (1,2);
+					\draw (3,0) -- (2,1);
+					\draw (3,3) -- (2,2);
+				\end{tikzpicture}
+			\end{center}
+		\end{ex}
+
+		\begin{ex}
+			If we have the following interval graph:
+			\begin{center}
+				\begin{tikzpicture} % scale = 1
+					\draw (0,0) -- (1,0) node [midway,fill=white] {5};
+					\draw (1,5) -- (3,5) node [midway,fill=white] {1};
+					\draw (2,4) -- (5,4) node [midway,fill=white] {2};
+					\draw (4,3) -- (7,3) node [midway,fill=white] {3};
+					\draw (3,1) -- (6,1) node [midway,fill=white] {4};
+					\draw[dashed] (1,0) -- (1,5);
+				\end{tikzpicture}
+			\end{center}
+
+			The overlaps are the edges. We can represent the same graph as:
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={180}{1}] at (0,1) {};
+					\node [dot={0}{2}] at (2,1) {};
+					\node [dot={0}{3}] at (2,0) {};
+					\node [dot={180}{4}] at (0,0) {};
+					\node [dot={0}{5}] at (1,2) {};
+
+					\draw (0,0) -- (0,1) -- (2,1) -- (2,0) -- (0,0);
+					\draw (0,0) -- (2,1);
+					\draw (0,1) -- (1,2);
+				\end{tikzpicture}
+			\end{center}
+		\end{ex}
+
+		\subsection{Isomorphism}
+			Are the following two graphs the same?
+			\\ \\
+			$G_1$, with vertices $V = \{1, 2, 3, 4\}$:
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={180}{1}] at (0,1) {};
+					\node [dot={0}{2}] at (1,1) {};
+					\node [dot={0}{3}] at (1,0) {};
+					\node [dot={180}{4}] at (0,0) {};
+
+					\draw (0,0) -- (0,1) -- (1,1) -- (1,0) -- (0,0) -- (1,1);
+				\end{tikzpicture}
+			\end{center}
+
+			$G_2$, with vertices $V = \{a, b, c, d\}$:
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={180}{a}] at (0,1) {};
+					\node [dot={0}{b}] at (1,1) {};
+					\node [dot={0}{c}] at (1,0) {};
+					\node [dot={180}{d}] at (0,0) {};
+
+					\draw (0,0) -- (0,1) -- (1,1) -- (1,0) -- (0,0) -- (1,1);
+				\end{tikzpicture}
+			\end{center}
+
+			\begin{defn}
+				$G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$ are \textbf{isomorphic} if there exists a bijection $\phi: V_1 \to V_2$ such that $uv \in E_1 \to \phi(u) \phi(v) \in E_2$ and $uv \not \in E_1 \to \phi(u) \phi(v) \not \in E_2$.
+			\end{defn}
+			
+			Examining the two graphs above, we have:
+			\begin{align*}
+				\phi(1) &= a \\
+				\phi(2) &= b \\
+				\phi(3) &= c \\
+				\phi(4) &= d
+			\end{align*}
+
+			Pairing 1 and 3, we get $13 \in E_1 \to \phi(1)\phi(3) = ac \not \in E_2$.
+			\\ \\
+			Pairing 4 and 3, we get $43 \in E_1 \to \phi(4) \phi(3) = dc \in E_2$.
+			\\ \\
+			We must continue to consider these pairings for all edges.
+
+			\begin{ex}
+				Are the following graphs isomorphic?
+
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={180}{1}] at (0,2) {};
+						\node [dot={180}{2}] at (0,1) {};
+						\node [dot={180}{3}] at (0,0) {};
+						\node [dot={0}{4}] at (1,2) {};
+						\node [dot={0}{5}] at (1,1) {};
+						\node [dot={0}{6}] at (1,0) {};
+
+						\draw (0,0) -- (1,0) -- (0,1) -- (1,2) -- (0,2) -- (1,1) -- (0,0);
+						\draw (0,0) -- (1,2);
+						\draw (0,2) -- (1,0);
+						\draw (0,1) -- (1,1);
+					\end{tikzpicture}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={90}{a}] at (1,2) {};
+						\node [dot={0}{b}] at (3,1) {};
+						\node [dot={-90}{c}] at (2,0) {};
+						\node [dot={180}{d}] at (0,1) {};
+						\node [dot={-90}{e}] at (1,0) {};
+						\node [dot={90}{f}] at (2,2) {};
+						
+						\draw (0,1) -- (1,2) -- (2,2) -- (3,1) -- (2,0) -- (1,0) -- (0,1);
+						\draw (0,1) -- (3,1);
+						\draw (1,2) -- (2,0);
+						\draw (1,0) -- (2,2);
+					\end{tikzpicture}
+				\end{center}
+
+				Yes! There exists a bijection $\phi$:
+				\begin{align*}
+					1 &\to a \\
+					2 &\to b \\
+					3 &\to e \\
+					4 &\to f \\
+					5 &\to d \\
+					6 &\to c
+				\end{align*}
+
+				There is no general algorithm for finding a bijection. In this case, you could see that 1, 2, and 3 have no edges and a, b, and e also have no edges.
+			\end{ex}
+
+			\begin{ex}
+				Are the following graphs isomorphic?
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={180}{1}] at (1,2) {};
+						\node [dot={0}{2}] at (3,2) {};
+						\node [dot={0}{3}] at (3,0) {};
+						\node [dot={180}{4}] at (1,0) {};
+						\node [dot={180}{5}] at (0,1) {};
+
+						\draw (0,1) -- (1,2) -- (3,2) -- (3,0) -- (1,0) -- (0,1);
+						\draw (1,0) -- (1,2);
+					\end{tikzpicture}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={180}{a}] at (0,2) {};
+						\node [dot={180}{b}] at (0,0) {};
+						\node [dot={0}{c}] at (2,2) {};
+						\node [dot={0}{d}] at (2,0) {};
+						\node [dot={0}{e}] at (1,1) {};
+
+						\draw (0,0) -- (0,2) -- (2,2) -- (2,0) -- (0,0);
+						\draw (2,0) -- (0,2);
+					\end{tikzpicture}
+				\end{center}
+				No. 1, 4, and 5 are pairwise adjacent but there are no corresponding vertices on the second graph.
+			\end{ex}
+
+			\begin{defn}
+				The \textbf{degree} of a vertex is the number of edges incident to that vertex.
+			\end{defn}
+
+			\begin{ex}
+				We have the following graph, with each vertex indicating its degree:
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={180}{3}] at (0,0) {};
+						\node [dot={-90}{2}] at (1,0) {};
+						\node [dot={0}{3}] at (2,0) {};
+						\node [dot={0}{3}] at (1,1) {};
+						\node [dot={90}{3}] at (1,2) {};
+
+						\draw (0,0) -- (2,0) -- (1,2) -- (0,0);
+						\draw (0,0) -- (1,1) -- (2,0);
+						\draw (1,2) -- (1,1);
+					\end{tikzpicture}
+				\end{center}
+
+				Note that $|E| = 7$, and the sum of all degrees is $3 + 3 + 3 + 3 + 2 = 14$.
+			\end{ex}
+
+			\begin{theorem}
+				For any graph $G = (V, E)$, $\displaystyle \sum_{v \in V} \deg(v) \ge 2|E|$.
+			\end{theorem}
+
+			Also, note that there is an even number of vertices of an odd degree.
+			
+			\begin{ex} Given the following table:
+				\begin{center}
+					\begin{tabular}{c|c}
+						Individuals & \# of friends among $\{a, \ldots, i\}$ \\ \hline
+						a & 6 \\
+						b & 3 \\
+						c & 4 \\
+						d & 1 \\
+						e & 5 \\
+						f & 3 \\
+						g & 7 \\
+						h & 2 \\
+						i & 4
+					\end{tabular}
+				\end{center}
+				
+				There are 5 odd numbers of friends.
+			\end{ex}
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
