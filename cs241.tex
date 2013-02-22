@@ -30,6 +30,8 @@
 	\author{Chris Thomson}
 	\maketitle
 	\newpage
+	\tableofcontents
+	\newpage
 
 	\section{Introduction \& Character Encodings} 
 		\lecture{January 7, 2013}
@@ -912,7 +914,7 @@
 			\end{verbatim}
 			When a linker links two MERL files together, the resulting MERL file will contain a new header, code from file 1, code from file 2 (relocated to be after code 1), and sticky notes (combined and relocated). Code 1 does not need to be relocated because it was and remains at location \verb+0xc+. Code 2 needs to be relocated to \verb.0xc + (size of code 1)..
 
-			\subsection{What a Linker Does}
+			\subsubsection{What a Linker Does}
 				\begin{itemize}
 					\item Creates a combined header.
 					\item Concatenates all code segments.
@@ -964,7 +966,7 @@
 				Importantly, if multiple programs are running at once that use the same dynamically-linked library, the procedure will still only exist once in RAM. There won't be a separate instance of the library in RAM for each running program that needs it.
 				\\ \\
 				On Windows, a dynamic (link) library is called a \textbf{DLL}. If you're on Windows and have two programs that need the same DLL, but different versions of that DLL, you're in for a bad time. Windows also requires restarting in order to update DLLs, which is a fundamental design flaw. Linux, on the other hand, preserves old versions of dynamic link libraries even after newer versions are installed.
-	\section{Formal Languages}
+	\section{Introduction to Formal Languages}
 		A mathematical definition of what is and is not in a language. Formal language is useful for:
 		\begin{itemize}
 			\item Automation (if possible).
@@ -1008,927 +1010,927 @@
 			\item Unrestricted languages (you can specify what you want to be in the language but you cannot build a computer to specify it).
 		\end{itemize}
 
-		\subsection{Regular Languages}
-			There are two equivalent definitions for regular languages: a generative definition (a method for building languages) and an analytic definition (how you can build a recognizer for the language).
-			\begin{defn}
-				A language $L$ on alphabet $\Sigma$ is regular if \emph{any} of the following are true:
-				\begin{itemize}
-					\item $L$ is finite.
-					\item $L = L_1 \cup L_2$ (that is, $L$ is the union of regular languages $L_1$ and $L_2$).
-					\item $L = L_1 L_2$ (that is, $L$ is the concatenation of regular languages $L_1$ and $L_2$). More precisely, $L_1 L_2 = \{ xy | x \in L_1, y \in L_2 \}$.
-					\item $L = L_1^\star$ of a regular language $L_1$. This is known as repetition or a Kleene closure. That is, $L = \{ \epsilon \} \cup L L_1$. Note that $L$ contains $\epsilon, L_1$, and every element of $L$ being concatenated with $L_1$ continuously. Alternatively, this could be expressed as $L^\star = \{ \epsilon \} \cup L_1 \cup L_1 L_1 \cup L_1 L_1 L_1 \cup \ldots$.
-				\end{itemize}
-			\end{defn}
+	\section{Regular Languages}
+		There are two equivalent definitions for regular languages: a generative definition (a method for building languages) and an analytic definition (how you can build a recognizer for the language).
+		\begin{defn}
+			A language $L$ on alphabet $\Sigma$ is regular if \emph{any} of the following are true:
+			\begin{itemize}
+				\item $L$ is finite.
+				\item $L = L_1 \cup L_2$ (that is, $L$ is the union of regular languages $L_1$ and $L_2$).
+				\item $L = L_1 L_2$ (that is, $L$ is the concatenation of regular languages $L_1$ and $L_2$). More precisely, $L_1 L_2 = \{ xy | x \in L_1, y \in L_2 \}$.
+				\item $L = L_1^\star$ of a regular language $L_1$. This is known as repetition or a Kleene closure. That is, $L = \{ \epsilon \} \cup L L_1$. Note that $L$ contains $\epsilon, L_1$, and every element of $L$ being concatenated with $L_1$ continuously. Alternatively, this could be expressed as $L^\star = \{ \epsilon \} \cup L_1 \cup L_1 L_1 \cup L_1 L_1 L_1 \cup \ldots$.
+			\end{itemize}
+		\end{defn}
 
-			\begin{defn}
-				A language $L$ is regular if it can be recognized by a computer with finite memory. If you need a stack or another unbounded data structure, then it is not regular.
-			\end{defn}
+		\begin{defn}
+			A language $L$ is regular if it can be recognized by a computer with finite memory. If you need a stack or another unbounded data structure, then it is not regular.
+		\end{defn}
 
-			For the analytic definition, we use an abstraction known as \textbf{finite state machines} or {finite automaton} to represent \emph{any} machine with finite memory.
-			\subsubsection{Deterministic Finite Automaton (DFA)}
-				You have an alphabet $\Sigma$, a finite set of states $S$, an initial state $i \in S$, a set of final states $f \subseteq S$, and a transition function $T: S \times \Sigma \to S$.
-				\\ \\
-				For example: $\Sigma = \{ 0, 1 \}$, $S = \{ \text{wilma}, \text{fred}, \text{pebbles} \}$, $i = \text{wilma}$, $f = \{ fred, pebbles \}$, and $T$ is defined by the table:
+		For the analytic definition, we use an abstraction known as \textbf{finite state machines} or {finite automaton} to represent \emph{any} machine with finite memory.
+		\subsection{Deterministic Finite Automaton (DFA)}
+			You have an alphabet $\Sigma$, a finite set of states $S$, an initial state $i \in S$, a set of final states $f \subseteq S$, and a transition function $T: S \times \Sigma \to S$.
+			\\ \\
+			For example: $\Sigma = \{ 0, 1 \}$, $S = \{ \text{wilma}, \text{fred}, \text{pebbles} \}$, $i = \text{wilma}$, $f = \{ fred, pebbles \}$, and $T$ is defined by the table:
 
+			\begin{center}
+				\begin{tabular}{|c|c|}
+					\hline $S \times \Sigma$ & $S$ \\ \hline
+					wilma, 0 & fred \\
+					wilma, 1 & pebbles \\
+					pebbles, 0 & pebbles \\
+					pebbles, 1 & pebbles \\ \hline
+				\end{tabular}
+			\end{center}
+
+			This is a partial function $T$. It's tedious to construct a table like this, and it doesn't easily convey the information to us in a visual way. Instead, we could use a bubble diagram.
+			\\ \\
+			A bubble diagram is more visual way to illustrate a finite state machine / finite automaton. You draw a circle for each state, an arrow for the initial state, and arrows between the circles to represent the transition function. You indicate the final states in some way, such as a double circle.
+
+			\begin{center}
+				\begin{tikzpicture}[scale=0.2]
+					\tikzstyle{every node}+=[inner sep=0pt]
+					\draw [black] (17.3,-17.3) circle (3);
+					\draw (17.3,-17.3) node {wilma};
+					\draw [black] (37,-23.6) circle (3);
+					\draw (37,-23.6) node {fred};
+					\draw [black] (37,-23.6) circle (2.4);
+					\draw [black] (56.7,-19) circle (3);
+					\draw (56.7,-19) node {barney};
+					\draw [black] (20.3,-31.3) circle (3);
+					\draw (20.3,-31.3) node {pebbles};
+					\draw [black] (20.3,-31.3) circle (2.4);
+					\draw [black] (10.7,-11.8) -- (15,-15.38);
+					\draw (10.15,-10.36) node [left] {$i$};
+					\fill [black] (15,-15.38) -- (14.7,-14.48) -- (14.06,-15.25);
+					\draw [black] (20.16,-18.21) -- (34.14,-22.69);
+					\fill [black] (34.14,-22.69) -- (33.53,-21.97) -- (33.23,-22.92);
+					\draw (26.28,-20.99) node [below] {$0$};
+					\draw [black] (17.93,-20.23) -- (19.67,-28.37);
+					\fill [black] (19.67,-28.37) -- (19.99,-27.48) -- (19.01,-27.69);
+					\draw (18.05,-24.65) node [left] {$1$};
+					\draw [black] (23.13,-32.26) arc (99:-189:2.25);
+					\draw (25.6,-37.55) node [right] {$0,\mbox{ }1$};
+					\fill [black] (21.26,-34.13) -- (20.89,-35) -- (21.88,-34.84);
+					\draw [black] (39.92,-22.92) -- (53.78,-19.68);
+					\fill [black] (53.78,-19.68) -- (52.89,-19.38) -- (53.11,-20.35);
+					\draw (48.19,-21.95) node [below] {$0,\mbox{ }1$};
+					\draw [black] (59.663,-19.386) arc (110.30993:-177.69007:2.25);
+					\draw (62.93,-24.08) node [right] {$0,\mbox{ }1$};
+					\fill [black] (58.2,-21.59) -- (58,-22.51) -- (58.94,-22.16);
+				\end{tikzpicture}
+			\end{center}
+
+			You follow the arrows through the states, as necessary, and if you end up on a final state then the element is in the language.
+			\\ \\
+			We prefer total functions to partial functions. We add a new state, which we'll call ``barney'', that acts as a black hole. A finite automaton only needs one black hole, where all states loop back to itself. We can always make $T$ total by directing transitions that are not otherwise specified to the black hole. The black hole state is \emph{not} a final state.
+			\\ \\
+			We can name our states whatever we'd like on our bubble diagram. Intelligent names should be chosen, like ``start'', ``zero'', ``nonzero'', and ``fail'', for instance.
+			\\ \\
+			Fun fact: regular languages have been proven to be closed under intersection and set difference. \lecture{February 6, 2013}
+			\\ \\
+			We sometimes denote a DFA as $\text{DFA} = < \Sigma, S, i, f, T >$.
+			\\ \\
+			For simplicity's sake, we'll setup some notation we'll be using to discuss DFAs. This is by convention only.
+			\begin{itemize}
+				\item $a, b, c, d$ (and other letters at the beginning of the standard alphabet) represent symbols in $\Sigma = \{a, b, c, d\}$.
+				\item Particular strings are a concatenation of symbols from $\Sigma$. Some examples are $abca, bbca,$ and $\epsilon$ (the empty string).
+				\item $x, y, z$ (and other letters near the end of the standard alphabet) are variables that represent strings. For example, let $x = abc$, then $x = x_0 x_1 x_2 \ldots x_{n - 1}$ where $n = |x|$.
+			\end{itemize}
+			The \textbf{DFA algorithm} is pretty simple. Given an input $x$ (which is implicitly a DFA = $< \Sigma, S, i, f, T >$, where $T$ is a total function), the output of the algorithm will be:
+			\begin{align*}
+				\begin{cases}
+					\text{``accept''} & x \in L \\
+					\text{``reject''} & x \not \in L
+				\end{cases}
+			\end{align*}
+			The DFA algorithm is as follows: \\ \\
+			\begin{algorithm}[H]
+				state = i\;
+				\For{$a = x_0, x_1, x_2, \ldots, x_{n - 1}$}{
+					state = T[state, a]\;
+				}
+				\lIf{state $\in $ f}{accept}
+				\lElse{reject}
+			\end{algorithm}
+			\vspace{0.5cm}
+			The bonus question on A5 involves implementing this algorithm. You may want to use an array or map. It's the easiest bonus question all term.
+
+			\begin{ex}
+				We're given the binary integers, $\Sigma = \{ 0, 1 \}, S = \{ \text{start}, \text{zero}, \text{nonzero}, \text{error} \}, i = \text{start}, f = \{ \text{zero}, \text{nonzero} \}$, and function $T$ defined by: \\
 				\begin{center}
 					\begin{tabular}{|c|c|}
 						\hline $S \times \Sigma$ & $S$ \\ \hline
-						wilma, 0 & fred \\
-						wilma, 1 & pebbles \\
-						pebbles, 0 & pebbles \\
-						pebbles, 1 & pebbles \\ \hline
+						start, 0 & zero \\
+						start, 1 & nonzero \\
+						zero, 0 & error \\
+						zero, 1 & error \\
+						nonzero, 0 & nonzero \\
+						nonzero, 1 & nonzero \\
+						error, 0 & error \\
+						error, 1 & error \\ \hline
 					\end{tabular}
 				\end{center}
-
-				This is a partial function $T$. It's tedious to construct a table like this, and it doesn't easily convey the information to us in a visual way. Instead, we could use a bubble diagram.
-				\\ \\
-				A bubble diagram is more visual way to illustrate a finite state machine / finite automaton. You draw a circle for each state, an arrow for the initial state, and arrows between the circles to represent the transition function. You indicate the final states in some way, such as a double circle.
-
+				This table for $T$ isn't very intuitive. Let's look at the bubble diagram representing this DFA for a clearer picture.
+				
 				\begin{center}
 					\begin{tikzpicture}[scale=0.2]
 						\tikzstyle{every node}+=[inner sep=0pt]
-						\draw [black] (17.3,-17.3) circle (3);
-						\draw (17.3,-17.3) node {wilma};
-						\draw [black] (37,-23.6) circle (3);
-						\draw (37,-23.6) node {fred};
-						\draw [black] (37,-23.6) circle (2.4);
-						\draw [black] (56.7,-19) circle (3);
-						\draw (56.7,-19) node {barney};
-						\draw [black] (20.3,-31.3) circle (3);
-						\draw (20.3,-31.3) node {pebbles};
-						\draw [black] (20.3,-31.3) circle (2.4);
-						\draw [black] (10.7,-11.8) -- (15,-15.38);
-						\draw (10.15,-10.36) node [left] {$i$};
-						\fill [black] (15,-15.38) -- (14.7,-14.48) -- (14.06,-15.25);
-						\draw [black] (20.16,-18.21) -- (34.14,-22.69);
-						\fill [black] (34.14,-22.69) -- (33.53,-21.97) -- (33.23,-22.92);
-						\draw (26.28,-20.99) node [below] {$0$};
-						\draw [black] (17.93,-20.23) -- (19.67,-28.37);
-						\fill [black] (19.67,-28.37) -- (19.99,-27.48) -- (19.01,-27.69);
-						\draw (18.05,-24.65) node [left] {$1$};
-						\draw [black] (23.13,-32.26) arc (99:-189:2.25);
-						\draw (25.6,-37.55) node [right] {$0,\mbox{ }1$};
-						\fill [black] (21.26,-34.13) -- (20.89,-35) -- (21.88,-34.84);
-						\draw [black] (39.92,-22.92) -- (53.78,-19.68);
-						\fill [black] (53.78,-19.68) -- (52.89,-19.38) -- (53.11,-20.35);
-						\draw (48.19,-21.95) node [below] {$0,\mbox{ }1$};
-						\draw [black] (59.663,-19.386) arc (110.30993:-177.69007:2.25);
-						\draw (62.93,-24.08) node [right] {$0,\mbox{ }1$};
-						\fill [black] (58.2,-21.59) -- (58,-22.51) -- (58.94,-22.16);
+						\draw [black] (13,-15.7) circle (3);
+						\draw (13,-15.7) node {start};
+						\draw [black] (38,-12.7) circle (3);
+						\draw (38,-12.7) node {zero};
+						\draw [black] (38,-12.7) circle (2.4);
+						\draw [black] (59.9,-16.5) circle (3);
+						\draw (59.9,-16.5) node {error};
+						\draw [black] (31,-27.7) circle (3);
+						\draw (31,-27.7) node {nonzero};
+						\draw [black] (31,-27.7) circle (2.4);
+						\draw [black] (15.5,-17.36) -- (28.5,-26.04);
+						\fill [black] (28.5,-26.04) -- (28.12,-25.18) -- (27.56,-26.01);
+						\draw (21,-22.2) node [below] {$1$};
+						\draw [black] (33.075,-25.549) arc (163.75996:-124.24004:2.25);
+						\draw (38.11,-24.64) node [right] {$0,\mbox{ }1$};
+						\fill [black] (33.97,-28.04) -- (34.6,-28.74) -- (34.88,-27.78);
+						\draw [black] (15.98,-15.34) -- (35.02,-13.06);
+						\fill [black] (35.02,-13.06) -- (34.17,-12.66) -- (34.29,-13.65);
+						\draw (25.76,-14.79) node [below] {$0$};
+						\draw [black] (40.96,-13.21) -- (56.94,-15.99);
+						\fill [black] (56.94,-15.99) -- (56.24,-15.36) -- (56.07,-16.34);
+						\draw (48.02,-15.29) node [below] {$0,\mbox{ }1$};
+						\draw [black] (60.547,-13.583) arc (195.22332:-92.77668:2.25);
+						\draw (66.13,-10.74) node [above] {$0,\mbox{ }1$};
+						\fill [black] (62.61,-15.24) -- (63.51,-15.51) -- (63.25,-14.55);
+						\draw [black] (8.1,-8.6) -- (11.3,-13.23);
+						\draw (7.3,-8.1) node [above] {$i$};
+						\fill [black] (11.3,-13.23) -- (11.25,-12.29) -- (10.43,-12.86);
 					\end{tikzpicture}
 				\end{center}
 
-				You follow the arrows through the states, as necessary, and if you end up on a final state then the element is in the language.
-				\\ \\
-				We prefer total functions to partial functions. We add a new state, which we'll call ``barney'', that acts as a black hole. A finite automaton only needs one black hole, where all states loop back to itself. We can always make $T$ total by directing transitions that are not otherwise specified to the black hole. The black hole state is \emph{not} a final state.
-				\\ \\
-				We can name our states whatever we'd like on our bubble diagram. Intelligent names should be chosen, like ``start'', ``zero'', ``nonzero'', and ``fail'', for instance.
-				\\ \\
-				Fun fact: regular languages have been proven to be closed under intersection and set difference. \lecture{February 6, 2013}
-				\\ \\
-				We sometimes denote a DFA as $\text{DFA} = < \Sigma, S, i, f, T >$.
-				\\ \\
-				For simplicity's sake, we'll setup some notation we'll be using to discuss DFAs. This is by convention only.
-				\begin{itemize}
-					\item $a, b, c, d$ (and other letters at the beginning of the standard alphabet) represent symbols in $\Sigma = \{a, b, c, d\}$.
-					\item Particular strings are a concatenation of symbols from $\Sigma$. Some examples are $abca, bbca,$ and $\epsilon$ (the empty string).
-					\item $x, y, z$ (and other letters near the end of the standard alphabet) are variables that represent strings. For example, let $x = abc$, then $x = x_0 x_1 x_2 \ldots x_{n - 1}$ where $n = |x|$.
-				\end{itemize}
-				The \textbf{DFA algorithm} is pretty simple. Given an input $x$ (which is implicitly a DFA = $< \Sigma, S, i, f, T >$, where $T$ is a total function), the output of the algorithm will be:
-				\begin{align*}
-					\begin{cases}
-						\text{``accept''} & x \in L \\
-						\text{``reject''} & x \not \in L
-					\end{cases}
-				\end{align*}
-				The DFA algorithm is as follows: \\ \\
+				Let's look at \underline{x = 10}. x = 10 will execute the following: \\
 				\begin{algorithm}[H]
-					state = i\;
-					\For{$a = x_0, x_1, x_2, \ldots, x_{n - 1}$}{
-						state = T[state, a]\;
-					}
-					\lIf{state $\in $ f}{accept}
-					\lElse{reject}
+					state = start\;
+					state = T[start, 1]; // state = nonzero \\
+					state = T[nonzero, 0]; // state = nonzero \\
+					(end loop) \\
+					nonzero $\in $ f? Yes, accept.
 				\end{algorithm}
 				\vspace{0.5cm}
-				The bonus question on A5 involves implementing this algorithm. You may want to use an array or map. It's the easiest bonus question all term.
+				Next, let's look at \underline{x = 01}. x = 01 will execute the following: \\
+				\begin{algorithm}[H]
+					state = start\;
+					state = T[start, 0]; // state = zero \\
+					state = T[zero, 1]; // state = error \\
+					(end loop) \\
+					error $\in $ f? No, reject.
+				\end{algorithm}
+			\end{ex}
 
-				\begin{ex}
-					We're given the binary integers, $\Sigma = \{ 0, 1 \}, S = \{ \text{start}, \text{zero}, \text{nonzero}, \text{error} \}, i = \text{start}, f = \{ \text{zero}, \text{nonzero} \}$, and function $T$ defined by: \\
-					\begin{center}
-						\begin{tabular}{|c|c|}
-							\hline $S \times \Sigma$ & $S$ \\ \hline
-							start, 0 & zero \\
-							start, 1 & nonzero \\
-							zero, 0 & error \\
-							zero, 1 & error \\
-							nonzero, 0 & nonzero \\
-							nonzero, 1 & nonzero \\
-							error, 0 & error \\
-							error, 1 & error \\ \hline
-						\end{tabular}
-					\end{center}
-					This table for $T$ isn't very intuitive. Let's look at the bubble diagram representing this DFA for a clearer picture.
-					
-					\begin{center}
-						\begin{tikzpicture}[scale=0.2]
-							\tikzstyle{every node}+=[inner sep=0pt]
-							\draw [black] (13,-15.7) circle (3);
-							\draw (13,-15.7) node {start};
-							\draw [black] (38,-12.7) circle (3);
-							\draw (38,-12.7) node {zero};
-							\draw [black] (38,-12.7) circle (2.4);
-							\draw [black] (59.9,-16.5) circle (3);
-							\draw (59.9,-16.5) node {error};
-							\draw [black] (31,-27.7) circle (3);
-							\draw (31,-27.7) node {nonzero};
-							\draw [black] (31,-27.7) circle (2.4);
-							\draw [black] (15.5,-17.36) -- (28.5,-26.04);
-							\fill [black] (28.5,-26.04) -- (28.12,-25.18) -- (27.56,-26.01);
-							\draw (21,-22.2) node [below] {$1$};
-							\draw [black] (33.075,-25.549) arc (163.75996:-124.24004:2.25);
-							\draw (38.11,-24.64) node [right] {$0,\mbox{ }1$};
-							\fill [black] (33.97,-28.04) -- (34.6,-28.74) -- (34.88,-27.78);
-							\draw [black] (15.98,-15.34) -- (35.02,-13.06);
-							\fill [black] (35.02,-13.06) -- (34.17,-12.66) -- (34.29,-13.65);
-							\draw (25.76,-14.79) node [below] {$0$};
-							\draw [black] (40.96,-13.21) -- (56.94,-15.99);
-							\fill [black] (56.94,-15.99) -- (56.24,-15.36) -- (56.07,-16.34);
-							\draw (48.02,-15.29) node [below] {$0,\mbox{ }1$};
-							\draw [black] (60.547,-13.583) arc (195.22332:-92.77668:2.25);
-							\draw (66.13,-10.74) node [above] {$0,\mbox{ }1$};
-							\fill [black] (62.61,-15.24) -- (63.51,-15.51) -- (63.25,-14.55);
-							\draw [black] (8.1,-8.6) -- (11.3,-13.23);
-							\draw (7.3,-8.1) node [above] {$i$};
-							\fill [black] (11.3,-13.23) -- (11.25,-12.29) -- (10.43,-12.86);
-						\end{tikzpicture}
-					\end{center}
+			\begin{ex}
+				Let's construct a finite automaton that represents the MIPS assembly notation for registers.
+				\\ \\
+				Given $\Sigma = \{ \$, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 \}, L = $ MIPS assembly notation for registers (i.e. $\{ \$0, \$1, \$2, \ldots, \$31 \}$).
+				\\ \\
+				It's useful to name your DFA states with what you've learned so far based on the conditions that led to that state, because that's the only way we know what we've determined in the past. These names don't matter, but it'll make the finite automaton much easier for you to understand.
+				\\ \\
+				We're going to assume there is an error state that all undefined transitions lead to. We'll make this assumption in general in this course. You need to draw the error state only when you need a \emph{total} function $T$ (such as when you intend to run the DFA algorithm), or when you're explicitly asked to draw it.
+				\\ \\
+				Let's look at the bubble diagram for this finite automaton that represents the notation of MIPS registers.
+				\begin{center}
+					\begin{tikzpicture}[scale=0.2]
+						\tikzstyle{every node}+=[inner sep=0pt]
+						\draw [black] (11.8,-10.2) circle (3);
+						\draw (11.8,-10.2) node {start};
+						\draw [black] (27.7,-17.8) circle (3);
+						\draw (27.7,-17.8) node {dollar};
+						\draw [black] (62,-38.5) circle (3);
+						\draw (62,-38.5) node {ok};
+						\draw [black] (62,-38.5) circle (2.4);
+						\draw [black] (59.4,-13.7) circle (3);
+						\draw (59.4,-13.7) node {\$1-\$2};
+						\draw [black] (59.4,-13.7) circle (2.4);
+						\draw [black] (7.1,-37.9) circle (3);
+						\draw (7.1,-37.9) node {\$3};
+						\draw [black] (7.1,-37.9) circle (2.4);
+						\draw [black] (5.7,-4.4) -- (9.63,-8.13);
+						\draw (5.17,-2.93) node [left] {$i$};
+						\fill [black] (9.63,-8.13) -- (9.39,-7.22) -- (8.7,-7.94);
+						\draw [black] (14.51,-11.49) -- (24.99,-16.51);
+						\fill [black] (24.99,-16.51) -- (24.49,-15.71) -- (24.06,-16.61);
+						\draw (18.76,-14.51) node [below] {\$};
+						\draw [black] (59.71,-16.68) -- (61.69,-35.52);
+						\fill [black] (61.69,-35.52) -- (62.1,-34.67) -- (61.11,-34.77);
+						\draw (60.05,-26.2) node [left] {$0,\mbox{ }1,\mbox{ }\dots,\mbox{ }9$};
+						\draw [black] (10.1,-37.93) -- (59,-38.47);
+						\fill [black] (59,-38.47) -- (58.21,-37.96) -- (58.19,-38.96);
+						\draw (34.54,-38.72) node [below] {$0,\mbox{ }1$};
+						\draw [black] (25.55,-19.9) -- (9.25,-35.8);
+						\fill [black] (9.25,-35.8) -- (10.17,-35.6) -- (9.47,-34.89);
+						\draw (16.38,-27.37) node [above] {$3$};
+						\draw [black] (30.68,-17.42) -- (56.42,-14.08);
+						\fill [black] (56.42,-14.08) -- (55.57,-13.69) -- (55.7,-14.68);
+						\draw (44.14,-16.43) node [below] {$1,\mbox{ }2$};
+						\draw [black] (30.27,-19.35) -- (59.43,-36.95);
+						\fill [black] (59.43,-36.95) -- (59,-36.11) -- (58.49,-36.96);
+						\draw (37.86,-28.66) node [below] {$0,\mbox{ }4,\mbox{ }5,\mbox{ }6,\mbox{ }7,\mbox{ }8,\mbox{ }9$};
+					\end{tikzpicture}
+				\end{center}
+				
+				Every MIPS register must start with the dollar sign (\$). Keep in mind that only $\$0, \ldots, \$31$ are valid MIPS registers. So, if the next number is a 1 or a 2, we can have any second digit (from 0-9) to form a valid MIPS register. If the number is 3, we can only follow that up by a 0 or 1 (\$30 and \$31). We also need to handle all other single digit registers (\$0, \$4, \$5, \$6, \$7, \$8, \$9).
+				\\ \\
+				We could've made this differently by having multiple ``ok'' states, but those aren't necessary so all valid registers point to the same ``ok'' state in this diagram. We can point all complete paths to a single complete state because what happens from the complete state onwards does not differ. In this case, all complete states have no further path (except to an implied black hole), and all complete states are final states, so having one complete state (denoted ``ok'' on the bubble diagram) is acceptable.
+				\\ \\
+				In general, you can combine two states if everything that follows from that point is the same among all of the states you're combining.
+			\end{ex}
 
-					Let's look at \underline{x = 10}. x = 10 will execute the following: \\
-					\begin{algorithm}[H]
-						state = start\;
-						state = T[start, 1]; // state = nonzero \\
-						state = T[nonzero, 0]; // state = nonzero \\
-						(end loop) \\
-						nonzero $\in $ f? Yes, accept.
-					\end{algorithm}
-					\vspace{0.5cm}
-					Next, let's look at \underline{x = 01}. x = 01 will execute the following: \\
-					\begin{algorithm}[H]
-						state = start\;
-						state = T[start, 0]; // state = zero \\
-						state = T[zero, 1]; // state = error \\
-						(end loop) \\
-						error $\in $ f? No, reject.
-					\end{algorithm}
-				\end{ex}
+			\begin{ex}
+				Let $\Sigma = \{a, b, c\}, L = $ any string with an odd number of $a$'s. For example: $a, abaa, babbc, \ldots$.
+				\begin{center}
+					\begin{tikzpicture}[scale=0.2]
+						\tikzstyle{every node}+=[inner sep=0pt]
+						\draw [black] (21.7,-12.5) circle (3);
+						\draw (21.7,-12.5) node {even};
+						\draw [black] (39.7,-12.5) circle (3);
+						\draw (39.7,-12.5) node {odd};
+						\draw [black] (39.7,-12.5) circle (2.4);
+						\draw [black] (15.4,-5.2) -- (19.74,-10.23);
+						\draw (14.59,-4.71) node [above] {$i$};
+						\fill [black] (19.74,-10.23) -- (19.6,-9.3) -- (18.84,-9.95);
+						\draw [black] (21.499,-9.518) arc (211.59369:-76.40631:2.25);
+						\draw (26.15,-5.73) node [above] {$b,\mbox{ }c$};
+						\fill [black] (23.94,-10.53) -- (24.89,-10.53) -- (24.36,-9.68);
+						\draw [black] (24.7,-12.5) -- (36.7,-12.5);
+						\fill [black] (36.7,-12.5) -- (35.9,-12) -- (35.9,-13);
+						\draw (30.7,-12) node [above] {$a$};
+						\draw [black] (36.7,-12.5) -- (24.7,-12.5);
+						\fill [black] (24.7,-12.5) -- (25.5,-13) -- (25.5,-12);
+						\draw (30.7,-12) node [above] {$a$};
+						\draw [black] (40.66,-9.67) arc (189:-99:2.25);
+						\draw (45,-6.25) node [right] {$b,\mbox{ }c$};
+						\fill [black] (42.53,-11.54) -- (43.4,-11.91) -- (43.24,-10.92);
+					\end{tikzpicture}
+				\end{center}
+				(Note that there are two arrows between those nodes: one for each direction.)
+				\\ \\
+				We can keep track of one binary bit of information with a state. In this case, that bit is ``do I have an even number of $a$'s?''
+				\\ \\
+				Suppose instead we want $L = $ any string with an even number of $a$'s. That's the complement of $L$ from before.
+				\\ \\
+				To find the complement of a DFA, you make all non-finish states into finish states, and vice versa. That means the error (black hole) state will become a finish state as well.
+				\begin{center}
+					\begin{tikzpicture}[scale=0.2]
+						\tikzstyle{every node}+=[inner sep=0pt]
+						\draw [black] (21.7,-12.5) circle (3);
+						\draw (21.7,-12.5) node {even};
+						\draw [black] (21.7,-12.5) circle (2.4);
+						\draw [black] (39.7,-12.5) circle (3);
+						\draw (39.7,-12.5) node {odd};
+						\draw [black] (15.4,-5.2) -- (19.74,-10.23);
+						\draw (14.59,-4.71) node [above] {$i$};
+						\fill [black] (19.74,-10.23) -- (19.6,-9.3) -- (18.84,-9.95);
+						\draw [black] (21.499,-9.518) arc (211.59369:-76.40631:2.25);
+						\draw (26.15,-5.73) node [above] {$b,\mbox{ }c$};
+						\fill [black] (23.94,-10.53) -- (24.89,-10.53) -- (24.36,-9.68);
+						\draw [black] (24.7,-12.5) -- (36.7,-12.5);
+						\fill [black] (36.7,-12.5) -- (35.9,-12) -- (35.9,-13);
+						\draw (30.7,-12) node [above] {$a$};
+						\draw [black] (36.7,-12.5) -- (24.7,-12.5);
+						\fill [black] (24.7,-12.5) -- (25.5,-13) -- (25.5,-12);
+						\draw (30.7,-12) node [above] {$a$};
+						\draw [black] (40.66,-9.67) arc (189:-99:2.25);
+						\draw (45,-6.25) node [right] {$b,\mbox{ }c$};
+						\fill [black] (42.53,-11.54) -- (43.4,-11.91) -- (43.24,-10.92);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
 
-				\begin{ex}
-					Let's construct a finite automaton that represents the MIPS assembly notation for registers.
-					\\ \\
-					Given $\Sigma = \{ \$, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 \}, L = $ MIPS assembly notation for registers (i.e. $\{ \$0, \$1, \$2, \ldots, \$31 \}$).
-					\\ \\
-					It's useful to name your DFA states with what you've learned so far based on the conditions that led to that state, because that's the only way we know what we've determined in the past. These names don't matter, but it'll make the finite automaton much easier for you to understand.
-					\\ \\
-					We're going to assume there is an error state that all undefined transitions lead to. We'll make this assumption in general in this course. You need to draw the error state only when you need a \emph{total} function $T$ (such as when you intend to run the DFA algorithm), or when you're explicitly asked to draw it.
-					\\ \\
-					Let's look at the bubble diagram for this finite automaton that represents the notation of MIPS registers.
-					\begin{center}
-						\begin{tikzpicture}[scale=0.2]
-							\tikzstyle{every node}+=[inner sep=0pt]
-							\draw [black] (11.8,-10.2) circle (3);
-							\draw (11.8,-10.2) node {start};
-							\draw [black] (27.7,-17.8) circle (3);
-							\draw (27.7,-17.8) node {dollar};
-							\draw [black] (62,-38.5) circle (3);
-							\draw (62,-38.5) node {ok};
-							\draw [black] (62,-38.5) circle (2.4);
-							\draw [black] (59.4,-13.7) circle (3);
-							\draw (59.4,-13.7) node {\$1-\$2};
-							\draw [black] (59.4,-13.7) circle (2.4);
-							\draw [black] (7.1,-37.9) circle (3);
-							\draw (7.1,-37.9) node {\$3};
-							\draw [black] (7.1,-37.9) circle (2.4);
-							\draw [black] (5.7,-4.4) -- (9.63,-8.13);
-							\draw (5.17,-2.93) node [left] {$i$};
-							\fill [black] (9.63,-8.13) -- (9.39,-7.22) -- (8.7,-7.94);
-							\draw [black] (14.51,-11.49) -- (24.99,-16.51);
-							\fill [black] (24.99,-16.51) -- (24.49,-15.71) -- (24.06,-16.61);
-							\draw (18.76,-14.51) node [below] {\$};
-							\draw [black] (59.71,-16.68) -- (61.69,-35.52);
-							\fill [black] (61.69,-35.52) -- (62.1,-34.67) -- (61.11,-34.77);
-							\draw (60.05,-26.2) node [left] {$0,\mbox{ }1,\mbox{ }\dots,\mbox{ }9$};
-							\draw [black] (10.1,-37.93) -- (59,-38.47);
-							\fill [black] (59,-38.47) -- (58.21,-37.96) -- (58.19,-38.96);
-							\draw (34.54,-38.72) node [below] {$0,\mbox{ }1$};
-							\draw [black] (25.55,-19.9) -- (9.25,-35.8);
-							\fill [black] (9.25,-35.8) -- (10.17,-35.6) -- (9.47,-34.89);
-							\draw (16.38,-27.37) node [above] {$3$};
-							\draw [black] (30.68,-17.42) -- (56.42,-14.08);
-							\fill [black] (56.42,-14.08) -- (55.57,-13.69) -- (55.7,-14.68);
-							\draw (44.14,-16.43) node [below] {$1,\mbox{ }2$};
-							\draw [black] (30.27,-19.35) -- (59.43,-36.95);
-							\fill [black] (59.43,-36.95) -- (59,-36.11) -- (58.49,-36.96);
-							\draw (37.86,-28.66) node [below] {$0,\mbox{ }4,\mbox{ }5,\mbox{ }6,\mbox{ }7,\mbox{ }8,\mbox{ }9$};
-						\end{tikzpicture}
-					\end{center}
-					
-					Every MIPS register must start with the dollar sign (\$). Keep in mind that only $\$0, \ldots, \$31$ are valid MIPS registers. So, if the next number is a 1 or a 2, we can have any second digit (from 0-9) to form a valid MIPS register. If the number is 3, we can only follow that up by a 0 or 1 (\$30 and \$31). We also need to handle all other single digit registers (\$0, \$4, \$5, \$6, \$7, \$8, \$9).
-					\\ \\
-					We could've made this differently by having multiple ``ok'' states, but those aren't necessary so all valid registers point to the same ``ok'' state in this diagram. We can point all complete paths to a single complete state because what happens from the complete state onwards does not differ. In this case, all complete states have no further path (except to an implied black hole), and all complete states are final states, so having one complete state (denoted ``ok'' on the bubble diagram) is acceptable.
-					\\ \\
-					In general, you can combine two states if everything that follows from that point is the same among all of the states you're combining.
-				\end{ex}
+			\begin{ex}
+				Let $\Sigma = \{a, b, c\}$ and $L$ = all strings with at least one $a$, one $b$, and one $c$. For example: $abaaaaaca \in L$, but $bcbcbccc \not \in L$.
 
-				\begin{ex}
-					Let $\Sigma = \{a, b, c\}, L = $ any string with an odd number of $a$'s. For example: $a, abaa, babbc, \ldots$.
-					\begin{center}
-						\begin{tikzpicture}[scale=0.2]
-							\tikzstyle{every node}+=[inner sep=0pt]
-							\draw [black] (21.7,-12.5) circle (3);
-							\draw (21.7,-12.5) node {even};
-							\draw [black] (39.7,-12.5) circle (3);
-							\draw (39.7,-12.5) node {odd};
-							\draw [black] (39.7,-12.5) circle (2.4);
-							\draw [black] (15.4,-5.2) -- (19.74,-10.23);
-							\draw (14.59,-4.71) node [above] {$i$};
-							\fill [black] (19.74,-10.23) -- (19.6,-9.3) -- (18.84,-9.95);
-							\draw [black] (21.499,-9.518) arc (211.59369:-76.40631:2.25);
-							\draw (26.15,-5.73) node [above] {$b,\mbox{ }c$};
-							\fill [black] (23.94,-10.53) -- (24.89,-10.53) -- (24.36,-9.68);
-							\draw [black] (24.7,-12.5) -- (36.7,-12.5);
-							\fill [black] (36.7,-12.5) -- (35.9,-12) -- (35.9,-13);
-							\draw (30.7,-12) node [above] {$a$};
-							\draw [black] (36.7,-12.5) -- (24.7,-12.5);
-							\fill [black] (24.7,-12.5) -- (25.5,-13) -- (25.5,-12);
-							\draw (30.7,-12) node [above] {$a$};
-							\draw [black] (40.66,-9.67) arc (189:-99:2.25);
-							\draw (45,-6.25) node [right] {$b,\mbox{ }c$};
-							\fill [black] (42.53,-11.54) -- (43.4,-11.91) -- (43.24,-10.92);
-						\end{tikzpicture}
-					\end{center}
-					(Note that there are two arrows between those nodes: one for each direction.)
-					\\ \\
-					We can keep track of one binary bit of information with a state. In this case, that bit is ``do I have an even number of $a$'s?''
-					\\ \\
-					Suppose instead we want $L = $ any string with an even number of $a$'s. That's the complement of $L$ from before.
-					\\ \\
-					To find the complement of a DFA, you make all non-finish states into finish states, and vice versa. That means the error (black hole) state will become a finish state as well.
-					\begin{center}
-						\begin{tikzpicture}[scale=0.2]
-							\tikzstyle{every node}+=[inner sep=0pt]
-							\draw [black] (21.7,-12.5) circle (3);
-							\draw (21.7,-12.5) node {even};
-							\draw [black] (21.7,-12.5) circle (2.4);
-							\draw [black] (39.7,-12.5) circle (3);
-							\draw (39.7,-12.5) node {odd};
-							\draw [black] (15.4,-5.2) -- (19.74,-10.23);
-							\draw (14.59,-4.71) node [above] {$i$};
-							\fill [black] (19.74,-10.23) -- (19.6,-9.3) -- (18.84,-9.95);
-							\draw [black] (21.499,-9.518) arc (211.59369:-76.40631:2.25);
-							\draw (26.15,-5.73) node [above] {$b,\mbox{ }c$};
-							\fill [black] (23.94,-10.53) -- (24.89,-10.53) -- (24.36,-9.68);
-							\draw [black] (24.7,-12.5) -- (36.7,-12.5);
-							\fill [black] (36.7,-12.5) -- (35.9,-12) -- (35.9,-13);
-							\draw (30.7,-12) node [above] {$a$};
-							\draw [black] (36.7,-12.5) -- (24.7,-12.5);
-							\fill [black] (24.7,-12.5) -- (25.5,-13) -- (25.5,-12);
-							\draw (30.7,-12) node [above] {$a$};
-							\draw [black] (40.66,-9.67) arc (189:-99:2.25);
-							\draw (45,-6.25) node [right] {$b,\mbox{ }c$};
-							\fill [black] (42.53,-11.54) -- (43.4,-11.91) -- (43.24,-10.92);
-						\end{tikzpicture}
-					\end{center}
-				\end{ex}
+				\begin{center}
+					\begin{tikzpicture}[scale=0.2]
+						\tikzstyle{every node}+=[inner sep=0pt]
+						\draw [black] (8.5,-13.7) circle (3);
+						\draw (8.5,-13.7) node {no abc};
+						\draw [black] (24.8,-11.9) circle (3);
+						\draw (24.8,-11.9) node {a};
+						\draw [black] (24.8,-27.6) circle (3);
+						\draw (24.8,-27.6) node {b};
+						\draw [black] (24.8,-43.9) circle (3);
+						\draw (24.8,-43.9) node {c};
+						\draw [black] (44.3,-11.9) circle (3);
+						\draw (44.3,-11.9) node {ab};
+						\draw [black] (67.1,-34.2) circle (3);
+						\draw (67.1,-34.2) node {ac};
+						\draw [black] (69.7,-11.9) circle (3);
+						\draw (69.7,-11.9) node {abc};
+						\draw [black] (69.7,-11.9) circle (2.4);
+						\draw [black] (37.7,-34.2) circle (3);
+						\draw (37.7,-34.2) node {bc};
+						\draw [black] (4.7,-7.2) -- (6.99,-11.11);
+						\draw (3.9,-6.7) node [above] {$i$};
+						\fill [black] (6.99,-11.11) -- (7.01,-10.17) -- (6.15,-10.67);
+						\draw [black] (11.48,-13.37) -- (21.82,-12.23);
+						\fill [black] (21.82,-12.23) -- (20.97,-11.82) -- (21.08,-12.81);
+						\draw (16.86,-13.38) node [below] {$a$};
+						\draw [black] (10.78,-15.65) -- (22.52,-25.65);
+						\fill [black] (22.52,-25.65) -- (22.23,-24.75) -- (21.58,-25.51);
+						\draw (15.64,-21.14) node [below] {$b$};
+						\draw [black] (9.92,-16.34) -- (23.38,-41.26);
+						\fill [black] (23.38,-41.26) -- (23.44,-40.32) -- (22.56,-40.79);
+						\draw (15.98,-29.98) node [left] {$c$};
+						\draw [black] (23.477,-9.22) arc (234:-54:2.25);
+						\draw (24.8,-4.65) node [above] {$a$};
+						\fill [black] (26.12,-9.22) -- (27,-8.87) -- (26.19,-8.28);
+						\draw [black] (23.477,-24.92) arc (234:-54:2.25);
+						\draw (24.8,-20.35) node [above] {$b$};
+						\fill [black] (26.12,-24.92) -- (27,-24.57) -- (26.19,-23.98);
+						\draw [black] (23.477,-41.22) arc (234:-54:2.25);
+						\draw (24.8,-36.65) node [above] {$c$};
+						\fill [black] (26.12,-41.22) -- (27,-40.87) -- (26.19,-40.28);
+						\draw [black] (27.72,-43.23) -- (64.18,-34.87);
+						\fill [black] (64.18,-34.87) -- (63.28,-34.56) -- (63.51,-35.54);
+						\draw (46.58,-39.62) node [below] {$a$};
+						\draw [black] (68.377,-9.22) arc (234:-54:2.25);
+						\draw (69.7,-4.65) node [above] {$a,\mbox{ }b,\mbox{ }c$};
+						\fill [black] (71.02,-9.22) -- (71.9,-8.87) -- (71.09,-8.28);
+						\draw [black] (27.2,-42.1) -- (35.3,-36);
+						\fill [black] (35.3,-36) -- (34.36,-36.08) -- (34.96,-36.88);
+						\draw (32.25,-39.55) node [below] {$b$};
+						\draw [black] (27.47,-28.97) -- (35.03,-32.83);
+						\fill [black] (35.03,-32.83) -- (34.54,-32.02) -- (34.09,-32.91);
+						\draw (30.31,-31.4) node [below] {$c$};
+						\draw [black] (27.45,-13.3) -- (64.45,-32.8);
+						\fill [black] (64.45,-32.8) -- (63.97,-31.99) -- (63.51,-32.87);
+						\draw (45.01,-23.55) node [below] {$c$};
+						\draw [black] (27.8,-11.9) -- (41.3,-11.9);
+						\fill [black] (41.3,-11.9) -- (40.5,-11.4) -- (40.5,-12.4);
+						\draw (34.55,-12.4) node [below] {$b$};
+						\draw [black] (42.977,-9.22) arc (234:-54:2.25);
+						\draw (44.3,-4.65) node [above] {$a,\mbox{ }b$};
+						\fill [black] (45.62,-9.22) -- (46.5,-8.87) -- (45.69,-8.28);
+						\draw [black] (36.377,-31.52) arc (234:-54:2.25);
+						\draw (37.7,-26.95) node [above] {$b,\mbox{ }c$};
+						\fill [black] (39.02,-31.52) -- (39.9,-31.17) -- (39.09,-30.58);
+						\draw [black] (27.14,-25.72) -- (41.96,-13.78);
+						\fill [black] (41.96,-13.78) -- (41.03,-13.89) -- (41.65,-14.67);
+						\draw (35.51,-20.24) node [below] {$a$};
+						\draw [black] (47.3,-11.9) -- (66.7,-11.9);
+						\fill [black] (66.7,-11.9) -- (65.9,-11.4) -- (65.9,-12.4);
+						\draw (57,-12.4) node [below] {$c$};
+						\draw [black] (67.45,-31.22) -- (69.35,-14.88);
+						\fill [black] (69.35,-14.88) -- (68.76,-15.62) -- (69.76,-15.73);
+						\draw (69.06,-23.17) node [right] {$b$};
+						\draw [black] (40.16,-32.48) -- (67.24,-13.62);
+						\fill [black] (67.24,-13.62) -- (66.3,-13.66) -- (66.87,-14.48);
+						\draw (54.65,-23.55) node [below] {$a$};
+						\draw [black] (69.78,-32.877) arc (144:-144:2.25);
+						\draw (74.35,-34.2) node [right] {$a,\mbox{ }c$};
+						\fill [black] (69.78,-35.52) -- (70.13,-36.4) -- (70.72,-35.59);
+					\end{tikzpicture}
+				\end{center}
 
-				\begin{ex}
-					Let $\Sigma = \{a, b, c\}$ and $L$ = all strings with at least one $a$, one $b$, and one $c$. For example: $abaaaaaca \in L$, but $bcbcbccc \not \in L$.
+				$T$ in this case is a total function. It has eight states because we need to keep track of three binary facts, which requires three bits of information ($2^3 = 8$). 
+			\end{ex}
+			Similarly, if we had a DFA to determine if every letter in the English alphabet is included in a particular string, we would need $2^{26}$ states because we would need to store 26 bits of information. At some point, we say a number is large enough that \emph{in practice} we can treat it as an infinite number, despite it being finite. We wouldn't solve this problem with a DFA because $2^{26}$ is a number large enough that we wouldn't want to create a state for each of them. 
+		\subsubsection{Searching and Scanning with DFAs} \lecture{February 11, 2013}
+			\begin{itemize}
+				\item \textbf{Recognition} answers the question ``is $x \in L$?'' This is what we've used DFAs for so far.
+				\item \textbf{Search} answers the question ``does $x$ contain $y \in L$?''. More formally, Does $\exists w, y, z . x = wyz$ and $y \in L$?
+				\item \textbf{Find} answers the question ``where in $x$ is $y \in L$'' (where $x = x_0 x_1 \ldots x_{|x|-1}$)? This question could have multiple answers, depending on what you're asked for, such as:
+					\begin{itemize}
+						\item $y$ begins at $x_i$.
+						\item $y$ ends at $x_j$.
+						\item $y$ begins at $x_i$ and ends at $x_j$. This can be expressed as the pair $(i, j)$.
+					\end{itemize}
 
-					\begin{center}
-						\begin{tikzpicture}[scale=0.2]
-							\tikzstyle{every node}+=[inner sep=0pt]
-							\draw [black] (8.5,-13.7) circle (3);
-							\draw (8.5,-13.7) node {no abc};
-							\draw [black] (24.8,-11.9) circle (3);
-							\draw (24.8,-11.9) node {a};
-							\draw [black] (24.8,-27.6) circle (3);
-							\draw (24.8,-27.6) node {b};
-							\draw [black] (24.8,-43.9) circle (3);
-							\draw (24.8,-43.9) node {c};
-							\draw [black] (44.3,-11.9) circle (3);
-							\draw (44.3,-11.9) node {ab};
-							\draw [black] (67.1,-34.2) circle (3);
-							\draw (67.1,-34.2) node {ac};
-							\draw [black] (69.7,-11.9) circle (3);
-							\draw (69.7,-11.9) node {abc};
-							\draw [black] (69.7,-11.9) circle (2.4);
-							\draw [black] (37.7,-34.2) circle (3);
-							\draw (37.7,-34.2) node {bc};
-							\draw [black] (4.7,-7.2) -- (6.99,-11.11);
-							\draw (3.9,-6.7) node [above] {$i$};
-							\fill [black] (6.99,-11.11) -- (7.01,-10.17) -- (6.15,-10.67);
-							\draw [black] (11.48,-13.37) -- (21.82,-12.23);
-							\fill [black] (21.82,-12.23) -- (20.97,-11.82) -- (21.08,-12.81);
-							\draw (16.86,-13.38) node [below] {$a$};
-							\draw [black] (10.78,-15.65) -- (22.52,-25.65);
-							\fill [black] (22.52,-25.65) -- (22.23,-24.75) -- (21.58,-25.51);
-							\draw (15.64,-21.14) node [below] {$b$};
-							\draw [black] (9.92,-16.34) -- (23.38,-41.26);
-							\fill [black] (23.38,-41.26) -- (23.44,-40.32) -- (22.56,-40.79);
-							\draw (15.98,-29.98) node [left] {$c$};
-							\draw [black] (23.477,-9.22) arc (234:-54:2.25);
-							\draw (24.8,-4.65) node [above] {$a$};
-							\fill [black] (26.12,-9.22) -- (27,-8.87) -- (26.19,-8.28);
-							\draw [black] (23.477,-24.92) arc (234:-54:2.25);
-							\draw (24.8,-20.35) node [above] {$b$};
-							\fill [black] (26.12,-24.92) -- (27,-24.57) -- (26.19,-23.98);
-							\draw [black] (23.477,-41.22) arc (234:-54:2.25);
-							\draw (24.8,-36.65) node [above] {$c$};
-							\fill [black] (26.12,-41.22) -- (27,-40.87) -- (26.19,-40.28);
-							\draw [black] (27.72,-43.23) -- (64.18,-34.87);
-							\fill [black] (64.18,-34.87) -- (63.28,-34.56) -- (63.51,-35.54);
-							\draw (46.58,-39.62) node [below] {$a$};
-							\draw [black] (68.377,-9.22) arc (234:-54:2.25);
-							\draw (69.7,-4.65) node [above] {$a,\mbox{ }b,\mbox{ }c$};
-							\fill [black] (71.02,-9.22) -- (71.9,-8.87) -- (71.09,-8.28);
-							\draw [black] (27.2,-42.1) -- (35.3,-36);
-							\fill [black] (35.3,-36) -- (34.36,-36.08) -- (34.96,-36.88);
-							\draw (32.25,-39.55) node [below] {$b$};
-							\draw [black] (27.47,-28.97) -- (35.03,-32.83);
-							\fill [black] (35.03,-32.83) -- (34.54,-32.02) -- (34.09,-32.91);
-							\draw (30.31,-31.4) node [below] {$c$};
-							\draw [black] (27.45,-13.3) -- (64.45,-32.8);
-							\fill [black] (64.45,-32.8) -- (63.97,-31.99) -- (63.51,-32.87);
-							\draw (45.01,-23.55) node [below] {$c$};
-							\draw [black] (27.8,-11.9) -- (41.3,-11.9);
-							\fill [black] (41.3,-11.9) -- (40.5,-11.4) -- (40.5,-12.4);
-							\draw (34.55,-12.4) node [below] {$b$};
-							\draw [black] (42.977,-9.22) arc (234:-54:2.25);
-							\draw (44.3,-4.65) node [above] {$a,\mbox{ }b$};
-							\fill [black] (45.62,-9.22) -- (46.5,-8.87) -- (45.69,-8.28);
-							\draw [black] (36.377,-31.52) arc (234:-54:2.25);
-							\draw (37.7,-26.95) node [above] {$b,\mbox{ }c$};
-							\fill [black] (39.02,-31.52) -- (39.9,-31.17) -- (39.09,-30.58);
-							\draw [black] (27.14,-25.72) -- (41.96,-13.78);
-							\fill [black] (41.96,-13.78) -- (41.03,-13.89) -- (41.65,-14.67);
-							\draw (35.51,-20.24) node [below] {$a$};
-							\draw [black] (47.3,-11.9) -- (66.7,-11.9);
-							\fill [black] (66.7,-11.9) -- (65.9,-11.4) -- (65.9,-12.4);
-							\draw (57,-12.4) node [below] {$c$};
-							\draw [black] (67.45,-31.22) -- (69.35,-14.88);
-							\fill [black] (69.35,-14.88) -- (68.76,-15.62) -- (69.76,-15.73);
-							\draw (69.06,-23.17) node [right] {$b$};
-							\draw [black] (40.16,-32.48) -- (67.24,-13.62);
-							\fill [black] (67.24,-13.62) -- (66.3,-13.66) -- (66.87,-14.48);
-							\draw (54.65,-23.55) node [below] {$a$};
-							\draw [black] (69.78,-32.877) arc (144:-144:2.25);
-							\draw (74.35,-34.2) node [right] {$a,\mbox{ }c$};
-							\fill [black] (69.78,-35.52) -- (70.13,-36.4) -- (70.72,-35.59);
-						\end{tikzpicture}
-					\end{center}
+					Find is a more general result than search.
+				\item \textbf{Scan} partitions $x$ into $x = y_0 y_1 y_2 y_3 \ldots y_n$ and $\forall i y_i \in L$.
+			\end{itemize}
 
-					$T$ in this case is a total function. It has eight states because we need to keep track of three binary facts, which requires three bits of information ($2^3 = 8$). 
-				\end{ex}
-				Similarly, if we had a DFA to determine if every letter in the English alphabet is included in a particular string, we would need $2^{26}$ states because we would need to store 26 bits of information. At some point, we say a number is large enough that \emph{in practice} we can treat it as an infinite number, despite it being finite. We wouldn't solve this problem with a DFA because $2^{26}$ is a number large enough that we wouldn't want to create a state for each of them. 
-			\subsubsection{Searching and Scanning with DFAs} \lecture{February 11, 2013}
+			\begin{ex}
+				Let $\Sigma = \{a, b, c, 0, 1, 2, !\}$ be an alphabet. We're interested in $L_{\text{id}}$ \textendash{} that is, the language of identifiers.
+				\\ \\
+				We can determine a \underline{recognizer} for $L_{\text{id}}$:
+				\begin{center}
+					\begin{tikzpicture}[scale=0.2]
+						\tikzstyle{every node}+=[inner sep=0pt]
+						\draw [black] (18.5,-22.9) circle (3);
+						\draw (18.5,-22.9) node {start};
+						\draw [black] (37.5,-22.9) circle (3);
+						\draw (37.5,-22.9) node {ok};
+						\draw [black] (37.5,-22.9) circle (2.4);
+						\draw [black] (12,-16.6) -- (16.35,-20.81);
+						\draw (11.47,-15.13) node [left] {$i$};
+						\fill [black] (16.35,-20.81) -- (16.12,-19.9) -- (15.42,-20.61);
+						\draw [black] (21.5,-22.9) -- (34.5,-22.9);
+						\fill [black] (34.5,-22.9) -- (33.7,-22.4) -- (33.7,-23.4);
+						\draw (28,-23.4) node [below] {$a,\mbox{ }b,\mbox{ }c$};
+						\draw [black] (39.624,-20.798) arc (162.43495:-125.56505:2.25);
+						\draw (44.67,-20.06) node [right] {$a,\mbox{ }b,\mbox{ }c,\mbox{ }0,\mbox{ }1,\mbox{ }2$};
+						\fill [black] (40.46,-23.31) -- (41.07,-24.03) -- (41.37,-23.07);
+					\end{tikzpicture}
+				\end{center}
+
+				\underline{Searching} for $L_{\text{id}}$ in $x$, where $x = !abc!cba!$ yields the vacuous result of ``yes!''. There is an identifier in $x$, somewhere.
+				\\ \\
+				Some possible answers for \underline{find} include:
 				\begin{itemize}
-					\item \textbf{Recognition} answers the question ``is $x \in L$?'' This is what we've used DFAs for so far.
-					\item \textbf{Search} answers the question ``does $x$ contain $y \in L$?''. More formally, Does $\exists w, y, z . x = wyz$ and $y \in L$?
-					\item \textbf{Find} answers the question ``where in $x$ is $y \in L$'' (where $x = x_0 x_1 \ldots x_{|x|-1}$)? This question could have multiple answers, depending on what you're asked for, such as:
-						\begin{itemize}
-							\item $y$ begins at $x_i$.
-							\item $y$ ends at $x_j$.
-							\item $y$ begins at $x_i$ and ends at $x_j$. This can be expressed as the pair $(i, j)$.
-						\end{itemize}
-
-						Find is a more general result than search.
-					\item \textbf{Scan} partitions $x$ into $x = y_0 y_1 y_2 y_3 \ldots y_n$ and $\forall i y_i \in L$.
+					\item $i = 1$ is the start of $y \in L$.
+					\item $i = 5$ is the start of $y \in L$.
+					\item $i = 3$ is the end of $y \in L$.
+					\item $i = 7$ is the end of $y \in L$.
+					\item $(i, j) = (1, 3)$ is $y \in L$.
+					\item $(i, j) = (5, 7)$ is $y \in L$.
 				\end{itemize}
 
-				\begin{ex}
-					Let $\Sigma = \{a, b, c, 0, 1, 2, !\}$ be an alphabet. We're interested in $L_{\text{id}}$ \textendash{} that is, the language of identifiers.
-					\\ \\
-					We can determine a \underline{recognizer} for $L_{\text{id}}$:
-					\begin{center}
-						\begin{tikzpicture}[scale=0.2]
-							\tikzstyle{every node}+=[inner sep=0pt]
-							\draw [black] (18.5,-22.9) circle (3);
-							\draw (18.5,-22.9) node {start};
-							\draw [black] (37.5,-22.9) circle (3);
-							\draw (37.5,-22.9) node {ok};
-							\draw [black] (37.5,-22.9) circle (2.4);
-							\draw [black] (12,-16.6) -- (16.35,-20.81);
-							\draw (11.47,-15.13) node [left] {$i$};
-							\fill [black] (16.35,-20.81) -- (16.12,-19.9) -- (15.42,-20.61);
-							\draw [black] (21.5,-22.9) -- (34.5,-22.9);
-							\fill [black] (34.5,-22.9) -- (33.7,-22.4) -- (33.7,-23.4);
-							\draw (28,-23.4) node [below] {$a,\mbox{ }b,\mbox{ }c$};
-							\draw [black] (39.624,-20.798) arc (162.43495:-125.56505:2.25);
-							\draw (44.67,-20.06) node [right] {$a,\mbox{ }b,\mbox{ }c,\mbox{ }0,\mbox{ }1,\mbox{ }2$};
-							\fill [black] (40.46,-23.31) -- (41.07,-24.03) -- (41.37,-23.07);
-						\end{tikzpicture}
-					\end{center}
+				Those are not the only answers for find, however. ``bc'' is a valid identifier, and it's contained within $x$. So, we have a number of additional solutions:
+				\begin{itemize}
+					\item $i = 2$ is the start of $y \in L$.
+					\item $i = 3$ is the start of $y \in L$.
+					\item $i = 1$ is the end of $y \in L$.
+					\item $i = 2$ is the end of $y \in L$.
+					\item etc.
+				\end{itemize}
 
-					\underline{Searching} for $L_{\text{id}}$ in $x$, where $x = !abc!cba!$ yields the vacuous result of ``yes!''. There is an identifier in $x$, somewhere.
-					\\ \\
-					Some possible answers for \underline{find} include:
-					\begin{itemize}
-						\item $i = 1$ is the start of $y \in L$.
-						\item $i = 5$ is the start of $y \in L$.
-						\item $i = 3$ is the end of $y \in L$.
-						\item $i = 7$ is the end of $y \in L$.
-						\item $(i, j) = (1, 3)$ is $y \in L$.
-						\item $(i, j) = (5, 7)$ is $y \in L$.
-					\end{itemize}
+				There are $O(|x|)$ possible solutions that indicate where $y \in L$ either begins or ends. There are also many additional pair solutions for the same reason:
+				\begin{itemize}
+					\item $(i, j) = (1, 1)$ is $y \in L$.
+					\item $(i, j) = (1, 2)$ is $y \in L$.
+					\item $(i, j) = (1, 3)$ is $y \in L$.
+					\item $(i, j) = (5, 5)$ is $y \in L$.
+					\item $(i, j) = (5, 6)$ is $y \in L$.
+					\item $(i, j) = (6, 7)$ is $y \in L$.
+					\item etc.
+				\end{itemize}
 
-					Those are not the only answers for find, however. ``bc'' is a valid identifier, and it's contained within $x$. So, we have a number of additional solutions:
-					\begin{itemize}
-						\item $i = 2$ is the start of $y \in L$.
-						\item $i = 3$ is the start of $y \in L$.
-						\item $i = 1$ is the end of $y \in L$.
-						\item $i = 2$ is the end of $y \in L$.
-						\item etc.
-					\end{itemize}
+				There are $O(|x^2|)$ possible $(i, j)$ pair solutions.
+			\end{ex}
+			We would like to specify a \underline{unique} solution. How could we do this? First, you have to choose whether you want $i$, $j$, or $(i, j)$ as the format of your solution. If you want just $i$ or $j$, then simply pick the first solution. But if you want the pair $(i, j)$, ``first'' is ill-defined. For example: does $(10, 20)$ come before $(5, 25)$? There's no correct answer, it's all about definitions.
+			\\ \\
+			The most common choice for a unique solution is to use the leftmost longest match.
+			\begin{defn}
+				The \textbf{leftmost longest match} is found by finding $(i, j)$ such that $x_i x_{i + 1} \ldots x_j \in L$, $i$ is minimized, and given $i$, $j$ is maximized.
+			\end{defn}
+			A subproblem of the leftmost longest match algorithm is the longest prefix problem.
+			\begin{defn}
+				The \textbf{longest prefix problem} is when given $x$, find the longest prefix (of $x$), $y \in L$.
+			\end{defn}
 
-					There are $O(|x|)$ possible solutions that indicate where $y \in L$ either begins or ends. There are also many additional pair solutions for the same reason:
-					\begin{itemize}
-						\item $(i, j) = (1, 1)$ is $y \in L$.
-						\item $(i, j) = (1, 2)$ is $y \in L$.
-						\item $(i, j) = (1, 3)$ is $y \in L$.
-						\item $(i, j) = (5, 5)$ is $y \in L$.
-						\item $(i, j) = (5, 6)$ is $y \in L$.
-						\item $(i, j) = (6, 7)$ is $y \in L$.
-						\item etc.
-					\end{itemize}
-
-					There are $O(|x^2|)$ possible $(i, j)$ pair solutions.
-				\end{ex}
-				We would like to specify a \underline{unique} solution. How could we do this? First, you have to choose whether you want $i$, $j$, or $(i, j)$ as the format of your solution. If you want just $i$ or $j$, then simply pick the first solution. But if you want the pair $(i, j)$, ``first'' is ill-defined. For example: does $(10, 20)$ come before $(5, 25)$? There's no correct answer, it's all about definitions.
+			For example, if $x = abc123!abc$, the longest prefix is $abc123$. This can be identified by $j$, where $x_j$ is the end of the prefix of $y$.
+			\begin{ex}
+				Suppose $L = \{a, aaa\}$. Let's find the longest match.
 				\\ \\
-				The most common choice for a unique solution is to use the leftmost longest match.
-				\begin{defn}
-					The \textbf{leftmost longest match} is found by finding $(i, j)$ such that $x_i x_{i + 1} \ldots x_j \in L$, $i$ is minimized, and given $i$, $j$ is maximized.
-				\end{defn}
-				A subproblem of the leftmost longest match algorithm is the longest prefix problem.
-				\begin{defn}
-					The \textbf{longest prefix problem} is when given $x$, find the longest prefix (of $x$), $y \in L$.
-				\end{defn}
+				If we have $x = aa\ldots$, after we examine the first $a$, we have no idea if that's the longest match or not. Only after examining more of the string can we be sure that it is. In $aab$, $a$ is the longest match. In $aaa$, $aaa$ is the longest match and so $a$ is not the longest match.
+			\end{ex}
 
-				For example, if $x = abc123!abc$, the longest prefix is $abc123$. This can be identified by $j$, where $x_j$ is the end of the prefix of $y$.
-				\begin{ex}
-					Suppose $L = \{a, aaa\}$. Let's find the longest match.
-					\\ \\
-					If we have $x = aa\ldots$, after we examine the first $a$, we have no idea if that's the longest match or not. Only after examining more of the string can we be sure that it is. In $aab$, $a$ is the longest match. In $aaa$, $aaa$ is the longest match and so $a$ is not the longest match.
-				\end{ex}
+			\begin{ex}
+				Suppose $L = \{a\} \cup \{ \text{ any string beginning with } a \text{ and ending in } b\}$. We can determine a recognizer for this:
+				\begin{center}
+					\begin{tikzpicture}[scale=0.2]
+						\tikzstyle{every node}+=[inner sep=0pt]
+						\draw [black] (18.5,-22.9) circle (3);
+						\draw (18.5,-22.9) node {start};
+						\draw [black] (35.9,-22.9) circle (3);
+						\draw (35.9,-22.9) node {a};
+						\draw [black] (35.9,-22.9) circle (2.4);
+						\draw [black] (57.4,-22.9) circle (3);
+						\draw (57.4,-22.9) node {b};
+						\draw [black] (57.4,-22.9) circle (2.4);
+						\draw [black] (46.8,-33.7) circle (3);
+						\draw (46.8,-33.7) node {error};
+						\draw [black] (12,-16.6) -- (16.35,-20.81);
+						\draw (11.47,-15.13) node [left] {$i$};
+						\fill [black] (16.35,-20.81) -- (16.12,-19.9) -- (15.42,-20.61);
+						\draw [black] (49.489,-35.003) arc (91.87498:-196.12502:2.25);
+						\draw (53.05,-39.52) node [below] {else};
+						\fill [black] (47.4,-36.63) -- (46.93,-37.44) -- (47.93,-37.41);
+						\draw [black] (38.03,-25.01) -- (44.67,-31.59);
+						\fill [black] (44.67,-31.59) -- (44.45,-30.67) -- (43.75,-31.38);
+						\draw (39.23,-28.78) node [below] {else};
+						\draw [black] (48.9,-31.56) -- (55.3,-25.04);
+						\fill [black] (55.3,-25.04) -- (54.38,-25.26) -- (55.1,-25.96);
+						\draw (52.63,-29.77) node [right] {else};
+						\draw [black] (21.5,-22.9) -- (32.9,-22.9);
+						\fill [black] (32.9,-22.9) -- (32.1,-22.4) -- (32.1,-23.4);
+						\draw (27.2,-23.4) node [below] {$a$};
+						\draw [black] (38.9,-22.9) -- (54.4,-22.9);
+						\fill [black] (54.4,-22.9) -- (53.6,-22.4) -- (53.6,-23.4);
+						\draw (46.65,-23.4) node [below] {$b$};
+					\end{tikzpicture}
+				\end{center}
 
-				\begin{ex}
-					Suppose $L = \{a\} \cup \{ \text{ any string beginning with } a \text{ and ending in } b\}$. We can determine a recognizer for this:
-					\begin{center}
-						\begin{tikzpicture}[scale=0.2]
-							\tikzstyle{every node}+=[inner sep=0pt]
-							\draw [black] (18.5,-22.9) circle (3);
-							\draw (18.5,-22.9) node {start};
-							\draw [black] (35.9,-22.9) circle (3);
-							\draw (35.9,-22.9) node {a};
-							\draw [black] (35.9,-22.9) circle (2.4);
-							\draw [black] (57.4,-22.9) circle (3);
-							\draw (57.4,-22.9) node {b};
-							\draw [black] (57.4,-22.9) circle (2.4);
-							\draw [black] (46.8,-33.7) circle (3);
-							\draw (46.8,-33.7) node {error};
-							\draw [black] (12,-16.6) -- (16.35,-20.81);
-							\draw (11.47,-15.13) node [left] {$i$};
-							\fill [black] (16.35,-20.81) -- (16.12,-19.9) -- (15.42,-20.61);
-							\draw [black] (49.489,-35.003) arc (91.87498:-196.12502:2.25);
-							\draw (53.05,-39.52) node [below] {else};
-							\fill [black] (47.4,-36.63) -- (46.93,-37.44) -- (47.93,-37.41);
-							\draw [black] (38.03,-25.01) -- (44.67,-31.59);
-							\fill [black] (44.67,-31.59) -- (44.45,-30.67) -- (43.75,-31.38);
-							\draw (39.23,-28.78) node [below] {else};
-							\draw [black] (48.9,-31.56) -- (55.3,-25.04);
-							\fill [black] (55.3,-25.04) -- (54.38,-25.26) -- (55.1,-25.96);
-							\draw (52.63,-29.77) node [right] {else};
-							\draw [black] (21.5,-22.9) -- (32.9,-22.9);
-							\fill [black] (32.9,-22.9) -- (32.1,-22.4) -- (32.1,-23.4);
-							\draw (27.2,-23.4) node [below] {$a$};
-							\draw [black] (38.9,-22.9) -- (54.4,-22.9);
-							\fill [black] (54.4,-22.9) -- (53.6,-22.4) -- (53.6,-23.4);
-							\draw (46.65,-23.4) node [below] {$b$};
-						\end{tikzpicture}
-					\end{center}
+				If we have $x = acc012cca12\ldots$ and we're examining $a$ at the beginning, we're unsure if that's the longest prefix $y \in L$ yet. We have to continue looking to be sure.
+			\end{ex}
 
-					If we have $x = acc012cca12\ldots$ and we're examining $a$ at the beginning, we're unsure if that's the longest prefix $y \in L$ yet. We have to continue looking to be sure.
-				\end{ex}
+			Here's the pseudocode for determining the longest prefix using a DFA, given an input $x = x_0 x_1 \ldots x_{|x|-1}$. \\
+			\begin{algorithm}
+				state = start\;
+				j = -1\;
+				\For{i = 0 to |x| - 1}{
+					\lIf{state $\in$ final}{j = i}\;
+					state = T[state, $x_i$]\;
+					\lIf{state is blackhole}{reject}; // You could always hope\dots this is optional though. \\
+				}
+				\lIf{$j \ge 0$}{accept, $y = x_0 \ldots x_{j - 1} \in L$}
+				\lElse{reject}
+			\end{algorithm}
 
-				Here's the pseudocode for determining the longest prefix using a DFA, given an input $x = x_0 x_1 \ldots x_{|x|-1}$. \\
-				\begin{algorithm}
-					state = start\;
-					j = -1\;
-					\For{i = 0 to |x| - 1}{
-						\lIf{state $\in$ final}{j = i}\;
-						state = T[state, $x_i$]\;
-						\lIf{state is blackhole}{reject}; // You could always hope\dots this is optional though. \\
-					}
-					\lIf{$j \ge 0$}{accept, $y = x_0 \ldots x_{j - 1} \in L$}
-					\lElse{reject}
-				\end{algorithm}
+			Next, let's take a deeper look at \underline{scanning}. With scanning, we want to partition $x$ using the longest prefix. This is also called leftmost longest, or more colloquially, the \textbf{maximal munch} scanning algorithm. \\
+			\begin{algorithm}
+				start with $x$\;
+				\While{$x \ne \epsilon$}{
+					find leftmost longest match of $L$\;
+					report result $y$, remove $y$ from $x$\;
+				}
+			\end{algorithm}
+			
+			In this algorithm, $L$ is the language of all tokens and separators. That is, $L = L_{\text{id}} \cup L_{\text{int}} \cup L_{\text{!}}$, where $L_{\text{int}}$ has this recognizer:
+			\begin{center}
+				\begin{tikzpicture}[scale=0.2]
+					\tikzstyle{every node}+=[inner sep=0pt]
+					\draw [black] (18,-21.8) circle (3);
+					\draw (18,-21.8) node {start};
+					\draw [black] (34.9,-27.4) circle (3);
+					\draw (34.9,-27.4) node {$0$};
+					\draw [black] (34.9,-27.4) circle (2.4);
+					\draw [black] (34.9,-16.5) circle (3);
+					\draw (34.9,-16.5) node {nat};
+					\draw [black] (34.9,-16.5) circle (2.4);
+					\draw [black] (11.5,-15.5) -- (15.85,-19.71);
+					\draw (10.97,-14.03) node [left] {$i$};
+					\fill [black] (15.85,-19.71) -- (15.62,-18.8) -- (14.92,-19.51);
+					\draw [black] (20.86,-20.9) -- (32.04,-17.4);
+					\fill [black] (32.04,-17.4) -- (31.12,-17.16) -- (31.42,-18.11);
+					\draw (28.17,-19.74) node [below] {$1,\mbox{ }2$};
+					\draw [black] (36.987,-14.361) arc (163.44003:-124.55997:2.25);
+					\draw (42.03,-13.5) node [right] {$0,\mbox{ }1,\mbox{ }2$};
+					\fill [black] (37.87,-16.86) -- (38.49,-17.56) -- (38.78,-16.6);
+					\draw [black] (20.85,-22.74) -- (32.05,-26.46);
+					\fill [black] (32.05,-26.46) -- (31.45,-25.73) -- (31.14,-26.68);
+					\draw (25.56,-25.14) node [below] {$0$};
+				\end{tikzpicture}
+			\end{center}
 
-				Next, let's take a deeper look at \underline{scanning}. With scanning, we want to partition $x$ using the longest prefix. This is also called leftmost longest, or more colloquially, the \textbf{maximal munch} scanning algorithm. \\
-				\begin{algorithm}
-					start with $x$\;
-					\While{$x \ne \epsilon$}{
-						find leftmost longest match of $L$\;
-						report result $y$, remove $y$ from $x$\;
-					}
-				\end{algorithm}
+			And $L_{\text{!}}$ has this recognizer:
+			\begin{center}
+				\begin{tikzpicture}[scale=0.2]
+					\tikzstyle{every node}+=[inner sep=0pt]
+					\draw [black] (18,-21.8) circle (3);
+					\draw (18,-21.8) node {start};
+					\draw [black] (34.9,-21.8) circle (3);
+					\draw (34.9,-21.8) node {!};
+					\draw [black] (34.9,-21.8) circle (2.4);
+					\draw [black] (11.5,-15.5) -- (15.85,-19.71);
+					\draw (10.97,-14.03) node [left] {$i$};
+					\fill [black] (15.85,-19.71) -- (15.62,-18.8) -- (14.92,-19.51);
+					\draw [black] (21,-21.8) -- (31.9,-21.8);
+					\fill [black] (31.9,-21.8) -- (31.1,-21.3) -- (31.1,-22.3);
+					\draw (26.45,-22.3) node [below] {$!$};
+				\end{tikzpicture}
+			\end{center}
+
+			There is a problem with maximal munch \textendash{} efficiency.
+			\\ \\
+			\textbf{Runtime of Maximal Munch}: the loop executes $|x|$ times, and for each iteration, it uses the ``find largest prefix'' algorithm (which itself takes $O(|x|)$ time). $|x| \cdot O(|x|) \in O(|x|^2)$.
+			\\ \\
+			In order to improve efficiency and readability, we'll use a ``total hack'' called \textbf{simplified maximal munch}. This involves finding the longest prefix $y$ of $x$ such that $ya$ could not possibly be a prefix of $L$ where $x = yaz$.
+			\\ \\
+			Suppose you have $L_{\text{int}} = \{0, 1, 2, 3, \ldots\}, L_{\text{id}} = \{x\}$, and $L_{\text{hex}} = \{0x1, \ldots\}$. If you have $x = 0x$, you can't determine if that's the integer zero followed by an identifier, or the beginning of a hex symbol. However, if you can look ahead and see $0x1$, you know it's a hex symbol. If you see something like $0xx$ (a hex prefix followed by an identifier), simplified maximal munch will not allow this.
+			\\ \\
+			The scanner we were given (which implements simplified maximal munch) will see $0xx$ as an error. It's an error because the scanner made the assumption that it was a hex constant, but that didn't work out (didn't see an integer after 0x), so it gave up and produced an error.
+		\subsection{Nondeterministic Finite Automata (NFA)} \lecture{February 13, 2013}
+			\begin{ex}
+				Let's say we have the alphabet $\Sigma = \{a, b, c\}$ and the language $L = \{ abc, abaca \}$. A recognizer for this NFA could be drawn as:
+				\begin{center}
+					\begin{tikzpicture}[scale=0.2]
+						\tikzstyle{every node}+=[inner sep=0pt]
+						\draw [black] (8,-18.9) circle (3);
+						\draw (8,-18.9) node {start};
+						\draw [black] (21.7,-12.1) circle (3);
+						\draw (21.7,-12.1) node {$1$};
+						\draw [black] (36.7,-12.1) circle (3);
+						\draw (36.7,-12.1) node {$3$};
+						\draw [black] (66.1,-12.1) circle (3);
+						\draw (66.1,-12.1) node {$5$};
+						\draw [black] (66.1,-12.1) circle (2.4);
+						\draw [black] (21.7,-25.5) circle (3);
+						\draw (21.7,-25.5) node {$2$};
+						\draw [black] (36.7,-25.5) circle (3);
+						\draw (36.7,-25.5) node {$4$};
+						\draw [black] (51.3,-25.5) circle (3);
+						\draw (51.3,-25.5) node {$6$};
+						\draw [black] (66.1,-25.5) circle (3);
+						\draw (66.1,-25.5) node {$7$};
+						\draw [black] (10.7,-20.2) -- (19,-24.2);
+						\fill [black] (19,-24.2) -- (18.49,-23.4) -- (18.06,-24.3);
+						\draw (13.91,-22.71) node [below] {$a$};
+						\draw [black] (24.7,-25.5) -- (33.7,-25.5);
+						\fill [black] (33.7,-25.5) -- (32.9,-25) -- (32.9,-26);
+						\draw (29.2,-26) node [below] {$b$};
+						\draw [black] (39.7,-25.5) -- (48.3,-25.5);
+						\fill [black] (48.3,-25.5) -- (47.5,-25) -- (47.5,-26);
+						\draw (44,-26) node [below] {$a$};
+						\draw [black] (54.3,-25.5) -- (63.1,-25.5);
+						\fill [black] (63.1,-25.5) -- (62.3,-25) -- (62.3,-26);
+						\draw (58.7,-26) node [below] {$c$};
+						\draw [black] (66.1,-22.5) -- (66.1,-15.1);
+						\fill [black] (66.1,-15.1) -- (65.6,-15.9) -- (66.6,-15.9);
+						\draw (66.6,-18.8) node [right] {$a$};
+						\draw [black] (10.69,-17.57) -- (19.01,-13.43);
+						\fill [black] (19.01,-13.43) -- (18.07,-13.34) -- (18.52,-14.24);
+						\draw (15.79,-16) node [below] {$a$};
+						\draw [black] (24.7,-12.1) -- (33.7,-12.1);
+						\fill [black] (33.7,-12.1) -- (32.9,-11.6) -- (32.9,-12.6);
+						\draw (29.2,-12.6) node [below] {$b$};
+						\draw [black] (39.7,-12.1) -- (63.1,-12.1);
+						\fill [black] (63.1,-12.1) -- (62.3,-11.6) -- (62.3,-12.6);
+						\draw (51.4,-12.6) node [below] {$c$};
+						\draw [black] (4.5,-12.9) -- (6.49,-16.31);
+						\draw (3.7,-12.4) node [above] {$i$};
+						\fill [black] (6.49,-16.31) -- (6.52,-15.37) -- (5.65,-15.87);
+					\end{tikzpicture}
+				\end{center}
+
+				This is \underline{not} a DFA because T[start, a] = 1 and T[start, a] = 2, which is not allowed in a DFA. It is acceptable for an NFA, though. 
+				\label{ex:nfa}
+			\end{ex}
 				
-				In this algorithm, $L$ is the language of all tokens and separators. That is, $L = L_{\text{id}} \cup L_{\text{int}} \cup L_{\text{!}}$, where $L_{\text{int}}$ has this recognizer:
+			The transition function $T$ no longer has to be a function \textendash{} it can have multiple values for the same inputs.
+			The rule is the same as before: if there is \underline{any} path that is followed to a finish state, then the string is considered to be in the language. With DFAs, we used the ``one-finger algorithm'', but now we can't do that because there could be multiple paths we need to follow.
+			\\ \\
+			An \textbf{oracle} is a magic function that sees the future. In CS theory, if we have an oracle then you can resolve the proper path and use the same process as a DFA. However, we don't have an oracle. When we see multiple paths, we clone our finger and follow each path as far as we can. This is more operationally satisfactory than looking into the future.
+			\\ \\
+			More formally, an $NFA = (\Sigma, S, i, f, T)$, where $\Sigma, S, i$, and $f$ follow the same definitions as with DFAs. However, $T: S \times \Sigma \to 2^S$ (where $2^S$ is the number of subsets of $S$). In \ref{ex:nfa}, we have that $T$ is defined by the table:
+			\begin{center}
+				\begin{tabular}{|c|c|}
+					\hline
+					start, a & \{ 1, 2 \} \\
+					1, b & \{ 3 \} \\
+					2, b & \{ 4 \} \\
+					3, c & \{ 5 \} \\
+					4, a & \{ 6 \} \\
+					6, c & \{ 7 \} \\
+					7, a & \{ 5 \} \\
+					3, a & \{  \} \\ \hline
+				\end{tabular}
+			\end{center}
+			Additionally, we have $\Sigma = \{a, b, c\}, i = start, S = \{start, 1, 2, 3, 4, 5, 6, 7\}$, and $f = \{ 5 \}$.
+			\\ \\
+			Note that we no longer need an error state because we are no longer required to make $T$ a total function, since it is doesn't need to be a function at all. 
+				
+			\textbf{NFA recognizer}: given an input string $x$, we expect output to be:
+			\begin{align*}
+				\text{output} &= \begin{cases}
+					\text{``accept''} & x \in L \\
+					\text{``reject''} & x \not \in L
+				\end{cases}
+			\end{align*}
+
+			The pseudocode for an NFA recognizer is as follows. \\
+			\begin{algorithm}[H]
+				states = \{ start \}\;
+				\For{a in $x_0x_1x_2 \ldots x_{|x|-1}$}{
+					states = $\displaystyle \bigcup_{s \in \text{states}}$ T[s, a]\;
+				}
+				\lIf{$\text{states} \cap f \ne \{ \}$}{``accept''}
+				\lElse{``reject''}
+			\end{algorithm}
+
+			\begin{theorem}
+				Any language recognized by an NFA can be recognized by a DFA.
+			\end{theorem}
+
+			\underline{Proof outline}: subset construction. For an $NFA = \{ \Sigma, S_{NFA}, i_{NFA}, f_{NFA}, T_{NFA} \}$, we can construct a $DFA = \{ \Sigma, S_{DFA}, i_{DFA}, f_{DFA}, T_{DFA} \}$. Why does this work?
+			\begin{enumerate}
+				\item $S_{NFA}$ is finite.
+				\item The number of subsets of a finite set is finite. There are $2^{|S|}$ subsets of a finite set $S$.
+				\item Each state in $S_{DFA}$ represents a subset of the states in $S_{NFA}$.
+			\end{enumerate}
+
+			From the NFA in \ref{ex:nfa}, we can create this corresponding DFA:
+			\begin{center}
+				\begin{tikzpicture}[scale=0.2]
+					\tikzstyle{every node}+=[inner sep=0pt]
+					\draw [black] (12.7,-17.8) circle (3);
+					\draw (12.7,-17.8) node {\{start\}};
+					\draw [black] (27.2,-17.8) circle (3);
+					\draw (27.2,-17.8) node {\{ 1, 2 \}};
+					\draw [black] (41.5,-17.8) circle (3);
+					\draw (41.5,-17.8) node {\{ 3, 4 \}};
+					\draw [black] (56.8,-17.8) circle (3);
+					\draw (56.8,-17.8) node {\{ 5 \}};
+					\draw [black] (56.8,-17.8) circle (2.4);
+					\draw [black] (41.5,-30.4) circle (3);
+					\draw (41.5,-30.4) node {\{ 6 \}};
+					\draw [black] (56.8,-30.4) circle (3);
+					\draw (56.8,-30.4) node {\{ 7 \}};
+					\draw [black] (7.4,-13.1) -- (10.46,-15.81);
+					\draw (6.86,-11.65) node [left] {$i$};
+					\fill [black] (10.46,-15.81) -- (10.19,-14.9) -- (9.53,-15.65);
+					\draw [black] (15.7,-17.8) -- (24.2,-17.8);
+					\fill [black] (24.2,-17.8) -- (23.4,-17.3) -- (23.4,-18.3);
+					\draw (19.95,-18.3) node [below] {$a$};
+					\draw [black] (30.2,-17.8) -- (38.5,-17.8);
+					\fill [black] (38.5,-17.8) -- (37.7,-17.3) -- (37.7,-18.3);
+					\draw (34.35,-18.3) node [below] {$b$};
+					\draw [black] (44.5,-17.8) -- (53.8,-17.8);
+					\fill [black] (53.8,-17.8) -- (53,-17.3) -- (53,-18.3);
+					\draw (49.15,-18.3) node [below] {$c$};
+					\draw [black] (41.5,-20.8) -- (41.5,-27.4);
+					\fill [black] (41.5,-27.4) -- (42,-26.6) -- (41,-26.6);
+					\draw (41,-24.1) node [left] {$a$};
+					\draw [black] (44.5,-30.4) -- (53.8,-30.4);
+					\fill [black] (53.8,-30.4) -- (53,-29.9) -- (53,-30.9);
+					\draw (49.15,-30.9) node [below] {$c$};
+					\draw [black] (56.8,-27.4) -- (56.8,-20.8);
+					\fill [black] (56.8,-20.8) -- (56.3,-21.6) -- (57.3,-21.6);
+					\draw (57.3,-24.1) node [right] {$a$};
+				\end{tikzpicture}
+			\end{center}
+		\subsection{Epsilon Nondeterministic Finite Automata ($\epsilon$-NFA)}
+			\begin{ex}
+				This is an example of an $\epsilon$-NFA:
 				\begin{center}
 					\begin{tikzpicture}[scale=0.2]
 						\tikzstyle{every node}+=[inner sep=0pt]
-						\draw [black] (18,-21.8) circle (3);
-						\draw (18,-21.8) node {start};
-						\draw [black] (34.9,-27.4) circle (3);
-						\draw (34.9,-27.4) node {$0$};
-						\draw [black] (34.9,-27.4) circle (2.4);
-						\draw [black] (34.9,-16.5) circle (3);
-						\draw (34.9,-16.5) node {nat};
-						\draw [black] (34.9,-16.5) circle (2.4);
-						\draw [black] (11.5,-15.5) -- (15.85,-19.71);
-						\draw (10.97,-14.03) node [left] {$i$};
-						\fill [black] (15.85,-19.71) -- (15.62,-18.8) -- (14.92,-19.51);
-						\draw [black] (20.86,-20.9) -- (32.04,-17.4);
-						\fill [black] (32.04,-17.4) -- (31.12,-17.16) -- (31.42,-18.11);
-						\draw (28.17,-19.74) node [below] {$1,\mbox{ }2$};
-						\draw [black] (36.987,-14.361) arc (163.44003:-124.55997:2.25);
-						\draw (42.03,-13.5) node [right] {$0,\mbox{ }1,\mbox{ }2$};
-						\fill [black] (37.87,-16.86) -- (38.49,-17.56) -- (38.78,-16.6);
-						\draw [black] (20.85,-22.74) -- (32.05,-26.46);
-						\fill [black] (32.05,-26.46) -- (31.45,-25.73) -- (31.14,-26.68);
-						\draw (25.56,-25.14) node [below] {$0$};
+						\draw [black] (12.6,-17.6) circle (3);
+						\draw (12.6,-17.6) node {start};
+						\draw [black] (25.3,-13.5) circle (3);
+						\draw (25.3,-13.5) node {$1$};
+						\draw [black] (37.1,-13.5) circle (3);
+						\draw (37.1,-13.5) node {$3$};
+						\draw [black] (49.8,-13.5) circle (3);
+						\draw (49.8,-13.5) node {$5$};
+						\draw [black] (74,-13.5) circle (3);
+						\draw (74,-13.5) node {$7$};
+						\draw [black] (74,-13.5) circle (2.4);
+						\draw [black] (25.3,-22.9) circle (3);
+						\draw (25.3,-22.9) node {$2$};
+						\draw [black] (37.1,-22.9) circle (3);
+						\draw (37.1,-22.9) node {$4$};
+						\draw [black] (49.8,-22.9) circle (3);
+						\draw (49.8,-22.9) node {$6$};
+						\draw [black] (62.1,-22.9) circle (3);
+						\draw (62.1,-22.9) node {$8$};
+						\draw [black] (74,-22.9) circle (3);
+						\draw (74,-22.9) node {$9$};
+						\draw [black] (6.1,-12.3) -- (10.27,-15.7);
+						\draw (5.54,-10.87) node [left] {$i$};
+						\fill [black] (10.27,-15.7) -- (9.97,-14.81) -- (9.34,-15.59);
+						\draw [black] (15.45,-16.68) -- (22.45,-14.42);
+						\fill [black] (22.45,-14.42) -- (21.53,-14.19) -- (21.84,-15.14);
+						\draw [black] (15.37,-18.76) -- (22.53,-21.74);
+						\fill [black] (22.53,-21.74) -- (21.99,-20.98) -- (21.6,-21.9);
+						\draw [black] (28.3,-22.9) -- (34.1,-22.9);
+						\fill [black] (34.1,-22.9) -- (33.3,-22.4) -- (33.3,-23.4);
+						\draw (31.2,-23.4) node [below] {$a$};
+						\draw [black] (28.3,-13.5) -- (34.1,-13.5);
+						\fill [black] (34.1,-13.5) -- (33.3,-13) -- (33.3,-14);
+						\draw (31.2,-14) node [below] {$a$};
+						\draw [black] (40.1,-13.5) -- (46.8,-13.5);
+						\fill [black] (46.8,-13.5) -- (46,-13) -- (46,-14);
+						\draw (43.45,-14) node [below] {$b$};
+						\draw [black] (52.8,-13.5) -- (71,-13.5);
+						\fill [black] (71,-13.5) -- (70.2,-13) -- (70.2,-14);
+						\draw (61.9,-14) node [below] {$c$};
+						\draw [black] (74,-19.9) -- (74,-16.5);
+						\fill [black] (74,-16.5) -- (73.5,-17.3) -- (74.5,-17.3);
+						\draw (74.5,-18.2) node [right] {$a$};
+						\draw [black] (65.1,-22.9) -- (71,-22.9);
+						\fill [black] (71,-22.9) -- (70.2,-22.4) -- (70.2,-23.4);
+						\draw (68.05,-23.4) node [below] {$c$};
+						\draw [black] (52.8,-22.9) -- (59.1,-22.9);
+						\fill [black] (59.1,-22.9) -- (58.3,-22.4) -- (58.3,-23.4);
+						\draw (55.95,-23.4) node [below] {$a$};
+						\draw [black] (40.1,-22.9) -- (46.8,-22.9);
+						\fill [black] (46.8,-22.9) -- (46,-22.4) -- (46,-23.4);
+						\draw (43.45,-23.4) node [below] {$b$};
 					\end{tikzpicture}
 				\end{center}
 
-				And $L_{\text{!}}$ has this recognizer:
+				The difference between $\epsilon$-NFAs and standard NFAs is that the transitions from the start state to states 1 and 2 have no symbol. That means you can spontaneously move your finger along those paths. We generally label those transitions as $\epsilon$ to prevent confusion between mistakes (omissions in labeling the transitions) and $\epsilon$ transitions. This recognizer is for the same language as the NFAs and DFAs in \ref{ex:nfa}.
+			\end{ex}
+
+			More formally, an $\epsilon-NFA = (\Sigma, S, i, f, T)$ where $\Sigma, S, i$, and $f$ are defined the same way they were for DFAs and NFAs. The transition function is now defined as $T: S \times (\Sigma \cup \{ \epsilon \} )$.
+			\\ \\
+			\textbf{$\epsilon$-NFA recognizer}:
+			\\ \\
+			We'll need a helper function called $\epsilon$-closure, which accepts a parameter $S$ (a set of states), and returns a set of all states that can be reached from a state in $S$ by following $\epsilon$-transitions. For instance, the $\epsilon$-closure(\{start\}) from earlier would return \{start, 1, 2\}.
+			\begin{ex}
+				What is the $\epsilon$-closure(\{a, e\}) of the following $\epsilon$-NFA?
 				\begin{center}
 					\begin{tikzpicture}[scale=0.2]
 						\tikzstyle{every node}+=[inner sep=0pt]
-						\draw [black] (18,-21.8) circle (3);
-						\draw (18,-21.8) node {start};
-						\draw [black] (34.9,-21.8) circle (3);
-						\draw (34.9,-21.8) node {!};
-						\draw [black] (34.9,-21.8) circle (2.4);
-						\draw [black] (11.5,-15.5) -- (15.85,-19.71);
-						\draw (10.97,-14.03) node [left] {$i$};
-						\fill [black] (15.85,-19.71) -- (15.62,-18.8) -- (14.92,-19.51);
-						\draw [black] (21,-21.8) -- (31.9,-21.8);
-						\fill [black] (31.9,-21.8) -- (31.1,-21.3) -- (31.1,-22.3);
-						\draw (26.45,-22.3) node [below] {$!$};
+						\draw [black] (12.8,-14) circle (3);
+						\draw (12.8,-14) node {$a$};
+						\draw [black] (27.2,-14) circle (3);
+						\draw (27.2,-14) node {$b$};
+						\draw [black] (42.4,-14) circle (3);
+						\draw (42.4,-14) node {$c$};
+						\draw [black] (27.2,-26.7) circle (3);
+						\draw (27.2,-26.7) node {$d$};
+						\draw [black] (50.8,-26.7) circle (3);
+						\draw (50.8,-26.7) node {$e$};
+						\draw [black] (61.6,-14) circle (3);
+						\draw (61.6,-14) node {$f$};
+						\draw [black] (7.4,-8.2) -- (10.76,-11.8);
+						\draw (6.58,-7.72) node [above] {$i$};
+						\fill [black] (10.76,-11.8) -- (10.58,-10.88) -- (9.84,-11.56);
+						\draw [black] (15.8,-14) -- (24.2,-14);
+						\fill [black] (24.2,-14) -- (23.4,-13.5) -- (23.4,-14.5);
+						\draw (20,-14.5) node [below] {$\epsilon$};
+						\draw [black] (15.05,-15.98) -- (24.95,-24.72);
+						\fill [black] (24.95,-24.72) -- (24.68,-23.81) -- (24.02,-24.56);
+						\draw (18.59,-20.84) node [below] {$\epsilon$};
+						\draw [black] (40.1,-15.92) -- (29.5,-24.78);
+						\fill [black] (29.5,-24.78) -- (30.44,-24.65) -- (29.8,-23.88);
+						\draw (33.39,-19.86) node [above] {$\epsilon$};
+						\draw [black] (30.2,-14) -- (39.4,-14);
+						\fill [black] (39.4,-14) -- (38.6,-13.5) -- (38.6,-14.5);
+						\draw (34.8,-14.5) node [below] {$\epsilon$};
+						\draw [black] (52.74,-24.41) -- (59.66,-16.29);
+						\fill [black] (59.66,-16.29) -- (58.76,-16.57) -- (59.52,-17.22);
+						\draw (56.75,-21.79) node [right] {$\epsilon$};
 					\end{tikzpicture}
 				\end{center}
 
-				There is a problem with maximal munch \textendash{} efficiency.
-				\\ \\
-				\textbf{Runtime of Maximal Munch}: the loop executes $|x|$ times, and for each iteration, it uses the ``find largest prefix'' algorithm (which itself takes $O(|x|)$ time). $|x| \cdot O(|x|) \in O(|x|^2)$.
-				\\ \\
-				In order to improve efficiency and readability, we'll use a ``total hack'' called \textbf{simplified maximal munch}. This involves finding the longest prefix $y$ of $x$ such that $ya$ could not possibly be a prefix of $L$ where $x = yaz$.
-				\\ \\
-				Suppose you have $L_{\text{int}} = \{0, 1, 2, 3, \ldots\}, L_{\text{id}} = \{x\}$, and $L_{\text{hex}} = \{0x1, \ldots\}$. If you have $x = 0x$, you can't determine if that's the integer zero followed by an identifier, or the beginning of a hex symbol. However, if you can look ahead and see $0x1$, you know it's a hex symbol. If you see something like $0xx$ (a hex prefix followed by an identifier), simplified maximal munch will not allow this.
-				\\ \\
-				The scanner we were given (which implements simplified maximal munch) will see $0xx$ as an error. It's an error because the scanner made the assumption that it was a hex constant, but that didn't work out (didn't see an integer after 0x), so it gave up and produced an error.
-			\subsubsection{Nondeterministic Finite Automata (NFA)} \lecture{February 13, 2013}
-				\begin{ex}
-					Let's say we have the alphabet $\Sigma = \{a, b, c\}$ and the language $L = \{ abc, abaca \}$. A recognizer for this NFA could be drawn as:
-					\begin{center}
-						\begin{tikzpicture}[scale=0.2]
-							\tikzstyle{every node}+=[inner sep=0pt]
-							\draw [black] (8,-18.9) circle (3);
-							\draw (8,-18.9) node {start};
-							\draw [black] (21.7,-12.1) circle (3);
-							\draw (21.7,-12.1) node {$1$};
-							\draw [black] (36.7,-12.1) circle (3);
-							\draw (36.7,-12.1) node {$3$};
-							\draw [black] (66.1,-12.1) circle (3);
-							\draw (66.1,-12.1) node {$5$};
-							\draw [black] (66.1,-12.1) circle (2.4);
-							\draw [black] (21.7,-25.5) circle (3);
-							\draw (21.7,-25.5) node {$2$};
-							\draw [black] (36.7,-25.5) circle (3);
-							\draw (36.7,-25.5) node {$4$};
-							\draw [black] (51.3,-25.5) circle (3);
-							\draw (51.3,-25.5) node {$6$};
-							\draw [black] (66.1,-25.5) circle (3);
-							\draw (66.1,-25.5) node {$7$};
-							\draw [black] (10.7,-20.2) -- (19,-24.2);
-							\fill [black] (19,-24.2) -- (18.49,-23.4) -- (18.06,-24.3);
-							\draw (13.91,-22.71) node [below] {$a$};
-							\draw [black] (24.7,-25.5) -- (33.7,-25.5);
-							\fill [black] (33.7,-25.5) -- (32.9,-25) -- (32.9,-26);
-							\draw (29.2,-26) node [below] {$b$};
-							\draw [black] (39.7,-25.5) -- (48.3,-25.5);
-							\fill [black] (48.3,-25.5) -- (47.5,-25) -- (47.5,-26);
-							\draw (44,-26) node [below] {$a$};
-							\draw [black] (54.3,-25.5) -- (63.1,-25.5);
-							\fill [black] (63.1,-25.5) -- (62.3,-25) -- (62.3,-26);
-							\draw (58.7,-26) node [below] {$c$};
-							\draw [black] (66.1,-22.5) -- (66.1,-15.1);
-							\fill [black] (66.1,-15.1) -- (65.6,-15.9) -- (66.6,-15.9);
-							\draw (66.6,-18.8) node [right] {$a$};
-							\draw [black] (10.69,-17.57) -- (19.01,-13.43);
-							\fill [black] (19.01,-13.43) -- (18.07,-13.34) -- (18.52,-14.24);
-							\draw (15.79,-16) node [below] {$a$};
-							\draw [black] (24.7,-12.1) -- (33.7,-12.1);
-							\fill [black] (33.7,-12.1) -- (32.9,-11.6) -- (32.9,-12.6);
-							\draw (29.2,-12.6) node [below] {$b$};
-							\draw [black] (39.7,-12.1) -- (63.1,-12.1);
-							\fill [black] (63.1,-12.1) -- (62.3,-11.6) -- (62.3,-12.6);
-							\draw (51.4,-12.6) node [below] {$c$};
-							\draw [black] (4.5,-12.9) -- (6.49,-16.31);
-							\draw (3.7,-12.4) node [above] {$i$};
-							\fill [black] (6.49,-16.31) -- (6.52,-15.37) -- (5.65,-15.87);
-						\end{tikzpicture}
-					\end{center}
+				$\epsilon$-closure(\{a, e\}) = \{a, b, c, d, e, f\}.
+			\end{ex}
 
-					This is \underline{not} a DFA because T[start, a] = 1 and T[start, a] = 2, which is not allowed in a DFA. It is acceptable for an NFA, though. 
-					\label{ex:nfa}
-				\end{ex}
-					
-				The transition function $T$ no longer has to be a function \textendash{} it can have multiple values for the same inputs.
-				The rule is the same as before: if there is \underline{any} path that is followed to a finish state, then the string is considered to be in the language. With DFAs, we used the ``one-finger algorithm'', but now we can't do that because there could be multiple paths we need to follow.
-				\\ \\
-				An \textbf{oracle} is a magic function that sees the future. In CS theory, if we have an oracle then you can resolve the proper path and use the same process as a DFA. However, we don't have an oracle. When we see multiple paths, we clone our finger and follow each path as far as we can. This is more operationally satisfactory than looking into the future.
-				\\ \\
-				More formally, an $NFA = (\Sigma, S, i, f, T)$, where $\Sigma, S, i$, and $f$ follow the same definitions as with DFAs. However, $T: S \times \Sigma \to 2^S$ (where $2^S$ is the number of subsets of $S$). In \ref{ex:nfa}, we have that $T$ is defined by the table:
-				\begin{center}
-					\begin{tabular}{|c|c|}
-						\hline
-						start, a & \{ 1, 2 \} \\
-						1, b & \{ 3 \} \\
-						2, b & \{ 4 \} \\
-						3, c & \{ 5 \} \\
-						4, a & \{ 6 \} \\
-						6, c & \{ 7 \} \\
-						7, a & \{ 5 \} \\
-						3, a & \{  \} \\ \hline
-					\end{tabular}
-				\end{center}
-				Additionally, we have $\Sigma = \{a, b, c\}, i = start, S = \{start, 1, 2, 3, 4, 5, 6, 7\}$, and $f = \{ 5 \}$.
-				\\ \\
-				Note that we no longer need an error state because we are no longer required to make $T$ a total function, since it is doesn't need to be a function at all. 
-					
-				\textbf{NFA recognizer}: given an input string $x$, we expect output to be:
-				\begin{align*}
-					\text{output} &= \begin{cases}
-						\text{``accept''} & x \in L \\
-						\text{``reject''} & x \not \in L
-					\end{cases}
-				\end{align*}
-
-				The pseudocode for an NFA recognizer is as follows. \\
-				\begin{algorithm}[H]
-					states = \{ start \}\;
-					\For{a in $x_0x_1x_2 \ldots x_{|x|-1}$}{
-						states = $\displaystyle \bigcup_{s \in \text{states}}$ T[s, a]\;
-					}
-					\lIf{$\text{states} \cap f \ne \{ \}$}{``accept''}
-					\lElse{``reject''}
-				\end{algorithm}
-
-				\begin{theorem}
-					Any language recognized by an NFA can be recognized by a DFA.
-				\end{theorem}
-
-				\underline{Proof outline}: subset construction. For an $NFA = \{ \Sigma, S_{NFA}, i_{NFA}, f_{NFA}, T_{NFA} \}$, we can construct a $DFA = \{ \Sigma, S_{DFA}, i_{DFA}, f_{DFA}, T_{DFA} \}$. Why does this work?
-				\begin{enumerate}
-					\item $S_{NFA}$ is finite.
-					\item The number of subsets of a finite set is finite. There are $2^{|S|}$ subsets of a finite set $S$.
-					\item Each state in $S_{DFA}$ represents a subset of the states in $S_{NFA}$.
-				\end{enumerate}
-
-				From the NFA in \ref{ex:nfa}, we can create this corresponding DFA:
-				\begin{center}
-					\begin{tikzpicture}[scale=0.2]
-						\tikzstyle{every node}+=[inner sep=0pt]
-						\draw [black] (12.7,-17.8) circle (3);
-						\draw (12.7,-17.8) node {\{start\}};
-						\draw [black] (27.2,-17.8) circle (3);
-						\draw (27.2,-17.8) node {\{ 1, 2 \}};
-						\draw [black] (41.5,-17.8) circle (3);
-						\draw (41.5,-17.8) node {\{ 3, 4 \}};
-						\draw [black] (56.8,-17.8) circle (3);
-						\draw (56.8,-17.8) node {\{ 5 \}};
-						\draw [black] (56.8,-17.8) circle (2.4);
-						\draw [black] (41.5,-30.4) circle (3);
-						\draw (41.5,-30.4) node {\{ 6 \}};
-						\draw [black] (56.8,-30.4) circle (3);
-						\draw (56.8,-30.4) node {\{ 7 \}};
-						\draw [black] (7.4,-13.1) -- (10.46,-15.81);
-						\draw (6.86,-11.65) node [left] {$i$};
-						\fill [black] (10.46,-15.81) -- (10.19,-14.9) -- (9.53,-15.65);
-						\draw [black] (15.7,-17.8) -- (24.2,-17.8);
-						\fill [black] (24.2,-17.8) -- (23.4,-17.3) -- (23.4,-18.3);
-						\draw (19.95,-18.3) node [below] {$a$};
-						\draw [black] (30.2,-17.8) -- (38.5,-17.8);
-						\fill [black] (38.5,-17.8) -- (37.7,-17.3) -- (37.7,-18.3);
-						\draw (34.35,-18.3) node [below] {$b$};
-						\draw [black] (44.5,-17.8) -- (53.8,-17.8);
-						\fill [black] (53.8,-17.8) -- (53,-17.3) -- (53,-18.3);
-						\draw (49.15,-18.3) node [below] {$c$};
-						\draw [black] (41.5,-20.8) -- (41.5,-27.4);
-						\fill [black] (41.5,-27.4) -- (42,-26.6) -- (41,-26.6);
-						\draw (41,-24.1) node [left] {$a$};
-						\draw [black] (44.5,-30.4) -- (53.8,-30.4);
-						\fill [black] (53.8,-30.4) -- (53,-29.9) -- (53,-30.9);
-						\draw (49.15,-30.9) node [below] {$c$};
-						\draw [black] (56.8,-27.4) -- (56.8,-20.8);
-						\fill [black] (56.8,-20.8) -- (56.3,-21.6) -- (57.3,-21.6);
-						\draw (57.3,-24.1) node [right] {$a$};
-					\end{tikzpicture}
-				\end{center}
-			\subsubsection{Epsilon Nondeterministic Finite Automata ($\epsilon$-NFA)}
-				\begin{ex}
-					This is an example of an $\epsilon$-NFA:
-					\begin{center}
-						\begin{tikzpicture}[scale=0.2]
-							\tikzstyle{every node}+=[inner sep=0pt]
-							\draw [black] (12.6,-17.6) circle (3);
-							\draw (12.6,-17.6) node {start};
-							\draw [black] (25.3,-13.5) circle (3);
-							\draw (25.3,-13.5) node {$1$};
-							\draw [black] (37.1,-13.5) circle (3);
-							\draw (37.1,-13.5) node {$3$};
-							\draw [black] (49.8,-13.5) circle (3);
-							\draw (49.8,-13.5) node {$5$};
-							\draw [black] (74,-13.5) circle (3);
-							\draw (74,-13.5) node {$7$};
-							\draw [black] (74,-13.5) circle (2.4);
-							\draw [black] (25.3,-22.9) circle (3);
-							\draw (25.3,-22.9) node {$2$};
-							\draw [black] (37.1,-22.9) circle (3);
-							\draw (37.1,-22.9) node {$4$};
-							\draw [black] (49.8,-22.9) circle (3);
-							\draw (49.8,-22.9) node {$6$};
-							\draw [black] (62.1,-22.9) circle (3);
-							\draw (62.1,-22.9) node {$8$};
-							\draw [black] (74,-22.9) circle (3);
-							\draw (74,-22.9) node {$9$};
-							\draw [black] (6.1,-12.3) -- (10.27,-15.7);
-							\draw (5.54,-10.87) node [left] {$i$};
-							\fill [black] (10.27,-15.7) -- (9.97,-14.81) -- (9.34,-15.59);
-							\draw [black] (15.45,-16.68) -- (22.45,-14.42);
-							\fill [black] (22.45,-14.42) -- (21.53,-14.19) -- (21.84,-15.14);
-							\draw [black] (15.37,-18.76) -- (22.53,-21.74);
-							\fill [black] (22.53,-21.74) -- (21.99,-20.98) -- (21.6,-21.9);
-							\draw [black] (28.3,-22.9) -- (34.1,-22.9);
-							\fill [black] (34.1,-22.9) -- (33.3,-22.4) -- (33.3,-23.4);
-							\draw (31.2,-23.4) node [below] {$a$};
-							\draw [black] (28.3,-13.5) -- (34.1,-13.5);
-							\fill [black] (34.1,-13.5) -- (33.3,-13) -- (33.3,-14);
-							\draw (31.2,-14) node [below] {$a$};
-							\draw [black] (40.1,-13.5) -- (46.8,-13.5);
-							\fill [black] (46.8,-13.5) -- (46,-13) -- (46,-14);
-							\draw (43.45,-14) node [below] {$b$};
-							\draw [black] (52.8,-13.5) -- (71,-13.5);
-							\fill [black] (71,-13.5) -- (70.2,-13) -- (70.2,-14);
-							\draw (61.9,-14) node [below] {$c$};
-							\draw [black] (74,-19.9) -- (74,-16.5);
-							\fill [black] (74,-16.5) -- (73.5,-17.3) -- (74.5,-17.3);
-							\draw (74.5,-18.2) node [right] {$a$};
-							\draw [black] (65.1,-22.9) -- (71,-22.9);
-							\fill [black] (71,-22.9) -- (70.2,-22.4) -- (70.2,-23.4);
-							\draw (68.05,-23.4) node [below] {$c$};
-							\draw [black] (52.8,-22.9) -- (59.1,-22.9);
-							\fill [black] (59.1,-22.9) -- (58.3,-22.4) -- (58.3,-23.4);
-							\draw (55.95,-23.4) node [below] {$a$};
-							\draw [black] (40.1,-22.9) -- (46.8,-22.9);
-							\fill [black] (46.8,-22.9) -- (46,-22.4) -- (46,-23.4);
-							\draw (43.45,-23.4) node [below] {$b$};
-						\end{tikzpicture}
-					\end{center}
-
-					The difference between $\epsilon$-NFAs and standard NFAs is that the transitions from the start state to states 1 and 2 have no symbol. That means you can spontaneously move your finger along those paths. We generally label those transitions as $\epsilon$ to prevent confusion between mistakes (omissions in labeling the transitions) and $\epsilon$ transitions. This recognizer is for the same language as the NFAs and DFAs in \ref{ex:nfa}.
-				\end{ex}
-
-				More formally, an $\epsilon-NFA = (\Sigma, S, i, f, T)$ where $\Sigma, S, i$, and $f$ are defined the same way they were for DFAs and NFAs. The transition function is now defined as $T: S \times (\Sigma \cup \{ \epsilon \} )$.
-				\\ \\
-				\textbf{$\epsilon$-NFA recognizer}:
-				\\ \\
-				We'll need a helper function called $\epsilon$-closure, which accepts a parameter $S$ (a set of states), and returns a set of all states that can be reached from a state in $S$ by following $\epsilon$-transitions. For instance, the $\epsilon$-closure(\{start\}) from earlier would return \{start, 1, 2\}.
-				\begin{ex}
-					What is the $\epsilon$-closure(\{a, e\}) of the following $\epsilon$-NFA?
-					\begin{center}
-						\begin{tikzpicture}[scale=0.2]
-							\tikzstyle{every node}+=[inner sep=0pt]
-							\draw [black] (12.8,-14) circle (3);
-							\draw (12.8,-14) node {$a$};
-							\draw [black] (27.2,-14) circle (3);
-							\draw (27.2,-14) node {$b$};
-							\draw [black] (42.4,-14) circle (3);
-							\draw (42.4,-14) node {$c$};
-							\draw [black] (27.2,-26.7) circle (3);
-							\draw (27.2,-26.7) node {$d$};
-							\draw [black] (50.8,-26.7) circle (3);
-							\draw (50.8,-26.7) node {$e$};
-							\draw [black] (61.6,-14) circle (3);
-							\draw (61.6,-14) node {$f$};
-							\draw [black] (7.4,-8.2) -- (10.76,-11.8);
-							\draw (6.58,-7.72) node [above] {$i$};
-							\fill [black] (10.76,-11.8) -- (10.58,-10.88) -- (9.84,-11.56);
-							\draw [black] (15.8,-14) -- (24.2,-14);
-							\fill [black] (24.2,-14) -- (23.4,-13.5) -- (23.4,-14.5);
-							\draw (20,-14.5) node [below] {$\epsilon$};
-							\draw [black] (15.05,-15.98) -- (24.95,-24.72);
-							\fill [black] (24.95,-24.72) -- (24.68,-23.81) -- (24.02,-24.56);
-							\draw (18.59,-20.84) node [below] {$\epsilon$};
-							\draw [black] (40.1,-15.92) -- (29.5,-24.78);
-							\fill [black] (29.5,-24.78) -- (30.44,-24.65) -- (29.8,-23.88);
-							\draw (33.39,-19.86) node [above] {$\epsilon$};
-							\draw [black] (30.2,-14) -- (39.4,-14);
-							\fill [black] (39.4,-14) -- (38.6,-13.5) -- (38.6,-14.5);
-							\draw (34.8,-14.5) node [below] {$\epsilon$};
-							\draw [black] (52.74,-24.41) -- (59.66,-16.29);
-							\fill [black] (59.66,-16.29) -- (58.76,-16.57) -- (59.52,-17.22);
-							\draw (56.75,-21.79) node [right] {$\epsilon$};
-						\end{tikzpicture}
-					\end{center}
-
-					$\epsilon$-closure(\{a, e\}) = \{a, b, c, d, e, f\}.
-				\end{ex}
-
-				$\epsilon$-closure(S) is actually a graph algorithm called \textbf{reachability}. The pseudocode of $\epsilon$-closure(S) is as follows. \\
-				\begin{algorithm}[H]
-					S' = S\;
-					W = S; // work list \\
-					\While{$w \ne \{\}$}{
-						select some element $s \in W$\;
-						W = W \textbackslash{} \{ s \}; // remove s from work list \\
-						\For{all $s' \in T[s, \epsilon]$}{
-							\If{$s' \not \in S$}{
-								// New state we've never reached before. \\
-								$S' = S' \cup \{s'\}$\;
-								$W = W \cup \{s'\}$\;
-							}
+			$\epsilon$-closure(S) is actually a graph algorithm called \textbf{reachability}. The pseudocode of $\epsilon$-closure(S) is as follows. \\
+			\begin{algorithm}[H]
+				S' = S\;
+				W = S; // work list \\
+				\While{$w \ne \{\}$}{
+					select some element $s \in W$\;
+					W = W \textbackslash{} \{ s \}; // remove s from work list \\
+					\For{all $s' \in T[s, \epsilon]$}{
+						\If{$s' \not \in S$}{
+							// New state we've never reached before. \\
+							$S' = S' \cup \{s'\}$\;
+							$W = W \cup \{s'\}$\;
 						}
 					}
-				\end{algorithm}
+				}
+			\end{algorithm}
 
-				More formally, $\epsilon$-closure($S$) = $S'$ where $S'$ is the smallest solution to:
-				\begin{align*}
-					S' = S \cup \{s' | \exists s \in S', T[s, \epsilon] = s'\}
-				\end{align*}
+			More formally, $\epsilon$-closure($S$) = $S'$ where $S'$ is the smallest solution to:
+			\begin{align*}
+				S' = S \cup \{s' | \exists s \in S', T[s, \epsilon] = s'\}
+			\end{align*}
 
-				The inclusion of $\epsilon$-closure is the only difference between the NFA and $\epsilon$-NFA recognizers. Here's the pseudocode for an $\epsilon$-NFA recognizer: \\
-				\begin{algorithm}[H]
-					states = $\epsilon$-closure(\{ start \})\;
-					\For{a in $x_0x_1x_2 \ldots x_{|x|-1}$}{
-						states = $\epsilon$-closure($\displaystyle \bigcup_{s \in \text{states}}$ T[s, a])\;
-					}
-					\lIf{$\text{states} \cap f \ne \{ \}$}{``accept''}
-					\lElse{``reject''}
-				\end{algorithm}
+			The inclusion of $\epsilon$-closure is the only difference between the NFA and $\epsilon$-NFA recognizers. Here's the pseudocode for an $\epsilon$-NFA recognizer: \\
+			\begin{algorithm}[H]
+				states = $\epsilon$-closure(\{ start \})\;
+				\For{a in $x_0x_1x_2 \ldots x_{|x|-1}$}{
+					states = $\epsilon$-closure($\displaystyle \bigcup_{s \in \text{states}}$ T[s, a])\;
+				}
+				\lIf{$\text{states} \cap f \ne \{ \}$}{``accept''}
+				\lElse{``reject''}
+			\end{algorithm}
 
-				DFAs, NFAs, and $\epsilon$-NFAs can all express recognizers for all regular languages, however sometimes one method is more straightforward than the others.
+			DFAs, NFAs, and $\epsilon$-NFAs can all express recognizers for all regular languages, however sometimes one method is more straightforward than the others.
 
-				\begin{ex}
-					Let $L$ be the language containing all strings that contain ``abaca'' as a substring, where the alphabet is defined as $\Sigma = \{a, b, c\}$. This language can be recognized by a much simpler NFA recognizer than a DFA recognizer. Here's the NFA recognizer for this language $L$:
-					\begin{center}
-						\begin{tikzpicture}[scale=0.2]
-							\tikzstyle{every node}+=[inner sep=0pt]
-							\draw [black] (11.3,-16.7) circle (3);
-							\draw (11.3,-16.7) node {start};
-							\draw [black] (22.3,-16.7) circle (3);
-							\draw [black] (33.2,-16.7) circle (3);
-							\draw [black] (43.7,-16.7) circle (3);
-							\draw [black] (54.3,-16.7) circle (3);
-							\draw [black] (65.1,-16.7) circle (3);
-							\draw [black] (65.1,-16.7) circle (2.4);
-							\draw [black] (6,-12.5) -- (8.95,-14.84);
-							\draw (5.44,-11.08) node [left] {$i$};
-							\fill [black] (8.95,-14.84) -- (8.63,-13.95) -- (8.01,-14.73);
-							\draw [black] (9.977,-14.02) arc (234:-54:2.25);
-							\draw (11.3,-9.45) node [above] {$a,\mbox{ }b,\mbox{ }c$};
-							\fill [black] (12.62,-14.02) -- (13.5,-13.67) -- (12.69,-13.08);
-							\draw [black] (67.78,-15.377) arc (144:-144:2.25);
-							\draw (72.35,-16.7) node [right] {$a,\mbox{ }b,\mbox{ }c$};
-							\fill [black] (67.78,-18.02) -- (68.13,-18.9) -- (68.72,-18.09);
-							\draw [black] (14.3,-16.7) -- (19.3,-16.7);
-							\fill [black] (19.3,-16.7) -- (18.5,-16.2) -- (18.5,-17.2);
-							\draw (16.8,-17.2) node [below] {$a$};
-							\draw [black] (25.3,-16.7) -- (30.2,-16.7);
-							\fill [black] (30.2,-16.7) -- (29.4,-16.2) -- (29.4,-17.2);
-							\draw (27.75,-17.2) node [below] {$b$};
-							\draw [black] (36.2,-16.7) -- (40.7,-16.7);
-							\fill [black] (40.7,-16.7) -- (39.9,-16.2) -- (39.9,-17.2);
-							\draw (38.45,-17.2) node [below] {$a$};
-							\draw [black] (46.7,-16.7) -- (51.3,-16.7);
-							\fill [black] (51.3,-16.7) -- (50.5,-16.2) -- (50.5,-17.2);
-							\draw (49,-17.2) node [below] {$c$};
-							\draw [black] (57.3,-16.7) -- (62.1,-16.7);
-							\fill [black] (62.1,-16.7) -- (61.3,-16.2) -- (61.3,-17.2);
-							\draw (59.7,-17.2) node [below] {$a$};
-						\end{tikzpicture}
-					\end{center}
-				\end{ex}
+			\begin{ex}
+				Let $L$ be the language containing all strings that contain ``abaca'' as a substring, where the alphabet is defined as $\Sigma = \{a, b, c\}$. This language can be recognized by a much simpler NFA recognizer than a DFA recognizer. Here's the NFA recognizer for this language $L$:
+				\begin{center}
+					\begin{tikzpicture}[scale=0.2]
+						\tikzstyle{every node}+=[inner sep=0pt]
+						\draw [black] (11.3,-16.7) circle (3);
+						\draw (11.3,-16.7) node {start};
+						\draw [black] (22.3,-16.7) circle (3);
+						\draw [black] (33.2,-16.7) circle (3);
+						\draw [black] (43.7,-16.7) circle (3);
+						\draw [black] (54.3,-16.7) circle (3);
+						\draw [black] (65.1,-16.7) circle (3);
+						\draw [black] (65.1,-16.7) circle (2.4);
+						\draw [black] (6,-12.5) -- (8.95,-14.84);
+						\draw (5.44,-11.08) node [left] {$i$};
+						\fill [black] (8.95,-14.84) -- (8.63,-13.95) -- (8.01,-14.73);
+						\draw [black] (9.977,-14.02) arc (234:-54:2.25);
+						\draw (11.3,-9.45) node [above] {$a,\mbox{ }b,\mbox{ }c$};
+						\fill [black] (12.62,-14.02) -- (13.5,-13.67) -- (12.69,-13.08);
+						\draw [black] (67.78,-15.377) arc (144:-144:2.25);
+						\draw (72.35,-16.7) node [right] {$a,\mbox{ }b,\mbox{ }c$};
+						\fill [black] (67.78,-18.02) -- (68.13,-18.9) -- (68.72,-18.09);
+						\draw [black] (14.3,-16.7) -- (19.3,-16.7);
+						\fill [black] (19.3,-16.7) -- (18.5,-16.2) -- (18.5,-17.2);
+						\draw (16.8,-17.2) node [below] {$a$};
+						\draw [black] (25.3,-16.7) -- (30.2,-16.7);
+						\fill [black] (30.2,-16.7) -- (29.4,-16.2) -- (29.4,-17.2);
+						\draw (27.75,-17.2) node [below] {$b$};
+						\draw [black] (36.2,-16.7) -- (40.7,-16.7);
+						\fill [black] (40.7,-16.7) -- (39.9,-16.2) -- (39.9,-17.2);
+						\draw (38.45,-17.2) node [below] {$a$};
+						\draw [black] (46.7,-16.7) -- (51.3,-16.7);
+						\fill [black] (51.3,-16.7) -- (50.5,-16.2) -- (50.5,-17.2);
+						\draw (49,-17.2) node [below] {$c$};
+						\draw [black] (57.3,-16.7) -- (62.1,-16.7);
+						\fill [black] (62.1,-16.7) -- (61.3,-16.2) -- (61.3,-17.2);
+						\draw (59.7,-17.2) node [below] {$a$};
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
 		\subsection{Regular Expressions} \lecture{February 15, 2013}
 			Regular expressions are a textual notation to specify regular languages, based on a generative definition. Every regular expression can be translated into an $\epsilon$-NFA. Any regular language can be expressed as a regular expression, but it's not always simple. However, it's a more intuitive way to express a language in typed form than using a typed bubble diagram.
 
