@@ -33,6 +33,8 @@
 	\author{Chris Thomson}
 	\maketitle
 	\newpage
+	\tableofcontents
+	\newpage
 
 	\section{Introduction \& Code Optimization} \lecture{January 8, 2013}
 		\subsection{Course Structure}
@@ -1116,98 +1118,98 @@
 					It would appear as if no progress has been made, at least if all numbers are distinct. However, note that $\Theta(n \lg n)$ is the \emph{best case} for quick sort, but it's the worst case here. So, we have made some progress.
 					\\ \\
 					\underline{Aside}: if you think about comparing two or more elements at a time (like a bitwise comparison), it could be possible to sort in $\Theta(n \lg \lg n)$ time.
-	\section{More Abstract Data Types}
-		\subsection{Dictionaries}
-			The dictionary abstract data type is the most important and most commonly used abstract data type of all time.
-			\\ \\
-			A dictionary is a collection of items, each consisting of a key and some data. The \verb+(key, data)+ construct is called a \textbf{key-value pair}. Keys can be compared and are usually unique (unless explicitly stated otherwise). A database is essentially a collection of dictionaries.
+	\section{Dictionaries}
+		The dictionary abstract data type is the most important and most commonly used abstract data type of all time.
+		\\ \\
+		A dictionary is a collection of items, each consisting of a key and some data. The \verb+(key, data)+ construct is called a \textbf{key-value pair}. Keys can be compared and are usually unique (unless explicitly stated otherwise). A database is essentially a collection of dictionaries.
 
-			\subsubsection{Supported Operations of Dictionaries}
-				A dictionary must support these operations:
-				\begin{itemize}
-					\item \verb+search(key)+. Returns the data associated with the \verb+key+, if the \verb+key+ is present in the dictionary.
-					\item \verb+insert(key, data)+. Inserts the \verb+(key, data)+ key-value pair into the dictionary.
-					\item \verb+delete(key)+. Deletes the \verb+key+ from the dictionary.
-				\end{itemize}
+		\subsection{Supported Operations of Dictionaries}
+			A dictionary must support these operations:
+			\begin{itemize}
+				\item \verb+search(key)+. Returns the data associated with the \verb+key+, if the \verb+key+ is present in the dictionary.
+				\item \verb+insert(key, data)+. Inserts the \verb+(key, data)+ key-value pair into the dictionary.
+				\item \verb+delete(key)+. Deletes the \verb+key+ from the dictionary.
+			\end{itemize}
 
-			\subsubsection{Implementations of Dictionaries}
-				There are many different ways that dictionaries could be implemented.
-				\begin{enumerate}
-					\item \textbf{Unordered array}.
-						\begin{itemize}
-							\item \verb+search+ takes $\Theta(n)$ time.
-							\item \verb+insert+ takes $\Theta(1)$ time, by inserting at the end of the array.
-							\item \verb+delete+ takes $\Theta(n)$ time, by searching, removing, then compacting the array.
-						\end{itemize}
-					
-					\item \textbf{Ordered array}.
-						\begin{itemize}
-							\item \verb+search+ takes $\Theta(\lg n)$ time by using binary search.
-							\item \verb+insert+ takes $\Theta(n)$ time.
-							\item \verb+delete+ takes $\Theta(n)$ time, by compacting and possibly searching, too.
-						\end{itemize}
-
-					\item \textbf{Linked list}.
-						\begin{itemize}
-							\item \verb+search+ takes $\Theta(n)$ time.
-							\item \verb+insert+ takes $\Theta(1)$ time.
-							\item \verb+delete+ takes $\Theta(n)$ time if it needs to find and delete the element, or $\Theta(1)$ time if it already has a pointer to the element.
-						\end{itemize}
-				\end{enumerate}
-				There is a trade-off with all of these implementations. If one operation is slow, the other is fast.
-				\\ \\
-				People thought it should be possible to achieve:
-				\begin{itemize}
-					\item \verb+search+ in $\Theta(\lg n)$ time (with a bigger constant than with an ordered array).
-					\item \verb+insert+ in $\Theta(\lg n)$ time.
-					\item \verb+delete+ in $\Theta(\lg n)$ time.
-				\end{itemize}
-				These operations are possible in those complexities with binary search trees in the worst case. The main property of binary search trees is that if $k_1$ is the root/parent element of $k_2$ and $k_3$, then $k_2 \le k_1 \le k_3$.
-				\begin{figure}[H]
-					\Tree [.k_1 [.k_2 ] [.k_3 ]].k_1
-				\end{figure}
-
-				\lecture{February 7, 2013}
-				\subsubsection{Binary Search Trees and AVL Trees}
-					Binary search trees take $\Theta(\lg n)$ time for \verb+insert+ and \verb+delete+ in the average case. However, we can achieve those complexities in the worst case if we get nicely balanced trees as seen in \ref{figure:balancedtree}.
-
-					\begin{figure}[H]
-						\Tree [.o [.o [.o ] [.o ]] [.o [.o ] [.o ]]]
-						\caption{A balanced binary tree. \label{figure:balancedtree}}
-					\end{figure}
-					
-					An example of an unbalanced tree was if we inserted 7, then 6, then 5, then 4, then 3, then 2, then 1, which would produce a single path of length 7.
-					\\ \\
-					In 1962, a group of Russian mathematicians came up with \textbf{AVL trees}. AVL stood for Adelson-Velski and Landis, the two Russian guys who came up with AVL trees. They were trying to build a chess program and had a need for balanced binary search trees.
-					\\ \\
-					They succeeded because they were tolerable of slight imperfections in their balanced trees. They had a relaxed attitude.
-					\begin{defn}
-						The \textbf{height of a tree} is the length of the longest path from the root to a leaf.
-					\end{defn}
-					They demanded height-balanced trees.
-					\begin{defn}
-						AVL trees were binary search trees where the difference between the height of the left and right subtrees is at most 1.
-					\end{defn}
-
-					\begin{figure}[H]
-						\Tree [.o [.o [.o [.o ] [.o ] [.o ]] [.o ]] !{\qframesubtree} [.o [.o ]] !{\qframesubtree} ]
-						\caption{A tree with the left subtree having $h = 2$ and the right subtree having $h = 1$ \label{figure:avlfreakouttree}}
-					\end{figure}
-
-					The people in the West would have freaked out at the tree as seen in \ref{figure:avlfreakouttree}.
-					\\ \\
-					In an AVL tree, at each non-empty node we store the result of the expression $\text{height}(R) - \text{height}(L)$, so that:
+		\subsection{Implementations of Dictionaries}
+			There are many different ways that dictionaries could be implemented.
+			\begin{enumerate}
+				\item \textbf{Unordered array}.
 					\begin{itemize}
-						\item -1 means the tree is left-heavy.
-						\item 0 means the tree is ``balanced''.
-						\item +1 means the tree is right-heavy. 
+						\item \verb+search+ takes $\Theta(n)$ time.
+						\item \verb+insert+ takes $\Theta(1)$ time, by inserting at the end of the array.
+						\item \verb+delete+ takes $\Theta(n)$ time, by searching, removing, then compacting the array.
+					\end{itemize}
+					
+				\item \textbf{Ordered array}.
+					\begin{itemize}
+						\item \verb+search+ takes $\Theta(\lg n)$ time by using binary search.
+						\item \verb+insert+ takes $\Theta(n)$ time.
+						\item \verb+delete+ takes $\Theta(n)$ time, by compacting and possibly searching, too.
 					\end{itemize}
 
-					If the difference is some other value ($\pm 2$, etc.), then the tree is skewed enough that the tree is no longer an AVL tree. It needs to be re-balanced slightly in order to become an AVL tree again.
-					\\ \\
-					\textbf{Insertion on an AVL tree}: first, do a standard BST insertion. Then, recompute all of the height (balance) expressions. If the expressions are all still $\in \{ -1, 0, 1 \}$, then do nothing. Otherwise, we need to rebalance.
-					\\ \\
-					\textbf{Right rotation}: if the balance of a particular subtree is -2, then a right rotation should be applied to that subtree.
+				\item \textbf{Linked list}.
+					\begin{itemize}
+						\item \verb+search+ takes $\Theta(n)$ time.
+						\item \verb+insert+ takes $\Theta(1)$ time.
+						\item \verb+delete+ takes $\Theta(n)$ time if it needs to find and delete the element, or $\Theta(1)$ time if it already has a pointer to the element.
+					\end{itemize}
+			\end{enumerate}
+			There is a trade-off with all of these implementations. If one operation is slow, the other is fast.
+			\\ \\
+			People thought it should be possible to achieve:
+			\begin{itemize}
+				\item \verb+search+ in $\Theta(\lg n)$ time (with a bigger constant than with an ordered array).
+				\item \verb+insert+ in $\Theta(\lg n)$ time.
+				\item \verb+delete+ in $\Theta(\lg n)$ time.
+			\end{itemize}
+			These operations are possible in those complexities with binary search trees in the worst case. The main property of binary search trees is that if $k_1$ is the root/parent element of $k_2$ and $k_3$, then $k_2 \le k_1 \le k_3$.
+			\begin{figure}[H]
+				\Tree [.k_1 [.k_2 ] [.k_3 ]].k_1
+			\end{figure}
+
+	\section{Trees} \lecture{February 7, 2013}
+			\subsection{Binary Search Trees and AVL Trees}
+				Binary search trees take $\Theta(\lg n)$ time for \verb+insert+ and \verb+delete+ in the average case. However, we can achieve those complexities in the worst case if we get nicely balanced trees as seen in \ref{figure:balancedtree}.
+
+				\begin{figure}[H]
+					\Tree [.o [.o [.o ] [.o ]] [.o [.o ] [.o ]]]
+					\caption{A balanced binary tree. \label{figure:balancedtree}}
+				\end{figure}
+					
+				An example of an unbalanced tree was if we inserted 7, then 6, then 5, then 4, then 3, then 2, then 1, which would produce a single path of length 7.
+				\\ \\
+				In 1962, a group of Russian mathematicians came up with \textbf{AVL trees}. AVL stood for Adelson-Velski and Landis, the two Russian guys who came up with AVL trees. They were trying to build a chess program and had a need for balanced binary search trees.
+				\\ \\
+				They succeeded because they were tolerable of slight imperfections in their balanced trees. They had a relaxed attitude.
+				\begin{defn}
+					The \textbf{height of a tree} is the length of the longest path from the root to a leaf.
+				\end{defn}
+				They demanded height-balanced trees.
+				\begin{defn}
+					AVL trees were binary search trees where the difference between the height of the left and right subtrees is at most 1.
+				\end{defn}
+
+				\begin{figure}[H]
+					\Tree [.o [.o [.o [.o ] [.o ] [.o ]] [.o ]] !{\qframesubtree} [.o [.o ]] !{\qframesubtree} ]
+					\caption{A tree with the left subtree having $h = 2$ and the right subtree having $h = 1$ \label{figure:avlfreakouttree}}
+				\end{figure}
+
+				The people in the West would have freaked out at the tree as seen in \ref{figure:avlfreakouttree}.
+				\\ \\
+				In an AVL tree, at each non-empty node we store the result of the expression $\text{height}(R) - \text{height}(L)$, so that:
+				\begin{itemize}
+					\item -1 means the tree is left-heavy.
+					\item 0 means the tree is ``balanced''.
+					\item +1 means the tree is right-heavy. 
+				\end{itemize}
+
+				If the difference is some other value ($\pm 2$, etc.), then the tree is skewed enough that the tree is no longer an AVL tree. It needs to be re-balanced slightly in order to become an AVL tree again.
+				\\ \\
+				\textbf{Insertion on an AVL tree}: first, do a standard BST insertion. Then, recompute all of the height (balance) expressions. If the expressions are all still $\in \{ -1, 0, 1 \}$, then do nothing. Otherwise, we need to rebalance.
+
+				\subsubsection{Right Rotation}
+					If the balance of a particular subtree is -2, then a right rotation should be applied to that subtree.
 					\begin{figure}[H]
 						\qroofx=2
 						\qroofy=2
@@ -1235,8 +1237,9 @@
 					\end{algorithm}
 
 					Similarly, we have left rotations.
-					\\ \\
-					\textbf{Left rotation}: if the balance of a particular subtree is +2, then a left rotation should be applied to that subtree.
+
+				\subsubsection{Left Rotation}
+					If the balance of a particular subtree is +2, then a left rotation should be applied to that subtree.
 					\begin{figure}[H]
 						\qroofx=2
 						\qroofy=2
@@ -1251,7 +1254,8 @@
 						\caption{After a left rotation has been applied to the tree in \ref{figure:lrotationneeded}. \label{figure:lrotationapplied}}.
 					\end{figure}
 
-					\textbf{Double-right rotation}: if the inner-left side is heavy (and the balance for the tree is -2), a double-right rotation should be applied to that subtree. A normal right rotation does not property rebalance the tree.
+				\subsubsection{Double-right Rotation}
+					If the inner-left side is heavy (and the balance for the tree is -2), a double-right rotation should be applied to that subtree. A normal right rotation does not property rebalance the tree.
 					\begin{figure}[H]
 						\qroofx=2
 						\qroofy=2
@@ -1274,8 +1278,9 @@
 					\end{figure}
 
 					Essentially, a double-right rotation involves a left rotation of the left subtree, then a right rotation of the entire tree.
-					\\ \\
-					\textbf{Double-left rotation}: if the inner-right side is heavy (and the balance for the tree is +2), a double-left rotation should be applied to that subtree. A normal left rotation does not properly rebalance the tree.
+
+				\subsubsection{Double-left Rotation}
+					If the inner-right side is heavy (and the balance for the tree is +2), a double-left rotation should be applied to that subtree. A normal left rotation does not properly rebalance the tree.
 					\begin{figure}[H]
 						\qroofx=2
 						\qroofy=2
@@ -1290,272 +1295,275 @@
 						\caption{After a double-left rotation has been applied to the tree in \ref{figure:dlrotationneeded}. \label{figure:dlrotationapplied}}
 					\end{figure}
 
-					Note that for all of these rotations, you only perform the rotation at the node level where the balance has been broken.
+				Note that for all of these rotations, you only perform the rotation at the node level where the balance has been broken.
 
-					\begin{ex}
-						Let's say you just did a BST insertion of element 4.5, and now need to rebalance. A double-left rotation must be used because the tree is inner-right heavy.
-						\begin{figure}[H]
-							\qroofx=2
-							\qroofy=2
-							\Tree [.4 [.2 [.1 ] [.3 ]].2 [.7 [.6 [.5 [.4.5 ] ].5 [.6.5 ]].6 [.15 [.14 ] [.16 ]].15 ].7 ].4
-							\caption{A double-left rotation needs to be applied to this entire tree. \label{figure:dlrotationexneeded}}
-						\end{figure}
-
-						\begin{figure}[H]
-							\qroofx=2
-							\qroofy=2
-							\Tree [.4 [.2 [.1 ] [.3 ]] [.6 [.5 [.4.5 ] ].5 [.7 [.6.5 ] [.15 [.14 ] [.16 ]].15 ].7 ].6 ].4
-							\caption{A right rotation was applied on the right subtree of the tree in \ref{figure:dlrotationexneeded}. \label{figure:dlrotationexrrapplied}}
-						\end{figure}
-
-						\begin{figure}[H]
-							\qroofx=2
-							\qroofy=2
-							\Tree [.6 [.4 [.2 [.1 ] [.3 ]].2 [.5 [.4.5 ] ].5 ].4 [.7 [.6.5 ] [.15 [.14 ] [.16 ]].15 ].7 ].6
-							\caption{A left rotation was applied on the entire tree in \ref{figure:dlrotationexrrapplied}. The double-left rotation is now complete. \label{figure:dlrotationexapplied}}
-						\end{figure}
-					\end{ex}
-					What is the relationship between the longest path in an AVL tree and the number of elements in it, in the worst case? We would like the path length to be $\lg n$ for a tree of $n$ elements. We want to avoid long paths with few elements (where height = number of elements, for instance).
-					\\ \\
-					\textbf{Observation}: the skinniest AVL tree $T_h$ of depth $h$ looks like this:
+				\begin{ex}
+					Let's say you just did a BST insertion of element 4.5, and now need to rebalance. A double-left rotation must be used because the tree is inner-right heavy.
 					\begin{figure}[H]
 						\qroofx=2
 						\qroofy=2
-						\Tree [.o \qroof{$T_{h - 2}$}. \qroof{$T_{h - 1}$}. ]
+						\Tree [.4 [.2 [.1 ] [.3 ]].2 [.7 [.6 [.5 [.4.5 ] ].5 [.6.5 ]].6 [.15 [.14 ] [.16 ]].15 ].7 ].4
+						\caption{A double-left rotation needs to be applied to this entire tree. \label{figure:dlrotationexneeded}}
 					\end{figure}
-					That is, the left subtree has depth $h - 2$ and the right subtree has depth $h - 1$. We get that $T_h = 1 + T_{h - 2} + T_{h - 1} = 1 + T_{h - 1} + T_{h - 2}$, which looks similar to the definition of the fibonacci numbers ($F_n = 1 + F_{n - 1} + F_{n - 2}$).
-					\\ \\
-					The smallest item in the left subtree is $T_{h - 2}$ because it satisfies the AVL property. $T_{h - 3}$ would be smaller, but it would not satisfy the AVL property as necessary.
-					\\ \\
-					Mathematicians discovered that $F_n = (\varphi)^n$ (the golden ratio $\varphi$ to the $n$-th power), so we can say that $T_h \approx (\varphi)^n$.
-					\\ \\
-					The number of nodes $n = c^h$ (where $c$ is some constant) in the skinniest AVL tree is:
-					\begin{align*}
-						\lg n &= \lg c^h = h \lg c \\
-						h &= \frac{\lg n}{\lg c} = \Theta(\lg n)	
-					\end{align*}
 
-					In practice, you probably won't implement an AVL tree. There are easier implementations, such as left red black trees and AA trees, however we look at AVL trees because they are more interesting theoretically. People also don't use any sort of binary tree in practice. It's more common to use a tree with more than two children. \lecture{February 12, 2013}
-					\\ \\
-					You may be interested in looking at \href{http://cs-study.blogspot.ca/2012/11/cases-of-rotation-of-avl-tree.html}{this webpage on the cases of rotation for AVL trees}. Note that after performing a BST insertion on the leftmost subtree then rotating right, the height will not change. Its ancestors will not see any change.
-					\\ \\
-					Upon insertion, after the first rebalancing operation the entire AVL tree is once again balanced. In contrast, after a deletion you might have to rotate every node in the path up to the root node in the worst case. In the best case, just a few rotations may suffice. This can be proven by the diagrams on \href{http://cs-study.blogspot.ca/2012/11/cases-of-rotation-of-avl-tree.html}{the webpage about the cases of rotation for AVL trees}.
-				\subsubsection{Handling RAM Constraints}
-					To many, a computer is a screen and a big box. To us, a computer is really an array $M$, which is RAM, plus a CPU and a hard drive.
-					\\ \\
-					When we write programs in a language like C++, our code is converted to machine instructions that operate on that array $M$.
-					\begin{verbatim}
-						C++:       Machine instructions:
-						int x;     
-						x = 8;     MOVE 8, 435
-						x++;       INC 1, 435
-					\end{verbatim}
-
-					Reading from a hard drive (or any secondary storage device) is much slower than reading from RAM. Hard drives operate at approximately 14,400 rpm, which is 240 rps. If we are looking for some data on a hard drive and just missed it as it was rotating, we have to wait for a full revolution to get the data. Each revolution takes $\approx 4 ms$. The head moves even slower than that.
-					\\ \\
-					Hard drives are made up of several platters on an axle, plus a head. Each platter is divided into tracks (rings) and sectors (pie slices). When reading from a hard drive, we must read an \emph{entire} sector at once, even if we aren't interested in all of the data on that sector.
-					\\ \\
-					As a rule of thumb, hard drives are 10,000x slower than RAM. This ratio has remained fairly constant because as hard drives have been improving at a similar progression as RAM. So, you want to avoid interacting with the hard drive as much as possible. There is some good news: solid state drives (SSDs). SSDs are ``only'' 100s of times slower than RAM, so dropping down to a SSD isn't as tragic as a traditional hard drive, but it still isn't as efficient as RAM.
-					\\ \\
-					If you're building a binary search tree over a \underline{large} amount of data, a hard drive must come into play. We define ``large'' here as being an amount of data that is large enough that it cannot fit into RAM in its entirety. 
-					\\ \\
-					Mergesort has efficiency $O(n \lg n)$. In reality, the performance is $n \lg n$ until the input size $n$ hits the RAM limit, then the performance spikes. After this performance spike, mergesort continues to operate in $O(n \lg n)$ time, but with a much larger constant like $10000n \lg n$. This performance hit is a result of having to drop down to the performance of a hard drive. Some machines will have multiple spikes, between L1 and L2 cache, L2 cache and RAM, and RAM and a hard drive (from the fastest storage to the slowest storage). 
-					\\ \\
-					When defining data structures, it's important to think about what will happen in terms of RAM and hard drive usage.
-					\\ \\
-					Let's say you have a binary search tree, stored in memory. When you insert a new element, let's say no more RAM is available, so the element needs to be placed on disk instead. This new element may contain pointers to other elements which are stored on other sectors of the hard drive. In order to follow this path, we would have to read several entire sectors, despite only being interested in a very small portion of each of those sectors. 
-					\\ \\
-					For reference: the size of a sector is typically between 512 bytes and 4,000 bytes, and this size has remained fairly constant as time has progressed.
-					\\ \\
-					\underline{Idea}: make the nodes exactly the size of the sector by changing the binary search tree into a multi-way tree (to utilize the extra space).
 					\begin{figure}[H]
 						\qroofx=2
 						\qroofy=2
-						\Tree [.k \qroof{$T_1$}. \qroof{$T_2$}. ]
-						\caption{A typical binary search tree. \label{figure:typicalbst}}
+						\Tree [.4 [.2 [.1 ] [.3 ]] [.6 [.5 [.4.5 ] ].5 [.7 [.6.5 ] [.15 [.14 ] [.16 ]].15 ].7 ].6 ].4
+						\caption{A right rotation was applied on the right subtree of the tree in \ref{figure:dlrotationexneeded}. \label{figure:dlrotationexrrapplied}}
 					\end{figure}
 
-					In \ref{figure:typicalbst}, $T_1 \in (- \infty, k)$ and $T_2 \in (k, +\infty)$. In any given BST, we need 1 key and 1 or 2 children. We could extend this to a multi-way tree.
 					\begin{figure}[H]
 						\qroofx=2
 						\qroofy=2
-						\Tree [.{$k_1 < k_2 < k_3$} \qroof{$T_1$}. \qroof{$T_2$}. \qroof{$T_3$}. \qroof{$T_4$}. ]
-						\caption{A multi-way tree. \label{figure:typicalmultiwaytree}}
+						\Tree [.6 [.4 [.2 [.1 ] [.3 ]].2 [.5 [.4.5 ] ].5 ].4 [.7 [.6.5 ] [.15 [.14 ] [.16 ]].15 ].7 ].6
+						\caption{A left rotation was applied on the entire tree in \ref{figure:dlrotationexrrapplied}. The double-left rotation is now complete. \label{figure:dlrotationexapplied}}
 					\end{figure}
+				\end{ex}
+				
+			\subsubsection{Other Tidbits about AVL Trees}
+				What is the relationship between the longest path in an AVL tree and the number of elements in it, in the worst case? We would like the path length to be $\lg n$ for a tree of $n$ elements. We want to avoid long paths with few elements (where height = number of elements, for instance).
+				\\ \\
+				\textbf{Observation}: the skinniest AVL tree $T_h$ of depth $h$ looks like this:
+				\begin{figure}[H]
+					\qroofx=2
+					\qroofy=2
+					\Tree [.o \qroof{$T_{h - 2}$}. \qroof{$T_{h - 1}$}. ]
+				\end{figure}
+				That is, the left subtree has depth $h - 2$ and the right subtree has depth $h - 1$. We get that $T_h = 1 + T_{h - 2} + T_{h - 1} = 1 + T_{h - 1} + T_{h - 2}$, which looks similar to the definition of the fibonacci numbers ($F_n = 1 + F_{n - 1} + F_{n - 2}$).
+				\\ \\
+				The smallest item in the left subtree is $T_{h - 2}$ because it satisfies the AVL property. $T_{h - 3}$ would be smaller, but it would not satisfy the AVL property as necessary.
+				\\ \\
+				Mathematicians discovered that $F_n = (\varphi)^n$ (the golden ratio $\varphi$ to the $n$-th power), so we can say that $T_h \approx (\varphi)^n$.
+				\\ \\
+				The number of nodes $n = c^h$ (where $c$ is some constant) in the skinniest AVL tree is:
+				\begin{align*}
+					\lg n &= \lg c^h = h \lg c \\
+					h &= \frac{\lg n}{\lg c} = \Theta(\lg n)	
+				\end{align*}
 
-					In \ref{figure:typicalmultiwaytree}, there are 3 keys and 4 children. However, to generalize, a multi-way tree with $k$ keys needs $k + 1$ or $k + 2$ children.
-					\\ \\
-					In a binary search tree, we have $O(\log_2 n)$ complexity. In a multi-way tree (with $k$ keys), we have $O(\log_{k + 1})$ complexity. For a 20-way tree, for example, $\log_{20} n \ge \log_2 n$, but the constant will be much smaller for $\log_{20} n$. This smaller constant means we will hit the hard drive fewer times, which is a net win.
-					\\ \\
-					CD-ROMs used to take as long to read as music CDs did. They implemented an indexing system using a binary search tree, which was too slow. It was relatively easy to make CD-ROMs quicker (2x, 4x, \ldots) by overclocking the spinning mechanism. However, the queries were not being processed any faster because the head was slow. For music CD players, heads didn't need to be very fast. In fact, heads really haven't improved much since then.
-					\\ \\
-					The index was being developed for the Oxford English Dictionary (OED). They wanted OED on a CD-ROM and they wanted it to be fast. They aimed to be able to store all levels of the tree in RAM except for the deepest level, which meant you'd only need to hit the hard drive once for each query ($\approx 250$ ms hard drive delay per query). A full dictionary lookup could occur in $< 1$ second, whereas before it took one and a half minutes.
-					\\ \\
-					To be cute, they also added ``queried in 0.3 seconds'' to their interface. Frank Tompa, a UW professor, worked on this project. The OED technology effectively enabled the first search engines.
+				In practice, you probably won't implement an AVL tree. There are easier implementations, such as left red black trees and AA trees, however we look at AVL trees because they are more interesting theoretically. People also don't use any sort of binary tree in practice. It's more common to use a tree with more than two children. \lecture{February 12, 2013}
+				\\ \\
+				You may be interested in looking at \href{http://cs-study.blogspot.ca/2012/11/cases-of-rotation-of-avl-tree.html}{this webpage on the cases of rotation for AVL trees}. Note that after performing a BST insertion on the leftmost subtree then rotating right, the height will not change. Its ancestors will not see any change.
+				\\ \\
+				Upon insertion, after the first rebalancing operation the entire AVL tree is once again balanced. In contrast, after a deletion you might have to rotate every node in the path up to the root node in the worst case. In the best case, just a few rotations may suffice. This can be proven by the diagrams on \href{http://cs-study.blogspot.ca/2012/11/cases-of-rotation-of-avl-tree.html}{the webpage about the cases of rotation for AVL trees}.
+				
+		\subsection{Handling RAM Constraints}
+			To many, a computer is a screen and a big box. To us, a computer is really an array $M$, which is RAM, plus a CPU and a hard drive.
+			\\ \\
+			When we write programs in a language like C++, our code is converted to machine instructions that operate on that array $M$.
+			\begin{verbatim}
+				C++:       Machine instructions:
+				int x;     
+				x = 8;     MOVE 8, 435
+				x++;       INC 1, 435
+			\end{verbatim}
 
-				\subsubsection{2-3 Trees}
-					2-3 trees were based on several key principles:
-					\begin{itemize}
-						\item Every node contains one or two keys and two or three children.
-						\item All the leaves are at the same level (like a heap).
-						\item The sloppiness permitted was the variable number of keys.
-					\end{itemize}
+			Reading from a hard drive (or any secondary storage device) is much slower than reading from RAM. Hard drives operate at approximately 14,400 rpm, which is 240 rps. If we are looking for some data on a hard drive and just missed it as it was rotating, we have to wait for a full revolution to get the data. Each revolution takes $\approx 4 ms$. The head moves even slower than that.
+			\\ \\
+			Hard drives are made up of several platters on an axle, plus a head. Each platter is divided into tracks (rings) and sectors (pie slices). When reading from a hard drive, we must read an \emph{entire} sector at once, even if we aren't interested in all of the data on that sector.
+			\\ \\
+			As a rule of thumb, hard drives are 10,000x slower than RAM. This ratio has remained fairly constant because as hard drives have been improving at a similar progression as RAM. So, you want to avoid interacting with the hard drive as much as possible. There is some good news: solid state drives (SSDs). SSDs are ``only'' 100s of times slower than RAM, so dropping down to a SSD isn't as tragic as a traditional hard drive, but it still isn't as efficient as RAM.
+			\\ \\
+			If you're building a binary search tree over a \underline{large} amount of data, a hard drive must come into play. We define ``large'' here as being an amount of data that is large enough that it cannot fit into RAM in its entirety. 
+			\\ \\
+			Mergesort has efficiency $O(n \lg n)$. In reality, the performance is $n \lg n$ until the input size $n$ hits the RAM limit, then the performance spikes. After this performance spike, mergesort continues to operate in $O(n \lg n)$ time, but with a much larger constant like $10000n \lg n$. This performance hit is a result of having to drop down to the performance of a hard drive. Some machines will have multiple spikes, between L1 and L2 cache, L2 cache and RAM, and RAM and a hard drive (from the fastest storage to the slowest storage). 
+			\\ \\
+			When defining data structures, it's important to think about what will happen in terms of RAM and hard drive usage.
+			\\ \\
+			Let's say you have a binary search tree, stored in memory. When you insert a new element, let's say no more RAM is available, so the element needs to be placed on disk instead. This new element may contain pointers to other elements which are stored on other sectors of the hard drive. In order to follow this path, we would have to read several entire sectors, despite only being interested in a very small portion of each of those sectors. 
+			\\ \\
+			For reference: the size of a sector is typically between 512 bytes and 4,000 bytes, and this size has remained fairly constant as time has progressed.
+			\\ \\
+			\underline{Idea}: make the nodes exactly the size of the sector by changing the binary search tree into a multi-way tree (to utilize the extra space).
+			\begin{figure}[H]
+				\qroofx=2
+				\qroofy=2
+				\Tree [.k \qroof{$T_1$}. \qroof{$T_2$}. ]
+				\caption{A typical binary search tree. \label{figure:typicalbst}}
+			\end{figure}
 
-					If we were to perform a BST insertion into the deepest leftmost position, we'd end up with the tree in \ref{figure:leftmostbstinsertion}.
-					\begin{figure}[H]
-						\Tree [.o [.o [.o [.N ] ] [.o ]] [.o [.o ] [.o ] ]]
-						\caption{A binary search tree with leaves at different levels. \label{figure:leftmostbstinsertion}}
-					\end{figure}
-					Performing the same insertion on a 2-3 tree would result in the tree as seen in \ref{figure:leftmost23insertion}.
-					\begin{figure}[H]
-						\Tree [.o [.o [.N ] [.o ] [.o ]] [.o [.o ] [.o ] ] ]
-						\caption{A 2-3 tree. \label{figure:leftmost23insertion}}
-					\end{figure}
+			In \ref{figure:typicalbst}, $T_1 \in (- \infty, k)$ and $T_2 \in (k, +\infty)$. In any given BST, we need 1 key and 1 or 2 children. We could extend this to a multi-way tree.
+			\begin{figure}[H]
+				\qroofx=2
+				\qroofy=2
+				\Tree [.{$k_1 < k_2 < k_3$} \qroof{$T_1$}. \qroof{$T_2$}. \qroof{$T_3$}. \qroof{$T_4$}. ]
+				\caption{A multi-way tree. \label{figure:typicalmultiwaytree}}
+			\end{figure}
 
-					\textbf{Insertion}:
-						\begin{enumerate}
-							\item Follow the path down the tree according to key ranges until you find the parent of the leaves.
-							\item Insert there.
-							\item Fix your free, if needed.
-						\end{enumerate}
+			In \ref{figure:typicalmultiwaytree}, there are 3 keys and 4 children. However, to generalize, a multi-way tree with $k$ keys needs $k + 1$ or $k + 2$ children.
+			\\ \\
+			In a binary search tree, we have $O(\log_2 n)$ complexity. In a multi-way tree (with $k$ keys), we have $O(\log_{k + 1})$ complexity. For a 20-way tree, for example, $\log_{20} n \ge \log_2 n$, but the constant will be much smaller for $\log_{20} n$. This smaller constant means we will hit the hard drive fewer times, which is a net win.
+			\\ \\
+			CD-ROMs used to take as long to read as music CDs did. They implemented an indexing system using a binary search tree, which was too slow. It was relatively easy to make CD-ROMs quicker (2x, 4x, \ldots) by overclocking the spinning mechanism. However, the queries were not being processed any faster because the head was slow. For music CD players, heads didn't need to be very fast. In fact, heads really haven't improved much since then.
+			\\ \\
+			The index was being developed for the Oxford English Dictionary (OED). They wanted OED on a CD-ROM and they wanted it to be fast. They aimed to be able to store all levels of the tree in RAM except for the deepest level, which meant you'd only need to hit the hard drive once for each query ($\approx 250$ ms hard drive delay per query). A full dictionary lookup could occur in $< 1$ second, whereas before it took one and a half minutes.
+			\\ \\
+			To be cute, they also added ``queried in 0.3 seconds'' to their interface. Frank Tompa, a UW professor, worked on this project. The OED technology effectively enabled the first search engines.
+
+		\subsection{2-3 Trees}
+			2-3 trees were based on several key principles:
+			\begin{itemize}
+				\item Every node contains one or two keys and two or three children.
+				\item All the leaves are at the same level (like a heap).
+				\item The sloppiness permitted was the variable number of keys.
+			\end{itemize}
+
+			If we were to perform a BST insertion into the deepest leftmost position, we'd end up with the tree in \ref{figure:leftmostbstinsertion}.
+			\begin{figure}[H]
+				\Tree [.o [.o [.o [.N ] ] [.o ]] [.o [.o ] [.o ] ]]
+				\caption{A binary search tree with leaves at different levels. \label{figure:leftmostbstinsertion}}
+			\end{figure}
+			Performing the same insertion on a 2-3 tree would result in the tree as seen in \ref{figure:leftmost23insertion}.
+			\begin{figure}[H]
+				\Tree [.o [.o [.N ] [.o ] [.o ]] [.o [.o ] [.o ] ] ]
+				\caption{A 2-3 tree. \label{figure:leftmost23insertion}}
+			\end{figure}
+
+			\textbf{Insertion}:
+				\begin{enumerate}
+					\item Follow the path down the tree according to key ranges until you find the parent of the leaves.
+					\item Insert there.
+					\item Fix your free, if needed.
+				\end{enumerate}
 						
-						Let's try inserting two elements. After step 1, we end up with the tree as seen in \ref{figure:23needsfix2insertions}.
+				Let's try inserting two elements. After step 1, we end up with the tree as seen in \ref{figure:23needsfix2insertions}.
 
-						\begin{figure}[H]
-							\Tree [.o [.o [.o ] [.N_1 ] [.o ]] [.o [.o ] [.o ] [.o ] [.N_2 ]]]
-							\caption{A 2-3 tree that needs fixing after two insertions. \label{figure:23needsfix2insertions}}
-						\end{figure}
+				\begin{figure}[H]
+					\Tree [.o [.o [.o ] [.N_1 ] [.o ]] [.o [.o ] [.o ] [.o ] [.N_2 ]]]
+					\caption{A 2-3 tree that needs fixing after two insertions. \label{figure:23needsfix2insertions}}
+				\end{figure}
 
-						Notice that the right subtree has four children, which is not allowed. We can fix this by splitting that node into two, each with two children. Then the root node will have three children (which is acceptable), and each subtree will have 2 or 3 children. The resulting tree is shown in \ref{figure:23fixed2insertions}.
+				Notice that the right subtree has four children, which is not allowed. We can fix this by splitting that node into two, each with two children. Then the root node will have three children (which is acceptable), and each subtree will have 2 or 3 children. The resulting tree is shown in \ref{figure:23fixed2insertions}.
 
-						\begin{figure}[H]
-							\Tree [.o [.o [.o ] [.N_1 ] [.o ]] [.o [.o ] [.o ]] [.o [.o ] [.N_2 ] ] ]
-							\caption{The 2-3 tree from \ref{figure:23needsfix2insertions} after its right subtree was fixed. \label{figure:23fixed2insertions}}
-						\end{figure}
+				\begin{figure}[H]
+					\Tree [.o [.o [.o ] [.N_1 ] [.o ]] [.o [.o ] [.o ]] [.o [.o ] [.N_2 ] ] ]
+					\caption{The 2-3 tree from \ref{figure:23needsfix2insertions} after its right subtree was fixed. \label{figure:23fixed2insertions}}
+				\end{figure}
 
-						We continue to split our parents up as necessary, and create a root node if necessary (if the root node was split).
-					\\ \\
-					\textbf{Deletion}:
-						If we remove a node that causes one subtree to only have one child, we ask the sibling subtrees how many children they have. If the sibling we ask has just two children, we shove our single child onto the sibling. Otherwise, the sibling must have three children, in which case we take one of those children.
-						\\ \\
-						Let's look at an example where we delete an element and the sibling has just two children. Immediately after deleting the node, we're left with \ref{figure:23needsfixdeletion}, whose right subtree needs adjusting.
+				We continue to split our parents up as necessary, and create a root node if necessary (if the root node was split).
+			\\ \\
+			\textbf{Deletion}:
+				If we remove a node that causes one subtree to only have one child, we ask the sibling subtrees how many children they have. If the sibling we ask has just two children, we shove our single child onto the sibling. Otherwise, the sibling must have three children, in which case we take one of those children.
+				\\ \\
+				Let's look at an example where we delete an element and the sibling has just two children. Immediately after deleting the node, we're left with \ref{figure:23needsfixdeletion}, whose right subtree needs adjusting.
 
-						\begin{figure}[H]
-							\Tree [.o [.o [.o ] [.o ]] [.o [.o ] [.o ]] [.o [.o ] ] ]
-							\caption{A 2-3 tree that needs fixing after the deepest rightmost element was deleted. \label{figure:23needsfixdeletion}}
-						\end{figure}
+				\begin{figure}[H]
+					\Tree [.o [.o [.o ] [.o ]] [.o [.o ] [.o ]] [.o [.o ] ] ]
+					\caption{A 2-3 tree that needs fixing after the deepest rightmost element was deleted. \label{figure:23needsfixdeletion}}
+				\end{figure}
 
-						The right subtree of \ref{figure:23needsfixdeletion} needs adjusting because no subtree in a 2-3 tree is allowed to only have one child. So, we shove this child onto our sibling, as seen in \ref{figure:23fixeddeletion}.
+				The right subtree of \ref{figure:23needsfixdeletion} needs adjusting because no subtree in a 2-3 tree is allowed to only have one child. So, we shove this child onto our sibling, as seen in \ref{figure:23fixeddeletion}.
 
-						\begin{figure}[H]
-							\Tree [.o [.o [.o ] [.o ]] [.o [.o ] [.o ] [.o ]]]
-							\caption{The 2-3 tree from \ref{figure:23needsfixdeletion} after its right subtree has been fixed. \label{figure:23fixeddeletion}}
-						\end{figure}
+				\begin{figure}[H]
+					\Tree [.o [.o [.o ] [.o ]] [.o [.o ] [.o ] [.o ]]]
+					\caption{The 2-3 tree from \ref{figure:23needsfixdeletion} after its right subtree has been fixed. \label{figure:23fixeddeletion}}
+				\end{figure}
 
-						After a deletion, you need to recurse upwards ensuring that are all parents still satisfy all requirements of 2-3 trees. At the very top of the tree, you may have a case like in \ref{figure:23rootgone1}.
+				After a deletion, you need to recurse upwards ensuring that are all parents still satisfy all requirements of 2-3 trees. At the very top of the tree, you may have a case like in \ref{figure:23rootgone1}.
 
-						\begin{figure}[H]
-							\Tree [.o [.o [.o ] [.o ] ] [.o [.o ] ] ]
-							\caption{A 2-3 tree with the deepest rightmost node removed (needs fixing). \label{figure:23rootgone1}}
-						\end{figure}
+				\begin{figure}[H]
+					\Tree [.o [.o [.o ] [.o ] ] [.o [.o ] ] ]
+					\caption{A 2-3 tree with the deepest rightmost node removed (needs fixing). \label{figure:23rootgone1}}
+				\end{figure}
 
-						We can push the child of the right subtree onto the left subtree, as seen in \ref{figure:23rootgone2}.
+				We can push the child of the right subtree onto the left subtree, as seen in \ref{figure:23rootgone2}.
 
-						\begin{figure}[H]
-							\Tree [.o [.o [.o ] [.o ] [.o ]]]
-							\caption{The 2-3 tree as seen in \ref{figure:23rootgone1} with its right subtree merged into the left subtree (still needs fixing). \label{figure:23rootgone2}}
-						\end{figure}
+				\begin{figure}[H]
+					\Tree [.o [.o [.o ] [.o ] [.o ]]]
+					\caption{The 2-3 tree as seen in \ref{figure:23rootgone1} with its right subtree merged into the left subtree (still needs fixing). \label{figure:23rootgone2}}
+				\end{figure}
 
-						We still need to adjust this further, however. The root node now only has one child, so we can get rid of it, as seen in \ref{figure:23rootgone3}.
+				We still need to adjust this further, however. The root node now only has one child, so we can get rid of it, as seen in \ref{figure:23rootgone3}.
 
-						\begin{figure}[H]
-							\Tree [.o [.o ] [.o ] [.o ]]
-							\caption{The 2-3 tree as seen in \ref{figure:23rootgone1} and \ref{figure:23rootgone2}, after it has been fully adjusted. \label{figure:23rootgone3}}
-						\end{figure}
+				\begin{figure}[H]
+					\Tree [.o [.o ] [.o ] [.o ]]
+					\caption{The 2-3 tree as seen in \ref{figure:23rootgone1} and \ref{figure:23rootgone2}, after it has been fully adjusted. \label{figure:23rootgone3}}
+				\end{figure}
 
-						We want to conserve RAM by storing only the keys in the internal nodes, instead of a key-value pair. All data resides in the leaves, which is the only layer that will be accessed on the hard drive. We're doing this to avoid the hard drive by storing as many levels as possible in RAM. In order to do this, we would have a many-way tree like the one seen in \ref{figure:manywayconservation}.
+				We want to conserve RAM by storing only the keys in the internal nodes, instead of a key-value pair. All data resides in the leaves, which is the only layer that will be accessed on the hard drive. We're doing this to avoid the hard drive by storing as many levels as possible in RAM. In order to do this, we would have a many-way tree like the one seen in \ref{figure:manywayconservation}.
 
-						\begin{figure}[H]
-							\qroofx=2
-							\qroofy=2
-							\Tree [.{$k_1 < k_2 < k_3$} \qroof{$T_1$}. \qroof{$T_2$}. \qroof{$T_3$}. \qroof{$T_4$}. ]
-							\caption{A many-way tree that stores all data in its leaves. \label{figure:manywayconservation}}
-						\end{figure}
+				\begin{figure}[H]
+					\qroofx=2
+					\qroofy=2
+					\Tree [.{$k_1 < k_2 < k_3$} \qroof{$T_1$}. \qroof{$T_2$}. \qroof{$T_3$}. \qroof{$T_4$}. ]
+					\caption{A many-way tree that stores all data in its leaves. \label{figure:manywayconservation}}
+				\end{figure}
 
-						In \ref{figure:manywayconservation}, $T_1$ is a subtree with range $(- \infty, k_1]$, $T_2$ has range $(k_1, k_2]$, $T_3$ has range $(k_2, k_3]$, and $T_4$ has range $(k_3, + \infty)$. Note that these ranges are all inclusive now, whereas before they were exclusive.
-						\\ \\
-						In a tree like the one in \ref{figure:manywayconservation}, if you find the key you're looking for, you know you're on the right path. The data lies further down the path \textendash{} not at the node you already found.
+				In \ref{figure:manywayconservation}, $T_1$ is a subtree with range $(- \infty, k_1]$, $T_2$ has range $(k_1, k_2]$, $T_3$ has range $(k_2, k_3]$, and $T_4$ has range $(k_3, + \infty)$. Note that these ranges are all inclusive now, whereas before they were exclusive.
+				\\ \\
+				In a tree like the one in \ref{figure:manywayconservation}, if you find the key you're looking for, you know you're on the right path. The data lies further down the path \textendash{} not at the node you already found.
 
-			\subsubsection{Comparison of Trees} \lecture{February 14, 2013} % Today's notes were taken from Kevin Cho's handwritten notes (thanks!).
-				\textbf{Binary Search Trees}:
-				\begin{itemize}
-					\item Each node has 0, 1, or 2 children.
-					\item Every node contains one key and some data, called a key-value pair.
-					\item If the BST is an AVL tree, then the children are balanced (their height does not differ by more than one).
-				\end{itemize}
+		\subsection{Comparison of Trees} \lecture{February 14, 2013} % Today's notes were taken from Kevin Cho's handwritten notes (thanks!).
+			\textbf{Binary Search Trees}:
+			\begin{itemize}
+				\item Each node has 0, 1, or 2 children.
+				\item Every node contains one key and some data, called a key-value pair.
+				\item If the BST is an AVL tree, then the children are balanced (their height does not differ by more than one).
+			\end{itemize}
 
-				\textbf{2-3 Trees}:
-				\begin{itemize}
-					\item Each node has 0, 2, or 3 children.
-					\item Every node has one or two key-value pairs.
-					\item All leaves are at the same level.
-				\end{itemize}
+			\textbf{2-3 Trees}:
+			\begin{itemize}
+				\item Each node has 0, 2, or 3 children.
+				\item Every node has one or two key-value pairs.
+				\item All leaves are at the same level.
+			\end{itemize}
 
-				\textbf{B-Trees}:
-				\begin{itemize}
-					\item Similar to 2-3 trees, but they contain between $\frac{m}{2}$ and $m - 1$ key-value pairs per node.
-					\item Each node can contain up to $m$ children.
-				\end{itemize}
+			\textbf{B-Trees}:
+			\begin{itemize}
+				\item Similar to 2-3 trees, but they contain between $\frac{m}{2}$ and $m - 1$ key-value pairs per node.
+				\item Each node can contain up to $m$ children.
+			\end{itemize}
 
-				\textbf{$B^+$-Trees}:
-				\begin{itemize}
-					\item The internal nodes only have keys.
-					\item Key-value pairs are present in the leaf nodes only.
-					\item The root node of a subtree is a marker for which subtree to navigate to.
-					\item Pointers to siblings are just for convenience.
-					\item This is an example of an ``algorithm for external memory'' (hard drives and other secondary storage). 
-				\end{itemize}
+			\textbf{$B^+$-Trees}:
+			\begin{itemize}
+				\item The internal nodes only have keys.
+				\item Key-value pairs are present in the leaf nodes only.
+				\item The root node of a subtree is a marker for which subtree to navigate to.
+				\item Pointers to siblings are just for convenience.
+				\item This is an example of an ``algorithm for external memory'' (hard drives and other secondary storage). 
+			\end{itemize}
 
-				In a B-tree of height $h$, what is the minimum number of nodes in the tree? $2 + 2 \cdot 2 + 2 \cdot 2 \cdot 2 + \ldots$, since the root has two children, and each of those has two children, and so on. This leaves us with the minimum number of nodes in the tree being:
-				\begin{align*}
-					2 + 2 \cdot 2 + 2 \cdot 2 \cdot 2 + \ldots &= \sum_{i = 1}^{h} \bigg(\frac{m}{2}\bigg)^i \approx \bigg(\frac{m}{2}\bigg)^{h + 1} \\
-					\bigg(\frac{m}{2}\bigg)^{h + 1} &\ge n \\
-					(h + 1) \lg\frac{m}{2} &\le \lg n \\
-					h + 1 &= \frac{\lg n}{\lg \frac{m}{2}} \\
-					h &\approx \frac{\lg n}{\lg m - 1} - 1
-				\end{align*}
+			In a B-tree of height $h$, what is the minimum number of nodes in the tree? $2 + 2 \cdot 2 + 2 \cdot 2 \cdot 2 + \ldots$, since the root has two children, and each of those has two children, and so on. This leaves us with the minimum number of nodes in the tree being:
+			\begin{align*}
+				2 + 2 \cdot 2 + 2 \cdot 2 \cdot 2 + \ldots &= \sum_{i = 1}^{h} \bigg(\frac{m}{2}\bigg)^i \approx \bigg(\frac{m}{2}\bigg)^{h + 1} \\
+				\bigg(\frac{m}{2}\bigg)^{h + 1} &\ge n \\
+				(h + 1) \lg\frac{m}{2} &\le \lg n \\
+				h + 1 &= \frac{\lg n}{\lg \frac{m}{2}} \\
+				h &\approx \frac{\lg n}{\lg m - 1} - 1
+			\end{align*}
 
-				In a B-tree of height $h$, what is the maximum number of nodes in the tree? $4 + 4 \cdot 4 + 4 \cdot 4 \cdot 4 + \ldots$, following the same logic as before. This leaves us with:
-				\begin{align*}
-					4 + 4 \cdot 4 + 4 \cdot 4 \cdot 4 + \ldots &= \sum_{i = 0}^{h} m^i \approx m^{h + 1} \\
-					m^{h + 1} &= n \\
-					(h + 1) \lg m &= \lg n \\
-					h &\approx \frac{\lg n}{\lg m} - 1 \approx \log_m n
-				\end{align*}
+			In a B-tree of height $h$, what is the maximum number of nodes in the tree? $4 + 4 \cdot 4 + 4 \cdot 4 \cdot 4 + \ldots$, following the same logic as before. This leaves us with:
+			\begin{align*}
+				4 + 4 \cdot 4 + 4 \cdot 4 \cdot 4 + \ldots &= \sum_{i = 0}^{h} m^i \approx m^{h + 1} \\
+				m^{h + 1} &= n \\
+				(h + 1) \lg m &= \lg n \\
+				h &\approx \frac{\lg n}{\lg m} - 1 \approx \log_m n
+			\end{align*}
 			
-			\subsubsection{Hashing}
-				Hashing is another dictionary implementation. It also has the same operations as a typical dictionary, including \verb+search(k)+, \verb+insert(k, data)+, and \verb+delete(k)+.
+	\section{Hashing}
+		Hashing is another dictionary implementation. It also has the same operations as a typical dictionary, including \verb+search(k)+, \verb+insert(k, data)+, and \verb+delete(k)+.
 
-				\begin{theorem}
-					In the comparison model for keys, $\Omega(\lg n)$ comparisons are required to search a dictionary of size $n$.
-				\end{theorem}
+		\begin{theorem}
+			In the comparison model for keys, $\Omega(\lg n)$ comparisons are required to search a dictionary of size $n$.
+		\end{theorem}
 
-				\underline{Assumption}: every key $k$ is an integer $k$ with $0 \le k < m$ for some fixed constant $m$.
-				\\ \\
-				We implement this dictionary using an array $A$ as our data structure, containing all of the dictionary's data values.
-				\\ \\
-				The na\"ive approach is to use direct addressing by making the array of size $m$. The operations would be implemented in the expected way:
-				\begin{itemize}
-					\item \verb+insert(k, data)+ would simply set the $k$-th index of the array to the \verb+data+.
-					\item \verb+search(k)+ would check the $k$-th index of the array, returning empty if the array's $k$-th index is empty (NULL), or returning the $k$-th element if it's found.
-					\item \verb+delete(k)+ would set the $k$-th index of the array to be empty.
-				\end{itemize}
+		\underline{Assumption}: every key $k$ is an integer $k$ with $0 \le k < m$ for some fixed constant $m$.
+		\\ \\
+		We implement this dictionary using an array $A$ as our data structure, containing all of the dictionary's data values.
+		\\ \\
+		The na\"ive approach is to use direct addressing by making the array of size $m$. The operations would be implemented in the expected way:
+		\begin{itemize}
+			\item \verb+insert(k, data)+ would simply set the $k$-th index of the array to the \verb+data+.
+			\item \verb+search(k)+ would check the $k$-th index of the array, returning empty if the array's $k$-th index is empty (NULL), or returning the $k$-th element if it's found.
+			\item \verb+delete(k)+ would set the $k$-th index of the array to be empty.
+		\end{itemize}
 
-				This approach is okay if $n \approx m$, but if $n$ is sufficiently less than $m$, we should use hashing instead.
-				\\ \\
-				We define a hash function $h: \{0, 1, \ldots, m - 1\} \to \{1, 2, \ldots, \Theta(n)\}$. That is, we define $h: U \to 0 \ldots |A| = 0 \ldots m - 1$, where $U$ is the key universe.
-				\\ \\
-				Using the hashing method, we use the same code as before except instead of using the $k$-th index of the array, we use the $h(k)$-th index for insertion, searching, and deletion.
-				\\ \\
-				We say there is a \textbf{collision} in a hash function if two different keys $k_1$ and $k_2$ exist such that $k_1 \ne k_2$ but $h(k_1) = h(k_2)$. Even if you have a nice hash function, collisions \emph{will} happen, so we need to deal with them in some way. For example, with the birthday paradox, $\sqrt{m}$ keys have a collision.
+		This approach is okay if $n \approx m$, but if $n$ is sufficiently less than $m$, we should use hashing instead.
+		\\ \\
+		We define a hash function $h: \{0, 1, \ldots, m - 1\} \to \{1, 2, \ldots, \Theta(n)\}$. That is, we define $h: U \to 0 \ldots |A| = 0 \ldots m - 1$, where $U$ is the key universe.
+		\\ \\
+		Using the hashing method, we use the same code as before except instead of using the $k$-th index of the array, we use the $h(k)$-th index for insertion, searching, and deletion.
+		\\ \\
+		We say there is a \textbf{collision} in a hash function if two different keys $k_1$ and $k_2$ exist such that $k_1 \ne k_2$ but $h(k_1) = h(k_2)$. Even if you have a nice hash function, collisions \emph{will} happen, so we need to deal with them in some way. For example, with the birthday paradox, $\sqrt{m}$ keys have a collision.
 \end{document}
