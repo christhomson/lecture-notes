@@ -5,6 +5,8 @@ I'm typing up these notes myself, and they're a combination from what was writte
 
 If you simply want to view the notes, look at the PDFs. I've also included the original LaTeX files if you're curious or if you'd like to extend the notes in some way.
 
+I'd greatly appreciate reports of any typos and factual errors you find. [Open an issue](https://github.com/christhomson/lecture-notes/issues/new) if you find something that should be fixed.
+
 ## Courses
 ### 2B - Winter 2013:
 * [CS 240 - Data Structures and Data Management](https://github.com/christhomson/lecture-notes/raw/master/cs240.pdf)
