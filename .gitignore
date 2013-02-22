@@ -6,3 +6,4 @@
 *.tex.project.vim
 *_aux
 *.swp
+*.toc
