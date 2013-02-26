@@ -401,8 +401,10 @@
 				\begin{algorithm}[H]
 					sum = 0\;
 					\For{i = 1 to n}{
-						$sum = sum + (i - j)^2$\;
-						$sum = sum^2$\;
+						\For{j = 1 to i}{
+							$sum = sum + (i - j)^2$\;
+							$sum = sum^2$\;
+						}
 					}
 					\Return sum
 
