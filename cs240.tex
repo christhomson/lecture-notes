@@ -1568,4 +1568,109 @@
 		Using the hashing method, we use the same code as before except instead of using the $k$-th index of the array, we use the $h(k)$-th index for insertion, searching, and deletion.
 		\\ \\
 		We say there is a \textbf{collision} in a hash function if two different keys $k_1$ and $k_2$ exist such that $k_1 \ne k_2$ but $h(k_1) = h(k_2)$. Even if you have a nice hash function, collisions \emph{will} happen, so we need to deal with them in some way. For example, with the birthday paradox, $\sqrt{m}$ keys have a collision.
+		\\ \\
+		Choosing a good hash function is hard. Let's look for an $h: \{\text{ keys }\} \to \{0, 1, \ldots, m\}$ (where $m$ is the size of the hash table). There are two main approaches. \lecture{February 26, 2013}
+		\begin{enumerate}
+			\item \textbf{h(k) = k mod m}. We know that $\mod m$ behaves a lot nicer if $m$ is prime, so we're interested in choosing a prime $m$ that is large enough to be the size of the table.
+				\\ \\
+				When you need to resize the hash table, you will often choose to double the hash table size. However, that would mean we'd have to double $m$ and then find the next prime that is larger than $m$. In practice, you may see pre-computed primes hard-coded into an array in a program for this purpose.
+			\item \textbf{Multiplication Method}. Choose $h(k)$ to be defined by:
+				\begin{align*}
+					h(k) = \lfloor m(kA - \lfloor kA \rfloor) \rfloor
+				\end{align*}
+
+				Mathematicians have found that choosing $A = \frac{\sqrt 5 - 1}{2} \approx 0.618$ is an ideal choice.
+		\end{enumerate}
+
+		It's possible to choose better hash functions, but these two methods are good enough for our purposes.
+		\\ \\
+		Collisions are unavoidable (in the expected case). The first collision will occur after $\sqrt{\frac{\pi m}{2}} \approx 1.25 \sqrt m$ items have been inserted, in the expected case. With the birthday paradox, that means you're likely to expect a collision after 24.
+		\\ \\
+		Speaking of the birthday paradox, buying baseball cards is a sort of reverse birthday paradox. The card company wants you to get many duplicates, so you'll keep buying more cards until you're lucky enough to get one of every card. That'll take $n^2$ cards (in the expected case) to get a full deck of $n$ unique cards.
+
+		\subsection{Collision Resolution Strategies}
+			\subsubsection{Seperate Chaining}
+				The table contains $n$ pointers, each pointing to an unsorted linked list.
+				\\ \\
+				When you want to insert a student whose hashed student ID is 5, you'll go to the 5th pointer and set the linked list element. If another student with the same hashed ID is inserted, you append that student to the linked list pointed to by the 5th pointer. In practice, the new student is usually prepended for simplicity \textendash{} to avoid walking down the list unnecessarily.
+				\\ \\
+				These linked lists would affect the run time if they become large. You could always make the linked list a sorted linked list if you care less about insert complexity and more about search complexity. In general, this solution is okay as long as the linked lists don't become too large.
+				\\ \\
+				The worst case linked list chains are $O(\lg n)$ in length, and many pointers would remain NULL. However, having a lot of pointers to NULL wastes memory, which isn't good.
+				\\ \\
+				The load factor of the hash table is $\alpha = \frac{n}{m}$, where $n$ is the number of elements and $m$ is the size of the hash table.
+				\\ \\
+				Searches are performed in $\Theta(1 + \alpha)$ complexity in the average case and in $\Theta(n)$ in the worst case.
+				\\ \\
+				Inserting runs in constant $\Theta(1)$ complexity because we're simply inserting into an unsorted linked list.
+				\\ \\
+				Deletion takes the same time as searching plus constant time $\Theta(1)$. Deletion requires finding the key in the linked list and then using one constant operation to remove it.
+				\\ \\
+				If we ensure that $m = \Theta(n)$, then $\alpha = \Theta(1)$. That is, the run times will be constant in the average case. But how do we keep $\alpha$ constant? We'd have to re-size the hash table, but that takes time.
+			\subsubsection{Open Addressing}
+				This is a more space efficient method because the table now contains the records themselves.
+				\\ \\
+				When we try to insert a second element with the same hashed key, we check the next element in the table to see if it's free. We continue to do this until we find a free element, and then we insert the new element there. This is called \textbf{linear probing}. That is, key $k$ lives in position $h(k)$ if it's available, otherwise it might live in the $h(k + 1)$-th position if that's available, or $h(k + 2)$ if that's available, and so on, until we find the first index greater or equal to $k$ that is free.
+				\\ \\
+				When performing a search, we check the hashed index, and continue checking until we find an empty (free) element.
+				\\ \\
+				Be careful when your table fills up. The hash table object should maintain a counter of how full it is and silently increase (or prepare itself to throw an error). The hash table should do this without any operation (that is, \emph{before} the next \verb+insert+ operation is even called). The hash table should never be left idle and full at the same time.
+				\\ \\
+				Linear probing has two main advantages: it uses space more efficiently, and it's quite easy to implement.
+				\\ \\
+				In reality, you'll get clusters of full elements \textendash{} many elements with no free elements between them. You want to keep the clusters small to keep things (both \verb+insert+ and \verb+search+ operations) speedy. The bigger the cluster gets, the quicker it will continue to grow. Why is this? The bigger the cluster, the larger the area, the larger chance that a new insertion will lie within that cluster. It's a vicious cycle.
+				\begin{theorem}
+					The average number of probes required to search in a hash table of size $m$ with $n$ keys ($\alpha = \frac{n}{m}$) is approximately $\frac{1}{2}\left(1 + \frac{1}{1 - \alpha}\right)$ (in the case of a successful search) or $\frac{1}{2}\left(1 + \frac{1}{(1 - \alpha)^2}\right)$ (in the case of an unsuccessful search) for $\alpha$ not too close to 1.
+				\end{theorem}
+
+				Why is this? If we have two clusters each growing larger and larger, they will eventually run into each other, causing longer search times when looking for elements whose hashed keys lie in what was previously the first cluster. You'd be forced to search both the first and second clusters (since there are no free elements between them anymore), causing delays.
+				\\ \\
+				With different load factors $\alpha$, the number of elements that need to be checked for a hit (successful search) and a miss (unsuccessful search) are as follows:
+				\begin{center}
+					\begin{tabular}{c|c|c|c|c}
+						$\alpha$: & 1/2 & 2/3 & 3/4 & 9/10 \\ \hline
+						hit: & 1.5 & 2.0 & 3.0 & 5.5 \\
+						miss: & 2.5 & 5.0 & 8.5 & 55.5
+					\end{tabular}
+				\end{center}
+
+				So, if your hash table is very close to being full, misses become very costly.
+
+			\subsubsection{Double Hashing}
+				\underline{Idea}: stop the formation of clusters by using two hash functions $h_1$ and $h_2$.
+				\\ \\
+				The key $k$ now lives in position $h_1(k)$ or $h_1(k) + h_2(k)$. Observe that in general, even if $h_1(k_1) = h_1(k_2)$ (that is, you have a collision), $h_2(k_1) \ne h_2(k_2)$, since they are different hash functions. It's unlikely that you'll have a collision in both the primary and secondary hashes, although it is possible.
+				\\ \\
+				More formally, we define $h_1: \{\text{ set of keys }\} \to \{0, 1, \ldots, m - 1\}$ and $h_2: \{\text{ set of keys }\} \to \{1, \ldots, m - 1\}$. Notice that the definition of $h_2$ excludes zero in the range because $h_2$ is a displacement and we don't want to cause a displacement of zero (since that element is already full).
+				\\ \\
+				What happens if the secondary ($h_1(k) + h_2(k)$-th position) is already occupied as well? We continue to add $h_2(k)$ until an empty position is found. Searching works the same way \textendash{} you keep adding $h_2$ until you find an empty element.
+				\\ \\
+				If we wanted to support deletion, we wouldn't actually delete the element \textendash{} we would simply mark it as deleted. In general, hash tables like these don't support deletion because it's inconvenient.
+				\begin{theorem}
+					The average number of probes required to search successfully using double hashing is approximately $\frac{1}{2} \ln \left( \frac{1}{1 - \alpha} \right)$. The average number of probes required to search unsuccessfully using double hashing is $\frac{1}{1 - \alpha}$.
+				\end{theorem}
+				
+				Let's examine the number of elements that need to be checked for a hit or miss using double hashing:
+				\begin{center}
+					\begin{tabular}{c|c|c|c|c}
+						$\alpha$: & 1/2 & 2/3 & 3/4 & 9/10 \\ \hline
+						hit: & 1.4 & 1.6 & 1.8 & 2.6 \\
+						miss: & 1.5 & 2.0 & 3.0 & 5.5
+					\end{tabular}
+				\end{center}
+
+				Notice that a miss on a load factor of $\frac{9}{10}$ was improved from 55.5 to 5.5 by using double hashing (a 10x increase in performance!).
+
+		\subsection{Hashing Applications}
+			Back in the day, Apple had a Pascal compiler that took an hour to compile programs. Another company made a compiler that could do the same job in just one and a half minutes. They achieved that by using hashing for all identifiers/tokens, while Apple used a straight-line table.
+			\\ \\
+			Network routers need performance greater than $O(\lg n)$ for passing packets to their appropriate destinations. A solution was found that ran in $O(\lg \lg n)$ time, which was nice. But even that wasn't fast enough. Now, hashing is used to achieve constant $O(1)$ time. Cisco continues to fund research to make hashing as efficient as possible.
+			\\ \\
+			A hash table may also be good for implementing a tree structure if the worst case complexity doesn't concern you.
+		
+		\subsection{Cuckoo Hashing}
+			Cuckoo hashing is a different way of handling the insertion of a second element with the same hash key. The first element (that's already in the hash table) is the one that gets moved by calculating its $h_2$ displacement value. The latest element to be inserted will always be in the $h_1$-th position for that hash key.
+			\\ \\
+			More on this next time.
+
 \end{document}
