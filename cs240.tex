@@ -21,9 +21,18 @@
 
 \setlength{\marginparwidth}{1.5in}
 \setlength{\algomargin}{0.75em}
+
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=blue,
+    filecolor=blue,
+    linkcolor=blue,
+    urlcolor=blue
+}
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
 
-\pgfplotsset{compat=newest,compat/show suggested version=false}
+\pgfplotsset{compat=newest}
 
 \begin{document}
 	\let\ref\Cref
