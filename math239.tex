@@ -27,6 +27,16 @@
 \setlength{\marginparwidth}{1.5in}
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
 
+\usepackage{hyperref}
+\hypersetup{
+    colorlinks,
+    citecolor=blue,
+    filecolor=blue,
+    linkcolor=blue,
+    urlcolor=blue
+}
+
+
 \tikzset{
 	dot/.style 2 args={circle,inner sep=2pt,fill,label=#1:{#2},name=#2},
 	rdot/.style 2 args={circle,inner sep=2pt,fill=red,label=#1:{#2},name=#2},
