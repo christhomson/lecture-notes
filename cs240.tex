@@ -518,7 +518,7 @@
 				There are a number of log identities you should be aware of:
 				\begin{align}
 					\log_b (a \cdot c) &= \log_b a + \log_b c \\
-					\log \big( \frac{a}{c} \big) &= \log_b a - \log_b c \\
+					\log \left( \frac{a}{c} \right) &= \log_b a - \log_b c \\
 					\log(a^c) &= c \cdot \log_b a \\
 					b^{\log_c a} &= a^{\log_c b} \\
 					\log_b a &= \frac{\log_c a}{\log_c b} 
@@ -636,8 +636,8 @@
 		\\ \\
 		The number of operations mergesort requires is:
 		\begin{align*}
-			T_{ms}(n) &= T_{ms}\big( \frac{n}{2} \big) + T_{ms}\big( \frac{n}{2} \big) + n \\
-			&= 2T_{ms}\big( \frac{n}{2} \big) + n
+			T_{ms}(n) &= T_{ms}\left( \frac{n}{2} \right) + T_{ms}\left( \frac{n}{2} \right) + n \\
+			&= 2T_{ms}\left( \frac{n}{2} \right) + n
 			\\ \\
 			T_{ms}(1) &= 1 \text{ (base case)}
 		\end{align*}
@@ -656,7 +656,7 @@
 
 		You can check this with induction. That is, assuming this holds for $n = 2$, show that it holds for any $n$. If $T_{ms}(n) = n \lg n$, then:
 		\begin{align*}
-			T_{ms}(n) &= 2 T_{ms}\big( \frac{n}{2} \big) + n \\
+			T_{ms}(n) &= 2 T_{ms}\left( \frac{n}{2} \right) + n \\
 			&= 2 \cdot \frac{n}{2} \cdot \lg \frac{n}{2} + n \\
 			&= n \cdot \lg \frac{n}{2} + n \\
 			&= n \cdot (\lg n - \log 2) + n \text{ by log identity} \\
@@ -760,7 +760,7 @@
 						\\ \\
 						Here's the pseudocode for the bubble up process: \\
 						\begin{algorithm}[H]
-							\While( [parent exists and has higher priority] ){$\lfloor \frac{v - 1}{2} \rfloor \ge 0$ and A[$\lfloor \frac{v - 1}{2} \rfloor$].p > A[v].p}{ 
+							\While( [parent exists and has higher priority] ){$\lfloor \frac{v - 1}{2} \rfloor \ge 0$ and $A[\lfloor \frac{v - 1}{2} \rfloor].p > A[v].p$}{ 
 								swap(v, $\lfloor \frac{v - 1}{2} \rfloor$)\;
 								v = $\lfloor \frac{v - 1}{2} \rfloor$\;
 							}
@@ -770,7 +770,7 @@
 						\begin{algorithm}[H]
 							\While( [v has at least one child] ){$2v + 1 \le$ last}{
 								u = argmin\{A[2v + 1], A[2v + 2]\}; // argmin returns the array index of the min \\
-								\eIf{A[u].p < A[v].p}{
+								\eIf{$A[u].p < A[v].p$}{
 									swap(u, v)\;
 									v = u\;
 								}{
@@ -804,7 +804,7 @@
 
 				The number of comparisons for boogie down is:
 				\begin{align*}
-					\frac{n}{2} + 1& + \frac{n}{4} \cdot 2 + \frac{n}{8} \cdot 3 + \ldots + 1 \cdot \lg n \\
+					\frac{n}{2} + 1& + \frac{n}{4} \cdot 2 + \frac{n}{8} \cdot 3 + \cdots + 1 \cdot \lg n \\
 					&\sum_{i = 1}^{\lg n} \frac{n}{2^i} \cdot i
 				\end{align*}
 
@@ -816,10 +816,10 @@
 				\begin{align*}
 					T\bigg(\frac{n}{2}\bigg) &= T\bigg(\frac{\frac{n}{2}}{2}\bigg) + \frac{\frac{n}{2}}{4} \\
 					&= T\bigg(\frac{n}{4}\bigg) + \frac{n}{8} \\
-					&= \frac{n}{4} + \frac{n}{8} + \frac{n}{16} + \frac{n}{32} + \ldots \\
-					&= n\bigg(\frac{1}{4} + \frac{1}{8} + \frac{1}{16} + \frac{1}{32} + \ldots\bigg)
+					&= \frac{n}{4} + \frac{n}{8} + \frac{n}{16} + \frac{n}{32} + \cdots \\
+					&= n\bigg(\frac{1}{4} + \frac{1}{8} + \frac{1}{16} + \frac{1}{32} + \cdots\bigg)
 				\end{align*}
-				This is true because $\sum_{i = 0}^{\infty} \frac{1}{2^i} = 1 + \frac{1}{2} + \frac{1}{4} + \ldots = 2$ was proven by Zeno.
+				This is true because $\sum_{i = 0}^{\infty} \frac{1}{2^i} = 1 + \frac{1}{2} + \frac{1}{4} + \cdots = 2$ was proven by Zeno.
 				\\ \\
 				\underline{Aside}: Zeno's proof of this involved a human and a turtle walking. The human walked at a pace of 1 metre per hour and the turtle moved at a pace of a $\frac{1}{2}$ metre per hour. The turtle was given a head start. The human would catch up with the turtle at point 2, but not any sooner because both the human and the turtle will have made progress on their race by the time the human reaches a point where the turtle was previously. This is known as \textbf{Zeno's paradox}. Unrelated: someone has called the dust that you can never sweep into a dust pan zenodust.
 				\\ \\
@@ -929,15 +929,15 @@
 				\textbf{Expected case}: probabilities come from the algorithm itself. For example: select $p$ at random in A[0\ldots n - 1], which preserves randomness. Regardless of the input distribution or partition algorithm, a pivot is ``good'' with probability $\approx \frac{1}{2}$. The expected case is that this algorithm runs in $T(n, k)$ time as follows:
 				\begin{align*}
 					T(n, k) &= cn + \frac{1}{n} T(n - 1, k) + \frac{1}{n} T(n - 2, k) + \frac{1}{n} T(n - 3, k) + \ldots + \frac{1}{n}T(n + 1, k - 1) + \frac{1}{n}T(n + 2, k - 2) + \ldots  \\
-					&= cn + \frac{1}{n} \bigg[ \sum_{i = 0}^{k - 1} T(n - i - 1, k - i - 1) + \sum_{i = k + 1}^{n - 1} T(i, k) \bigg]
+					&= cn + \frac{1}{n} \left[ \sum_{i = 0}^{k - 1} T(n - i - 1, k - i - 1) + \sum_{i = k + 1}^{n - 1} T(i, k) \right]
 				\end{align*}
 				We could hand-wave and say:
 				\begin{align*}
-					T(n) &\le \frac{1}{2} T(n) + \frac{1}{2} T\big(\frac{3n}{4}\big) + cn \\
-					&\le 2cn + 2cn\big(\frac{3n}{4}\big) + 2c\big(\frac{9n}{16}\big) + \ldots + T(1) \\
-					&\le \frac{1}{2} \bigg[\frac{1}{2}T(n) + \frac{1}{2}T\big(\frac{3n}{4}\big) + cn \bigg] + \frac{1}{2}\bigg[ \frac{1}{2} T\big(\frac{3n}{4}\big) + \frac{1}{2}T\big(\frac{9n}{16}\big) + c \frac{3n}{4} \bigg] \\
-					&\le \frac{1}{4}T(n) + \frac{1}{2}T\big(\frac{3n}{4}\big) + \frac{1}{2} cn + \frac{1}{4}T\big(\frac{9n}{16}\big) + c\frac{3n}{8} + cn \\
-					&\le \underbrace{T(1)}_{\text{constant}} + 2cn \underbrace{\sum_{i = 0}^{\infty} \big(\frac{3}{4}\big)^i}_{\text{constant}} \\
+					T(n) &\le \frac{1}{2} T(n) + \frac{1}{2} T\left(\frac{3n}{4}\right) + cn \\
+					&\le 2cn + 2cn\left(\frac{3n}{4}\right) + 2c\left(\frac{9n}{16}\right) + \ldots + T(1) \\
+					&\le \frac{1}{2} \bigg[\frac{1}{2}T(n) + \frac{1}{2}T\left(\frac{3n}{4}\right) + cn \bigg] + \frac{1}{2}\bigg[ \frac{1}{2} T\left(\frac{3n}{4}\right) + \frac{1}{2}T\left(\frac{9n}{16}\right) + c \frac{3n}{4} \bigg] \\
+					&\le \frac{1}{4}T(n) + \frac{1}{2}T\left(\frac{3n}{4}\right) + \frac{1}{2} cn + \frac{1}{4}T\left(\frac{9n}{16}\right) + c\frac{3n}{8} + cn \\
+					&\le \underbrace{T(1)}_{\text{constant}} + 2cn \underbrace{\sum_{i = 0}^{\infty} \left(\frac{3}{4}\right)^i}_{\text{constant}} \\
 					&= \Theta(n)
 				\end{align*}
 				$\therefore$ We can quick select in linear time in the expected case.
@@ -957,14 +957,14 @@
 				\\ \\
 				\textbf{Worst case}: $T(n) = n + T(n - 1) = n + (n - 1) + T(n - 2) + \ldots = \Theta(n^2)$.
 				\\ \\
-				\textbf{Best case}: $T(n) = n + 2T\big(\frac{n}{2}\big) = \Theta(n \lg n)$.
+				\textbf{Best case}: $T(n) = n + 2T\left(\frac{n}{2}\right) = \Theta(n \lg n)$.
 				\\ \\
 				\textbf{Average case}:
 				\begin{align*}
 					T(n) &= cn + \frac{1}{n}(T(n - 1) + T(1)) + \frac{1}{n}(T(n - 2) + T(2)) + \ldots + \frac{1}{n}(T(1) + T(n - 1)) \\
 					&= \frac{1}{n} \sum_{i = 0}^{n - 1}(T(i) + T(n - i - 1)) + \underbrace{\Theta(n)}_{\text{partition step}} \\
 					&\le \frac{1}{n} \sum_{i = 0}^{n - 1} 2 \max \{T(i), T(n - i - 1) \} + \Theta(n) \\
-					&= \frac{1}{n} \cdot \frac{1}{2}(T\big(\frac{3i}{4}\big)) + \frac{1}{n} \cdot \frac{1}{2} T(i) + cn
+					&= \frac{1}{n} \cdot \frac{1}{2}(T\left(\frac{3i}{4}\right)) + \frac{1}{n} \cdot \frac{1}{2} T(i) + cn
 				\end{align*}
 
 				Take note of two important observations here:
@@ -1018,7 +1018,7 @@
 			\\ \\
 			We need a tree with $n!$ leaves that is as shallow as possible. More specifically:
 			\begin{align*}
-				h = \log(n!) = \log\big(\frac{n^n}{e^n}) = \log n^n - \log e^n = n \log n - n \log e = \Theta\big(\big(\frac{n}{e}\big)^n\big)
+				h = \log(n!) = \log\left(\frac{n^n}{e^n}\right) = \log n^n - \log e^n = n \log n - n \log e = \Theta\left(\left(\frac{n}{e}\right)^n\right)
 			\end{align*}
 			This is true because of Stirling's approximation.
 			\\ \\
@@ -1535,18 +1535,18 @@
 				\item This is an example of an ``algorithm for external memory'' (hard drives and other secondary storage). 
 			\end{itemize}
 
-			In a B-tree of height $h$, what is the minimum number of nodes in the tree? $2 + 2 \cdot 2 + 2 \cdot 2 \cdot 2 + \ldots$, since the root has two children, and each of those has two children, and so on. This leaves us with the minimum number of nodes in the tree being:
+			In a B-tree of height $h$, what is the minimum number of nodes in the tree? $2 + 2 \cdot 2 + 2 \cdot 2 \cdot 2 + \cdots$, since the root has two children, and each of those has two children, and so on. This leaves us with the minimum number of nodes in the tree being:
 			\begin{align*}
-				2 + 2 \cdot 2 + 2 \cdot 2 \cdot 2 + \ldots &= \sum_{i = 1}^{h} \bigg(\frac{m}{2}\bigg)^i \approx \bigg(\frac{m}{2}\bigg)^{h + 1} \\
+				2 + 2 \cdot 2 + 2 \cdot 2 \cdot 2 + \cdots &= \sum_{i = 1}^{h} \bigg(\frac{m}{2}\bigg)^i \approx \bigg(\frac{m}{2}\bigg)^{h + 1} \\
 				\bigg(\frac{m}{2}\bigg)^{h + 1} &\ge n \\
 				(h + 1) \lg\frac{m}{2} &\le \lg n \\
 				h + 1 &= \frac{\lg n}{\lg \frac{m}{2}} \\
 				h &\approx \frac{\lg n}{\lg m - 1} - 1
 			\end{align*}
 
-			In a B-tree of height $h$, what is the maximum number of nodes in the tree? $4 + 4 \cdot 4 + 4 \cdot 4 \cdot 4 + \ldots$, following the same logic as before. This leaves us with:
+			In a B-tree of height $h$, what is the maximum number of nodes in the tree? $4 + 4 \cdot 4 + 4 \cdot 4 \cdot 4 + \cdots$, following the same logic as before. This leaves us with:
 			\begin{align*}
-				4 + 4 \cdot 4 + 4 \cdot 4 \cdot 4 + \ldots &= \sum_{i = 0}^{h} m^i \approx m^{h + 1} \\
+				4 + 4 \cdot 4 + 4 \cdot 4 \cdot 4 + \cdots &= \sum_{i = 0}^{h} m^i \approx m^{h + 1} \\
 				m^{h + 1} &= n \\
 				(h + 1) \lg m &= \lg n \\
 				h &\approx \frac{\lg n}{\lg m} - 1 \approx \log_m n
@@ -1580,7 +1580,7 @@
 		\\ \\
 		Choosing a good hash function is hard. Let's look for an $h: \{\text{ keys }\} \to \{0, 1, \ldots, m\}$ (where $m$ is the size of the hash table). There are two main approaches. \lecture{February 26, 2013}
 		\begin{enumerate}
-			\item \textbf{h(k) = k mod m}. We know that $\mod m$ behaves a lot nicer if $m$ is prime, so we're interested in choosing a prime $m$ that is large enough to be the size of the table.
+			\item \textbf{h(k) = k mod m}. We know that mod $m$ behaves a lot nicer if $m$ is prime, so we're interested in choosing a prime $m$ that is large enough to be the size of the table.
 				\\ \\
 				When you need to resize the hash table, you will often choose to double the hash table size. However, that would mean we'd have to double $m$ and then find the next prime that is larger than $m$. In practice, you may see pre-computed primes hard-coded into an array in a program for this purpose.
 			\item \textbf{Multiplication Method}. Choose $h(k)$ to be defined by:
@@ -1671,7 +1671,7 @@
 				Notice that a miss on a load factor of $\frac{9}{10}$ was improved from 55.5 to 5.5 by using double hashing (a 10x increase in performance!).
 
 		\subsection{Hashing Applications}
-			Back in the day, Apple had a Pascal compiler that took an hour to compile programs. Another company made a compiler that could do the same job in just one and a half minutes. They achieved that by using hashing for all identifiers/tokens, while Apple used a straight-line table.
+        Back in the day, Apple had a Pascal compiler that took an hour to compile programs. Another company (Borland) made a compiler that could do the same job in just one and a half minutes. They achieved that by using hashing for all identifiers/tokens, while Apple used a straight-line table.
 			\\ \\
 			Network routers need performance greater than $O(\lg n)$ for passing packets to their appropriate destinations. A solution was found that ran in $O(\lg \lg n)$ time, which was nice. But even that wasn't fast enough. Now, hashing is used to achieve constant $O(1)$ time. Cisco continues to fund research to make hashing as efficient as possible.
 			\\ \\
