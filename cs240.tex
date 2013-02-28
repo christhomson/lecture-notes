@@ -392,7 +392,7 @@
 
 			Operations like addition and multiplication are primitive for numbers of a reasonable size. Once numbers get large enough to exceed certain limits, we have to resort to some trickery to perform those operations, which adds additional complexity, making them no longer ``basic'' operations.
 			\\ \\
-			We can be a bit sloppy and use the worst case, then say the actual algorithm is $\le$ what we calculated.
+			We can be a bit sloppy and use the worst case, then say the actual algorithm is $\le$ to what we calculated.
 			\begin{ex} 
 				Analyze the following algorithm. Test 1 ($n$). \\
 				\begin{algorithm}[H]
@@ -659,7 +659,7 @@
 			T_{ms}(n) &= 2 T_{ms}\big( \frac{n}{2} \big) + n \\
 			&= 2 \cdot \frac{n}{2} \cdot \lg \frac{n}{2} + n \\
 			&= n \cdot \lg \frac{n}{2} + n \\
-			&= n \cdot (\lg n - \log 2) + n \text{ by log identity} \\
+			&= n \cdot (\lg n - \lg 2) + n \text{ by log identity} \\
 			&= n(\lg n - 1) + n \\
 			&= n \lg n - n + n \\
 			&= n \lg n
@@ -746,7 +746,7 @@
 						\\ \\
 						Next, we'll look into \textbf{filling holes}. If you delete an element from the tree, you delete the element at the top, but then you have a hole that needs to be filled. But how? We take the last element in the tree (the rightmost element at the bottom level) and swap it into the top position, then we get it to \textbf{boogie down}.
 						\\ \\
-						The process of \textbf{boogieing down} is where an element (in this case, the top element) looks at its children and swaps with a child that has lower priority than itself (if any). It does this recursively. It continues to recurse until the child is of higher priority than its parent, or until you reach a leaf node. Swap places with the child with the highest priority.
+						The process of \textbf{boogieing down} is where an element (in this case, the top element) looks at its children and swaps with a child that has higher priority than itself (if any, where ``higher priority'' differs depending on if it's a min- or max-heap). It does this recursively. It continues to recurse until the child is of higher priority than its parent, or until you reach a leaf node. Swap places with the child with the highest priority.
 						\\ \\
 						Insertion uses the process of \textbf{bubbling up}. We place the new element in the first available spot, which will be in the bottom level. The new element exchanges with their parent if the new element has higher priority than the parent, and that continues as far as needed, until it doesn't swap or until it reaches the top.
 						\\ \\
@@ -842,7 +842,7 @@
 			\\ \\
 			A heap implemented using an array is called an \textbf{in-place implicit data structure}. You avoid pointers by using trickery in the organization of the data itself.
 		\subsection{Quick Sort}
-			\textbf{Selection}: suppose we want to find the minimum or maximum element in an unsorted array. The easy solution is to scan the array and report the answer in $\Theta(n)$ time. However, if you're asked to find the $k$-th largest element? The na\"ive solution would be to sort the entire array, which would take $\Theta(n \lg n)$ time.
+			\textbf{Selection}: suppose we want to find the minimum or maximum element in an unsorted array. The easy solution is to scan the array and report the answer in $\Theta(n)$ time. However, what if you're asked to find the $k$-th largest element? The na\"ive solution would be to sort the entire array, which would take $\Theta(n \lg n)$ time.
 			\\ \\
 			We can do better. We can find the $k$-th largest element in an array in linear time in the worst case, using a method called quick select.
 
