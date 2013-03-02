@@ -9,6 +9,7 @@
 \usepackage{amsthm}
 \usepackage{tikz}
 \usepackage{qtree}
+\usepackage{float}
 \usepackage[lined]{algorithm2e}
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
@@ -2178,4 +2179,210 @@
 				Using a parse tree has the advantage of not having to rewrite the entire sentential form at each derivation step. It's also easier to visually traverse what has changed at each step.
 				\\ \\
 				Parse trees remove irrelevant differences, however we could still have some ambiguity as with the other parsing methods. Ambiguity is acceptable for context-free grammars, but it's sometimes easier to make compilers that deal with unambiguous grammars.
+		\subsection{Parsing WLPP} \lecture{February 27, 2013}
+			WLPP is described in lexical syntax (splitting it up into tokens), context-free syntax (how to arrange the tokens to create a valid WLPP program), and context-sensitive syntax (other rules that cannot be expressed by a context-free grammar).
+			\\ \\
+			The start symbol is always \verb+procedure+. We parse the tokens in order. When we encounter a nonterminal symbol, we look for a rule that defines it (on the following lines). We perform a substitution based on the rule we found, and then check the continual validity of token kinds in that order.
+			\\ \\
+			Note that declarations can be defined recursively in these grammars.
+			\\ \\
+			For more information, see the \href{https://www.student.cs.uwaterloo.ca/~cs241/wlpp/WLPP.html}{WLPP specification}.
+		\subsection{Some Parsing Examples}
+			\begin{ex}
+				We're given the alphabet $\Sigma = \{a, b\}$, the language $L = \{\epsilon, a, aa, aaa, \ldots\}$ (that is, $a^\star$), and the following rules $R$:
+				\begin{align*}
+					S &\to \epsilon \\
+					S &\to Sa
+				\end{align*}
+
+				Let's derive $x = aaa$ using a parse tree.
+				\begin{figure}[H]
+					\Tree [.S [.S [.S [.S [.$\epsilon$ ] ] [.a ] ] [.a ] ] [.a ] ]
+				\end{figure}
+
+				This could also be expressed as a derivation like so:
+				\begin{align*}
+					&S \\
+					&Sa \\
+					&Saa \\
+					&Saaa \\
+					&aaa
+				\end{align*}
+
+				That derivation is both a leftmost and rightmost derivation. This grammar is called \textbf{left-recursive} or \textbf{left-associative}.
+			\end{ex}
+
+			\begin{ex}
+				Given the same alphabet and language as before, we could have also had this set of rules $R$:
+				\begin{align*}
+					S &\to \epsilon \\
+					S &\to aS
+				\end{align*}
+
+				Let's again look at deriving $x = aaa$, but with these new rules.
+				\begin{figure}[H]
+					\Tree [.S [.a ] [.S [.a ] [.S [.a ] [.S [.$\epsilon$ ] ] ] ] ]
+				\end{figure}
+
+				This could also be expressed as a derivation like so:
+				\begin{align*}
+					S& \\
+					aS& \\
+					aaS& \\
+					aaaS& \\
+					aaa&
+				\end{align*}
+
+				This grammar is called \textbf{right-recursive} or \textbf{right-associative}.
+			\end{ex}
+
+			\begin{ex}
+				Given the same alphabet and language as before, we could have also had this set of rules $R$:
+				\begin{align*}
+					S &\to \epsilon \\
+					S &\to a \\
+					S &\to SS
+				\end{align*}
+
+				Let's again look at deriving $x = aaa$, but with these new rules.
+				\begin{figure}[H]
+					\Tree [.S [.S [.S [.a ] ] [.S [.a ]]] [.S [.a ] ] ]
+					\Tree [.S [.S [.a ] ] [.S [.S [.a ] ] [.S [.a ] ] ] ]
+				\end{figure}
+
+				We have two different parse trees, which means this grammar is ambiguous. That is, there are two canonical forms.
+				\\ \\
+				We have two different leftmost derivations for $x = aaa$. The first leftmost derivation is:
+				\begin{align*}
+					&S \\
+					&SS \\
+					&SSS \\
+					&aSS \\
+					&aaa
+				\end{align*}
+
+				The second leftmost derivation is:
+				\begin{align*}
+					&S \\
+					&SS \\
+					&aS \\
+					&aSS \\
+					&aaS \\
+					& aaa
+				\end{align*}
+
+				Note that these two derivations are different.
+				\\ \\
+				Similarly, there are two different rightmost derivations. The first rightmost derivation is:
+				\begin{align*}
+					S& \\
+					SS& \\
+					Sa& \\
+					SSa& \\
+					Saa& \\
+					aaa
+				\end{align*}
+
+				The second rightmost derivation is:
+				\begin{align*}
+					S& \\
+					SS& \\
+					SSS& \\
+					SSa& \\
+					Saa& \\
+					aaa
+				\end{align*}
+
+				Once again, note that these two derivations are different.
+			\end{ex}
+
+			\begin{ex}
+				Assume the context-free grammar as specified in the \href{https://www.student.cs.uwaterloo.ca/~cs241/wlpp/WLPP.html}{WLPP specification}.
+				\\ \\
+				Let's parse \verb+int* x = 25;+. We get the following parse tree:
+				\begin{figure}[H]
+					\Tree [.dcls [.dcls [.$\epsilon$ ] ] [.dcl [.INT ] [.STAR ] [.ID ] ] [.BECOMES ] [.NUM ] [.SEMI ] ]
+				\end{figure}
+
+				Technically, this shouldn't be valid, because type \verb+int*+ cannot be assigned the value 25. However, this context-free grammar does not enforce that \textendash{} the context-sensitive syntax will. It was decided that this grammar was sufficient to construct a parse tree, although if we wanted we could enforce that constrain in a context-free grammar. 
+				\\ \\
+				It is sometimes the case that adding seemingly-simple constraints like these will make the grammar quite complicated, so it's sometimes better to just leave certain restrictions for enforcement through a context-sensitive syntax instead.
+			\end{ex}
+
+		\subsection{Formalizing Derivations}
+			We'll start off with two formal definitions for leftmost derivations.
+
+			\begin{defn}
+				$xA\beta \implies x \gamma \beta := A \to \gamma \in R$. That is, you must substitute the first nonterminal symbol.
+			\end{defn}
+			
+			\begin{defn}
+				$\alpha \stackrel{\star}{\implies} \beta := \alpha = \beta \text{ OR } \exists \gamma \cdot \alpha \implies \gamma, \gamma \stackrel{\star}{\implies} \beta$.
+			\end{defn}
+
+			We have similar definitions for rightmost derivations, as follows.
+
+			\begin{defn}
+				$\alpha Ay \implies \alpha \gamma y := A \to \gamma \in R$.
+			\end{defn}
+
+			\begin{defn}
+				$\alpha \stackrel{\star}{\implies} \beta := \alpha = \beta \text{ OR } \exists \gamma \cdot \alpha \implies \gamma, \gamma \stackrel{\star}{\implies} \beta$.
+			\end{defn}
+
+			We will now formally define ambiguity in a context-free grammar.
+
+			\begin{defn}
+				A grammar $G$ is \textbf{ambiguous} if there exists $x \in L(G)$ such that:
+				\begin{itemize}
+					\item There are two or more leftmost derivations for $x$, or equivalently,
+					\item There are two or more rightmost derivations for $x$, or equivalently,
+					\item There are two or more parse trees for $x$.
+				\end{itemize}
+			\end{defn}
+
+			Often, there is a different grammar $G'$ where $L(G') = L(G)$ and $G'$ is unambiguous. But, $G'$ may not be easy to find, or $G'$ may not exist at all. If $G'$ does not exist, we say $L(G)$ is \textbf{inherently ambiguous}.
+			\\ \\
+			We're interested in unambiguous grammars because they allow us to do syntax-directed translation.
+		\subsection{Syntax-Directed Translation}
+			Syntax-directed translation involves computing the ``meaning'' for all subtrees in the parse.
+
+			\begin{ex}
+				Let $T = \{0, 1\}, N = \{I, B\}, S = I$, and $R$ be the set of rules:
+				\begin{align*}
+					I &\to 0 \\
+					I &\to B \\
+					B &\to 1 \\
+					B &\to B0 \\
+					B &\to B1
+				\end{align*}
+
+				We're interested in the language of binary integers without leading zeros, that is, $\{0, 1, 10, 11, 100, 101, \ldots\}$.
+				\\ \\
+				Let's parse the big-endian value of $x = 110$. We have the parse tree:
+				\begin{figure}[H]
+					\Tree [.I [.B [.B [.B [.1 ] ] [.1 ] ] [.0 ] ] ]
+				\end{figure}
+
+				From the bottom of the tree, the meaning of $B$ is 1. The meaning of the next $B$ is 3, since $Meaning(B) = 2 \times 1 + 1$. The meaning of the uppermost $B$, and $I$, are 6. The meaning of a particular element is determined by its subtrees.
+				\\ \\
+				Suppose instead we wanted the little-endian binary unsigned value. That's reasonably difficult with this grammar. Instead, we'll use a right-associative grammar for the same language. Let's define the rules for this new grammar to be:
+				\begin{align*}
+					I &\to 0 \\
+					I &\to B \\
+					B &\to 1 \\
+					B &\to 0B \\
+					B &\to 1B \\
+					B &\to 0
+				\end{align*}
+
+				Actually, this example is broken, since the number $110$ has a useless leading zero when interpreted as a little-endian binary value. So, we added the last rule, $B \to 0$ to allow leading zeroes.
+				\\ \\
+				We have the following parse tree:
+				\begin{figure}[H]
+					\Tree [.I [.B [.1 ] [.B [.1 ] [.B [.0 ] ] ] ] ]
+				\end{figure}
+
+				From the bottom of the tree, the meaning of $B$ is 0, the meaning of the second $B$ is 1, and the meaning of the uppermost $B$ (and $I$) is 3.
+			\end{ex}
 \end{document}
