@@ -2029,6 +2029,197 @@
 			\end{proposition}
 			
 			To find the path from a walk, when you reach a vertex that is equal to another, you ignore that cycle.
+
+			\lecture{February 27, 2013}
+			\begin{ex}
+				Let's say you have the following graph:
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={-90}{$x$}] at (0,0) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={-90}{$V_i$}] at (4,0) {};
+						\node [dot={-90}{$V_j$}] at (6,0) {};
+						\node [dot={-90}{$y$}] at (8,0) {};
+						\node [dot={0}{}] at (3,1) {};
+						\node [dot={0}{}] at (5,1) {};
+
+						\draw (0,0) -- (8,0);
+						\draw (4,0) -- (5,1) -- (3,1) -- (4,0);
+					\end{tikzpicture}
+				\end{center}
+
+				Heading from $x$ to $y$, while going through the nodes in the triangle in the middle, is a walk. However, if we were to skip visiting the $V_i$-th node entirely, we would have a path.
+			\end{ex}
+
+			\begin{proof}
+				Among all walks from $x$ to $y$, pick a walk $W$ with as few edges as possible. We would pick:
+				\begin{align*}
+					W = V_0e_1V_1e_2V_2 \ldots e_nV_n \text{ where } V_0 = x_1 \text{ and } V_n = y
+				\end{align*}
+
+				We need to show that $V_0, V_1, \ldots, V_n$ are all distinct. Suppose for a contradiction that there exists $V_i = V_j$ for some $i < j$. That would mean:
+				\begin{align*}
+					W &= V_0 \ldots e_i \underbrace{V_ie_{i + 1} \ldots e_j}_{\text{cut off}} V_je_{j + 1} \ldots V_n \\
+					\implies W' &= V_0 \ldots e_iV_je_{j + 1} \ldots V_n
+				\end{align*}
+
+				$W'$ is still a walk from $x$ to $y$. But $W'$ has fewer edges than $W$, which is a contradiction.
+			\end{proof}
+
+			\begin{theorem}[Corollary]
+				If there exists a path from $x$ to $y$ and there exists a path from $y$ to $z$, then there exists a path from $x$ to $z$.
+			\end{theorem}
+
+			This corollary is not as trivial to show as you might initially think. You can't just join the two paths, because the two paths may share some vertices. 
+			\begin{proof}
+				The path from $x$ to $y$ followed by the path from $y$ to $z$ is a walk from $x$ to $z$ (\emph{not} a path). By the previous result, there exists a path from $x$ to $z$.
+			\end{proof}
+
+			Does every graph have a cycle?
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={0}{}] at (0,0) {};
+					\node [dot={0}{}] at (1,0) {};
+
+					\draw (0,0) -- (1,0);
+				\end{tikzpicture}
+			\end{center}
+
+			This graph does clearly not have a cycle, but it's not a terribly interesting graph. This more complicated graph also does not have a cycle:
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={0}{}] at (0,0) {};
+					\node [dot={0}{}] at (1,0) {};
+					\node [dot={0}{}] at (2,0) {};
+					\node [dot={0}{}] at (1,1) {};
+
+					\node [dot={0}{}] at (3,2) {};
+
+					\node [dot={0}{}] at (0,4) {};
+					\node [dot={0}{}] at (1,4) {};
+					\node [dot={0}{}] at (2,4) {};
+					\node [dot={0}{}] at (2,3) {};
+
+					\node [dot={0}{}] at (6,1) {};
+					\node [dot={0}{}] at (6,2) {};
+					\node [dot={0}{}] at (5,3) {};
+					\node [dot={0}{}] at (7,3) {};
+					\node [dot={0}{}] at (8,2) {};
+
+					\draw (1,1) -- (0,0);
+					\draw (1,1) -- (1,0);
+					\draw (1,1) -- (2,0);
+
+					\draw (3,2) -- (1,1);
+					\draw (3,2) -- (2,3);
+
+					\draw (2,3) -- (0,4);
+					\draw (2,3) -- (1,4);
+					\draw (2,3) -- (2,4);
+
+					\draw (3,2) -- (8,2);
+					\draw (6,2) -- (6,1);
+					\draw (6,2) -- (5,3);
+					\draw (6,2) -- (7,3);
+				\end{tikzpicture}
+			\end{center}
+
+			But what if every vertex has degree at least 2? In that case, it is not possible to create a graph that does \emph{not} have a cycle. In order for each vertex to have degree of at least 2, it must loop back somewhere.
+			\begin{proposition}
+				Let $G = (V, E)$. If for all $v \in V$, $\deg(v) \ge 2$, then $G$ has a cycle.
+			\end{proposition}
+
+			\begin{proof}
+				Among all paths, pcik a path $P$ with as many edges as possible. We have:
+				\begin{align*}
+					P = V_0e_1V_1e_2 \ldots e_nV_n
+				\end{align*}
+
+				Since $\deg(V_n) \ge 2$, there exists $V_nw \ne e_n$. Since $P$ is the longest path, $w = V_i$ for some $i \in \{0, \ldots, n - 2\}$. Then we have the cycle $C$:
+				\begin{align*}
+					C &= V_ie_iV_{i + 1} \ldots e_nV_ne_{n + 1}V_i
+				\end{align*}
+			\end{proof}
+
+			Note that it doesn't necessarily have to loop back to the ``first'' vertex because you may have a graph like this:
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={0}{}] at (0,0) {};
+					\node [dot={0}{}] at (1,1) {};
+					\node [dot={0}{}] at (0,2) {};
+					\node [dot={0}{}] at (3,1) {};
+					\node [dot={0}{}] at (4,0) {};
+					\node [dot={0}{}] at (4,2) {};
+
+					\draw (0,0) -- (1,1) -- (0,2) -- (0,0);
+					\draw (3,1) -- (4,0) -- (4,2) -- (3,1);
+					\draw (1,1) -- (3,1);
+				\end{tikzpicture}
+			\end{center}
+
+			\begin{defn}
+				A cycle is \textbf{Hamiltonian} if every vertex is in the cycle.
+			\end{defn}
+
+			You can think of a Hamiltonian cycle in terms of a graph of cities, where you have a person who wants to visit all the cities once and then return to their initial city.
+
+			\begin{ex}
+				Here's an example of a Hamiltonian cycle:
+				\begin{center}
+					\begin{tikzpicture}%[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (4,0) {};
+						\node [dot={0}{}] at (0,4) {};
+						\node [dot={0}{}] at (4,4) {};
+
+						\node [dot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (3,1) {};
+						\node [dot={0}{}] at (1,3) {};
+						\node [dot={0}{}] at (3,3) {};
+
+						\draw (0,0) -- (4,0) -- (4,4) -- (0,4) -- (0,0);
+						\draw (1,1) -- (1,3) -- (3,3) -- (3,1) -- (1,1);
+						\draw (0,0) -- (1,1);
+						\draw (4,4) -- (3,3);
+						\draw (0,4) -- (1,3);
+						\draw (4,0) -- (3,1);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+
+			Do we always have a Hamiltonian cycle? No.
+			\begin{ex}
+				Here's an example of a graph without a Hamiltonian cycle.
+				\begin{center}
+					\begin{tikzpicture}%[scale=1.5]
+						\node [dot={0}{}] at (0,4) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (5,0) {};
+						\node [dot={0}{}] at (2,1) {};
+						\node [dot={0}{}] at (4,1) {};
+						\node [dot={0}{}] at (1,3) {};
+						\node [dot={0}{}] at (5,3) {};
+						\node [dot={0}{}] at (3,4) {};
+						\node [dot={0}{}] at (6,4) {};
+						\node [dot={0}{}] at (3,6) {};
+
+						\draw (0,4) -- (1,0) -- (5,0) -- (6,4) -- (3,6) -- (0,4);
+						\draw (0,4) -- (1,3) -- (2,1) -- (4,1) -- (5,3) -- (3,4) -- (1,3);
+						\draw (1,0) -- (2,1);
+						\draw (5,0) -- (4,1);
+						\draw (5,3) -- (6,4);
+						\draw (3,4) -- (3,6);
+						\draw (2,1) -- (5,3);
+						\draw (1,3) -- (4,1) -- (3,4) -- (2,1);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+
+			\begin{proposition}
+				Let $G = (V, E)$. If for all $v \in V$, $\deg(v) \ge \frac{|V|}{2}$, then there exists a Hamiltonian cycle.
+			\end{proposition}
+
+
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
@@ -2053,5 +2244,67 @@
 			\item The set of binary strings without consecutive zeroes can be described as\dots? The set can be described as $(\{\epsilon, 0\}\{ 1 \})^\star \{ \epsilon, 0 \}$.
 				\\ \\
 				We have to make sure this expression does not generate anything that is not in the set. Then we think about how to generate any arbitrary string contained in the set we're trying to express. There is a unique way to generate each string with the expression.
+			\item \lecture{February 27, 2013} The general solution of the recurrence relation $a_n - 4a_{n - 2} = 0$ is given by $a_n = c_12^n + c_2(-2)^n$.
+				\\ \\
+				$a_{n - 2}$ indicates that the degree of the characteristic polynomial is 2. So, we get that $p(x) = x^2 - 4 = (x + 2)(x - 2)$, which has roots -2 and 2.
+			\item Suppose $a_n = (c_1n + c_2)3^n$. Then it is the general solution to the recurrence $a_n - 6a_{n-1} + 9a_{n-2} = 0$.
+				\\ \\
+				Note that 3 corresponds to the root, which appears with multiplicity 2. The characteristic polynomial is $p(x) = (x-3)^2 = x^2 - 6x + 9$.
+			\item How many vertices are there in a 4-regular graph with 40 edges? 20.
+				\\ \\
+				Recall that $\sum_{v \in V} \deg(v) = 2|E|$ (by theorem), so we get:
+				\begin{align*}
+					\sum_{v \in V} \deg(v) &= 2|E| \\
+					4|V| &= 2|40| \\
+					4|V| &= 80 \\
+					|V| = 20
+				\end{align*}
+			\item Are the following two graphs isomorphic?
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={180}{c}] at (0,0) {};
+						\node [dot={0}{d}] at (1,0) {};
+						\node [dot={180}{a}] at (0,1) {};
+						\node [dot={0}{b}] at (1,1) {};
+
+						\draw (0,0) -- (0,1) -- (1,1) -- (1,0) -- (0,0);
+					\end{tikzpicture}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={180}{2}] at (0,0) {};
+						\node [dot={0}{w}] at (3,0) {};
+						\node [dot={180}{x}] at (1,1) {};
+						\node [dot={0}{y}] at (2,1) {};
+
+						\draw (0,0) -- (1,1) -- (2,1) -- (3,0) -- (1,1);
+						\draw (0,0) -- (2,1);
+						\draw (0,0) -- (3,0);
+					\end{tikzpicture}
+				\end{center}
+
+				Yes! Here's a bijection between their vertices:
+				\begin{align*}
+					a &\to x \\
+					d &\to y \\
+					c &\to z \\
+					b &\to w
+				\end{align*}
+
+			\item Consider this graph. Is $W = a1c4d3a2b$ a walk, cycle, and/or path?
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={180}{c}] at (0,0) {};
+						\node [dot={0}{d}] at (1,0) {};
+						\node [dot={180}{a}] at (0,1) {};
+						\node [dot={0}{b}] at (1,1) {};
+
+						\draw (0,0) -- (1,0) node [midway,fill=white] {4};
+						\draw (1,0) -- (1,1) node [midway,fill=white] {5};
+						\draw (1,1) -- (0,1) node [midway,fill=white] {2};
+						\draw (0,1) -- (0,0) node [midway,fill=white] {1};
+						\draw (0,1) -- (1,0) node [midway,fill=white] {3};
+					\end{tikzpicture}
+				\end{center}
+
+				$W$ is a walk but not a cycle nor a path.
 		\end{itemize}
 \end{document}
