@@ -497,7 +497,7 @@
 					&= \Theta(n^3)
 				\end{align*}
 
-				Alternatively, we could use a lazier process to determine that this algorithm is $O(n^3)$, wihch is less precise than saying the algorithm is $\Theta(n^3)$. The lazy way is to say each of the nested loops will run in $\le n$ operations in the worst case, which can be multiplied out to $n^3$.
+				Alternatively, we could use a lazier process to determine that this algorithm is $O(n^3)$, which is less precise than saying the algorithm is $\Theta(n^3)$. The lazy way is to say each of the nested loops will run in $\le n$ operations in the worst case, which can be multiplied out to $n^3$.
 			\end{ex}
 
 		\subsection{Math Review}
@@ -1272,7 +1272,7 @@
 					\begin{figure}[H]
 						\qroofx=2
 						\qroofy=2
-						\Tree [.z [.y \qroof{A}. [.x \qroof{X}. \qroof{C}. ].x ].y \qroof{D}. ].z
+						\Tree [.z [.y \qroof{A}. [.x \qroof{B}. \qroof{C}. ].x ].y \qroof{D}. ].z
 						\caption{A double-right rotation needs to be applied to this entire tree. \label{figure:drrotationneeded}}
 					\end{figure}
 
@@ -1406,7 +1406,7 @@
 
 			In \ref{figure:typicalmultiwaytree}, there are 3 keys and 4 children. However, to generalize, a multi-way tree with $k$ keys needs $k + 1$ or $k + 2$ children.
 			\\ \\
-			In a binary search tree, we have $O(\log_2 n)$ complexity. In a multi-way tree (with $k$ keys), we have $O(\log_{k + 1})$ complexity. For a 20-way tree, for example, $\log_{20} n \ge \log_2 n$, but the constant will be much smaller for $\log_{20} n$. This smaller constant means we will hit the hard drive fewer times, which is a net win.
+			In a binary search tree, we have $O(\log_2 n)$ complexity. In a multi-way tree (with $k$ keys), we have $O(\log_{k + 1})$ complexity. For a 20-way tree ($\log_{20} n$), the constant will be much smaller. This smaller constant means we will hit the hard drive fewer times, which is a net win.
 			\\ \\
 			CD-ROMs used to take as long to read as music CDs did. They implemented an indexing system using a binary search tree, which was too slow. It was relatively easy to make CD-ROMs quicker (2x, 4x, \ldots) by overclocking the spinning mechanism. However, the queries were not being processed any faster because the head was slow. For music CD players, heads didn't need to be very fast. In fact, heads really haven't improved much since then.
 			\\ \\
@@ -1528,7 +1528,7 @@
 				\item Each node can contain up to $m$ children.
 			\end{itemize}
 
-			\textbf{$B^+$-Trees}:
+			\textbf{$\boldsymbol{B^+}$-Trees}:
 			\begin{itemize}
 				\item The internal nodes only have keys.
 				\item Key-value pairs are present in the leaf nodes only.
