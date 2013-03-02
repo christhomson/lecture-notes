@@ -7,3 +7,5 @@
 *_aux
 *.swp
 *.toc
+*.fdb_latexmk
+*.fls
