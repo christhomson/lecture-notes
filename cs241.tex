@@ -2385,4 +2385,172 @@
 
 				From the bottom of the tree, the meaning of $B$ is 0, the meaning of the second $B$ is 1, and the meaning of the uppermost $B$ (and $I$) is 3.
 			\end{ex}
+
+			\begin{ex} \lecture{March 1, 2013}
+				Let's change the rules $R$, to be:
+				\begin{align*}
+					I &\to 0 \\
+					I &\to B \\
+					I &\to 1 \\
+					I &\to B0 \\
+					I &\to B1
+				\end{align*}
+
+				We're interested in the meaning of $x = 1101 \in L(G)$ as a binary big-endian number. $x$ means 13 in big-endian. We get this parse tree:
+				\begin{figure}[H]
+					\Tree [.I [.B [.B [.B [.1 ] [.1 ] ] [.0 ] ] [.1 ] ] ]
+				\end{figure}
+
+
+				The meaning of an individual node is called its \textbf{attribute}. The attribute of the lowest $B$ is 3, then 6, then 13. We denote the attribute of $I$ as $m(I) = 13$. To determine the meaning, you determine the meaning of the subtrees first by doing a postfix traversal.
+				\\ \\
+				What about the little-endian meaning? The best way to determine this is to write another grammar that is right-associative. We'll define the rules $R$ as:
+				\begin{align*}
+					I &\to 0 \\
+					I &\to B \\
+					B &\to 1 \\
+					B &\to 0B \\
+					B &\to 1B
+				\end{align*}
+
+				This is the parse tree for $x = 1101$ as a little-endian binary number:
+				\begin{figure}[H]
+					\Tree [.I [.B [.1 ] [.B [.1 ] [.B [.0 ] [.B [.1 ] ] ] ] ] ]
+				\end{figure}
+			\end{ex}
+		\subsection{Extended Grammars}
+			Let's extend the grammar from before to add these rules to $R$:
+			\begin{align*}
+				E &\to I \\
+				E &\to E + I
+			\end{align*}
+
+			Now, let's parse \verb|1 + 1 + 0|. We get the parse tree:
+			\begin{figure}[H]
+				\Tree [.E [.E [.E [.I [.B [.1 ] ] ] ] [.+ ] [.I [.B [.1 ] ] ] ] [.+ ] [.I [.0 ] ] ]
+			\end{figure}
+
+			The meaning of the $E + I$ expression at the second level is $m(E) = 2$ and $m(I) = 0$, so the resulting meaning for the uppermost $E$ is $m(E) = 2$.
+			\\ \\
+			Now, let's extend the grammar once more to include these rules for $E$, in addition to the rules for $I$ that were defined earlier:
+			\begin{align*}
+				E &\to I \\
+				E &\to E + I \\
+				E &\to E * I
+			\end{align*}
+
+			Now, let's try to parse \verb|1 + 1 * 0|. We get the parse tree:
+			\begin{figure}[H]
+				\Tree [.E [.E [.E [.I [.B [.0 ] ] ] ] [.+ ] [.I [.B [.1 ] ] ] ] [.* ] [.I [.0 ] ] ]
+			\end{figure}
+
+			If you examine the attributes, you'll see that the uppermost \verb|E * I| expression has $m(E) = 2$ and $m(I) = 0$, which gives the attribute of the uppermost $E$ to be $m(E) = 0$. This is mathematically incorrect.
+			\\ \\
+			To get around this, we'll introduce the notion of a term $T$. We'll re-define the rules for $E$ once more:
+			\begin{align*}
+				E &\to T \\ 
+				E &\to E + T \\
+				T &\to I \\
+				T &\to T * I
+			\end{align*}
+
+			Now, when we parse \verb|1 + 1 * 0|, we get this parse tree:
+			\begin{figure}[H]
+				\Tree [.E [.E [.T [.I [.B [.1 ] ] ] ] ] [.+ ] [.T [.T [.I [.B [.1 ] ] ] ] [.* ] [.I [.B [.0 ] ] ] ] ]
+			\end{figure}
+
+			This yields the proper values for the uppermost \verb|E + T| expression, $m(E) = 1$ and $m(T) = 0$. This works as we would mathematically expect.
+			\\ \\
+			You can see this general pattern of evaluation ordering in the WLPP spec, but instead of $I$ and $B$, we will have specific INT tokens. Here's an example of a WLPP parse tree, parsing \verb|1 + 1 * 0|.
+			\begin{figure}[H]
+				\Tree [.E [.E [.T [.{INT 1} ] ] ] [.+ ] [.T [.T [.{INT 1} ] ] [.* ] [.{INT 0} ] ] ]
+			\end{figure}
+		\subsection{Parsing Algorithms}
+			There are several different parsing algorithms, some of which are top-down and some of which are bottom-up.
+			\subsubsection{Generic Top-Down Parser}
+				Given $x \in L(G)$, find a derivation $\gamma_0 \gamma_1 \ldots \gamma_n$.
+
+				\begin{algorithm}[H]
+					$\gamma = S$\;
+					\While{$\gamma \ne x$}{
+						select $\alpha, A, \beta$ where $\gamma = \alpha A \beta$ (find a nonterminal $A$ in $\gamma$)\;
+						select $\delta$ where $A \to \delta \in R$ (find a rule with $A$ as its left side, may fail if $x \not \in L(G)$)\;
+						$\gamma = \alpha \delta \beta$\;
+					}
+				\end{algorithm}
+
+				\begin{ex}
+					We're given the following set of rules $R$:
+					\begin{align*}
+						S &\to AhB \\
+						A &\to ab \\
+						B &\to ef \\
+						B &\to g
+					\end{align*}
+
+					Let's parse $x = abhg$. We get:
+					\begin{align*}
+						\gamma &= S, A = S, \alpha = \beta = \epsilon, \delta = AhB \\
+						\gamma &= AhB, A = A (\text{or} A = B), \alpha = \epsilon, \beta = hB, \delta = ab \text{ by oracle} \\
+						\gamma &= abhB \\
+						\gamma &= abhg
+					\end{align*}
+				\end{ex}
+
+			\subsubsection{Stack-Based Top-Down Parser}
+				Given input $x = x_0 x_1 x_2 \ldots x_{|x|-1}$, we'll read $x$ from left to right. At any step, we have:
+				\begin{align*}
+					x = \underbrace{x_0 x_1 x_2}_{\text{input read so far}} \ldots \underbrace{x_i x_{i + 1} \ldots x_{|x| - 1}}_{\text{input yet to be read}}
+				\end{align*}
+
+				We also have a stack of vocabulary symbols:
+				\begin{align*}
+					\text{stack} = X_0X_1 \ldots X_{|\text{stack}|-1}
+				\end{align*}
+
+				(where $X_0$ is the top of the stack and $X_{|\text{stack}|-1}$ is the bottom of the stack.
+				\\ \\
+				A key observation: at all steps, we have:
+				\begin{align*}
+					\gamma = (\text{input read so far}) (\text{stack})
+				\end{align*}
+
+				\begin{ex}
+					Let's parse $x = abhg$.
+					\begin{center}
+						\begin{tabular}{|c|c|c|c|}
+							\hline
+							$\gamma$ & input read & input yet to be read & stack (top $\ldots$ bottom) \\ \hline
+							S & $\epsilon$ & abhg & S \\
+							AhB & $\epsilon$ & abhg & AhB \\
+							abhB & $\epsilon$ & abhg & abhB \\
+							abhB & a & bhg & bhB \\
+							abhB & ab & hg & hB \\
+							abhB & abh & g & B \\
+							abh & abh & g & g \\
+							abhg & abhg & $\epsilon$ & $\epsilon$ \\ \hline
+						\end{tabular}
+					\end{center}
+
+					We're popping a terminal from the stack and comparing it with the input. When both the input to be read and the stack are empty, we're done.
+				\end{ex}
+
+				Here's some pseudocode for a stack-based top-down parser:
+
+				\begin{algorithm}[H]
+					push $S$ onto stack\;
+					\For{$c = x_0, x_1, x_2, \ldots, x_{|x| - 1}$}{
+						\While{top of stack is nonterminal $A$}{
+							pop $[A]$ from stack\;
+							consult oracle to determine $\delta$ where $A \to \delta \in R$\;
+							push $\delta_{|\delta|-1}$\;
+							push $\delta_{|\delta|-2}$\;
+							$\vdots$ \\
+							push $\delta_0$\;
+						}
+						pop $a$ from stack\;
+						assert $a = c$\;
+					}
+					assert stack = $\epsilon$\;
+				\end{algorithm}
 \end{document}
