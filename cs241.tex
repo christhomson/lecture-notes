@@ -80,7 +80,7 @@
 			\begin{itemize}
 				\item \textbf{Unsigned, little-endian}: $(1 \times 2^0) + (0 \times 2^1) + (1 \times 2^2) + (0 \times 2^3) = 1 + 4 = 5$.
 				\item \textbf{Unsigned, big-endian}: $(0 \times 2^0) + (1 \times 2^1) + (0 \times 2^2) + (1 \times 2^3) = 2 + 8 = 10$.
-				\item \textbf{Two's complement, little-endian}: $5 - 16 = -10$.
+				\item \textbf{Two's complement, little-endian}: $5$ (interpret as $0101$, so 0 is the two's complement sign bit). Similarly, $1011$ would be $-2^3 + 2^2 + 2^0 = -8 + 4 + 1 = -3$.
 				\item \textbf{Two's complement, big-endian}: $10 - 16 = -6$.
 				\item \textbf{Computer terminal}: LF (line feed).
 			\end{itemize}
