@@ -107,7 +107,7 @@
 		\subsection{Unicode}
 			\textbf{Unicode} was created to represent more characters. Unicode is represented as a 32-bit binary number, although representing it using 20 bits would also be sufficient. The ASCII characters are the first 128, followed by additional symbols.
 			\\ \\
-			A 16-bit representation of Unicode is called \textbf{UTF-16}. However, there's a problem: we have \emph{many} symbols ($> 1M$) but only $2^16 = 65,536$ possibilities to represent them. Common characters are represented directly, and there is also a `see attachment' bit for handling the many other symbols that didn't make the cut to be part of the $65,536$. Similarly, there is an 8-bit representation of Unicode called \textbf{UTF-8}, with the ASCII characters followed by additional characters and a `see attachment' bit.
+			A 16-bit representation of Unicode is called \textbf{UTF-16}. However, there's a problem: we have \emph{many} symbols ($> 1M$) but only $2^{16} = 65,536$ possibilities to represent them. Common characters are represented directly, and there is also a `see attachment' bit for handling the many other symbols that didn't make the cut to be part of the $65,536$. Similarly, there is an 8-bit representation of Unicode called \textbf{UTF-8}, with the ASCII characters followed by additional characters and a `see attachment' bit.
 			\\ \\
 			The bits themselves do not have meaning. Their meaning is in your head -- everything is up for interpretation.
 		\subsection{A Message for Aliens} \lecture{January 9, 2013}
@@ -294,7 +294,7 @@
 
 				; beginning of loop
 				add $3, $3, $1  ; add $1 to $3
-				lis $2          ; decrement $2
+				lis $2          ; decrement $1 by 1
 				.word -1
 				add $1, $1, $2
 				bne $1, $0, -5  ; n = 0? If not, branch to beginning of loop
@@ -308,11 +308,11 @@
 				\item You don't need to memorize the binary representation of MIPS commands for exams, or the ASCII representation of characters. You'll be provided with the MIPS reference sheet and an ASCII conversion chart for the exams.
 			\end{itemize}
 			\subsubsection{Labels} \lecture{January 16, 2013}
-				Part of the assembler's job is to count instructions and keep track of their locations (\verb+0x00000004+, \verb+0x00000008+, \verb+0x0000000c+, etc.). The assembler can also simplify the programmer's job at with \textbf{labels}.
+				Part of the assembler's job is to count instructions and keep track of their locations (\verb+0x00000004+, \verb+0x00000008+, \verb+0x0000000c+, etc.). The assembler can also simplify the programmer's job with \textbf{labels}.
 				\\ \\
-				Labels are identifiers in the form \verb+foo:+ (a string followed by a colon). A label \verb+foo:+ is equated to the \textbf{location} of the ine on which it is defined.
+				Labels are identifiers in the form \verb+foo:+ (a string followed by a colon). A label \verb+foo:+ is equated to the \textbf{location} of the line on which it is defined.
 				\\ \\
-				Some instructions like \verb+beq+ and \verb+bne+ rely on relative locations of lines. Counting these yourself is tedious, and can be troublesome in some situations. The locations you specify, both in places where they're specified relatively and in places where they're specified absolutely (\verb+jr+), may become invalid if you add or remove any lines to your codebase.
+				Some instructions like \verb+beq+ and \verb+bne+ rely on relative locations of lines. Counting these yourself is tedious, and can be troublesome in some situations. The locations you specify, both in places where they're specified relatively and in places where they're specified absolutely (\verb+jr+), may become invalid if you add or remove any lines in your codebase.
 				\\ \\
 				Labels can be used in place of integer constants. If you have an instruction like \verb+bne $1, $2, -5+, you can replace it with \verb+bne $1, $2, foo+. The assembler will compute:
 				\begin{align*}
@@ -325,7 +325,7 @@
 			There are some key differences between RAM and registers:
 			\begin{itemize}
 				\item There is lots of RAM available, but there are a finite number of registers available (usually not very many).
-				\item You can compute addresses with RAM, but registers have fixed names that cannot be computed (i.e. you can compute memory address \verb|0x00000008 = 0x00000004 + 0x0000004|, but you can't compute \$2.
+				\item You can compute addresses with RAM, but registers have fixed names that cannot be computed (i.e. you can compute memory address \verb|0x00000008 = 0x00000004 + 0x0000004|, but you can't compute \$2).
 				\item You can create large, rich data structures in RAM. Registers provide small, fixed, fast storage mechanisms.
 			\end{itemize}
 		\subsection{Storing in RAM}
@@ -472,7 +472,7 @@
 		\\ \\
 		We use \verb+jalr+ instead of \verb+jr+ so the \verb+sum+ routine knows how to get back. \verb+jalr+ is the only instruction that can access the contents of the \verb+PC+.
 		\\ \\
-		How do we actually run this program? We \verb+cat+ together the two programs! It really is that simple. You execute \verb+cat sum10.asm sum.asm | java cs241.binasm > foo.mips+ to get a MIPS program in binary.
+		How do we actually run this program? We \verb+cat+ together the two programs! It really is that simple. You execute \verb+cat sum10.asm sum.asm | java cs241.binasm > foo.mips+ to get a MIPS program in binary. Note that the order of the \verb+cat+ arguments matters \textendash{} you must list your runner program before the procedures so a procedure isn't executed prior to your runner program.
 
 		\subsection{Recursion}
 			Recursion is nothing special. You need to save any local variables (which are stored in registers), including given parameters and the return address, onto the stack so we can change them back when we're done. We don't want subroutines (recursive calls) to mess with those values, so subroutines must preserve their own values. ``It's always good hygiene to save your registers.''
@@ -545,7 +545,7 @@
 		\\ \\
 		Ensure you implement and test everything on the MIPS reference sheet. You need to test the range for all numbers and reject all programs that contain numbers that are not within the valid ranges, for instance.
 		\\ \\
-		Sometimes when we look at a MIPS program there is no meaning because the MIPS assembly code is not well-formed (it's invalid). In that case, we need to have the assembler output an error report. For us, our assembler will identify well-formed MIPS programs in the 'all or nothing' sense \textendash{} that is, if the program is valid we will produce valid binary machine code, otherwise we'll indicate that there's a problem.
+		Sometimes when we look at a MIPS program there is no meaning because the MIPS assembly code is not well-formed (it's invalid). In that case, we need to have the assembler output an error report. For us, our assembler will identify well-formed MIPS programs in the `all or nothing' sense \textendash{} that is, if the program is valid we will produce valid binary machine code, otherwise we'll indicate that there's a problem.
 		\\ \\
 		Don't imagine all the ways a program can be wrong. Write your assembler to identify correct MIPS assembly code as per the specification, and if the program does not follow those finite number of rules, then it is invalid and should be rejected.
 		
@@ -594,7 +594,7 @@
 					\item identifier \verb+foo+
 				\end{itemize}
 
-				You should have code to check the validity of \verb+add+'s parameters \textendash{} you shouldn't have code to check for indentifiers in place of registers, etc. You must also ensure that there aren't too many or two few arguments, but to do so you should check that you have exactly the correct number of arguments.
+				You should have code to check the validity of \verb+add+'s parameters \textendash{} you shouldn't have code to check for indentifiers in place of registers, etc. You must also ensure that there aren't too many or too few arguments, but to do so you should check that you have exactly the correct number of arguments.
 				\\ \\
 				You can use \verb+cs241.binasm+ combined with \verb+xxd+ as a reference implementation, because it's a valid MIPS assembler.
 				\\ \\
@@ -628,7 +628,7 @@
 							output ERROR to standard error\;
 							quit\;
 						}
-						add(label, location\_counter) to symbol table
+						add(label, location\_counter) to symbol table\;
 					}
 
 					\If{next token is an OPCODE}{
@@ -753,7 +753,7 @@
 			\end{verbatim}
 			This should give no output. Remember: there is a one-to-one mapping of valid MIPS assembly code to valid MIPS binary machine code.
 			\\ \\
-			You're going to have to make a large test suite to test your assembler. For valid code, you only need a handful of test cases. However, for error cases, you'll need a separate test case for each error since our assembler will quit as soon as it encounters the first error. Write a test script to run all of these cases, because it'll become tedious otherwise. You can share test cases you make with others, however you are not allowed to share information about how Marmoset test cases Marmoset uses to test your code.
+			You're going to have to make a large test suite to test your assembler. For valid code, you only need a handful of test cases. However, for error cases, you'll need a separate test case for each error since our assembler will quit as soon as it encounters the first error. Write a test script to run all of these cases, because it'll become tedious otherwise. You can share test cases you make with others, however you are not allowed to share information about the test cases Marmoset uses to test your code.
 			\\ \\
 			We're going to take a look at the \href{https://www.student.cs.uwaterloo.ca/~cs241/mips/mipsasm.html}{specification of the CS 241 dialect of MIPS}. You'll likely want to print this out and mark every statement/condition twice: once after you implement it and once after you test it. [Note: you should look at \href{https://www.student.cs.uwaterloo.ca/~cs241/mips/mipsasm.html}{the specification itself} rather than relying on the notes here.]
 			
@@ -810,7 +810,7 @@
 					\item \verb+add, sub, slt, slt+ \textendash{} \verb+add+, register, comma, register, comma, register, nothing else.
 					\item \verb+mult, div, multu, divu+ \textendash{} \verb+mult+, register, comma, register, nothing else.
 					\item \verb+mfhi, mflo, lis+ \textendash{} \verb+mfhi+, register, nothing else.
-					\item \verb+lw, sw+ \textendash{} lw, register, comma, $i$, bracket(, register, bracket), nothing else, where $i$ can be an unsigned, negative, or hex number within the 16-bit range. Test cases needed: in/valid with unsigned, in/valid with hex, etc. Note: there is no rule stating that you must load a multiple of four.
+					\item \verb+lw, sw+ \textendash{} lw, register, comma, $i$, bracket(, register, bracket), nothing else, where $i$ can be an unsigned, negative, or hex number within the 16-bit range. Test cases needed: (in)valid with unsigned, (in))valid with hex, etc. Note: there is no rule stating that you must load a multiple of four.
 					\item  \verb+beq, bne+ \textendash{} \verb+beq+, register, comma, register, $i$, nothing else. $i$ in this case can be an unsigned, negative, or hex number in the 16-bit range, or it could be the use of a label. In the case of a label, you calculate the numerical value by calculating: $\frac{\text{location(label)} - \text{location counter} - 4}{4}$.
 					\item \verb+jr, jalr+ \textendash{} \verb+jr+, register, nothing else.
 					\item \verb+.word+ \textendash{} \verb+.word+, $i$, nothing else, where $i$ can be an unsigned, negative, or hex number in the 16-bit range, or it could be the use of a label. 
@@ -866,8 +866,8 @@
 			\begin{verbatim}
 				ASSEMBLY            RAM          LOCATION          BINARY
 				.word 0x10000002    8            0                 10000002
-				.word 32            c            4                 00000020
-				.word 40            10           8                 00000028
+				.word 40            c            4                 00000028
+				.word 32            10           8                 00000020
 				lis $3              14           c                 00001814
 				.word ft            18           10                00000010
 				lw $3, 0($3)        1c           14                8c630000
@@ -1026,7 +1026,7 @@
 	\section{Regular Languages}
 		There are two equivalent definitions for regular languages: a generative definition (a method for building languages) and an analytic definition (how you can build a recognizer for the language).
 		\begin{defn}
-			A language $L$ on alphabet $\Sigma$ is regular if \emph{any} of the following are true:
+			A language $L$ on alphabet $\Sigma$ is \textbf{regular} if \emph{any} of the following are true:
 			\begin{itemize}
 				\item $L$ is finite.
 				\item $L = L_1 \cup L_2$ (that is, $L$ is the union of regular languages $L_1$ and $L_2$).
@@ -1036,14 +1036,14 @@
 		\end{defn}
 
 		\begin{defn}
-			A language $L$ is regular if it can be recognized by a computer with finite memory. If you need a stack or another unbounded data structure, then it is not regular.
+			A language $L$ is \textbf{regular} if it can be recognized by a computer with finite memory. If you need a stack or another unbounded data structure, then it is not regular.
 		\end{defn}
 
-		For the analytic definition, we use an abstraction known as \textbf{finite state machines} or {finite automaton} to represent \emph{any} machine with finite memory.
+		For the analytic definition, we use an abstraction known as a \textbf{finite state machine} or {finite automaton} to represent \emph{any} machine with finite memory.
 		\subsection{Deterministic Finite Automaton (DFA)}
 			You have an alphabet $\Sigma$, a finite set of states $S$, an initial state $i \in S$, a set of final states $f \subseteq S$, and a transition function $T: S \times \Sigma \to S$.
 			\\ \\
-			For example: $\Sigma = \{ 0, 1 \}$, $S = \{ \text{wilma}, \text{fred}, \text{pebbles} \}$, $i = \text{wilma}$, $f = \{ fred, pebbles \}$, and $T$ is defined by the table:
+			For example: $\Sigma = \{ 0, 1 \}$, $S = \{ \text{wilma}, \text{fred}, \text{pebbles} \}$, $i = \text{wilma}$, $f = \{ \text{fred}, \text{pebbles} \}$, and $T$ is defined by the table:
 
 			\begin{center}
 				\begin{tabular}{|c|c|}
