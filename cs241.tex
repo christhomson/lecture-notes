@@ -520,7 +520,7 @@
 			\\ \\
 			Notice in the \verb+gcd.asm+ example, you aren't actually erasing the stack contents. If you're storing secret data, you should overwrite it with zeroes, or (ideally) garbage data. For assignment 2, at least, we can just leave our garbage lying around.
 		\subsection{Input and Output}
-			\verb+getchar+ and \verb+putchar+ simulate RAM, however they actually send the data to/from the user's keyboard/monitor. \verb+getchar+ is located at memory address \verb+0xffff0004+ and \verb+putchar+ is at address \verb+0xffff000c+. If you store or load a byte at either of these addresses, you will send or retrieve the byte to/from standard input (STDIN) or standard output (STDOUT). 
+			\verb+getchar+ and \verb+putchar+ simulate RAM, however they actually send the data from/to the user's keyboard/monitor. \verb+getchar+ is located at memory address \verb+0xffff0004+ and \verb+putchar+ is at address \verb+0xffff000c+. If you load or store a byte at either of these addresses, you will retrieve or send the byte from/to standard input (STDIN) or standard output (STDOUT). 
 			\\ \\
 			We will create an example program, \verb+cat.asm+, to copy input to output:
 
