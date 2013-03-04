@@ -511,7 +511,7 @@
 				  .word 12
 				  add $30, $30, $4
 				  lw $31, -4($30)
-				  lw $31, -8($30)
+				  lw $1, -8($30)
 				  lw $2, -12($30)
 				  jr $31
 			\end{verbatim}
@@ -672,9 +672,9 @@
 					Why do we use \verb+map+s? It's more efficient because it converts strings into numbers in order to make lookups more performant.
 
 			\subsubsection{The Supplied Scanners}
-			The supplied scanners will find a sequence of tokens on the given line for you. For each token, you'll get a tuple (kind, lexeme, value), where the lexene is the literal text of the token. For example, take the line \verb+foo: beq $3, $6, -2\verb+. The provided scanners will return a list with this data:
+			The supplied scanners will find a sequence of tokens on the given line for you. For each token, you'll get a tuple (kind, lexeme, value), where the lexene is the literal text of the token. For example, take the line \verb+foo: beq $3, $6, -2+. The provided scanners will return a list with this data:
 			\begin{itemize}
-				\item (LABEL, ``for:'', ?)
+				\item (LABEL, ``foo:'', ?)
 				\item (OPCODE, ``beq'', ?)
 				\item (REGISTER, ``\$3'', 3)
 				\item (COMMA, ``,'', ?)
@@ -963,7 +963,7 @@
 				\\ \\
 				The loader is implicit. Fun fact: \verb+a.out+ was a format like ELF (but simpler), and it literally meant ``the \textbf{out}put from the \textbf{a}ssembler.''
 			\subsection{Libraries}
-				You may have a bunch of procedures that you want to use in many \verb+asm+ files. You can package these in a \textbf{library} so the linker can search the sticky notse for the ESD (external symbol definition) for the procedures it needs. Think of it as a match.com for MERLs.
+				You may have a bunch of procedures that you want to use in many \verb+asm+ files. You can package these in a \textbf{library} so the linker can search the sticky notes for the ESD (external symbol definition) for the procedures it needs. Think of it as a match.com for MERLs.
 				\\ \\
 				How do you create an archive? It could be just a folder. But on Linux, you use \verb+ar+ (which is an abbreviation for ``archive'') which produces an archive similar to a zip file.
 				\\ \\
