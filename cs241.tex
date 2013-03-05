@@ -1497,7 +1497,7 @@
 			\end{ex}
 
 			\begin{ex}
-				Suppose $L = \{a\} \cup \{ \text{ any string beginning with } a \text{ and ending in } b\}$. We can determine a recognizer for this:
+				Suppose $L = \{a\} \cup \{ \text{any string beginning with } a \text{ and ending in } b\}$. We can determine a recognizer for this:
 				\begin{center}
 					\begin{tikzpicture}[scale=0.2]
 						\tikzstyle{every node}+=[inner sep=0pt]
@@ -1540,9 +1540,10 @@
 				state = start\;
 				j = -1\;
 				\For{i = 0 to |x| - 1}{
-					\lIf{state $\in$ final}{j = i}\;
+					\lIf{state $\in$ final}{j = i}
 					state = T[state, $x_i$]\;
-					\lIf{state is blackhole}{reject}; // You could always hope\dots this is optional though. \\
+					// You could always hope\dots this is optional though: \\
+					\lIf{state is blackhole}{reject}
 				}
 				\lIf{$j \ge 0$}{accept, $y = x_0 \ldots x_{j - 1} \in L$}
 				\lElse{reject}
@@ -1690,7 +1691,7 @@
 			Additionally, we have $\Sigma = \{a, b, c\}, i = start, S = \{start, 1, 2, 3, 4, 5, 6, 7\}$, and $f = \{ 5 \}$.
 			\\ \\
 			Note that we no longer need an error state because we are no longer required to make $T$ a total function, since it is doesn't need to be a function at all. 
-				
+			\\ \\	
 			\textbf{NFA recognizer}: given an input string $x$, we expect output to be:
 			\begin{align*}
 				\text{output} &= \begin{cases}
@@ -1968,7 +1969,7 @@
 			\end{ex}
 
 			\begin{ex}
-				Given the alphabet $\Sigma = \{ a, b \}$, we're interseted in the language $L(R)$ of all strings with an even number of $a$'s. Note that $L = \epsilon, babbab, \ldots \}$. We could define the regular expression for this language in several different ways:
+				Given the alphabet $\Sigma = \{ a, b \}$, we're interseted in the language $L(R)$ of all strings with an even number of $a$'s. Note that $L = \{ \epsilon, babbab, \ldots \}$. We could define the regular expression for this language in several different ways:
 				\begin{align*}
 					R &= (b^\star{} ab^\star{} ab^\star{})^\star \\
 					&= b^\star{}(b^\star{}ab^\star{}ab^\star{})^\star \\
@@ -2007,7 +2008,7 @@
 						Extended RE & Meaning \\ \hline
 						$R^+$ & $RR^\star$ \\
 						$\{R_1 \text{\textbf{|}} R_2\}$ & $R_1(R_2R_1)^\star$ \\
-						$\{R_1 \text{\textbf{||}} R_2\}$ & $R_1(R_2R_1)^\star$
+						$\{R_1 \text{\textbf{||}} R_2\}$ & $R_1(R_2R_1)^+$
 					\end{tabular}
 				\end{center}
 				(the vertical bars in the above table are fatter than normal)
