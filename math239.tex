@@ -266,13 +266,18 @@
 		
 		\subsection{Injections, Bijections, and Onto} \lecture{January 11, 2013}
 			Let's consider a function $f: S \to T$.
-			\\ \\
-			The function $f$ is an \textbf{injection} if for all $x_1, x_2 \in S, x_1 \ne x_2$ such that $f(x_1) \ne f(x_2)$. That is, no element in the codomain $T$ is the image of more than one element in $S$.
-			\\ \\
-			The function $f$ is \textbf{onto} (or a \textbf{surjection}) if for all $y \in T$, there exists $x \in S$ such that $f(x) = y$. That is, all elements in the codomain $T$ are the image of an element in $S$. Multiple elements in $S$ can map to the same element in $T$.
-			\\ \\
-			The function $f$ is a \textbf{bijection} if it is both injective and onto. That is, there is a one-to-one mapping between elements in $S$ and $T$, and vice versa.
-			
+			\begin{defn}
+				The function $f$ is an \textbf{injection} if for all $x_1, x_2 \in S, x_1 \ne x_2$ such that $f(x_1) \ne f(x_2)$. That is, no element in the codomain $T$ is the image of more than one element in $S$.
+			\end{defn}
+
+			\begin{defn}
+				The function $f$ is \textbf{onto} (or a \textbf{surjection}) if for all $y \in T$, there exists $x \in S$ such that $f(x) = y$. That is, all elements in the codomain $T$ are the image of an element in $S$. Multiple elements in $S$ can map to the same element in $T$.
+			\end{defn}
+
+			\begin{defn}
+				The function $f$ is a \textbf{bijection} if it is both injective and onto. That is, there is a one-to-one mapping between elements in $S$ and $T$, and vice versa.
+			\end{defn}
+
 			\begin{proposition}
 				If $S$ and $T$ are finite, $|S| = |T|$ if $f$ is bijective.
 			\end{proposition}
@@ -293,7 +298,7 @@
 				\end{proposition}
 				
 				\begin{proof}
-					I will prove this proposition in a combinatorial using the bijection technique. We want to show that the cardinalities are the same. 
+					I will prove this proposition in a combinatorial proof using the bijection technique. We want to show that the cardinalities are the same. 
 					\\ \\
 					Let $S_1$ be the set of $k$-subsets of $[n]$, so $|S_1| = {n \choose k}$, as shown earlier. Let $S_2$ be the set of $(n-k)$-subsets of $[n]$, so $|S_2| = {n \choose n - k}$. We need to show that $|S_1| = |S_2|$, so we need to show that there is a bijection between $S_1$ and $S_2$, $f: S_1 \to S_2$.
 					\\ \\
@@ -619,7 +624,7 @@
 					\end{align*}
 				\end{proof}
 			\subsubsection{Product Lemma} \lecture{January 18, 2013}
-				Let $S = A \times B = \{ (\{r\}, \{G\}), (\{R\}, \{G\}), (\{r, R\}, \{G\}), (\{r\}, \{G, G\}), (\{R\}, \{G, G\}), (\{r, R\}, \{G, G\}) \}$. $S$ is the number of ways of selecting marbles from both bins of marbles. Let $w(\sigma)$ be the number of marbles selected in total.
+				Let $S = A \times B = \{ (\{r\}, \{G\}), (\{R\}, \{G\}), (\{r, R\}, \{G\}), (\{r\}, \{G, G\}), (\{R\}, \{G, G\}), (\{r, R\}, \{G, G\}) \}$. $S$ is the various ways of selecting marbles from both bins. Let $w(\sigma)$ be the number of marbles selected in total.
 				\\ \\
 				\textbf{Note}: you can think of a generating series as the sum of all objects' $x^{w(\sigma)}$, or you can think of it as the sum of all $a_k x^k$.
 				\begin{align*}
@@ -730,7 +735,7 @@
 					Which is a composition of:
 					\begin{align*}
 						A(y) &= y + y^2 + y^3 + \ldots = y(1 + y + y^2 + \ldots) = \frac{y}{1 - y} \\
-						B(y) &= \frac{x}{1 - x}
+						B(x) &= \frac{x}{1 - x}
 					\end{align*}
 					The composition is $A(B(x))$, but we need to be careful before using compositions. We can easily check that the constant of $B(x)$ is not zero, as required:
 					\begin{align*}
@@ -785,7 +790,7 @@
 						&= \frac{x^3}{1 - x}
 					\end{align*}
 
-					Now, we have $S = (\mathbb{N}_{\le 5})^k \times (\mathbb{N}_{\ge 3})^k$ with weight function $w[(a_1, \ldots, a_2k)] = a_1 + a_2 + \ldots + a_{2k}$. By the product lemma, we get:
+					Now, we have $S = (\mathbb{N}_{\le 5})^k \times (\mathbb{N}_{\ge 3})^k$ with weight function $w[(a_1, \ldots, a_{2k})] = a_1 + a_2 + \ldots + a_{2k}$. By the product lemma, we get:
 					\begin{align*}
 						\phi_S(x) &= x^k \bigg(\frac{1 - x^5}{1 - x}\bigg)^k \bigg( \frac{x^3}{1 - x} \bigg)^k \\
 						&= x^{4k}(1 - x^5)^k (1-x)^{-2k}
@@ -865,7 +870,7 @@
 					The \textbf{golden ratio} is a pair of integers $a$ and $b$ such that $\frac{a + b}{a} = {a}{b}$. It's a ratio that comes up in nature a lot, and is aesthetically pleasing.
 				\end{defn}
 
-				You can approximate the golden ration with the Fibonacci numbers. $\frac{a_n}{a_{n - 1}}$ approaches the golden ratio as $n \to \infty$.
+				You can approximate the golden ratio with the Fibonacci numbers. $\frac{a_n}{a_{n - 1}}$ approaches the golden ratio as $n \to \infty$.
 				
 				\begin{ex}
 					Let $S_n$ be the set of compositions into odd numbers of $n$. $|S_n| = |S_{n - 1}| + |S_{n - 2}|$ for $n \ge 2$. $S_n$ is partitioned by $S_{n - 1}$ and $S_{n - 2}$. Is there a bijection between $S_n$ and $S_{n - 1} \cup S_{n - 2}$?
@@ -879,7 +884,7 @@
 					\begin{align*}
 						f(a_1, \ldots, a_k) = \begin{cases}
 							(a_1, \ldots, a_{k - 1}) & a_k = 1 \\
-							(a_1, \ldots, a_k - 2) & a_k \ge 3
+							(a_1, \ldots, a_{k - 2}) & a_k \ge 3
 						\end{cases}
 					\end{align*}
 					Note that $f(a_1, \ldots, a_k)$ is undefined for $1 < k < 3$, but that's okay because we're only interested in odd natural numbers. 
