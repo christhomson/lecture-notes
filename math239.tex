@@ -904,7 +904,7 @@
 		\end{defn}
 
 		\begin{defn}
-			The \textbf{concatenation $AB$ of two sets} ($A$ and $B$) of binary strings is defined as all possible strings formed as concatenations of one string from set $A$ followed by one string of set $B$. For example, if $A = \{ 011, 11 \}$ and $B = \{10, 0\}$, then $AB = \{ 01110, 0110, 1110, 110 \}$.
+			The \textbf{concatenation $\boldsymbol{AB}$ of two sets} ($A$ and $B$) of binary strings is defined as all possible strings formed as concatenations of one string from set $A$ followed by one string from set $B$. For example, if $A = \{ 011, 11 \}$ and $B = \{10, 0\}$, then $AB = \{ 01110, 0110, 1110, 110 \}$.
 		\end{defn}
 
 		\begin{defn}
@@ -924,7 +924,7 @@
 		\end{ex}
 
 		\begin{ex}
-			Describe the set $S$ of all binary strings with no three consecutive 1s. For example: $a = 011000\underline{111}01001 \not \in S$, $b = 0\underline{111}10 \not \in S$, but $c = 0110010011011 \in S$. We aim to express $S$ using expression $\star$ concatenation.
+			Describe the set $S$ of all binary strings with no three consecutive 1s. For example: $a = 011000\underline{111}01001 \not \in S$, $b = 0\underline{111}10 \not \in S$, but $c = 0110010011011 \in S$. We aim to express $S$ using expression-$\star$ concatenation.
 			\\ \\
 			Let's take a second look at $c$.
 			\begin{align*}
@@ -952,7 +952,7 @@
 
 		\begin{ex}
 			Describe the set $S$ of strings with no blocks of length 2. For example, $a = 10\underline{11}000101 \not \in S$, but $b = 1110111000101000 \in S$.
-
+			\\ \\
 			Let's take another look at $b$.
 			\begin{align*}
 				b = \underbrace{111}_{(1)},\underbrace{0111,0001,01}_{(2)},\underbrace{000}_{(3)} \in S
@@ -983,7 +983,7 @@
 					\phi_A(x) \cdot \phi_B(x) &= (x + x^2) \cdot (x + x^2) \\
 					&= x^2 + 2x^3 + x^4 \\
 				\end{align*}
-				Therefore, in this case, $\phi_{AB}(x) \not = \phi_A(x) \cdot \phi_B(x)$. Why is this? $A \times B = \{ (0, 0), (01, 0), (0, 10), (0110) \}$. Note that the string for $(01, 0)$ and $(0, 10)$ is the same ($010$), but it's only going to be included in $AB$ once. That's where the trouble is.
+				Therefore, in this case, $\phi_{AB}(x) \not = \phi_A(x) \cdot \phi_B(x)$. Why is this? $A \times B = \{ (0, 0), (01, 0), (0, 10), (01,10) \}$. Note that the string for $(01, 0)$ and $(0, 10)$ is the same ($010$), but it's only going to be included in $AB$ once. That's where the trouble is.
 			\end{ex}
 
 			\begin{defn}
@@ -1036,7 +1036,7 @@
 			For example: $\{0, 10, 110\}^\star \{\epsilon, 1, 11\}$ is the set of strings with no more than two consecutive ones. Let's examine the arbitrary string $0001101011001$. If we split the string after every zero, we get $0,0,0,110,10,110,0,1$, which is a unique way of breaking down the string.
 
 			\begin{proposition}
-				Suppose $A^\star$ is unambiguous and $\epsilon \not \in A$. Then $\phi_A(x) = \frac{1}{1 - \phi_A(x)}$.
+				Suppose $A^\star$ is unambiguous and $\epsilon \not \in A$. Then $\phi_{A^\star}(x) = \frac{1}{1 - \phi_A(x)}$.
 				\label{proposition:unambiguousstar}
 			\end{proposition}
 
@@ -1105,7 +1105,7 @@
 				\begin{ex} \lecture{February 1, 2013}
 					Let $S$ be the set of all binary strings. We can define $S$ recursively as $S = \{ \epsilon \} \cup \{0, 1\}$. Whenever you write an expression like this, you should take great care to ensure that both sides are actually equal.
 					\\ \\
-					One might attempt to describe $S$ as $\{ \epsilon, 0, 1 \}S$, however that is ambiguous. $S = \{ \epsilon \} \cup \{ 0, 1 \}$ is unambiguous. Since there are two terms of length 1, and applying the sum \& product lemmas, we get:
+					One might attempt to describe $S$ as $\{ \epsilon, 0, 1 \}S$, however that is ambiguous. $S = \{ \epsilon \} \cup \{ 0, 1 \} S$ is unambiguous. Since there are two terms of length 1, and applying the sum \& product lemmas, we get:
 					\begin{align*}
 						\phi_S(x) &= \phi_{\{\epsilon\}}(x) + \phi_{\{0, 1\}}(x) \cdot \phi_S(x) \text{ by the sum lemma} \\
 						&= 1 + 2x \cdot \phi_S(x) \\
@@ -1349,7 +1349,7 @@
 				&\implies A = 3, B = -2
 			\end{align*}
 
-			Substituting the values for $A$ and $B$ back into our equation from eralier, we get $a_n = 3 \cdot 2^n - 2$.
+			Substituting the values for $A$ and $B$ back into our equation from earlier, we get $a_n = 3 \cdot 2^n - 2$.
 		\end{ex}
 
 		Let's now look at a more efficient (lazy) approach to this.
