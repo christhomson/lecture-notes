@@ -2722,4 +2722,245 @@
 
 					Note that this grammar is not LL(1) and it is ambiguous.
 				\end{ex}
+
+			\subsubsection{Stack-Based Bottom-Up Rightmost Parser} \lecture{March 6, 2013}
+				\begin{ex}
+					We're given the following set of rules $R$:
+					\begin{align*}
+						S &\to AhB \\
+						A &\to ab \\
+						A &\to cd \\
+						B &\to ef \\
+						B &\to g
+					\end{align*}
+
+					A bottom-up rightmost derivation for $x = abhg$ is:
+					\begin{align*}
+						\gamma_3 &= abhg \\
+						\gamma_2 &= Ahg \\
+						\gamma_1 &= AhB \\
+						\gamma_0 &= S
+					\end{align*}
+					
+					\textbf{Stack-Based Bottom-Up Rightmost Parse}:
+					\\ \\
+					The key observation is that we have the stack written the opposite way:
+					\begin{align*}
+						\gamma &= (\text{stack: bottom \ldots top})(\text{input yet to be read})
+					\end{align*}
+
+					\begin{tabular}{|c|c|c|c|c|}
+						\hline
+						$\gamma$ & stack & input read & input not read & comment \\ \hline
+						abhg & $\epsilon$ & $\epsilon$ & abhg & \\
+						abhg & a & a & bhg & shift a \\
+						abhg & ab & ab & hg & shift b \\
+						Ahg & A & ab & hg & reduce $A \to ab$ (pop, pop, push A) \\
+						Ahg & Ah & abh & g & shift h \\
+						Ahg & Ahg & abhg & $\epsilon$ & shift g \\
+						AhB & AhB & abhg & $\epsilon$ & reduce $B \to g$ \\
+						S & S & abhg & $\epsilon$ & reduce $S \to AhB$ \\
+						& & & & done \\ \hline
+					\end{tabular}
+				\end{ex}
+
+			\subsubsection{LR(1) Parsing}
+				LR(1) parsing means we're analyzing input from left to right, using rightmost reversed derivations, and we have one symbol of lookahead. 
+				\\ \\
+				The oracle, in this case, looks at the stack and the next symbol that has yet to be read. It tells you either:
+				\begin{itemize}
+					\item Goto[start, symbol]: new element to push onto the stack.
+					\item Reduce[start, symbol]: a set of rules to use to reduce the expression. Hopefully, this is at most one rule.
+				\end{itemize}
+
+				You can build this oracle in a sneaky way. 
+				\\ \\
+				In 1966, Donald Knuth made this key observation: when you do a stack-based rightmost derivation in reverse, the set of valid stacks is a regular language. That is, a valid stack can be recognized by a DFA. Assuming a stack is valid, if we push the next symbol onto the stack, will we still have a valid stack (will we still be in a final state)?
+				\\ \\
+				If we're planning to reduce, we have the right-hand side of the stack. We analyze more ``what-if'' scenarios. We check for the next sequence of symbols if reductions are possible that still lead to a valid stack.
+				\begin{ex}
+					LR(1) uses an augmented grammar. We have this augmented set of rules $R'$:
+					\begin{align*}
+						S &\to{} \vdash S \dashv \\
+						S &\to AhB \\
+						A &\to ab \\
+						A &\to cd \\
+						B &\to ef \\
+						B &\to g
+					\end{align*}
+
+					We get this derivation:
+					\begin{align*}
+						\gamma_3 &={} \vdash abhg \dashv \\
+						\gamma_2 &={} \vdash Ahg \dashv \\
+						\gamma_1 &={} \vdash AhB \dashv \\
+						\gamma_0 &={} \vdash S \dashv
+					\end{align*}
+
+					After this augmentation, we have:
+						\begin{center}
+							\begin{tabular}{|c|c|c|c|c|}
+								\hline
+								$\gamma$ & stack & input read & input not read & comment \\ \hline
+								$\vdash$ abhg $\dashv$ & $\vdash$ & $\vdash$ & abhg $\dashv$ & \\
+								$\vdash$ abhg $\dashv$ & $\vdash$ a & $\vdash$ a & bhg $\dashv$ & shift a \\
+								$\vdash$ abhg $\dashv$ & $\vdash$ ab & $\vdash$ ab & hg $\dashv$ & shift b \\
+								$\vdash$ Ahg $\dashv$ & $\vdash$ A & $\vdash$ ab & hg $\dashv$ & reduce $A \to ab$ (pop, pop, push A) \\
+								$\vdash$ Ahg $\dashv$ & $\vdash$ Ah & $\vdash$ abh & g $\dashv$ & shift h \\
+								$\vdash$ Ahg $\dashv$ & $\vdash$ Ahg & $\vdash$ abhg & $\dashv$ & shift g \\
+								$\vdash$ AhB $\dashv$ & $\vdash$ AhB & $\vdash$ abhg & $\dashv$ & reduce $B \to g$ \\
+								$\vdash$ S $\dashv$ & $\vdash$ S & $\vdash$ abhg & $\dashv$ & reduce $S \to AhB$ \\ 
+								$\vdash$ S $\dashv$ & $\vdash$ S $\dashv$ & $\vdash$ abhg $\dashv$ & $\epsilon$ & shift $\dashv$ \\ \hline
+							\end{tabular}
+						\end{center}
+						
+						We don't need the actual symbols in the stack in this table. You may still want to keep them to make more intuitive sense, or if you're doing syntax-directed translation. But, if we wanted, we could label them just as numbers that will represent state numbers:
+						\begin{center}
+							\begin{tabular}{|c|c|c|c|c|}
+								\hline
+								$\gamma$ & stack & input read & input not read & comment \\ \hline
+								$\vdash$ abhg $\dashv$ & 2 & $\vdash$ & abhg $\dashv$ & \\
+								$\vdash$ abhg $\dashv$ & 2,5 & $\vdash$ a & bhg $\dashv$ & shift a \\
+								$\vdash$ abhg $\dashv$ & 2,5,8 & $\vdash$ ab & hg $\dashv$ & shift b \\
+								$\vdash$ Ahg $\dashv$ & 2,4 & $\vdash$ ab & hg $\dashv$ & reduce $A \to ab$ (pop, pop, push A) \\
+								$\vdash$ Ahg $\dashv$ & 2,4,9 & $\vdash$ abh & g $\dashv$ & shift h \\
+								$\vdash$ Ahg $\dashv$ & 2,4,9,13 & $\vdash$ abhg & $\dashv$ & shift g \\
+								$\vdash$ AhB $\dashv$ & 2,4,9,14 & $\vdash$ abhg & $\dashv$ & reduce $B \to g$ \\
+								$\vdash$ S $\dashv$ & 2,3 & $\vdash$ abhg & $\dashv$ & reduce $S \to AhB$ \\ 
+								$\vdash$ S $\dashv$ & 2,3,10 & $\vdash$ abhg $\dashv$ & $\epsilon$ & shift $\dashv$ \\ \hline
+							\end{tabular}
+						\end{center}
+						
+						We can construct this DFA with the state identifiers being the numbers from the stack in the table above:
+						\begin{center}
+						\begin{tikzpicture}[scale=0.2]
+						\tikzstyle{every node}+=[inner sep=0pt]
+						\draw [black] (10.9,-15.8) circle (3);
+						\draw (10.9,-15.8) node {$1$};
+						\draw [black] (24.6,-21.5) circle (3);
+						\draw (24.6,-21.5) node {$2$};
+						\draw [black] (24.6,-21.5) circle (2.4);
+						\draw [black] (13.3,-32.1) circle (3);
+						\draw (13.3,-32.1) node {$6$};
+						\draw [black] (13.3,-32.1) circle (2.4);
+						\draw [black] (30.5,-7.7) circle (3);
+						\draw (30.5,-7.7) node {$3$};
+						\draw [black] (30.5,-7.7) circle (2.4);
+						\draw [black] (37.1,-23.7) circle (3);
+						\draw (37.1,-23.7) node {$4$};
+						\draw [black] (37.1,-23.7) circle (2.4);
+						\draw [black] (30.5,-34.8) circle (3);
+						\draw (30.5,-34.8) node {$5$};
+						\draw [black] (30.5,-34.8) circle (2.4);
+						\draw [black] (45.1,-4.8) circle (3);
+						\draw (45.1,-4.8) node {$10$};
+						\draw [black] (45.1,-4.8) circle (2.4);
+						\draw [black] (52.3,-22.2) circle (3);
+						\draw (52.3,-22.2) node {$9$};
+						\draw [black] (52.3,-22.2) circle (2.4);
+						\draw [black] (45.1,-37.2) circle (3);
+						\draw (45.1,-37.2) node {$8$};
+						\draw [black] (45.1,-37.2) circle (2.4);
+						\draw [black] (19.5,-45.9) circle (3);
+						\draw (19.5,-45.9) node {$7$};
+						\draw [black] (19.5,-45.9) circle (2.4);
+						\draw [black] (53.9,-11.8) circle (3);
+						\draw (53.9,-11.8) node {$11$};
+						\draw [black] (53.9,-11.8) circle (2.4);
+						\draw [black] (62.7,-7.7) circle (3);
+						\draw (62.7,-7.7) node {$12$};
+						\draw [black] (62.7,-7.7) circle (2.4);
+						\draw [black] (65.1,-21.5) circle (3);
+						\draw (65.1,-21.5) node {$13$};
+						\draw [black] (65.1,-21.5) circle (2.4);
+						\draw [black] (60.8,-32.9) circle (3);
+						\draw (60.8,-32.9) node {$14$};
+						\draw [black] (60.8,-32.9) circle (2.4);
+						\draw (32.9,-48.8) node {reduce $A \to cd$};
+						\draw (55.8,-40.9) node {reduce $A \to ab$};
+						\draw (71.3,-28.8) node {reduce $S \to AhB$};
+						\draw (73,-15.8) node {reduce $B \to g$};
+						\draw (73,-3.6) node {reduce $B \to ef$};
+						\draw [black] (4.6,-11.4) -- (8.44,-14.08);
+						\fill [black] (8.44,-14.08) -- (8.07,-13.21) -- (7.5,-14.03);
+						\draw [black] (13.67,-16.95) -- (21.83,-20.35);
+						\fill [black] (21.83,-20.35) -- (21.28,-19.58) -- (20.9,-20.5);
+						\draw (14.71,-19.2) node [below] {$\vdash$};
+						\draw [black] (22.41,-23.55) -- (15.49,-30.05);
+						\fill [black] (15.49,-30.05) -- (16.41,-29.86) -- (15.73,-29.14);
+						\draw (17.98,-26.32) node [above] {$c$};
+						\draw [black] (14.53,-34.84) -- (18.27,-43.16);
+						\fill [black] (18.27,-43.16) -- (18.4,-42.23) -- (17.49,-42.64);
+						\draw (15.68,-40) node [left] {$d$};
+						\draw [black] (22.45,-46.43) -- (29.95,-47.77);
+						\fill [black] (29.95,-47.77) -- (29.25,-47.14) -- (29.07,-48.12);
+						\draw (25.74,-47.69) node [below] {$a$};
+						\draw [black] (25.82,-24.24) -- (29.28,-32.06);
+						\fill [black] (29.28,-32.06) -- (29.42,-31.12) -- (28.5,-31.53);
+						\draw (26.82,-29.14) node [left] {$a$};
+						\draw [black] (33.46,-35.29) -- (42.14,-36.71);
+						\fill [black] (42.14,-36.71) -- (41.43,-36.09) -- (41.27,-37.08);
+						\draw (37.37,-36.59) node [below] {$b$};
+						\draw [black] (47.94,-38.18) -- (52.96,-39.92);
+						\fill [black] (52.96,-39.92) -- (52.37,-39.19) -- (52.05,-40.13);
+						\draw (49.54,-39.58) node [below] {$h$};
+						\draw [black] (27.55,-22.02) -- (34.15,-23.18);
+						\fill [black] (34.15,-23.18) -- (33.44,-22.55) -- (33.27,-23.53);
+						\draw (30.28,-23.21) node [below] {$A$};
+						\draw [black] (40.09,-23.41) -- (49.31,-22.49);
+						\fill [black] (49.31,-22.49) -- (48.47,-22.08) -- (48.57,-23.07);
+						\draw (44.88,-23.53) node [below] {$h$};
+						\draw [black] (54.17,-24.55) -- (58.93,-30.55);
+						\fill [black] (58.93,-30.55) -- (58.83,-29.61) -- (58.04,-30.24);
+						\draw (55.99,-28.97) node [left] {$B$};
+						\draw [black] (63.59,-31.81) -- (68.51,-29.89);
+						\fill [black] (68.51,-29.89) -- (67.58,-29.72) -- (67.94,-30.65);
+						\draw (69.04,-31.41) node [below] {$\dashv$};
+						\draw [black] (55.3,-22.04) -- (62.1,-21.66);
+						\fill [black] (62.1,-21.66) -- (61.28,-21.21) -- (61.33,-22.21);
+						\draw (58.76,-22.4) node [below] {$a$};
+						\draw [black] (67.53,-19.74) -- (70.57,-17.56);
+						\fill [black] (70.57,-17.56) -- (69.63,-17.62) -- (70.21,-18.43);
+						\draw (72.2,-19.15) node [below] {$\dashv$};
+						\draw [black] (52.76,-19.23) -- (53.44,-14.77);
+						\fill [black] (53.44,-14.77) -- (52.83,-15.48) -- (53.82,-15.63);
+						\draw (53.8,-17.2) node [right] {$e$};
+						\draw [black] (56.62,-10.53) -- (59.98,-8.97);
+						\fill [black] (59.98,-8.97) -- (59.04,-8.85) -- (59.47,-9.76);
+						\draw (59.14,-10.26) node [below] {$f$};
+						\draw [black] (65.49,-6.59) -- (70.21,-4.71);
+						\fill [black] (70.21,-4.71) -- (69.28,-4.54) -- (69.65,-5.47);
+						\draw (64.84,-5.09) node [above] {$\dashv$};
+						\draw [black] (25.78,-18.74) -- (29.32,-10.46);
+						\fill [black] (29.32,-10.46) -- (28.55,-11) -- (29.47,-11.39);
+						\draw (28.28,-15.55) node [right] {$S$};
+						\draw [black] (33.44,-7.12) -- (42.16,-5.38);
+						\fill [black] (42.16,-5.38) -- (41.28,-5.05) -- (41.47,-6.03);
+						\draw (39.55,-7.03) node [below] {$\dashv$};
+						\end{tikzpicture}
+						\end{center}
+						
+						This DFA recognizes two different things: valid stacks \emph{and} stacks ending in right-hand sides of rules.
+				\end{ex}
+				
+				Goto[state, symbol] $\to$ state: this is the same DFA transition function from before.
+				\\ \\
+				Reduce[state, symbol] $\to 2^R$: yields a set of rules to reduce. If |Reduce[s, a]| > 1, then we have a reduce conflict (the oracle can't decide between two rules to reduce) which means this is not an LR(1) grammar. If |Reduce[s, a]| > 0 and Goto[s, a] $\in$ f, then we have a shift/reduce conflict.
+				\\ \\
+				If you have no conflicts, then you have a deterministic LR(1) parser. With conflicts, you could make a nondeterministic parser which would be inefficient and not LR(1).
+				\\ \\
+				Here's the pseudocode for an LR(1) parser for input $x$: \\
+				\begin{algorithm}[H]
+					push $\vdash$\;
+					\For{$c$ in $x \dashv$}{
+						\While{Reduce[top of stack, c] = $\{A \to \alpha\}$}{
+							pop $|\alpha|$ times\;
+							push Goto[(new) top of stack, c]\;
+						}
+						assert Goto[top of stack, c] $\in$ f; // if not, then $x \not \in L(G)$ \\
+					}
+					accept if all assertions succeeded\;
+				\end{algorithm}
+				
+				In an LR(1) parse, if you ever shift $\dashv$, you know for a fact that your parse succeeded.
 \end{document}
