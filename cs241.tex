@@ -2541,17 +2541,185 @@
 				\begin{algorithm}[H]
 					push $S$ onto stack\;
 					\For{$c = x_0, x_1, x_2, \ldots, x_{|x| - 1}$}{
-						\While{top of stack is nonterminal $A$}{
-							pop $[A]$ from stack\;
+						\While{top of stack is $A \in N$}{
 							consult oracle to determine $\delta$ where $A \to \delta \in R$\;
+							pop stack\;
 							push $\delta_{|\delta|-1}$\;
 							push $\delta_{|\delta|-2}$\;
 							$\vdots$ \\
 							push $\delta_0$\;
 						}
-						pop $a$ from stack\;
-						assert $a = c$\;
+						assert $c = \text{top of stack}$\;
+						pop stack\;
 					}
 					assert stack = $\epsilon$\;
 				\end{algorithm}
+				
+				\lecture{March 4, 2013}
+				The crux of a stack-based top-down parser is in each derivation step, we have this invariant:
+				\begin{align*}
+					\gamma &= (\text{input read so far}) (\text{stack: top \ldots bottom})
+				\end{align*}
+
+			\subsubsection{LL(1) Parsing}
+				The name ``LL(1)'' comes from the fact that this parsing algorithm reads input from left-to-right, and it uses leftmost derivations. An oracle uses one symbol of lookahead \textendash{} that is, it looks at $A$ (the nonterminal to expand) and $c$ (the next input symbol) in order to choose $A \to \alpha \in R$.
+				\\ \\
+				The oracle is represented as a Predict function, Predict: $N \times T \to 2^R$ (that is, it yields a subset of the set of rules $R$).
+				\\ \\
+				As a convenience, we'll introduce the notion of an augmented grammar.
+				\\ \\
+				\textbf{Augmented Grammar}: given $G$, the augmented grammar $G'$ is:
+				\begin{align*}
+					N' &= N \cup \{ S' \} \text{ where } S' \text{ is the new start symbol} \\
+					S' &= S' \\
+					T' &= T \cup \{ \vdash, \dashv \} \text{ where } \vdash \text{ and } \dashv \text{ are the beginning and end string markers} \\
+					R' &= R \cup \{ S' \to{} \vdash S \dashv \}
+				\end{align*}
+
+				Let's introduce a specific augmented grammar with the following set of rules $R'$:
+				\setcounter{equation}{0}
+				\begin{align}
+					S' &={} \vdash S \dashv \\
+					S &= AhB \\
+					A &= ab \\
+					A &= cd \\
+					B &= ef \\
+					B &= g
+				\end{align}
+
+				A derivation for some input $x$ would look like:
+				\begin{align*}
+					\gamma_0 &={} \vdash S' \dashv \\
+					\vdots& \\
+					\gamma_n &={} \vdash x \dashv
+				\end{align*}
+
+				Let's get back to our Predict function. We have the following table which represents the logic the oracle uses:
+				\begin{center}
+					\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+						\hline
+						& \textbf{a} & \textbf{b} & \textbf{c} & \textbf{d} & \textbf{e} & \textbf{f} & \textbf{g} & \textbf{h} & $\boldsymbol \vdash$ & $\boldsymbol \dashv$ \\ \hline
+						\textbf{S'} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{1\} & \{\} \\
+						\textbf{S} & \{2\} & \{\} & \{2\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} \\
+						\textbf{A} & \{3\} & \{\} & \{4\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} \\
+						\textbf{B} & \{\} & \{\} & \{\} & \{\} & \{5\} & \{\} & \{6\} & \{\} & \{\} & \{\} \\ \hline
+					\end{tabular}
+				\end{center}
+				
+				The $(B, e)$ position means if $e$ is the next symbol, rule 5 must be used. We could have drawn this table without empty sets all over the place \textendash{} blank spaces indicate empty sets of applicable rules.
+				\\ \\
+				Here's the pseudocode for an LL(1) parser for input $x$: \\
+				\begin{algorithm}[H]
+					push $\dashv$\;
+					push $S$\;
+					push $\vdash$\;
+					\For{c in $\vdash x \dashv$}{
+						\While{top of stack is some $A \in N$}{
+							assert Predict$[A, c]$ = $\{A \to X_0 X_1 \ldots X_m\}$\;
+							pop stack\;
+							push $X_m$\;
+							push $X_{m - 1}$\;
+							$\vdots$ \\
+							push $X_0$;
+						}
+						assert top of stack = $c$\;
+						pop stack;
+					}
+					assert stack = $\epsilon$;
+				\end{algorithm}
+
+				\underline{Aside}: if we added the rule (7) $A \to abdc$, we would have a set of two elements for $[A, a]$, which means the grammar would no longer be an LL(1) grammar. LL(1) is a deterministic parser. If we wanted to support multiple rules, like by adding that rule (7), we could build a non-LL(1) nondeterministic parser. 
+				\\ \\
+				Here's a sample LL(1) parse:
+				\begin{center}
+					\begin{tabular}{|c|c|c|c|c|}
+						\hline
+						$\gamma$ & input read & not read & stack (top \ldots bottom) & action \\ \hline
+						$\vdash S \dashv$ & $\epsilon$ & $\vdash abhg \dashv$ & $\vdash S \dashv$ & assert $\vdash = \vdash$ \\
+						$\vdash S \dashv$ & $\vdash$ & $abhg \dashv$ & $S \dashv$ & read $\vdash$ \\
+						$\vdash AhB \dashv$ & $\vdash$ & $abhg \dashv$ & $AhB \dashv$ & Predict[S, a] = $\{S \to AhB\}$ \\
+						$\vdash abhB \dashv$ & $\vdash$ & $abhg \dashv$ & $abhB \dashv$ & Predict[A, a] = $\{A \to ab\}$ \\
+						$\vdash abhB \dashv$ & $\vdash a$ & $bhg \dashv$ & $bhB \dashv$ & assert $a = a$, read $a$ \\
+						$\vdash abhB \dashv$ & $\vdash ab$ & $hg \dashv$ & $hB \dashv$ & assert $b = b$, read $b$ \\
+						$\vdash abhB \dashv$ & $\vdash abh$ & $g \dashv$ & $B \dashv$ & assert $h = h$, read $h$ \\
+						$\vdash abhg \dashv$ & $\vdash abh$ & $g \dashv$ & $g \dashv$ & Predict[B, g] = $\{B \to g\}$ \\
+						$\vdash abhg \dashv$ & $\vdash abhg$ & $\dashv$ & $\dashv$ & assert $g = g$ \\
+						$\vdash abhg \dashv$ & $\vdash abhg \dashv$ & $\epsilon$ & $\epsilon$ & assert stack = $\epsilon$ \\ \hline
+					\end{tabular}
+				\end{center}
+	
+
+				\textbf{Constructing the Predict Function}: we'll need some helper functions.
+				\begin{itemize}
+					\item first[$\alpha$] = $\{a | \alpha \stackrel{\star}{\implies} a \beta\}$. For example, first($A$) = $\{a, c\}$, and first($AbB$) = $\{a\}$.
+					\item nullable[$\alpha$] := $\alpha \stackrel{\star}{\implies} \epsilon$.
+					\item follow[$A$] := $\{b | S' \stackrel{\star}{\implies} \alpha A b \beta\}$. That is, in \emph{some} sentential form, $A$ is followed by these elements $b$.
+				\end{itemize}
+
+				Now, we can define Predict:
+				\begin{align*}
+					\text{Predict}[A, a] = \{A \to \alpha \in R | a \in \text{first}(\alpha) \text{ OR } (\text{nullable}(\alpha) \text{ AND } a \in \text{follow}(A)\}
+				\end{align*}
+
+				In the previous example, we didn't use the nullable rule because we did not have any rules leading to $\epsilon$.
+				\\ \\
+				\textbf{Observation}: if for all $A, a$, |Predict[$A$, $a$]| $\le$ 1, we say that $G$ is an LL(1) grammar. Otherwise, $G$ is not LL(1). We \emph{may} be able to write an LL(1) grammar for the same language.
+				\begin{ex}
+					Let $G$ be a grammar with the following set of rules $R$:
+					\begin{align*}
+						S' &\to{} \vdash S \dashv \\
+						S &\to ab \\
+						S &\to aab
+					\end{align*}
+
+					This grammar is not LL(1), because Predict[$S$, $a$] = $\{S \to ab, S \to aab\}$. In particular, |Predict[$A$, $a$]| $\not \le 1$ for all $A, a$.
+					\\ \\
+					We can fix this (and make it an LL(1) grammar) by changing $R$ to be the following set of rules:
+					\begin{align*}
+						S' &\to{} \vdash S \dashv \\
+						S &\to aB \\
+						B &\to b \\
+						B &\to ab
+					\end{align*}
+
+					In this case, we have:
+					\begin{align*}
+						\text{Predict}[S, a] &= \{S \to ab\} \\
+						\text{Predict}[B, a] &= \{B \to ab\} \\
+						\text{Predict}[B, b] &= \{B \to b\}
+					\end{align*}
+
+					Now, |Predict[$A$, $a$]| $\le 1$ for all $A, a$, so this is an LL(1) grammar for the same language.
+					\\ \\
+					Similarly, we can find yet another LL(1) grammar for the same language. Let $R$ now be this set of rules:
+					\begin{align*}
+						S' &\to{} \vdash S \dashv \\
+						S &\to aBb \\
+						B &\to \\
+						B &\to a
+					\end{align*}
+
+					Note that the third rule is $B$ mapping to nothing. That is, $B \to$ is nullable. We get these results from our Predict function:
+					\begin{align*}
+						\text{Predict}[S, a] &= \{S \to aBb\} \\
+						\text{Predict}[B, a] &= \{B \to a\} \\
+						\text{Predict}[B, b] &= \{B \to \}
+					\end{align*}
+
+					So, we have that $B \to $ is nullable and follow($B$) = $\{b\}$.
+				\end{ex}
+
+				If you use LL(1), you'll have to forget about left recursion, and therefore forget about syntax-directed translation as well.
+				\\ \\
+				There are some languages for which no LL(1) grammar is possible.
+				\begin{ex}
+					Let's look at the language defined by the regular expression $a^\star(ab)^\star$. Here's a set of rules $R$ for that regular expression:
+					\begin{align*}
+						S &\to \epsilon \\
+						S &\to aSb \\
+						S &\to aaSb
+					\end{align*}
+
+					Note that this grammar is not LL(1) and it is ambiguous.
+				\end{ex}
 \end{document}
