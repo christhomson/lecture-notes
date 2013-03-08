@@ -2462,6 +2462,191 @@
 						\item Say, $k = 3$, for instance. Divide the graph in two, and shrink the vertices from half the graph into a single consolidated vertex. Then apply the same logic for the other half of the graph. By induction, we can find three paths on both of the smaller graphs. We want to combine these two smaller paths, which we can do by connecting the corresponding paths of the two sub-graphs.
 					\end{enumerate}
 				\end{proof}
+
+				\begin{theorem}[Corollary] \lecture{March 4, 2013}
+					There exists a path from $s$ to $t$ (1) if and only if for all $s \subseteq V, s \in S, \delta(S) \ne \emptyset$ (2).
+				\end{theorem}
+
+				\begin{proof}
+					Let us prove that (2) implies (1).
+					\\ \\
+					Let $U = \{s\} \cup \{v | \exists \text{ a path from } s \text{ to } v\}$. If $t \in U$, we're done. 
+					\\ \\
+					Let's assume $t \not \in U$. By (2), there exists $ab \in \delta(v)$, say $a \in U, b \not \in U$. That is, we have at least one edge leaving $U$.
+					\\ \\
+					Informally, we know we have a path from $s$ to $a$. We can take that path and add the edge $ab$ to get us a path from $s$ to $b$. However, then $b$ should be in $U$ as well, because there exists a path from $s$ to $b$.
+					\\ \\
+					Formally, since $a \in U$, there exists a path $P_a$ from $s$ to $a$. Construct a path $P_b$ by adding edge $ab$ at the end of $P_a$. This implies that $b \in U$, which is a contradiction.
+				\end{proof}
+
+			\subsubsection{Connectedness, Subgraphs, and Components}
+				\begin{defn}
+					A graph is \textbf{connected} if there exists a path between any pair of vertices. If a graph is not connected, it is \textbf{disconnected}.
+				\end{defn}
+				
+				\begin{ex}
+					This graph is disconnected:
+					\begin{center}
+						\begin{tikzpicture}[scale=1.5]
+							\node [dot={-90}{s}] at (0,0) {};
+							\node [dot={-90}{t}] at (2,0) {};
+						\end{tikzpicture}
+					\end{center}
+				\end{ex}
+
+				\begin{ex}
+					This graph (considered as a whole) is disconnected:
+					\begin{center}
+						\begin{tikzpicture}[scale=1.5]
+							\node [dot={0}{}] at (0,1) {};
+							\node [dot={0}{}] at (1,0) {};
+							\node [dot={0}{}] at (1,2) {};
+							\draw (0,1) -- (1,0) -- (1,2) -- (0,1);
+
+							\node [dot={0}{}] at (2,1) {};
+							\node [dot={0}{}] at (3,0) {};
+							\node [dot={0}{}] at (3,2) {};
+							\node [dot={0}{}] at (4,1) {};
+							\draw (2,1) -- (3,0) -- (4,1) -- (3,2) -- (2,1);
+							\draw (2,1) -- (4,1);
+
+							\node [dot={0}{}] at (5,1) {};
+							\node [dot={0}{}] at (6,0) {};
+							\node [dot={0}{}] at (6,2) {};
+							\draw (5,1) -- (6,0) -- (6,2) -- (5,1);
+						\end{tikzpicture}
+					\end{center}
+				\end{ex}
+
+				This corollary follows immediately from our characterization of $st$-cuts:
+				\begin{theorem}[Corollary]
+					$G$ is connected (1) if and only if for all $X \subseteq V, X \ne \emptyset, X \ne V, \delta(X) \ne \emptyset$ (2).
+				\end{theorem}
+
+				\begin{defn}
+					$H = (V_H, E_H)$ is a \textbf{subgraph} of $G = (V_G, E_G)$ if $V_H \subseteq V_G$ and $E_H \subseteq E_G$.
+				\end{defn}
+
+				\begin{ex}
+					The highlighted portion of this graph is a subgraph:
+					\begin{center}
+						\begin{tikzpicture}[scale=1.5]
+							\node [gdot={0}{}] at (0,0) {};
+							\node [dot={0}{}] at (0,1) {};
+							\node [gdot={0}{}] at (1,0) {};
+							\node [gdot={0}{}] at (1,1) {};
+							\node [gdot={0}{}] at (2,0) {};
+							\node [gdot={0}{}] at (2,1) {};
+
+							\draw (2,1) -- (0,1) -- (0,0) -- (1,0);
+							\draw [green, ultra thick] (2,1) -- (2,0) -- (1,1) -- (1,0) -- (2,0);
+						\end{tikzpicture}
+					\end{center}
+				\end{ex}
+
+				Note that in order to keep an edge in a subgraph, we must keep both of its vertices. When we discard a vertex, we must discard all edges that have that vertex as an endpoint.
+
+				\begin{defn}
+					A \textbf{component} of a graph is a maximal connected subgraph of $G$. That is, a component is the connected subgraph of $G$ that has the same number of edges as vertices.
+				\end{defn}
+
+				\begin{ex}
+					Given the following graph $G$ (considered as a whole):
+					\begin{center}
+						\begin{tikzpicture}[scale=1.5]
+							\node [dot={0}{}] at (0,0) {};
+							\node [dot={0}{}] at (0,1) {};
+							\node [dot={0}{}] at (1,0) {};
+							\node [dot={0}{}] at (1,1) {};
+							\draw (0,0) -- (0,1) -- (1,1) -- (1,0) -- (0,0) -- (1,1);
+							\draw (0,1) -- (1,0);
+							\draw [green, ultra thick] (0,1) -- (0,0);
+
+							\node [dot={0}{}] at (2,0) {};
+							\node [dot={0}{}] at (3,1) {};
+							\node [dot={0}{}] at (4,0) {};
+							\draw (2,0) -- (3,1) -- (4,0) -- (2,0);
+
+							\node [dot={0}{}] at (5,0) {};
+							\node [dot={0}{}] at (5,2) {};
+							\node [dot={0}{}] at (6,1) {};
+							\node [dot={0}{}] at (7,1) {};
+							\draw (5,0) -- (6,1) -- (7,1);
+							\draw (5,2) -- (6,1);
+						\end{tikzpicture}
+					\end{center}
+
+					Each of these three obviously-disjoint subgraphs are components. The highlighted portion is not itself a component (as expected), because it is not a \underline{maximal} subgraph.
+				\end{ex}
+
+				\begin{theorem}[Remark]
+					$G$ is connected if and only if $G$ has a single component.
+				\end{theorem}
+
+			\subsubsection{Equivalence Relations}
+				\begin{defn}
+					$\boldsymbol{\sim}$ is an \textbf{equivalence relation} for $S$ (an infinite set) if all of the following hold:
+					\begin{enumerate}
+						\item For all $a \in S$, $a \sim a$ (reflexivity).
+						\item For all $a, b \in S$, $a \sim b \implies b \sim a$ (symmetry).
+						\item For all $a, b, c \in S$, if $a \sim b$ and $b \sim c$, then $a \sim c$ (transitivity).
+					\end{enumerate}
+				\end{defn}
+
+				\begin{ex}
+					Let $S$ be the set of all integers. Pick some integer $m \ge 1$. A sample equivalence relation would be $a \sim b$ if $a - b$ is a multiple of $m$.
+				\end{ex}
+
+				You can always partition your set $S$ into \textbf{equivalence classes}.
+				
+				\begin{ex}
+					Let $G = (V, E)$ be a graph. Given $a, b \in V$, $a \sim b$ if $a = b$ or there exists a path from $a$ to $b$. We propose that $\sim$ is an equivalence relation, and we want to prove it.
+					\begin{proof}
+						We have to prove all three parts of the definition of equivalence relations.
+						\\ \\
+						(1) is true by definition.
+						\\ \\
+						(2) is true because if there exists a path from $a$ to $b$, then there exists a path from $b$ to $a$.
+						\\ \\
+						(3) is true because if there exists a path from $a$ to $b$ and there exists a path from $b$ to $c$, then there exists a path from $a$ to $c$ (by theorem).
+						\\ \\
+						Therefore, we have shown that $\sim$ is indeed an equivalence relation.
+					\end{proof}
+				\end{ex}
+
+				\textbf{Question}: what do the equivalence classes correspond to? Any two vertices with one component should have a path \emph{and} one vertex from a component and one vertex from another component should \emph{not} have a path between them. The equivalence classes correspond to the vertices of each of the components of $G$.
+				\\ \\
+				\textbf{Exercise}: look at set $S$ (the set of all possible graphs). We propose that $G \sim H$ if $G$ is isomorphic to $H$. Prove that $\sim$ is an equivalence relation.
+				\\ \\
+				\textbf{Remark}: it's useful to think of paths and cycles as sets of edges. Reflexivity makes a lot more sense under this interpretation, for instance. Cycles become a set of edges of a connected subgraph where every vertex has degree two. Paths are edges of a connected subgraph where two vertices have degree one and every other vertex degree two.
+				
+			\subsubsection{Bridges}
+				\begin{defn}
+					Let $G = (V, E)$ be a graph, and $e \in E$. Then, $G \backslash e$ is the graph obtained from $G$ by deleting edge $e$. We say $e$ is a \textbf{bridge} of $G$ if $G \backslash e$ has more components than $G$.
+				\end{defn}
+
+				\begin{ex}
+					Given the following graph:
+					\begin{center}
+						\begin{tikzpicture}[scale=1.5]
+							\node [dot={0}{}] at (0,0) {};
+							\node [dot={0}{}] at (0,2) {};
+							\node [dot={90}{x}] at (1,1) {};
+							\node [dot={90}{y}] at (3,1) {};
+							\node [dot={0}{}] at (4,0) {};
+							\node [dot={0}{}] at (4,2) {};
+							\node [dot={0}{}] at (5,1) {};
+
+							\draw (0,0) -- (0,2) -- (1,1) -- (0,0);
+							\draw (3,1) -- (4,0) -- (5,1) -- (4,2) -- (3,1);
+							\draw [dashed] (1,1) -- (3,1);
+						\end{tikzpicture}
+					\end{center}
+
+					The edge $xy$ is a bridge, because if it was removed the number of components will increase from one to two. If this edge was removed, $x$ and $y$ would be in different components. This can be proven by transitivity.
+				\end{ex}
+
+
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
