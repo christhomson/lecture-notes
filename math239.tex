@@ -2646,7 +2646,181 @@
 					The edge $xy$ is a bridge, because if it was removed the number of components will increase from one to two. If this edge was removed, $x$ and $y$ would be in different components. This can be proven by transitivity.
 				\end{ex}
 
+				
+				\begin{proposition} \lecture{March 6, 2013}
+					If $e = xy$ is a bridge of $G$, then $x$ and $y$ are in distinct components of $G \backslash e$.
+				\end{proposition}
 
+				\begin{proof}
+					There exists $ab$ such that $a$ and $b$ are in the same component of $G$, but $a$ and $b$ are in distinct components of $G \backslash e$. This implies that there exists a path $P$ in $G$ between $a$ and $b$ that uses $e$.
+					\\ \\
+					Suppose for a contradiction that $x$ and $y$ are in the same component of $G \backslash e$. We know:
+					\begin{itemize}
+						\item $a$ and $x$ are in the same component of $G \backslash e$ (because of $P$).
+						\item $b$ and $y$ are in the same component of $G \backslash e$ (because of $P$).
+					\end{itemize}
+
+					By transitivity, $a$ and $b$ must be in the same component, which is a contradiction.
+				\end{proof}
+
+				\begin{proposition}
+					Let $G = (V, E)$ be a connected graph, and let $e$ be a bridge of $G$. Then $G \backslash e$ has exactly two components.
+				\end{proposition}
+
+				\begin{proof}
+					Let $X$ be the vertices in the component of $G \backslash e$ that contains $x$. Let $Y = V \backslash X$. We need to show that any two vertices in $Y$ are connected by a path in $G \backslash e$.
+					\\ \\
+					Let $a, b \in Y$. Since $G$ is connected, there exists a path $P_a$ between $a$ and $x$ in $G$, and there exists a path $P_b$ between $b$ and $x$ in $G$. Moreover, $P_a$ and $P_b$ both use the edge $e$. This implies:
+					\begin{itemize}
+						\item $a$ and $y$ are in the same component of $G \backslash e$.
+						\item $b$ and $y$ are in the same component of $G \backslash e$.
+					\end{itemize}
+
+					By transitivity, $a$ and $b$ are in the same component of $G \backslash e$.
+				\end{proof}
+
+				Note that we didn't just prove that there exists a path from $a$ and $b$ to $y$ because we wanted to ensure that the path did not use the edge $e$.
+
+				\begin{proposition}
+					Let $G = (V, E)$ be a graph, and $e \in E$. $e$ is \emph{not} a bridge (1) if and only if $e$ is in a cycle (2).
+				\end{proposition}
+				
+				In fact, this is the only reason you wouldn't have a bridge.
+
+				\begin{proof}
+					Assume $e = xy$. We'll start by proving that (1) implies (2).
+					\\ \\
+					The fact that $e = xy$ is not a bridge implies that there exists a path $P$ between $x$ and $y$ in $G \backslash e$. Then, $P \cup \{e\}$ is a cycle.
+					\\ \\
+					Now, we'll prove (2) implies (1).
+					\\ \\
+					If $e$ is in a cycle $C$, then $G \backslash e$ is a path between $x$ and $y$. This implies that $e$ is not a bridge, otherwise $x$ and $y$ are in distinct components of $G \backslash e$, as proven earlier.
+				\end{proof}
+
+				\begin{proposition}
+					Let $G = (V, E)$ be a graph. Let $a, b \in V$ (where $a \ne b$). Suppose there exists paths $P_1, P_2$ between $a$ and $b$ where $P_1$ and $P_2$ are distinct. Then $G$ has a cycle.
+				\end{proposition}
+
+				We want to show that there is a cycle that uses the edge $e$. So, we need to show that there exists a path from $x$ to $y$ that does not use the edge $e$.
+
+				\begin{proof}
+					Since $P_1$ is distinct from $P_2$, there exists an edge $e = xy$ in $P_2$ that is not in $P_1$. After possibly interchanging $a$ and $b$, we know:
+					\begin{itemize}
+						\item $a$ and $x$ are in the same component of $G \backslash e$ (because of $P_2$).
+						\item $y$ and $b$ are in the same component of $G \backslash e$ (because of $P_2$).
+						\item $a$ and $b$ are in the same component of $G \backslash e$ (because of $P_1$).
+					\end{itemize}
+
+					Using those facts, by transitivity we know there exists a path $P$ between $x$ and $y$ in $G \backslash e$. Then $P \cup \{e\}$ is a cycle.
+				\end{proof}
+		\subsection{Trees}
+			\begin{defn}
+				A graph $G$ is a \textbf{tree} if $G$ is connected and $G$ has no cycle.
+			\end{defn}
+
+			\begin{ex}
+				This graph is not a tree because it contains cycles:
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (0,2) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (2,1) {};
+						\node [dot={0}{}] at (3,0) {};
+						\node [dot={0}{}] at (3,2) {};
+
+						\draw (0,0) -- (0,2) -- (1,1) -- (0,0);
+						\draw (3,0) -- (2,1) -- (3,2) -- (3,0);
+						\draw (1,1) -- (2,1);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+
+			\begin{ex}
+				This graph (considered as a whole) is not a tree because it is disconnected:
+				\begin{center}
+					\begin{tikzpicture}%[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (0,2) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (2,2) {};
+						\draw (0,0) -- (1,1) -- (0,2);
+						\draw (2,0) -- (1,1) -- (2,2);
+
+						\node [dot={0}{}] at (3,2) {};
+						\node [dot={0}{}] at (4,1) {};
+						\node [dot={0}{}] at (4,3) {};
+						\node [dot={0}{}] at (5,2) {};
+						\node [dot={0}{}] at (5,0) {};
+						\draw (3,2) -- (4,1) -- (5,2);
+						\draw (3,2) -- (4,3);
+						\draw (4,1) -- (5,0);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+
+			\begin{ex}
+				This graph is a tree because it is connected and has no cycles:
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (4,0) {};
+						\node [dot={0}{}] at (2,1) {};
+						\node [dot={0}{}] at (3,2) {};
+						\node [dot={0}{}] at (1,2) {};
+						\node [dot={0}{}] at (0,3) {};
+						\node [dot={0}{}] at (1,3) {};
+						\node [dot={0}{}] at (2,3) {};
+						\node [dot={0}{}] at (6,1) {};
+						\node [dot={0}{}] at (5,2) {};
+						\node [dot={0}{}] at (7,2) {};
+						\node [dot={0}{}] at (5,3) {};
+						\node [dot={0}{}] at (7,3) {};
+
+						\draw (4,0) -- (2,1) -- (0,3);
+						\draw (1,2) -- (1,3);
+						\draw (1,2) -- (2,3);
+						\draw (2,1) -- (3,2);
+
+						\draw (4,0) -- (6,1) -- (7,2);
+						\draw (6,1) -- (6,2) -- (7,3);
+						\draw (6,2) -- (5,3);
+						\draw (6,1) -- (5,2);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+
+			\begin{ex}
+				This graph is also a tree:
+				\begin{center}
+					\begin{tikzpicture}%[scale=1.5]
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (1,2) {};
+
+						\draw (1,0) -- (0,1) -- (1,2);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+
+			\begin{ex}
+				This is the simplest graph that is a tree:
+				\begin{center}
+					\begin{tikzpicture}
+						\node [dot={0}{}] at (0,0) {};
+					\end{tikzpicture}
+				\end{center}
+
+				Keep this graph (just one vertex with no edges) in mind when doing inductive proofs involving trees.
+			\end{ex}
+
+			\begin{proposition}
+				Let $G = (V, E)$ be a tree. For all $a, b \in V$, there exists a unique path between $a$ and $b$.
+			\end{proposition}
+
+			Why is this? Simple: trees have no cycles.
+			\\ \\
+			\textbf{Conjecture}: every edge of $G$ is a bridge.
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
