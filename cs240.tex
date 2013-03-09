@@ -1808,5 +1808,92 @@
 			In practice, this works really well. If keys are uniformly distributed, interpolation search finds the key in $O(\lg \lg n)$ expected time. In the worst case, it's worse than binary search.
 			\\ \\
 			Greek researcher Tsakalidis studied how much worse interpolation search would perform if the keys were not uniformly distributed. Much to his surprise, he discovered that if the keys are not uniformly distributed, but instead they were \emph{realistically} distributed, he got $O(1)$ complexity consistently. 
+			\\ \\
+			\lecture{March 7, 2013} An example of a worst case search is if you perform search(9) on this data: 
+			\begin{center}
+				\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+					\hline
+					1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 100,000,000 \\ \hline
+				\end{tabular}
+			\end{center}
+			This is a worst case search because it would check 1, 2, 3, \ldots, in order, because it expects there to be a jump of 10,000,000 between elements ($\frac{100,000,000}{10} = 10,000,000$). It would take $\Theta(n)$ time. This is similar to having a phone book full of `A' names and a single 'Z' name, and you're searching for a name that starts with an `A'.
+			\\ \\
+			If instead, the last key in that data was 10, we would've guessed 9 as being to the left of 10 immediately, since $\frac{10}{10} = 1$ and $10 - 1 = 9$.
+			\\ \\
+			Note that computing the expected position is expensive, because division is typically fairly expensive. Additions are much faster.
 
+		\subsection{Exiting Recursion Early}
+			There's no point in performing interpolation search on an array of four elements. The same goes for quick sorting small arrays. Instead, you should just walk the array. In other words, when implementing algorithms like these, your base case need not be the smallest possible base case.
+			\\ \\
+			For quick sort, you should quit recursing when $n = 17$, and instead use insertion sort. Researchers have discovered that when $n \le 17$, it is more beneficial to stop recursing and use a different method. The alternate method may not be as efficient when $n$ is large, but avoiding needless recursion is worth it.
+
+		\subsection{Gallop Search}
+			If you wanted to determine how high you could jump off a building before dying, you could get a grad student to jump off the first floor, then the second floor, and so on, until he or she dies. You'd have just one casualty, but it's slow. It's take $\Theta(n)$ time.
+			\\ \\
+			Instead, let's use a method like binary search but starting at the left. For example, you'd get your grad student to jump off $F_1$, then $F_2$, then $F_4$, then $F_8$, and so on, until you find your range of [fatal, not fatal]. After that, you can perform binary search on that range. You'll have more casualties, but it'll be more efficient in terms of complexity.
+			\\ \\
+			This is called \textbf{gallop search}.
+			\\ \\
+			Here's the pseudocode for gallop search, which takes an ordered array $A$ and a key $k$: \\
+			\begin{algorithm}[H]
+				i = 0\;
+				\While{i < size(A) and k > A[i]}{
+					i = 2i + 1\;
+				}
+				\Return{BinarySearch(A$\left[ \left \lceil \frac{i}{2} \right \rceil, min(i, size(A) - 1) \right], k)$;}
+			\end{algorithm}
+
+
+			Google uses an algorithm like this to rank pages that contain multiple words. For each search term, Google has ranked all pages on the Internet for that term (this is a simplification of their actual algorithm). When you do a search for two words, they cross-reference these lists and find the pages that are the highest ranked among the two search terms. We essentially want to find the intersection of these lists.
+			\\ \\
+			If you were to search for a misspelled word in addition to an actual word, the page IDs in the misspelled word's list will likely be very large (lowly ranked pages, which is intuitive because it was a misspelling). The na\"ive algorithm would check the valid word's list one by one to look for matches with the invalid word's rankings. The better algorithm is to use gallop search to locate the numbers from the misspelled word's list.
+			\\ \\
+			Gallop search is also useful when you don't know the endpoint of your data source, such as in the case of data streams, a huge file, etc.
+			\\ \\
+			Gallop search takes $\lg n$ time for the double steps, and $\lg \left( \frac{n}{2} \right)$ time for the binary search step in the worst case. So, gallop search runs in time:
+			\begin{align*}
+				\lg n + \lg \frac{n}{2} = \lg n + \lg n - \lg 2 = 2 \lg n - 1 \le 2 \lg n
+			\end{align*}
+
+			So, gallop search runs in $\Theta(\lg n)$ time, but it runs twice as slow as binary search in the worst case. What would happen if we replaced the binary search call with another call to gallop search?
+			\begin{align*}
+				T(n) &= \lg n + T \left( \frac{n}{2} \right) \\
+				&= \lg n + \lg \frac{n}{2} + T \left( \frac{n}{4} \right) \\
+				&= \lg n + \lg \frac{n}{2} + \lg \frac{n}{4} + T \left( \frac{n}{8} \right) \\
+				&= \sum_{i = 1}^{\lg n} i \\
+				&= \lg^2 n
+			\end{align*}
+
+			Clearly, you don't want to replace the binary search call in gallop search with another call to gallop search. If you recursive with gallop search, you'll get $\lg^2 n$ complexity, which is worse than with the binary search call.
+			\\ \\
+			This is called an \textbf{adaptive algorithm}. If the element we're looking for is nearby, it'll take $\Theta(\lg n)$ time, otherwise it'll take longer. Adaptive algorithms are sometimes referred to as polynomial parameterized algorithms or breaking distance.
+		\subsection{Self-Organizing Lists}
+			If you look at Alejandro's desk, there are papers all over the place. It's a mess. But a paper he read recently would be on or near the top of the pile. Similarly, we pack away our swimsuits for the winter and we pack away our winter coats for the summer, because we won't be needing them.
+			\\ \\
+			We could do something similar. Things we use frequently or have used recently should be placed in a more convenient place. We'll sort items by the frequency of access.
+			\\ \\
+			You could use an unordered linked list for this, with the most frequently used items at the front of the linked list. That's just one implementation strategy.
+			\\ \\
+			What happens when the frequencies of items change? For example, the frequency of midterm access by Alejandro was high last week, but will radically decrease after today. The user should have a way of indicating a change of frequency. There are two key strategies to achieve this:
+			\begin{itemize}
+				\item \textbf{Move-to-front (MTF)}: as an item is accessed, move it to the front of the list (after a successful search).
+				\item \textbf{Transpose}: swap the accessed item with the item that is immediately preceding it. This is a more conservative approach.
+			\end{itemize}
+
+			Both of these approaches can be implemented using an array or a linked list.
+			\\ \\
+			In the worst case, transpose can be very bad. The worst case occurs when you keep swapping and accessing elements that are adjacent to each other. After many accesses, no progress has been made on changing the frequency of those items because they were just swapping with each other continuously.
+			\\ \\
+			However, with move-to-front, if we use a rare item, it still gets put at the very front of the list, even if we won't need it again any time soon. It interferes with the other frequencies for a little while until it eventually makes its way further down the list.
+			\\ \\
+			Move-to-front is no worse than twice as expensive as the best possible order. That's pretty great when you take into account how simplistic the MTF algorithm is. This method is used a lot for caching. It could also be implemented as a hash table with chaining, where each chain uses the MTF technique.
+
+		\subsection{Skip Lists}
+			Skip lists are a type of generalized binary tree, that provide a much better (and easy) implementation of a binary tree. 
+			\\ \\
+			You start with a sorted linked list. Sorted arrays are good because you can binary search them (you know their length and have arbitrary access to elements), but they're bad because inserting requires shifting of elements, which is expensive.
+			\\ \\
+			Linked lists make insertions easy, but we cannot binary search them. So, we make another linked list in a level above, and this linked list contains just some of the elements, which will act as shortcuts. We make more and more layers of these shortcuts, each level up containing larger and larger jumps, to further optimize searching.
+			\\ \\
+			If you insert in the bottom layer, the shortcuts still work and don't need to be changed \textendash{} the shortcut just becomes a bit longer. If the shortcut becomes too large, simply break the shortcut into two.
 \end{document}
