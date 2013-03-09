@@ -5,6 +5,7 @@
 \usepackage{amsthm}
 \usepackage{amsfonts}
 \usepackage{amssymb}
+\usepackage{mathtools}
 \usepackage{hyperref}
 \usepackage{wasysym}
 \usepackage{soul}
@@ -26,6 +27,8 @@
 
 \setlength{\marginparwidth}{1.5in}
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
+
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
 
 \crefname{ex}{Example}{Examples}
 
@@ -109,7 +112,7 @@
 			\end{problem}
 		
 			\begin{problem}[Binary Strings]
-				Let $S = a_1, a_2, \ldots, a_n$ where $a_i \in \{0, 1\}$. How many strings $S$ exist?
+				Let $S = a_1, a_2, \ldots, a_n$ where $a_i \in \set{0, 1}$. How many strings $S$ exist?
 			\end{problem}
 		
 			For each $a_i$, there is the choice between $0$ or $1$, and that choice is independent for each character of the string (for each $a_i$). So, there are $2^n$ binary strings of length $n$.
@@ -139,9 +142,9 @@
 		
 		\subsection{Permutations and Combinations}
 			\subsubsection{Set Notation}
-				The usual set and sequence notation is used in this course. $(1, 2, 3)$ is a sequence (where order matters), and $\{1, 2, 3\}$ is a set (where order does not matter).
+				The usual set and sequence notation is used in this course. $(1, 2, 3)$ is a sequence (where order matters), and $\set{1, 2, 3}$ is a set (where order does not matter).
 				\\ \\
-				We will also be using one piece of notation you may not be familiar with: $[n] := \{1, 2, \ldots, n\}$.
+				We will also be using one piece of notation you may not be familiar with: $[n] := \set{1, 2, \ldots, n}$.
 
 			\subsubsection{Permutations}
 				\begin{defn}
@@ -185,7 +188,7 @@
 							(1 + x)^n = \overbrace{(1 + x)}^1 \overbrace{(1 + x)}^2 \cdots \overbrace{(1 + x)}^n
 						\end{align*}
 						
-						In order to get $x^k$, we need to choose $x$ in $k$ of $\{1, \ldots, n \}$. There are $\binom{n}{k}$ ways of doing this.
+						In order to get $x^k$, we need to choose $x$ in $k$ of $\set{1, \ldots, n }$. There are $\binom{n}{k}$ ways of doing this.
 					\end{proof}
 		
 		\section{Simple Tools for Counting}
@@ -195,8 +198,8 @@
 				\begin{ex}
 					\begin{align*}
 						S &= [5] = \begin{cases} 
-							S_1 = \{1, 2 \} \\
-							S_2 = \{3, 4, 5\}
+							S_1 = \set{1, 2 } \\
+							S_2 = \set{3, 4, 5}
 						\end{cases} \\
 						|S| &= |S_1| + |S_2|
 					\end{align*}
@@ -215,7 +218,7 @@
 						
 						Let $S$ be the set of subsets of $[n]$. $|S| = 2^n$, since for every element of $[n]$ we have two possibilities: include or don't include the element in $S$.
 						
-						\underline{Aside}: suppose $n = 2$. Then $S = \{\emptyset, \{1\}, \{2\}, \{1, 2\}\}$. 
+						\underline{Aside}: suppose $n = 2$. Then $S = \set{\emptyset, \set{1}, \set{2}, \set{1, 2}}$. 
 						
 						Partition $S$ into $S_0, S_1, \ldots, S_n$, where $S_k$ is the set of $k$-subsets of $[n]$.
 						
@@ -302,7 +305,7 @@
 					\\ \\
 					Let $S_1$ be the set of $k$-subsets of $[n]$, so $|S_1| = \binom{n}{k}$, as shown earlier. Let $S_2$ be the set of $(n-k)$-subsets of $[n]$, so $|S_2| = \binom{n}{n - k}$. We need to show that $|S_1| = |S_2|$, so we need to show that there is a bijection between $S_1$ and $S_2$, $f: S_1 \to S_2$.
 					\\ \\
-					\underline{Aside}: suppose $n = 5$ and $k = 2$. Then, the bijection could be $\{1, 3\} \to \{2, 4, 5\}$ (the complement function).
+					\underline{Aside}: suppose $n = 5$ and $k = 2$. Then, the bijection could be $\set{1, 3} \to \set{2, 4, 5}$ (the complement function).
 					\\ \\
 					The bijective function is $f(A) = [n]\backslash A$ (the complement function). Check: $f$ is its own inverse (let $g = f$).
 				\end{proof}
@@ -347,19 +350,19 @@
 			\end{defn}
 			
 			\begin{ex}
-				Let $S = \{ \sigma | \sigma \subseteq \{1, 2, 3\} \}, w(\sigma) = |\sigma|$.
+				Let $S = \set{\sigma | \sigma \subseteq \set{1, 2, 3} }, w(\sigma) = |\sigma|$.
 				
 				\begin{center}
 					\begin{tabular}{c|c|c}
 						$\sigma$ & $w(\sigma)$ & $x^{w(\sigma)}$ \\ \hline
 						$\emptyset$ & 0 & 1 \\
-						\{1\} & 1 & x \\
-						\{2\} & 1 & x \\
-						\{3\} & 1 & x \\
-						\{1, 2\} & 2 & $x^2$ \\
-						\{1, 3\} & 2 & $x^2$ \\
-						\{2, 3\} & 2 & $x^2$ \\
-						\{1, 2, 3\} & 3 & $x^3$ \\
+						$\set{1}$ & 1 & x \\
+						$\set{2}$ & 1 & x \\
+						$\set{3}$ & 1 & x \\
+						$\set{1, 2}$ & 2 & $x^2$ \\
+						$\set{1, 3}$ & 2 & $x^2$ \\
+						$\set{2, 3}$ & 2 & $x^2$ \\
+						$\set{1, 2, 3}$ & 3 & $x^3$ \\
 					\end{tabular}
 				\end{center}
 				
@@ -580,32 +583,32 @@
 				\begin{defn}
 					Let $A$ and $B$ be sets. The \textbf{cartesian product} is defined as:
 					\begin{align*}
-						A \times B := \{ (a, b) \big| a \in A, b \in B \}
+						A \times B := \set{(a, b) \big| a \in A, b \in B }
 					\end{align*}
 
 					Note that $(a, b)$ is an ordered pair.
 				\end{defn}
 
 				\begin{ex}
-					Let $A = \{1, 2, 3\}$ and $B = \{x, y\}$. Then $A \times B = \{ (1, x), (2, x), (3, x), (1, y), (2, y), (3, y) \}$.
+					Let $A = \set{1, 2, 3}$ and $B = \set{x, y}$. Then $A \times B = \set{(1, x), (2, x), (3, x), (1, y), (2, y), (3, y) }$.
 				\end{ex}
 
 				The cardinality of $A \times B$ is the product of the cardinalities of $A$ and $B$: $|A \times B| = |A||B|$.
 		\subsection{The Sum and Product Lemmas}
 			Let's consider a bin of two red marbles -- one large marble (denoted $R$), and one small marble (denoted $r$). We define $A$ to be the set of all selections of $\ge 1$ marbles. We know: 
 			\begin{align*}
-				A &= \{ \{r\}, \{R\}, \{r, R\} \} \\
+				A &= \set{\set{r}, \set{R}, \set{r, R} } \\
 				w(\sigma) &= |\sigma| \\
 				\phi_A(x) &= x + x + x^2 = 2x + x^2
 			\end{align*}
 			Let's now consider a bin of green marbles -- two large marbles (denoted $G$). We define $B$ to be the set of all selections of $\ge 1$ marbles. We know:
 			\begin{align*}
-				B &= \{ \{G\}, \{G, G\} \} \\
+				B &= \set{\set{G}, \set{G, G} } \\
 				w(\sigma) &= |\sigma| \\
 				\phi_B(x) &= x + x^2
 			\end{align*}
 			\subsubsection{Sum Lemma}
-				Let $S = A \union B = \{ \{r\}, \{R\}, \{r, R\}, \{G\}, \{G, G\} \}$, and note that $A \intersection B = \emptyset$. What is the generating function for $S$?
+				Let $S = A \union B = \set{\set{r}, \set{R}, \set{r, R}, \set{G}, \set{G, G} }$, and note that $A \intersection B = \emptyset$. What is the generating function for $S$?
 				\begin{align*}
 					\phi_S(x) = \underbrace{(x + x + x^2)}_{\phi_A(x)} + \underbrace{(x  + x^2)}_{\phi_B(x)}
 				\end{align*}
@@ -624,7 +627,7 @@
 					\end{align*}
 				\end{proof}
 			\subsubsection{Product Lemma} \lecture{January 18, 2013}
-				Let $S = A \times B = \{ (\{r\}, \{G\}), (\{R\}, \{G\}), (\{r, R\}, \{G\}), (\{r\}, \{G, G\}), (\{R\}, \{G, G\}), (\{r, R\}, \{G, G\}) \}$. $S$ is the various ways of selecting marbles from both bins. Let $w(\sigma)$ be the number of marbles selected in total.
+				Let $S = A \times B = \set{(\set{r}, \set{G}), (\set{R}, \set{G}), (\set{r, R}, \set{G}), (\set{r}, \set{G, G}), (\set{R}, \set{G, G}), (\set{r, R}, \set{G, G}) }$. $S$ is the various ways of selecting marbles from both bins. Let $w(\sigma)$ be the number of marbles selected in total.
 				\\ \\
 				\textbf{Note}: you can think of a generating series as the sum of all objects' $x^{w(\sigma)}$, or you can think of it as the sum of all $a_k x^k$.
 				\begin{align*}
@@ -656,7 +659,7 @@
 					\\ \\
 					Suppose $n = 3$ and $k = 2$. You'll have $(0, 3), (1, 2), (2, 1)$, and $(3, 0)$ \textendash{} four possibilities (notice order matters).
 					\\ \\
-					We have $\mathbb{N}_0 = \{0, 1, 2, 3, \ldots \}, w(a) = a$. Then:
+					We have $\mathbb{N}_0 = \set{0, 1, 2, 3, \ldots }, w(a) = a$. Then:
 					\begin{align*}
 						\phi_{\mathbb{N}_0}(x) = \sum_{n \ge 0} a_n x^n = 1 + x + x^2 + x^3 + \ldots = \frac{1}{1-x}
 					\end{align*}
@@ -702,7 +705,7 @@
 				\end{defn}
 				
 				\begin{ex}
-					We have $\mathbb{N} = \{1, 2, 3, \ldots \}, w(a) = a$, which gives us:
+					We have $\mathbb{N} = \set{1, 2, 3, \ldots }, w(a) = a$, which gives us:
 					\begin{align*}
 						\phi_{\mathbb{N}}(x) = x + x^2 + x^3 + \ldots = x(1 + x + x^2 + \ldots) = \frac{x}{1 - x}
 					\end{align*}
@@ -767,8 +770,8 @@
 					\end{align*}
 					It's useful to think about what you're counting. In this case, you're counting the $k$-tuples, so this is the cartesian product of six sets (the first three being the set of positive integers $\le 5$ and the last three being the set of integers $\ge 3$).
 					\begin{align*}
-						\mathbb{N}_{\le 5} &= \{1, 2, 3, 4, 5\} \\
-						\mathbb{N}_{\ge 3} &= \{3, 4, 5, \ldots\}
+						\mathbb{N}_{\le 5} &= \set{1, 2, 3, 4, 5} \\
+						\mathbb{N}_{\ge 3} &= \set{3, 4, 5, \ldots}
 						\\ \\
 						S &= (\mathbb{N}_{\le 5})^k \times (\mathbb{N}_{\ge 3})^k
 					\end{align*}
@@ -812,11 +815,11 @@
 					\\ \\
 					For example, with $n = 5$, the five solutions are:
 					\begin{align*}
-						\{ (1, 1, 1, 1, 1), (5), (3, 1, 1), (1, 3, 1), (1, 1, 3) \}
+						\set{(1, 1, 1, 1, 1), (5), (3, 1, 1), (1, 3, 1), (1, 1, 3) }
 					\end{align*}
 					We'll define $n = 0$ to have a unique composition (), the empty tuple.
 					\\ \\
-					We have $\mathbb{N}_{\text{odd}} = \{1, 3, 5, 7, \ldots\}$, with its weight function defined to be $w(a) = a$ for any $a \in \mathbb{N}_{\text{odd}}$. That gives us its generating function:
+					We have $\mathbb{N}_{\text{odd}} = \set{1, 3, 5, 7, \ldots}$, with its weight function defined to be $w(a) = a$ for any $a \in \mathbb{N}_{\text{odd}}$. That gives us its generating function:
 					\setcounter{equation}{0}
 					\begin{align}
 						\phi_{\mathbb{N}_{\text{odd}}}(x) &= x + x^3 + x^5 + x^7 + \ldots \\
@@ -877,8 +880,8 @@
 					\\ \\
 					Let's look at the case where $n = 5$. We have: \lecture{January 25, 2013}
 					\begin{align*}
-						\overbrace{\{ (1, 1, 1, 1, 1), (3, 1, 1), (1, 3, 1), (1, 1, 3), (5) \}}^{S_n} \\
-						\{ \underbrace{(1, 1, 1, 1), (3, 1), (1, 3)}_{S_{n - 1}}, \underbrace{(1, 1, 1), (3)}_{S_{n - 2}} \} 
+						\overbrace{\set{(1, 1, 1, 1, 1), (3, 1, 1), (1, 3, 1), (1, 1, 3), (5) }}^{S_n} \\
+						\set{\underbrace{(1, 1, 1, 1), (3, 1), (1, 3)}_{S_{n - 1}}, \underbrace{(1, 1, 1), (3)}_{S_{n - 2}} } 
 					\end{align*}
 					Notice that each element in $S_{n - 1}$ and $S_{n - 2}$ can be obtained from $S_n$ by either removing the last element entirely, or by subtracting 2 from the last element. That's the bijection we're looking for, which we will now define more formally as $f : S_n \to S_{n - 1} \cup S_{n - 2}$:
 					\begin{align*}
@@ -904,7 +907,7 @@
 		\end{defn}
 
 		\begin{defn}
-			The \textbf{concatenation $\mathbf{AB}$ of two sets} ($A$ and $B$) of binary strings is defined as all possible strings formed as concatenations of one string from set $A$ followed by one string from set $B$. For example, if $A = \{ 011, 11 \}$ and $B = \{10, 0\}$, then $AB = \{ 01110, 0110, 1110, 110 \}$.
+			The \textbf{concatenation $\mathbf{AB}$ of two sets} ($A$ and $B$) of binary strings is defined as all possible strings formed as concatenations of one string from set $A$ followed by one string from set $B$. For example, if $A = \set{011, 11 }$ and $B = \set{10, 0}$, then $AB = \set{01110, 0110, 1110, 110 }$.
 		\end{defn}
 
 		\begin{defn}
@@ -912,15 +915,15 @@
 		\end{defn}
 
 		\begin{defn}
-			We define $A^\star = \{ \epsilon \} \cup A \cup A^2 \cup A^3 \cup \ldots$, where $\epsilon$ represents the empty string.
+			We define $A^\star = \set{\epsilon } \cup A \cup A^2 \cup A^3 \cup \ldots$, where $\epsilon$ represents the empty string.
 		\end{defn}
 
 		\begin{ex}
-			What is $\{ 0, 1 \}^\star$? It's the set of \emph{all} binary strings.
+			What is $\set{0, 1 }^\star$? It's the set of \emph{all} binary strings.
 		\end{ex}
 
 		\begin{ex}
-			What's $\{ 0, 1 \}^5$? $\{ 0, 1 \}^5 = \{ 0, 1 \} \{ 0, 1 \} \{ 0, 1 \} \{ 0, 1 \} \{ 0, 1 \}$. $\{0, 1\}^5$ is the set of all binary strings of length 5.
+			What's $\set{0, 1 }^5$? $\set{0, 1 }^5 = \set{0, 1 } \set{0, 1 } \set{0, 1 } \set{0, 1 } \set{0, 1 }$. $\set{0, 1}^5$ is the set of all binary strings of length 5.
 		\end{ex}
 
 		\begin{ex}
@@ -932,11 +935,11 @@
 			\end{align*}
 			
 			\begin{enumerate}
-				\item A sequence of at most two ones followed by zero, repeated: $\{ 0, 10, 110 \}^\star$
-				\item A sequence of zero, one, or two ones: $\{ \epsilon, 1, 11 \}$.
+				\item A sequence of at most two ones followed by zero, repeated: $\set{0, 10, 110 }^\star$
+				\item A sequence of zero, one, or two ones: $\set{\epsilon, 1, 11 }$.
 			\end{enumerate}
 
-			Therefore, $S = \{0, 10, 110\}^\star \{ \epsilon, 1, 11 \}$. Note that $\epsilon$ is an element of $\{ \text{anything} \}^\star$.
+			Therefore, $S = \set{0, 10, 110}^\star \set{\epsilon, 1, 11 }$. Note that $\epsilon$ is an element of $\set{\text{anything} }^\star$.
 		\end{ex}
 
 		\begin{defn}
@@ -959,12 +962,12 @@
 			\end{align*}
 
 			\begin{enumerate}
-				\item A sequence of ones, of any length other than length 2: $\{ \epsilon, 1, 111, 1111, 11111, \ldots \}$.
-				\item A sequence of zeroes (of any non-zero length other than length 2), followed by a sequence of ones (of any non-zero length other than length 2), repeated: $[ \{0, 000, 0000, \ldots \} \{1, 111, 1111, \ldots \} ]^\star$.
-				\item A sequence of zeroes, of any length other than length 2: $\{ \epsilon, 0, 000, 0000, 00000, \ldots \}$.
+				\item A sequence of ones, of any length other than length 2: $\set{\epsilon, 1, 111, 1111, 11111, \ldots }$.
+				\item A sequence of zeroes (of any non-zero length other than length 2), followed by a sequence of ones (of any non-zero length other than length 2), repeated: $[ \set{0, 000, 0000, \ldots } \set{1, 111, 1111, \ldots } ]^\star$.
+				\item A sequence of zeroes, of any length other than length 2: $\set{\epsilon, 0, 000, 0000, 00000, \ldots }$.
 			\end{enumerate}
 
-			It's important to note that $\{ 1, 111, 1111, \ldots, 0, 000, 0000, \ldots \}^\star$ does not work because you could pick two zeroes or two ones consecutively, which is not allowed. You have to be very careful that you don't generate strings that you don't want to generate.
+			It's important to note that $\set{1, 111, 1111, \ldots, 0, 000, 0000, \ldots }^\star$ does not work because you could pick two zeroes or two ones consecutively, which is not allowed. You have to be very careful that you don't generate strings that you don't want to generate.
 		\end{ex}
 
 		\subsection{Generating Functions for Strings}
@@ -976,14 +979,14 @@
 			\end{align*}
 
 			\begin{ex} \lecture{January 28, 2013}
-				Let $A = \{0, 01\}$ and $B = \{0, 10\}$. Their generating functions are $\phi_A(x) = \phi_B(x) = x + x^2$. What is the generating function for $AB$?
+				Let $A = \set{0, 01}$ and $B = \set{0, 10}$. Their generating functions are $\phi_A(x) = \phi_B(x) = x + x^2$. What is the generating function for $AB$?
 				\\ \\
-				It's easy to see that $AB = \{00, 010, 0110\}$, which gives us $\phi_{AB}(x) = x^2 + x^3 + x^4$. Also note that:
+				It's easy to see that $AB = \set{00, 010, 0110}$, which gives us $\phi_{AB}(x) = x^2 + x^3 + x^4$. Also note that:
 				\begin{align*}
 					\phi_A(x) \cdot \phi_B(x) &= (x + x^2) \cdot (x + x^2) \\
 					&= x^2 + 2x^3 + x^4 \\
 				\end{align*}
-				Therefore, in this case, $\phi_{AB}(x) \not = \phi_A(x) \cdot \phi_B(x)$. Why is this? $A \times B = \{ (0, 0), (01, 0), (0, 10), (01,10) \}$. Note that the string for $(01, 0)$ and $(0, 10)$ is the same ($010$), but it's only going to be included in $AB$ once. That's where the trouble is.
+				Therefore, in this case, $\phi_{AB}(x) \not = \phi_A(x) \cdot \phi_B(x)$. Why is this? $A \times B = \set{(0, 0), (01, 0), (0, 10), (01,10) }$. Note that the string for $(01, 0)$ and $(0, 10)$ is the same ($010$), but it's only going to be included in $AB$ once. That's where the trouble is.
 			\end{ex}
 
 			\begin{defn}
@@ -1033,7 +1036,7 @@
 				An expression is \textbf{unambiguous} if there exists a unique way of writing the string according to the expression.
 			\end{defn}
 
-			For example: $\{0, 10, 110\}^\star \{\epsilon, 1, 11\}$ is the set of strings with no more than two consecutive ones. Let's examine the arbitrary string $0001101011001$. If we split the string after every zero, we get $0,0,0,110,10,110,0,1$, which is a unique way of breaking down the string.
+			For example: $\set{0, 10, 110}^\star \set{\epsilon, 1, 11}$ is the set of strings with no more than two consecutive ones. Let's examine the arbitrary string $0001101011001$. If we split the string after every zero, we get $0,0,0,110,10,110,0,1$, which is a unique way of breaking down the string.
 
 			\begin{proposition}
 				Suppose $A^\star$ is unambiguous and $\epsilon \not \in A$. Then $\phi_{A^\star}(x) = \frac{1}{1 - \phi_A(x)}$.
@@ -1041,7 +1044,7 @@
 			\end{proposition}
 
 			\begin{proof}
-				We have $A^\star = \{\epsilon\} \cup A \cup A^2 \cup A^3 \cup A^4 \cup \ldots$. What is $\phi_{A^k}(x)$?
+				We have $A^\star = \set{\epsilon} \cup A \cup A^2 \cup A^3 \cup A^4 \cup \ldots$. What is $\phi_{A^k}(x)$?
 				\begin{align*}
 					\phi_{A^k}(x) &= [\phi_A(x)]^k \text{ by the product lemma for strings} \\
 					&= 1 + \phi_A(x) + \phi_{A^2}(x) + \phi_{A^3}(x) + \ldots \text{ by the sum lemma} \\
@@ -1055,14 +1058,14 @@
 			\end{proof}
 		\subsection{Counting Strings} \lecture{January 30, 2013}
 			\begin{ex}
-				Let $S$ be the set of binary strings with no three consecutive ones (111). We can express $S$ as $S = \{ 0, 10, 110 \}^\star \{\epsilon, 1, 11\}$. You can verify that this is unambiguous.
+				Let $S$ be the set of binary strings with no three consecutive ones (111). We can express $S$ as $S = \set{0, 10, 110 }^\star \set{\epsilon, 1, 11}$. You can verify that this is unambiguous.
 				\\ \\
 				We have:
 				\begin{align*}
-					\phi_{\{0, 10, 110\}}(x) &= x + x^2 + x^3 \\
-					\phi_{\{0, 10, 110\}^\star}(x) &= \frac{1}{1 - x - x^2 - x^3} \text{ by proposition} \\
-					\phi_{\{\epsilon, 1, 11\}}(x) &= 1 + x + x^2 \\ \\
-					\phi_S(x) &= \phi_{\{0, 10, 110\}^\star}(x) \cdot \phi_{\{\epsilon, 1, 11\}}(x) \text{ by the product lemma for strings} \\
+					\phi_{\set{0, 10, 110}}(x) &= x + x^2 + x^3 \\
+					\phi_{\set{0, 10, 110}^\star}(x) &= \frac{1}{1 - x - x^2 - x^3} \text{ by proposition} \\
+					\phi_{\set{\epsilon, 1, 11}}(x) &= 1 + x + x^2 \\ \\
+					\phi_S(x) &= \phi_{\set{0, 10, 110}^\star}(x) \cdot \phi_{\set{\epsilon, 1, 11}}(x) \text{ by the product lemma for strings} \\
 					&= \frac{1 + x + x^2}{1 - x - x^2 - x^3}
 				\end{align*}
 			\end{ex}
@@ -1071,8 +1074,8 @@
 				Let $S$ be the set of binary strings where no block has length 2. Recall from before:
 				\begin{align*}
 					S &= ABC \\
-					A &= \{\epsilon, 1, 111, 1111, \ldots\} \\
-					B &= (\{0, 000, 0000, \ldots\}\{1, 111, 1111, \ldots\})^\star
+					A &= \set{\epsilon, 1, 111, 1111, \ldots} \\
+					B &= (\set{0, 000, 0000, \ldots}\set{1, 111, 1111, \ldots})^\star
 				\end{align*}
 
 				For the sake of convenience, we'll define $f$ as follows.
@@ -1103,11 +1106,11 @@
 			\subsubsection{Recursive String Definitions}
 				There's another way of constructing binary strings: recursive definitions.
 				\begin{ex} \lecture{February 1, 2013}
-					Let $S$ be the set of all binary strings. We can define $S$ recursively as $S = \{ \epsilon \} \cup \{0, 1\}$. Whenever you write an expression like this, you should take great care to ensure that both sides are actually equal.
+					Let $S$ be the set of all binary strings. We can define $S$ recursively as $S = \set{\epsilon } \cup \set{0, 1}$. Whenever you write an expression like this, you should take great care to ensure that both sides are actually equal.
 					\\ \\
-					One might attempt to describe $S$ as $\{ \epsilon, 0, 1 \}S$, however that is ambiguous. $S = \{ \epsilon \} \cup \{ 0, 1 \} S$ is unambiguous. Since there are two terms of length 1, and applying the sum \& product lemmas, we get:
+					One might attempt to describe $S$ as $\set{\epsilon, 0, 1 }S$, however that is ambiguous. $S = \set{\epsilon } \cup \set{0, 1 } S$ is unambiguous. Since there are two terms of length 1, and applying the sum \& product lemmas, we get:
 					\begin{align*}
-						\phi_S(x) &= \phi_{\{\epsilon\}}(x) + \phi_{\{0, 1\}}(x) \cdot \phi_S(x) \text{ by the sum lemma} \\
+						\phi_S(x) &= \phi_{\set{\epsilon}}(x) + \phi_{\set{0, 1}}(x) \cdot \phi_S(x) \text{ by the sum lemma} \\
 						&= 1 + 2x \cdot \phi_S(x) \\
 						&= \frac{1}{2 - x} \\
 						&= 1 + 2x + 4x^2 + 8x^3 + \ldots \text{ by composition}
@@ -1120,11 +1123,11 @@
 					\\ \\
 					Consider the arbitrary string $110000100110100011 \in S$. There are no three consecutive ones in that string. We can prefix this string with 0, 10, or 110 while maintaining the constraint that the string cannot have three consecutive ones. With this recursive definition, we're building the string from right to left.
 					\\ \\
-					We can express $S$ as $S = \{ \epsilon, 1, 11 \} \cup S\{0, 01, 011\}$.
+					We can express $S$ as $S = \set{\epsilon, 1, 11 } \cup S\set{0, 01, 011}$.
 					\\ \\
 					In order to check this, we must verify that the two sides of the union are disjoint. That's easy to confirm: the elements on the left have no zeroes in them, and all elements on the right have a zero. Therefore, the sum lemma applies.
 					\begin{align*}
-						\phi_S(x) &= \phi_{\{\epsilon, 1, 11\}}(x) + \phi_{\{0, 10, 110\}}(x) \cdot \phi_S(x) \\
+						\phi_S(x) &= \phi_{\set{\epsilon, 1, 11}}(x) + \phi_{\set{0, 10, 110}}(x) \cdot \phi_S(x) \\
 						&= 1 + x + x^2 + (x + x^2 + x^3) \cdot \phi_S(x) \\
 						&= \frac{1 + x + x^2}{1 - x - x^2 - x^3}
 					\end{align*}
@@ -1140,9 +1143,9 @@
 						\item Solve and get an expression for $\phi_S(x)$.
 					\end{enumerate}
 
-					The first equation relating $S$ and $F$ is $\{ \epsilon \} \cup S \{ 0, 1 \} = S \cup F$. We need to verify this by showing both directions of the equality.
+					The first equation relating $S$ and $F$ is $\set{\epsilon } \cup S \set{0, 1 } = S \cup F$. We need to verify this by showing both directions of the equality.
 					\\ \\
-					\underline{Showing $\{\epsilon \} \cup S \{ 0, 1 \} \subseteq S \cup F$}: let $a \in \{ \epsilon \} \cup S \{ 0, 1 \}$. We need to show that $a \in S$ or $a \in F$.
+					\underline{Showing $\set{\epsilon } \cup S \set{0, 1 } \subseteq S \cup F$}: let $a \in \set{\epsilon } \cup S \set{0, 1 }$. We need to show that $a \in S$ or $a \in F$.
 					\\ \\
 					If $a = \epsilon$, then $a \in S$ since $\epsilon \in S$. If $a = a'0$ or $a = a'1$ where $a' \in S$, then either:
 					\begin{itemize}
@@ -1150,21 +1153,21 @@
 						\item $a'$ has the forbidden string at the end, since $a' \in S$, so $a \in F$.
 					\end{itemize}
 
-					\underline{Showing $\{ \epsilon \} \cup S \{ 0, 1 \} \supseteq S \cup F$}: let $a \in S \cup F$. We need to show that $a \in \{ \epsilon \} \cup S \{ 0, 1 \}$.
+					\underline{Showing $\set{\epsilon } \cup S \set{0, 1 } \supseteq S \cup F$}: let $a \in S \cup F$. We need to show that $a \in \set{\epsilon } \cup S \set{0, 1 }$.
 					\\ \\
-					Suppose $a \in S$, or $a = \epsilon$. Then clearly, $a \in S \{ 0, 1 \}$. Suppose $a \in F$, then $a \in S \{ 0, 1 \}$.
+					Suppose $a \in S$, or $a = \epsilon$. Then clearly, $a \in S \set{0, 1 }$. Suppose $a \in F$, then $a \in S \set{0, 1 }$.
 					\\ \\
-					The second equation relating $S$ and $F$ is $S\{11010\} = F$. As before, we need to verify this by showing both directions of the equality. \lecture{February 4, 2013} 
+					The second equation relating $S$ and $F$ is $S\set{11010} = F$. As before, we need to verify this by showing both directions of the equality. \lecture{February 4, 2013} 
 					\\ \\
-					\underline{Showing $S\{11010\} \supseteq F$}: let $a \in F$. Then we know that the string $a$ with its last character truncated off is an element of $S$ (it no longer can contain the forbidden string). Therefore, the prefix to $11010$ is also an element of $S$, as required.
+					\underline{Showing $S\set{11010} \supseteq F$}: let $a \in F$. Then we know that the string $a$ with its last character truncated off is an element of $S$ (it no longer can contain the forbidden string). Therefore, the prefix to $11010$ is also an element of $S$, as required.
 					\\ \\
-					\underline{Showing $S\{11010\} \subseteq F$}: let $a \in S\{11010\}$. We need to show that the string ends in 11010, and that the forbidden string does not occur elsewhere. But what if the forbidden string is partially in the $\in S$ part and partially in the 11010 part? Shifting the forbidden string to the left by one character several times shows that it is not possible to construct the forbidden string partially from the prefix and partially from the suffix (11010), for all shifts.
+					\underline{Showing $S\set{11010} \subseteq F$}: let $a \in S\set{11010}$. We need to show that the string ends in 11010, and that the forbidden string does not occur elsewhere. But what if the forbidden string is partially in the $\in S$ part and partially in the 11010 part? Shifting the forbidden string to the left by one character several times shows that it is not possible to construct the forbidden string partially from the prefix and partially from the suffix (11010), for all shifts.
 					\\ \\
 					Now, let's find the generating functions of both sides of these two equations.
 					\\ \\
-					The intersection of $\{ \epsilon \}$ and $S\{0, 1\}$ is empty, so the sum lemma applies. We'll also apply the product lemma to $S\{ 0, 1 \}$. The generating function for $\{ \epsilon \} \cup S\{0, 1\}$ is therefore $1 + \phi_S(x) 2x$. On the other side of equation 1, we get $\phi_F(x) + \phi_S(x)$ by the sum lemma, since it's a partition ($F$ only contains elements ending in the forbidden string, and $S$ does not contain the forbidden string at all). So, for the first equation we have $1 + \phi_S(x) 2x = \phi_F(x) + \phi_S(x)$.
+					The intersection of $\set{\epsilon }$ and $S\set{0, 1}$ is empty, so the sum lemma applies. We'll also apply the product lemma to $S\set{0, 1 }$. The generating function for $\set{\epsilon } \cup S\set{0, 1}$ is therefore $1 + \phi_S(x) 2x$. On the other side of equation 1, we get $\phi_F(x) + \phi_S(x)$ by the sum lemma, since it's a partition ($F$ only contains elements ending in the forbidden string, and $S$ does not contain the forbidden string at all). So, for the first equation we have $1 + \phi_S(x) 2x = \phi_F(x) + \phi_S(x)$.
 					\\ \\
-					By the product lemma, we get the generating function for $S\{11010\}$ to be $\phi_S(x) x^5$. The other side of equation 2 has a generating function of $\phi_F(x)$. So, for equation 2 we have $\phi_S(x) x^5 = \phi_F(x)$.
+					By the product lemma, we get the generating function for $S\set{11010}$ to be $\phi_S(x) x^5$. The other side of equation 2 has a generating function of $\phi_F(x)$. So, for equation 2 we have $\phi_S(x) x^5 = \phi_F(x)$.
 					\\ \\
 					Next, we'll substitute $\phi_F(x)$ from equation 2 into the generating function for equation 1:
 					\begin{align*}
@@ -1177,11 +1180,11 @@
 				\begin{ex}
 					Let $S$ be the set of strings not containing 1010, and let $F$ be the set of strings that end in 1010, but if the last character of $f \in F$ is removed, $f \in S$. We'll apply a similar method as in the previous example.
 					\\ \\
-					The first equation is $\{ \epsilon \} \cup S\{0, 1\} = S \cup F$, as before. There is nothing about this specific forbidden string in this equation, so it applies generally.
+					The first equation is $\set{\epsilon } \cup S\set{0, 1} = S \cup F$, as before. There is nothing about this specific forbidden string in this equation, so it applies generally.
 					\\ \\
-					The second equation we'd logically like to try is $S \{ 1010 \} \stackrel{?}{=} F$. Let's see if that works. Let $A \in S\{1010\}$. If we're unlucky, then the prefix of 1010 will be 10, which means the forbidden string will occur with 10 in the prefix and 10 in the suffix (forming 1010). So, $S\{1010\} \not = F$.
+					The second equation we'd logically like to try is $S \set{1010 } \stackrel{?}{=} F$. Let's see if that works. Let $A \in S\set{1010}$. If we're unlucky, then the prefix of 1010 will be 10, which means the forbidden string will occur with 10 in the prefix and 10 in the suffix (forming 1010). So, $S\set{1010} \not = F$.
 					\\ \\
-					We could instead use $S\{1010\} = F \cup F\{10\}$. Note that in the case where the forbidden string occurs partially in the prefix and partially in the suffix, we could say that is an instance of a forbidden string followed by an additional 10, which is what this equation is expressing. We would also need to check the opposite direction, $\in F \cup F\{10\} \implies \in S\{1010\}$, but we'll omit that here.
+					We could instead use $S\set{1010} = F \cup F\set{10}$. Note that in the case where the forbidden string occurs partially in the prefix and partially in the suffix, we could say that is an instance of a forbidden string followed by an additional 10, which is what this equation is expressing. We would also need to check the opposite direction, $\in F \cup F\set{10} \implies \in S\set{1010}$, but we'll omit that here.
 					\\ \\
 					Finding the generating functions, we get $1 + \phi_S(x) 2x = \phi_S(x) + \phi_F(x)$ (for equation 1) and $\phi_S(x) x^4 = \phi_F(x) + \phi_F(x) x^2$ (for equation 2), which gives us:
 					\begin{align*}
@@ -1196,13 +1199,13 @@
 				\begin{ex}
 					Let $S$ be the set of strings where there is no odd block of 0s that is immediately followed by an odd block of 1s. For example, $01\underline{000}\underline{1}011 \not \in S$, but $111011000 \in S$.
 					\\ \\
-					First, let $A$ be the set of a block of zeroes followed by a block of ones. That is, strings in $A$ are composed of at least one 0 followed by at least one 1. We can express $A$ by $A = \{0\}\{0\}^\star\{1\}\{1\}^\star$.
+					First, let $A$ be the set of a block of zeroes followed by a block of ones. That is, strings in $A$ are composed of at least one 0 followed by at least one 1. We can express $A$ by $A = \set{0}\set{0}^\star\set{1}\set{1}^\star$.
 					\\ \\
-					Next, let $B$ be the set of an odd block of zeroes followed by an odd block of ones. We can express $B$ as $B = \{0\}\{00\}^\star\{1\}\{11\}^\star$.
+					Next, let $B$ be the set of an odd block of zeroes followed by an odd block of ones. We can express $B$ as $B = \set{0}\set{00}^\star\set{1}\set{11}^\star$.
 					\\ \\
 					Next, let $C$ be the set of a block of zeroes followed by a block of ones where both blocks cannot be odd simultaneously (one can be odd, but not both of them). $C$ can be expressed as $C = A \mathbin{\backslash} B$.
 					\\ \\
-					We then have that $S = \{1\}^\star(A \mathbin{\backslash} B)^\star \{0\}^\star$.
+					We then have that $S = \set{1}^\star(A \mathbin{\backslash} B)^\star \set{0}^\star$.
 
 				\end{ex}
 	
@@ -1525,7 +1528,7 @@
 				\\ \\
 				That guess didn't work, so we'll try a higher degree. Our second guess is $a_n = \alpha n$ for some constant $\alpha$, which would give us:
 				\begin{align*}
-					\alpha n + alpha(n - 1) - 2 \alpha(n - 2) &= 9 \\
+					\alpha n + \alpha(n - 1) - 2 \alpha(n - 2) &= 9 \\
 					\alpha &= 3
 				\end{align*}
 				
@@ -1539,7 +1542,7 @@
 		\end{defn}
 
 		\begin{ex}
-			Let's say we have the graph $G = (V, E)$, where $V = \{ 1, 2, 3, 4, 5 \}$ and $E = \{ 12, 13, 14, 23, 34, 25, 45 \}$. Note that for edges, we're using the shorthand of $xy$ to mean $\{ x, y \}$ (for example: edge $12 = \{ 1, 2 \}$).
+			Let's say we have the graph $G = (V, E)$, where $V = \set{1, 2, 3, 4, 5 }$ and $E = \set{12, 13, 14, 23, 34, 25, 45 }$. Note that for edges, we're using the shorthand of $xy$ to mean $\set{x, y }$ (for example: edge $12 = \set{1, 2 }$).
 			\begin{center}
 				\begin{tikzpicture}[scale=1.5]
 					\node [dot={180}{1}] at (0,2) {};
@@ -1579,7 +1582,7 @@
 			\end{center}
 			If $ij \in E$, we say $i$ and $j$ are \textbf{endpoints} of $ij$. We also say that $i, j$ are \textbf{adjacent}, and that edge $ij$ is \textbf{incident} to $i$ and $j$.
 			\\ \\
-			The neighbours of $v \in V$ are defined as $\{v \in V | v u \in E\}$.
+			The neighbours of $v \in V$ are defined as $\set{v \in V | v u \in E}$.
 		\end{defn}
 
 		\begin{ex}
@@ -1673,7 +1676,7 @@
 		\subsection{Isomorphism}
 			Are the following two graphs the same?
 			\\ \\
-			$G_1$, with vertices $V = \{1, 2, 3, 4\}$:
+			$G_1$, with vertices $V = \set{1, 2, 3, 4}$:
 			\begin{center}
 				\begin{tikzpicture}[scale=1.5]
 					\node [dot={180}{1}] at (0,1) {};
@@ -1685,7 +1688,7 @@
 				\end{tikzpicture}
 			\end{center}
 
-			$G_2$, with vertices $V = \{a, b, c, d\}$:
+			$G_2$, with vertices $V = \set{a, b, c, d}$:
 			\begin{center}
 				\begin{tikzpicture}[scale=1.5]
 					\node [dot={180}{a}] at (0,1) {};
@@ -1820,7 +1823,7 @@
 			\begin{ex} Given the following table:
 				\begin{center}
 					\begin{tabular}{c|c}
-						Individuals & \# of friends among $\{a, \ldots, i\}$ \\ \hline
+						Individuals & \# of friends among $\set{a, \ldots, i}$ \\ \hline
 						a & 6 \\
 						b & 3 \\
 						c & 4 \\
@@ -1853,7 +1856,7 @@
 				Let's examine the degrees of $a, b, c,$ and $d$:
 				\begin{align*}
 					&\deg(a) + \deg(b) + \deg(c) + \deg(d) \\
-					&= |\{ab, ac\}| + |\{ab, bc\}| + |\{ac, bc, cd\}| + |\{cd\}|
+					&= |\set{ab, ac}| + |\set{ab, bc}| + |\set{ac, bc, cd}| + |\set{cd}|
 				\end{align*}
 
 				Note that each edge appears exactly twice in the above equation \textendash{} once for each endpoint. This is the general idea behind the proof for the previous theorem.
@@ -2142,7 +2145,7 @@
 					P = V_0e_1V_1e_2 \ldots e_nV_n
 				\end{align*}
 
-				Since $\deg(V_n) \ge 2$, there exists $V_nw \ne e_n$. Since $P$ is the longest path, $w = V_i$ for some $i \in \{0, \ldots, n - 2\}$. Then we have the cycle $C$:
+				Since $\deg(V_n) \ge 2$, there exists $V_nw \ne e_n$. Since $P$ is the longest path, $w = V_i$ for some $i \in \set{0, \ldots, n - 2}$. Then we have the cycle $C$:
 				\begin{align*}
 					C &= V_ie_iV_{i + 1} \ldots e_nV_ne_{n + 1}V_i
 				\end{align*}
@@ -2367,7 +2370,7 @@
 			
 			Let $G = (V,E)$, and let $S \subseteq V, S \ne \emptyset, S \ne V$ (we pick a proper subset of vertices). We define:
 			\begin{align*}
-				\delta(S) := \{uv \in E | u \in S, v \not \in S\}
+				\delta(S) := \set{uv \in E | u \in S, v \not \in S}
 			\end{align*}
 			
 			Informally, $\delta(S)$ is the set of edges between $V$ and $V \backslash S$.
@@ -2391,7 +2394,7 @@
 					\end{tikzpicture}
 				\end{center}
 				
-				If $S = \{s, a, b, c\}$, we get $\delta(S) = \{cd\}$.
+				If $S = \set{s, a, b, c}$, we get $\delta(S) = \set{cd}$.
 			\end{ex}
 			
 			\begin{ex}
@@ -2411,7 +2414,7 @@
 					\end{tikzpicture}
 				\end{center}
 				
-				If $S = \{b, e\}$, we get $\delta(S) = \{ab, bc, bd, ec, ed, ef\}$.
+				If $S = \set{b, e}$, we get $\delta(S) = \set{ab, bc, bd, ec, ed, ef}$.
 			\end{ex}
 			
 			\begin{defn}
@@ -2434,7 +2437,7 @@
 				\end{theorem}
 			
 				\begin{proof}
-					Let $\delta(S)$ be an $st$-cut ($s \in S, t \not \in S$). Let $i \in \{1, \ldots, k\}$. Follow $P_i$ from $s$ to $t$. Let $v_i$ be the last vertex in $S$ of $P_i$, and let $w_i$ be the first vertex \emph{not} in $S$ of $P_i$. Then $e_i = v_i w_i$ is an edge of $P_i$ and $e_i \in \delta(S)$. This implies $\{e_1, e_2, \ldots, e_k\} \subseteq \delta(S)$.
+					Let $\delta(S)$ be an $st$-cut ($s \in S, t \not \in S$). Let $i \in \set{1, \ldots, k}$. Follow $P_i$ from $s$ to $t$. Let $v_i$ be the last vertex in $S$ of $P_i$, and let $w_i$ be the first vertex \emph{not} in $S$ of $P_i$. Then $e_i = v_i w_i$ is an edge of $P_i$ and $e_i \in \delta(S)$. This implies $\set{e_1, e_2, \ldots, e_k} \subseteq \delta(S)$.
 					\\ \\
 					Since $P_1, P_2, \ldots, P_k$ are edge disjoint, $e_1, e_2, \ldots, e_k$ are all different. This implies that $\delta(S)| \ge k$. Since $\delta(S)$ was an arbitrary cut, we have shown that all $st$-cuts have at least $k$ edges.
 				\end{proof}
@@ -2470,7 +2473,7 @@
 				\begin{proof}
 					Let us prove that (2) implies (1).
 					\\ \\
-					Let $U = \{s\} \cup \{v | \exists \text{ a path from } s \text{ to } v\}$. If $t \in U$, we're done. 
+					Let $U = \set{s} \cup \set{v | \exists \text{ a path from } s \text{ to } v}$. If $t \in U$, we're done. 
 					\\ \\
 					Let's assume $t \not \in U$. By (2), there exists $ab \in \delta(v)$, say $a \in U, b \not \in U$. That is, we have at least one edge leaving $U$.
 					\\ \\
@@ -2690,7 +2693,7 @@
 				\begin{proof}
 					Assume $e = xy$. We'll start by proving that (1) implies (2).
 					\\ \\
-					The fact that $e = xy$ is not a bridge implies that there exists a path $P$ between $x$ and $y$ in $G \backslash e$. Then, $P \cup \{e\}$ is a cycle.
+					The fact that $e = xy$ is not a bridge implies that there exists a path $P$ between $x$ and $y$ in $G \backslash e$. Then, $P \cup \set{e}$ is a cycle.
 					\\ \\
 					Now, we'll prove (2) implies (1).
 					\\ \\
@@ -2711,7 +2714,7 @@
 						\item $a$ and $b$ are in the same component of $G \backslash e$ (because of $P_1$).
 					\end{itemize}
 
-					Using those facts, by transitivity we know there exists a path $P$ between $x$ and $y$ in $G \backslash e$. Then $P \cup \{e\}$ is a cycle.
+					Using those facts, by transitivity we know there exists a path $P$ between $x$ and $y$ in $G \backslash e$. Then $P \cup \set{e}$ is a cycle.
 				\end{proof}
 		\subsection{Trees}
 			\begin{defn}
@@ -2865,7 +2868,7 @@
 			\end{ex}
 
 			\begin{proof}
-				$C$ is a cycle of $G$ if and only if $C \backslash \{e\}$ is a path of $H$ between $a$ and $b$. We know that there exists a unique such path.
+				$C$ is a cycle of $G$ if and only if $C \backslash \set{e}$ is a path of $H$ between $a$ and $b$. We know that there exists a unique such path.
 			\end{proof}
 
 			You could add an edge to create a cycle, then remove \emph{any} edge from within the cycle to get a different tree. This technique could be used by shipping companies to find the most optimal cost-efficient route to ship a package.
@@ -2997,9 +3000,9 @@
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
-			\item \lecture{January 21, 2013} How many bijections are there from $\{1, \ldots, n\}$ to $\{1, \ldots, n\}$? $n!$, since you can't map two elements in the first set to the same one element in the second set.
+			\item \lecture{January 21, 2013} How many bijections are there from $\set{1, \ldots, n}$ to $\set{1, \ldots, n}$? $n!$, since you can't map two elements in the first set to the same one element in the second set.
 			\item Let $S$ be a set of objects with weight function $w$. Suppose that $S = A \union B$. Does $\phi_S(x) = \phi_A(x) + \phi_B(x)$? No, not always. The sum lemma only applies when $A$ and $B$ are partitions of $S$.
-			\item Let $S = \{(a, b) | a, b \ge 1 \in \mathbb{Z}\}, w[(a, b)] = a - b$. What is the generating function for $S$? There is no generating function for $S$, since it is not a power series. There are an infinite number of pairings \textendash{} that is, there are an infinite number of objects with the same weight.
+			\item Let $S = \set{(a, b) | a, b \ge 1 \in \mathbb{Z}}, w[(a, b)] = a - b$. What is the generating function for $S$? There is no generating function for $S$, since it is not a power series. There are an infinite number of pairings \textendash{} that is, there are an infinite number of objects with the same weight.
 			\item Does $x^2 - x^4 + x^6 - x^8 + x^10 - \ldots$ have an inverse? No. There is no constant term that isn't equal to zero, therefore it does not have an inverse.
 			\item Is a composition of $A(x) = 1 + x + x^2 + x^3 + \ldots$ and $B(x) = \frac{1}{1 - x}$ a power series? No. $B(x)$ must have a constant term that is not zero in order for a composition to be acceptable.
 			\item \lecture{January 30, 2013} What is the power series $x^2 + x^3 + x^4 + x^5 + \ldots$ equal to? It is equal to $\frac{x^2}{1 - x}$, since:
@@ -3013,9 +3016,9 @@
 				\end{align*}
 			\item The number of ways of spending exactly \$237 to buy oranges (\$1 each) and/or mangos (\$2 each) is\dots? It's $[x^{237}](1 + x + x^2 + x^3 + \ldots)(1 + x^2 + x^4 + x^6 + \ldots)$.
 				\\ \\
-				You can represent this as a pair, $(a, b)$, where $a$ is the number of oranges and $b$ is the number of mangos. Define a weight function $w[(a, b)] = a + 2b$. We also have $S = \{ (a, b) \}, A = \{ 0, 1, \ldots \}, B = \{ 0, 1, \ldots \}$. Also, define weight functions for $A$ and $B$: $w(a) = a, w(b) = 2b$. The generating series are $\phi_A(x) = 1 + x + x^2 + \ldots$ and $\phi_B(x) = 1 + x^2 + x^4 + \ldots$. Finally, use the product lemma on $\phi_A(x) \cdot \phi_B(x)$.
+				You can represent this as a pair, $(a, b)$, where $a$ is the number of oranges and $b$ is the number of mangos. Define a weight function $w[(a, b)] = a + 2b$. We also have $S = \set{(a, b) }, A = \set{0, 1, \ldots }, B = \set{0, 1, \ldots }$. Also, define weight functions for $A$ and $B$: $w(a) = a, w(b) = 2b$. The generating series are $\phi_A(x) = 1 + x + x^2 + \ldots$ and $\phi_B(x) = 1 + x^2 + x^4 + \ldots$. Finally, use the product lemma on $\phi_A(x) \cdot \phi_B(x)$.
 
-			\item The set of binary strings without consecutive zeroes can be described as\dots? The set can be described as $(\{\epsilon, 0\}\{ 1 \})^\star \{ \epsilon, 0 \}$.
+			\item The set of binary strings without consecutive zeroes can be described as\dots? The set can be described as $(\set{\epsilon, 0}\set{1 })^\star \set{\epsilon, 0 }$.
 				\\ \\
 				We have to make sure this expression does not generate anything that is not in the set. Then we think about how to generate any arbitrary string contained in the set we're trying to express. There is a unique way to generate each string with the expression.
 			\item \lecture{February 27, 2013} The general solution of the recurrence relation $a_n - 4a_{n - 2} = 0$ is given by $a_n = c_12^n + c_2(-2)^n$.

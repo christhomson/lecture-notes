@@ -7,6 +7,7 @@
 \usepackage{cleveref}
 \usepackage{amsmath}
 \usepackage{amsthm}
+\usepackage{mathtools}
 \usepackage{tikz}
 \usepackage{qtree}
 \usepackage{float}
@@ -14,6 +15,8 @@
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
 \usepackage{color}
+
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
 
 \definecolor{darkish-blue}{RGB}{25,103,185}
 
@@ -998,20 +1001,20 @@
 		\begin{defn}
 			An \textbf{alphabet} $\Sigma$ is a finite set of symbols.
 		\end{defn}
-		For example, $\Sigma = \{0, 1, 2, 3, 4, 5, 6, 7, 8, 9\}$ or $\Sigma = \{ \text{dog}, \text{cat}, \text{monkey} \}$. Note that an alphabet can contain any arbitrary symbols \textendash{} it does not need to consist of just single Roman characters.
+		For example, $\Sigma = \set{0, 1, 2, 3, 4, 5, 6, 7, 8, 9}$ or $\Sigma = \set{\text{dog}, \text{cat}, \text{monkey}}$. Note that an alphabet can contain any arbitrary symbols \textendash{} it does not need to consist of just single Roman characters.
 
 		\begin{defn}
 			A \textbf{string} is a sequence whose elements are symbols. The \textbf{empty string} is a sequence with zero elements, typically denoted $\epsilon$ or $\lambda$.
 		\end{defn}
 		In this course, we'll denote the empty string as $\epsilon$.
 		\\ \\
-		Language $L$ is a set of strings. $L_1 = \{ 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, \ldots \}$, $L_2 = \{0, 1, 00, 11, 000, 111, 0000, 1111, \ldots\}$, and $L_3 = \{ \text{dogcat}, \text{catdog}, \text{dogdogmonkey} \}$ are three examples of languages. It's important to note that unlike an alphabet, a language can be infinite in size.
+		Language $L$ is a set of strings. $L_1 = \set{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, \ldots}$, $L_2 = \set{0, 1, 00, 11, 000, 111, 0000, 1111, \ldots}$, and $L_3 = \set{\text{dogcat}, \text{catdog}, \text{dogdogmonkey}}$ are three examples of languages. It's important to note that unlike an alphabet, a language can be infinite in size.
 		\\ \\
 		There is a certain imprecision in the definitions of $L_1$ and $L_2$. ``$\ldots$'' is not mathematically precise. For example, does $L_1$ contain counting numbers with no extra (padding) zeroes \ldots{} except zero? It gets complicated. There are also some even more complicated languages:
 		\begin{itemize}
-			\item $L_1 = \{ \text{set of coded messages sent by NASA on probes} \}$. We could ask NASA, but it still gets complicated. What if a probe had a coded message on-board but the probe blew up on the launchpad? We need to be more precise in our definition.
-			\item $L_2 = \{ \text{set of coded messages that aliens will understand} \}$. This involves mind-reading.
-			\item $L_3 = \{ \text{set of all MIPS binary programs that halt for all inputs} \}$. You can't write a program to determine membership in this language.
+			\item $L_1 = \set{\text{set of coded messages sent by NASA on probes}}$. We could ask NASA, but it still gets complicated. What if a probe had a coded message on-board but the probe blew up on the launchpad? We need to be more precise in our definition.
+			\item $L_2 = \set{\text{set of coded messages that aliens will understand}}$. This involves mind-reading.
+			\item $L_3 = \set{\text{set of all MIPS binary programs that halt for all inputs}}$. You can't write a program to determine membership in this language.
 		\end{itemize}
 		Some languages are clearly easier to specify (precisely) than others.
 		\\ \\	
@@ -1030,8 +1033,8 @@
 			\begin{itemize}
 				\item $L$ is finite.
 				\item $L = L_1 \cup L_2$ (that is, $L$ is the union of regular languages $L_1$ and $L_2$).
-				\item $L = L_1 L_2$ (that is, $L$ is the concatenation of regular languages $L_1$ and $L_2$). More precisely, $L_1 L_2 = \{ xy | x \in L_1, y \in L_2 \}$.
-				\item $L = L_1^\star$ of a regular language $L_1$. This is known as repetition or a Kleene closure. That is, $L = \{ \epsilon \} \cup L L_1$. Note that $L$ contains $\epsilon, L_1$, and every element of $L$ being concatenated with $L_1$ continuously. Alternatively, this could be expressed as $L^\star = \{ \epsilon \} \cup L_1 \cup L_1 L_1 \cup L_1 L_1 L_1 \cup \ldots$.
+				\item $L = L_1 L_2$ (that is, $L$ is the concatenation of regular languages $L_1$ and $L_2$). More precisely, $L_1 L_2 = \set{xy | x \in L_1, y \in L_2}$.
+				\item $L = L_1^\star$ of a regular language $L_1$. This is known as repetition or a Kleene closure. That is, $L = \set{\epsilon} \cup L L_1$. Note that $L$ contains $\epsilon, L_1$, and every element of $L$ being concatenated with $L_1$ continuously. Alternatively, this could be expressed as $L^\star = \set{\epsilon} \cup L_1 \cup L_1 L_1 \cup L_1 L_1 L_1 \cup \ldots$.
 			\end{itemize}
 		\end{defn}
 
@@ -1043,7 +1046,7 @@
 		\subsection{Deterministic Finite Automaton (DFA)}
 			You have an alphabet $\Sigma$, a finite set of states $S$, an initial state $i \in S$, a set of final states $f \subseteq S$, and a transition function $T: S \times \Sigma \to S$.
 			\\ \\
-			For example: $\Sigma = \{ 0, 1 \}$, $S = \{ \text{wilma}, \text{fred}, \text{pebbles} \}$, $i = \text{wilma}$, $f = \{ \text{fred}, \text{pebbles} \}$, and $T$ is defined by the table:
+			For example: $\Sigma = \set{0, 1}$, $S = \set{\text{wilma}, \text{fred}, \text{pebbles}}$, $i = \text{wilma}$, $f = \set{\text{fred}, \text{pebbles}}$, and $T$ is defined by the table:
 
 			\begin{center}
 				\begin{tabular}{|c|c|}
@@ -1105,7 +1108,7 @@
 			\\ \\
 			For simplicity's sake, we'll setup some notation we'll be using to discuss DFAs. This is by convention only.
 			\begin{itemize}
-				\item $a, b, c, d$ (and other letters at the beginning of the standard alphabet) represent symbols in $\Sigma = \{a, b, c, d\}$.
+				\item $a, b, c, d$ (and other letters at the beginning of the standard alphabet) represent symbols in $\Sigma = \set{a, b, c, d}$.
 				\item Particular strings are a concatenation of symbols from $\Sigma$. Some examples are $abca, bbca,$ and $\epsilon$ (the empty string).
 				\item $x, y, z$ (and other letters near the end of the standard alphabet) are variables that represent strings. For example, let $x = abc$, then $x = x_0 x_1 x_2 \ldots x_{n - 1}$ where $n = |x|$.
 			\end{itemize}
@@ -1129,7 +1132,7 @@
 			The bonus question on A5 involves implementing this algorithm. You may want to use an array or map. It's the easiest bonus question all term.
 
 			\begin{ex}
-				We're given the binary integers, $\Sigma = \{ 0, 1 \}, S = \{ \text{start}, \text{zero}, \text{nonzero}, \text{error} \}, i = \text{start}, f = \{ \text{zero}, \text{nonzero} \}$, and function $T$ defined by: \\
+				We're given the binary integers, $\Sigma = \set{0, 1}, S = \set{\text{start}, \text{zero}, \text{nonzero}, \text{error}}, i = \text{start}, f = \set{\text{zero}, \text{nonzero}}$, and function $T$ defined by: \\
 				\begin{center}
 					\begin{tabular}{|c|c|}
 						\hline $S \times \Sigma$ & $S$ \\ \hline
@@ -1201,7 +1204,7 @@
 			\begin{ex}
 				Let's construct a finite automaton that represents the MIPS assembly notation for registers.
 				\\ \\
-				Given $\Sigma = \{ \$, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9 \}, L = $ MIPS assembly notation for registers (i.e. $\{ \$0, \$1, \$2, \ldots, \$31 \}$).
+				Given $\Sigma = \set{\$, 0, 1, 2, 3, 4, 5, 6, 7, 8, 9}, L = $ MIPS assembly notation for registers (i.e. $\set{\$0, \$1, \$2, \ldots, \$31}$).
 				\\ \\
 				It's useful to name your DFA states with what you've learned so far based on the conditions that led to that state, because that's the only way we know what we've determined in the past. These names don't matter, but it'll make the finite automaton much easier for you to understand.
 				\\ \\
@@ -1256,7 +1259,7 @@
 			\end{ex}
 
 			\begin{ex}
-				Let $\Sigma = \{a, b, c\}, L = $ any string with an odd number of $a$'s. For example: $a, abaa, babbc, \ldots$.
+				Let $\Sigma = \set{a, b, c}, L = $ any string with an odd number of $a$'s. For example: $a, abaa, babbc, \ldots$.
 				\begin{center}
 					\begin{tikzpicture}[scale=0.2]
 						\tikzstyle{every node}+=[inner sep=0pt]
@@ -1317,7 +1320,7 @@
 			\end{ex}
 
 			\begin{ex}
-				Let $\Sigma = \{a, b, c\}$ and $L$ = all strings with at least one $a$, one $b$, and one $c$. For example: $abaaaaaca \in L$, but $bcbcbccc \not \in L$.
+				Let $\Sigma = \set{a, b, c}$ and $L$ = all strings with at least one $a$, one $b$, and one $c$. For example: $abaaaaaca \in L$, but $bcbcbccc \not \in L$.
 
 				\begin{center}
 					\begin{tikzpicture}[scale=0.2]
@@ -1421,7 +1424,7 @@
 			\end{itemize}
 
 			\begin{ex}
-				Let $\Sigma = \{a, b, c, 0, 1, 2, !\}$ be an alphabet. We're interested in $L_{\text{id}}$ \textendash{} that is, the language of identifiers.
+				Let $\Sigma = \set{a, b, c, 0, 1, 2, !}$ be an alphabet. We're interested in $L_{\text{id}}$ \textendash{} that is, the language of identifiers.
 				\\ \\
 				We can determine a \underline{recognizer} for $L_{\text{id}}$:
 				\begin{center}
@@ -1491,13 +1494,13 @@
 
 			For example, if $x = abc123!abc$, the longest prefix is $abc123$. This can be identified by $j$, where $x_j$ is the end of the prefix of $y$.
 			\begin{ex}
-				Suppose $L = \{a, aaa\}$. Let's find the longest match.
+				Suppose $L = \set{a, aaa}$. Let's find the longest match.
 				\\ \\
 				If we have $x = aa\ldots$, after we examine the first $a$, we have no idea if that's the longest match or not. Only after examining more of the string can we be sure that it is. In $aab$, $a$ is the longest match. In $aaa$, $aaa$ is the longest match and so $a$ is not the longest match.
 			\end{ex}
 
 			\begin{ex}
-				Suppose $L = \{a\} \cup \{ \text{any string beginning with } a \text{ and ending in } b\}$. We can determine a recognizer for this:
+				Suppose $L = \set{a} \cup \set{\text{any string beginning with } a \text{ and ending in } b}$. We can determine a recognizer for this:
 				\begin{center}
 					\begin{tikzpicture}[scale=0.2]
 						\tikzstyle{every node}+=[inner sep=0pt]
@@ -1609,12 +1612,12 @@
 			\\ \\
 			In order to improve efficiency and readability, we'll use a ``total hack'' called \textbf{simplified maximal munch}. This involves finding the longest prefix $y$ of $x$ such that $ya$ could not possibly be a prefix of $L$ where $x = yaz$.
 			\\ \\
-			Suppose you have $L_{\text{int}} = \{0, 1, 2, 3, \ldots\}, L_{\text{id}} = \{x\}$, and $L_{\text{hex}} = \{0x1, \ldots\}$. If you have $x = 0x$, you can't determine if that's the integer zero followed by an identifier, or the beginning of a hex symbol. However, if you can look ahead and see $0x1$, you know it's a hex symbol. If you see something like $0xx$ (a hex prefix followed by an identifier), simplified maximal munch will not allow this.
+			Suppose you have $L_{\text{int}} = \set{0, 1, 2, 3, \ldots}, L_{\text{id}} = \set{x}$, and $L_{\text{hex}} = \set{0x1, \ldots}$. If you have $x = 0x$, you can't determine if that's the integer zero followed by an identifier, or the beginning of a hex symbol. However, if you can look ahead and see $0x1$, you know it's a hex symbol. If you see something like $0xx$ (a hex prefix followed by an identifier), simplified maximal munch will not allow this.
 			\\ \\
 			The scanner we were given (which implements simplified maximal munch) will see $0xx$ as an error. It's an error because the scanner made the assumption that it was a hex constant, but that didn't work out (didn't see an integer after 0x), so it gave up and produced an error.
 		\subsection{Nondeterministic Finite Automata (NFA)} \lecture{February 13, 2013}
 			\begin{ex}
-				Let's say we have the alphabet $\Sigma = \{a, b, c\}$ and the language $L = \{ abc, abaca \}$. A recognizer for this NFA could be drawn as:
+				Let's say we have the alphabet $\Sigma = \set{a, b, c}$ and the language $L = \set{abc, abaca}$. A recognizer for this NFA could be drawn as:
 				\begin{center}
 					\begin{tikzpicture}[scale=0.2]
 						\tikzstyle{every node}+=[inner sep=0pt]
@@ -1678,17 +1681,17 @@
 			\begin{center}
 				\begin{tabular}{|c|c|}
 					\hline
-					start, a & \{ 1, 2 \} \\
-					1, b & \{ 3 \} \\
-					2, b & \{ 4 \} \\
-					3, c & \{ 5 \} \\
-					4, a & \{ 6 \} \\
-					6, c & \{ 7 \} \\
-					7, a & \{ 5 \} \\
-					3, a & \{  \} \\ \hline
+					start, a & $\set{1, 2}$ \\
+					1, b & $\set{3}$ \\
+					2, b & $\set{4}$ \\
+					3, c & $\set{5}$ \\
+					4, a & $\set{6}$ \\
+					6, c & $\set{7}$ \\
+					7, a & $\set{5}$ \\
+					3, a & $\set{}$ \\ \hline
 				\end{tabular}
 			\end{center}
-			Additionally, we have $\Sigma = \{a, b, c\}, i = start, S = \{start, 1, 2, 3, 4, 5, 6, 7\}$, and $f = \{ 5 \}$.
+			Additionally, we have $\Sigma = \set{a, b, c}, i = start, S = \set{start, 1, 2, 3, 4, 5, 6, 7}$, and $f = \set{5}$.
 			\\ \\
 			Note that we no longer need an error state because we are no longer required to make $T$ a total function, since it is doesn't need to be a function at all. 
 			\\ \\	
@@ -1702,11 +1705,11 @@
 
 			The pseudocode for an NFA recognizer is as follows. \\
 			\begin{algorithm}[H]
-				states = \{ start \}\;
+				states = $\set{start}$\;
 				\For{a in $x_0x_1x_2 \ldots x_{|x|-1}$}{
 					states = $\displaystyle \bigcup_{s \in \text{states}}$ T[s, a]\;
 				}
-				\lIf{$\text{states} \cap f \ne \{ \}$}{``accept''}
+				\lIf{$\text{states} \cap f \ne \set{}$}{``accept''}
 				\lElse{``reject''}
 			\end{algorithm}
 
@@ -1714,7 +1717,7 @@
 				Any language recognized by an NFA can be recognized by a DFA.
 			\end{theorem}
 
-			\underline{Proof outline}: subset construction. For an $NFA = \{ \Sigma, S_{NFA}, i_{NFA}, f_{NFA}, T_{NFA} \}$, we can construct a $DFA = \{ \Sigma, S_{DFA}, i_{DFA}, f_{DFA}, T_{DFA} \}$. Why does this work?
+			\underline{Proof outline}: subset construction. For an $NFA = \set{\Sigma, S_{NFA}, i_{NFA}, f_{NFA}, T_{NFA}}$, we can construct a $DFA = \set{\Sigma, S_{DFA}, i_{DFA}, f_{DFA}, T_{DFA}}$. Why does this work?
 			\begin{enumerate}
 				\item $S_{NFA}$ is finite.
 				\item The number of subsets of a finite set is finite. There are $2^{|S|}$ subsets of a finite set $S$.
@@ -1726,18 +1729,18 @@
 				\begin{tikzpicture}[scale=0.2]
 					\tikzstyle{every node}+=[inner sep=0pt]
 					\draw [black] (12.7,-17.8) circle (3);
-					\draw (12.7,-17.8) node {\{start\}};
+					\draw (12.7,-17.8) node {$\set{start}$};
 					\draw [black] (27.2,-17.8) circle (3);
-					\draw (27.2,-17.8) node {\{ 1, 2 \}};
+					\draw (27.2,-17.8) node {$\set{1, 2}$};
 					\draw [black] (41.5,-17.8) circle (3);
-					\draw (41.5,-17.8) node {\{ 3, 4 \}};
+					\draw (41.5,-17.8) node {$\set{3, 4}$};
 					\draw [black] (56.8,-17.8) circle (3);
-					\draw (56.8,-17.8) node {\{ 5 \}};
+					\draw (56.8,-17.8) node {$\set{5}$};
 					\draw [black] (56.8,-17.8) circle (2.4);
 					\draw [black] (41.5,-30.4) circle (3);
-					\draw (41.5,-30.4) node {\{ 6 \}};
+					\draw (41.5,-30.4) node {$\set{6}$};
 					\draw [black] (56.8,-30.4) circle (3);
-					\draw (56.8,-30.4) node {\{ 7 \}};
+					\draw (56.8,-30.4) node {$\set{7}$};
 					\draw [black] (7.4,-13.1) -- (10.46,-15.81);
 					\draw (6.86,-11.65) node [left] {$i$};
 					\fill [black] (10.46,-15.81) -- (10.19,-14.9) -- (9.53,-15.65);
@@ -1825,13 +1828,13 @@
 				The difference between $\epsilon$-NFAs and standard NFAs is that the transitions from the start state to states 1 and 2 have no symbol. That means you can spontaneously move your finger along those paths. We generally label those transitions as $\epsilon$ to prevent confusion between mistakes (omissions in labeling the transitions) and $\epsilon$ transitions. This recognizer is for the same language as the NFAs and DFAs in \ref{ex:nfa}.
 			\end{ex}
 
-			More formally, an $\epsilon$-NFA = $(\Sigma, S, i, f, T)$ where $\Sigma, S, i$, and $f$ are defined the same way they were for DFAs and NFAs. The transition function is now defined as $T: S \times (\Sigma \cup \{ \epsilon \} )$.
+			More formally, an $\epsilon$-NFA = $(\Sigma, S, i, f, T)$ where $\Sigma, S, i$, and $f$ are defined the same way they were for DFAs and NFAs. The transition function is now defined as $T: S \times (\Sigma \cup \set{\epsilon} )$.
 			\\ \\
 			\textbf{$\epsilon$-NFA recognizer}:
 			\\ \\
-			We'll need a helper function called $\epsilon$-closure, which accepts a parameter $S$ (a set of states), and returns a set of all states that can be reached from a state in $S$ by following $\epsilon$-transitions. For instance, the $\epsilon$-closure(\{start\}) from earlier would return \{start, 1, 2\}.
+			We'll need a helper function called $\epsilon$-closure, which accepts a parameter $S$ (a set of states), and returns a set of all states that can be reached from a state in $S$ by following $\epsilon$-transitions. For instance, the $\epsilon$-closure($\set{start}$) from earlier would return $\set{start, 1, 2}$.
 			\begin{ex}
-				What is the $\epsilon$-closure(\{a, e\}) of the following $\epsilon$-NFA?
+				What is the $\epsilon$-closure($\set{a, e}$) of the following $\epsilon$-NFA?
 				\begin{center}
 					\begin{tikzpicture}[scale=0.2]
 						\tikzstyle{every node}+=[inner sep=0pt]
@@ -1868,21 +1871,21 @@
 					\end{tikzpicture}
 				\end{center}
 
-				$\epsilon$-closure(\{a, e\}) = \{a, b, c, d, e, f\}.
+				$\epsilon$-closure($\set{a, e}$) = $\set{a, b, c, d, e, f}$.
 			\end{ex}
 
 			$\epsilon$-closure(S) is actually a graph algorithm called \textbf{reachability}. The pseudocode of $\epsilon$-closure(S) is as follows. \\
 			\begin{algorithm}[H]
 				S' = S\;
 				W = S; // work list \\
-				\While{$w \ne \{\}$}{
+				\While{$w \ne \set{}$}{
 					select some element $s \in W$\;
-					W = W \textbackslash{} \{ s \}; // remove s from work list \\
+					W = W \textbackslash{} $\set{s}$; // remove s from work list \\
 					\For{all $s' \in T[s, \epsilon]$}{
 						\If{$s' \not \in S$}{
 							// New state we've never reached before. \\
-							$S' = S' \cup \{s'\}$\;
-							$W = W \cup \{s'\}$\;
+							$S' = S' \cup \set{s'}$\;
+							$W = W \cup \set{s'}$\;
 						}
 					}
 				}
@@ -1890,23 +1893,23 @@
 
 			More formally, $\epsilon$-closure($S$) = $S'$ where $S'$ is the smallest solution to:
 			\begin{align*}
-				S' = S \cup \{s' | \exists s \in S', T[s, \epsilon] = s'\}
+				S' = S \cup \set{s' | \exists s \in S', T[s, \epsilon] = s'}
 			\end{align*}
 
 			The inclusion of $\epsilon$-closure is the only difference between the NFA and $\epsilon$-NFA recognizers. Here's the pseudocode for an $\epsilon$-NFA recognizer: \\
 			\begin{algorithm}[H]
-				states = $\epsilon$-closure(\{ start \})\;
+				states = $\epsilon$-closure($\set{start}$)\;
 				\For{a in $x_0x_1x_2 \ldots x_{|x|-1}$}{
 					states = $\epsilon$-closure($\displaystyle \bigcup_{s \in \text{states}}$ T[s, a])\;
 				}
-				\lIf{$\text{states} \cap f \ne \{ \}$}{``accept''}
+				\lIf{$\text{states} \cap f \ne \set{}$}{``accept''}
 				\lElse{``reject''}
 			\end{algorithm}
 
 			DFAs, NFAs, and $\epsilon$-NFAs can all express recognizers for all regular languages, however sometimes one method is more straightforward than the others.
 
 			\begin{ex}
-				Let $L$ be the language containing all strings that contain ``abaca'' as a substring, where the alphabet is defined as $\Sigma = \{a, b, c\}$. This language can be recognized by a much simpler NFA recognizer than a DFA recognizer. Here's the NFA recognizer for this language $L$:
+				Let $L$ be the language containing all strings that contain ``abaca'' as a substring, where the alphabet is defined as $\Sigma = \set{a, b, c}$. This language can be recognized by a much simpler NFA recognizer than a DFA recognizer. Here's the NFA recognizer for this language $L$:
 				\begin{center}
 					\begin{tikzpicture}[scale=0.2]
 						\tikzstyle{every node}+=[inner sep=0pt]
@@ -1951,25 +1954,25 @@
 			\begin{center}
 				\begin{tabular}{c|c|c}
 					Regular Expression $R$ & Language $L(R)$ & Comments / Examples \\ \hline
-					$a$ & $\{ a \}$ & $a \in \Sigma$ \\
-					$\epsilon$ & $\{ \epsilon \}$ &  NULL string \\
+					$a$ & $\set{a}$ & $a \in \Sigma$ \\
+					$\epsilon$ & $\set{\epsilon}$ &  NULL string \\
 					$R_1 R_2$ & $L(R_1) L(R_2)$ & Concatenation. e.g.:  \\
-					& & $L(ab) = \{ab\}$ \\
-					& & $L(abc) = \{abc\}$ \\
-					& & $L(\epsilon a) = \{a\}$ \\
-					$R_1 | R_2$ & $L(R_1) \cup L(R_2)$ & e.g. $L(abc | def) = \{abc, def\}$ \\
+					& & $L(ab) = \set{ab}$ \\
+					& & $L(abc) = \set{abc}$ \\
+					& & $L(\epsilon a) = \set{a}$ \\
+					$R_1 | R_2$ & $L(R_1) \cup L(R_2)$ & e.g. $L(abc | def) = \set{abc, def}$ \\
 					$R \star$ & $L(R)^\star$ & Kleene closure. e.g.: \\
-					& & $(abc) \star = \{ \epsilon, abc, abcabc, \ldots \}$ \\
-					$\emptyset$ & $\{ \}$ & Empty language.
+					& & $(abc) \star = \set{\epsilon, abc, abcabc, \ldots}$ \\
+					$\emptyset$ & $\set{}$ & Empty language.
 				\end{tabular}
 			\end{center}
 
 			\begin{ex}
-				Given the alphabet $\Sigma = \{ 0, 1 \}$, we're interested in the language $L(R)$ of all binary integers. The regular expression $R$ would be defined as $R = 0 | 1(0 | 1)^\star$.
+				Given the alphabet $\Sigma = \set{0, 1}$, we're interested in the language $L(R)$ of all binary integers. The regular expression $R$ would be defined as $R = 0 | 1(0 | 1)^\star$.
 			\end{ex}
 
 			\begin{ex}
-				Given the alphabet $\Sigma = \{ a, b \}$, we're interseted in the language $L(R)$ of all strings with an even number of $a$'s. Note that $L = \{ \epsilon, babbab, \ldots \}$. We could define the regular expression for this language in several different ways:
+				Given the alphabet $\Sigma = \set{a, b}$, we're interseted in the language $L(R)$ of all strings with an even number of $a$'s. Note that $L = \set{\epsilon, babbab, \ldots}$. We could define the regular expression for this language in several different ways:
 				\begin{align*}
 					R &= (b^\star{} ab^\star{} ab^\star{})^\star \\
 					&= b^\star{}(b^\star{}ab^\star{}ab^\star{})^\star \\
@@ -1983,7 +1986,7 @@
 			\end{ex}
 			
 			\begin{ex}
-				Let $\Sigma = \{ 0, 1, + \}$, and $L(R)$ be the sum of one or more integers. We can express this as the regular expression $R$:
+				Let $\Sigma = \set{0, 1, +}$, and $L(R)$ be the sum of one or more integers. We can express this as the regular expression $R$:
 				\begin{align*}
 					R &= 0 | 1 (0 | 1)^\star{} (+ 0|1(0|1)^\star{})^\star
 				\end{align*}
@@ -1992,7 +1995,7 @@
 			\end{ex}
 
 			\begin{ex}
-				Let $\Sigma = \{ 0, 1, + \}$ (as before), but now let $L(R)$ be the sum of two or more integers. We can express this as the regular expression $R$:
+				Let $\Sigma = \set{0, 1, +}$ (as before), but now let $L(R)$ be the sum of two or more integers. We can express this as the regular expression $R$:
 				\begin{align*}
 					R = 0|1(0|1)^\star{} + 0|1(0|1)^\star{} (+ 0|1(0|1)^\star{})^\star
 				\end{align*}
@@ -2007,15 +2010,15 @@
 					\begin{tabular}{c|c}
 						Extended RE & Meaning \\ \hline
 						$R^+$ & $RR^\star$ \\
-						$\{R_1 \text{\textbf{|}} R_2\}$ & $R_1(R_2R_1)^\star$ \\
-						$\{R_1 \text{\textbf{||}} R_2\}$ & $R_1(R_2R_1)^+$
+						$\set{R_1 \text{\textbf{|}} R_2}$ & $R_1(R_2R_1)^\star$ \\
+						$\set{R_1 \text{\textbf{||}} R_2}$ & $R_1(R_2R_1)^+$
 					\end{tabular}
 				\end{center}
 				(the vertical bars in the above table are fatter than normal)
 				\\ \\
 				The $R^+$ case is where we would see an exponential increase in notation if we weren't using extensions, if there were nested expressions containing +.
 				\\ \\
-				We could have expressed the earlier expression as $\{0|1(0|1)^\star{} \text{\textbf{|}} +\}$.
+				We could have expressed the earlier expression as $\set{0|1(0|1)^\star{} \text{\textbf{|}} +}$.
 				\\ \\
 				In practice, many people call regexps ``regular expressions'', but they aren't true regular expressions because they can express more than just the regular languages. When \emph{we} say ``regular expressions'', we really mean true regular expressions (expressions that can only represent regular languages).
 			
@@ -2039,8 +2042,8 @@
 		\begin{ex}
 			An example of a context-free language that is not regular is the language defined by:
 			\begin{align*}
-				\Sigma &= \{ (, ) \} \\
-				L &= \{ \epsilon, (), (()), ((())), \ldots \}
+				\Sigma &= \set{(, )} \\
+				L &= \set{\epsilon, (), (()), ((())), \ldots}
 			\end{align*}
 
 			That is, $L$ is the language of all strings containing $n$ opening parentheses and $n$ (matching) closing parentheses.
@@ -2070,7 +2073,7 @@
 				\item $T$: a finite set of terminal symbols (terminals), sometimes referred to as the alphabet $\Sigma$.
 				\item $N$: a finite set of non-terminal symbols (nonterminals), sometimes referred to as variables.
 				\item $S \in N$: a start symbol.
-				\item $R$: a set of rules. $R = \{A \to \alpha | A \in N, \alpha \in (N \cup T)^\star\}$
+				\item $R$: a set of rules. $R = \set{A \to \alpha | A \in N, \alpha \in (N \cup T)^\star}$
 			\end{itemize}
 
 			\textbf{Notation} (by convention only):
@@ -2092,7 +2095,7 @@
 					B &\to g
 				\end{align*}
 
-				We also have $T = \{a, b, c, d, e, f, g, h\}, N = \{S, A, B\}$, and $S = S$. We usually just write $R$ and the rest of the components of the grammar can be inferred. The language generated by $G$ is a finite (and regular) language $L(G) = \{abhef, abhg, cdhef, cdhg\}$.
+				We also have $T = \set{a, b, c, d, e, f, g, h}, N = \set{S, A, B}$, and $S = S$. We usually just write $R$ and the rest of the components of the grammar can be inferred. The language generated by $G$ is a finite (and regular) language $L(G) = \set{abhef, abhg, cdhef, cdhg}$.
 
 				\begin{align*}
 					\gamma_0&: &\implies& S \\
@@ -2122,7 +2125,7 @@
 				\end{align*}
 			\end{defn}
 
-			We could express $L(G)$ as $L(G) = \{ x | S \stackrel{\star}{\implies} x \}$.
+			We could express $L(G)$ as $L(G) = \set{x | S \stackrel{\star}{\implies} x}$.
 
 			\begin{defn}
 				$x$ is a sequence of terminals. $x$ is sometimes called a \textbf{member} in $L(G)$, a \textbf{word} in $L(G)$, or a \textbf{sentence} in $L(G)$. All of this terminology means the same thing.
@@ -2190,7 +2193,7 @@
 			For more information, see the \href{https://www.student.cs.uwaterloo.ca/~cs241/wlpp/WLPP.html}{WLPP specification}.
 		\subsection{Some Parsing Examples}
 			\begin{ex}
-				We're given the alphabet $\Sigma = \{a, b\}$, the language $L = \{\epsilon, a, aa, aaa, \ldots\}$ (that is, $a^\star$), and the following rules $R$:
+				We're given the alphabet $\Sigma = \set{a, b}$, the language $L = \set{\epsilon, a, aa, aaa, \ldots}$ (that is, $a^\star$), and the following rules $R$:
 				\begin{align*}
 					S &\to \epsilon \\
 					S &\to Sa
@@ -2349,7 +2352,7 @@
 			Syntax-directed translation involves computing the ``meaning'' for all subtrees in the parse.
 
 			\begin{ex}
-				Let $T = \{0, 1\}, N = \{I, B\}, S = I$, and $R$ be the set of rules:
+				Let $T = \set{0, 1}, N = \set{I, B}, S = I$, and $R$ be the set of rules:
 				\begin{align*}
 					I &\to 0 \\
 					I &\to B \\
@@ -2358,7 +2361,7 @@
 					B &\to B1
 				\end{align*}
 
-				We're interested in the language of binary integers without leading zeros, that is, $\{0, 1, 10, 11, 100, 101, \ldots\}$.
+				We're interested in the language of binary integers without leading zeros, that is, $\set{0, 1, 10, 11, 100, 101, \ldots}$.
 				\\ \\
 				Let's parse the big-endian value of $x = 110$. We have the parse tree:
 				\begin{figure}[H]
@@ -2570,10 +2573,10 @@
 				\\ \\
 				\textbf{Augmented Grammar}: given $G$, the augmented grammar $G'$ is:
 				\begin{align*}
-					N' &= N \cup \{ S' \} \text{ where } S' \text{ is the new start symbol} \\
+					N' &= N \cup \set{S'} \text{ where } S' \text{ is the new start symbol} \\
 					S' &= S' \\
-					T' &= T \cup \{ \vdash, \dashv \} \text{ where } \vdash \text{ and } \dashv \text{ are the beginning and end string markers} \\
-					R' &= R \cup \{ S' \to{} \vdash S \dashv \}
+					T' &= T \cup \set{\vdash, \dashv} \text{ where } \vdash \text{ and } \dashv \text{ are the beginning and end string markers} \\
+					R' &= R \cup \set{S' \to{} \vdash S \dashv}
 				\end{align*}
 
 				Let's introduce a specific augmented grammar with the following set of rules $R'$:
@@ -2599,10 +2602,10 @@
 					\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
 						\hline
 						& \textbf{a} & \textbf{b} & \textbf{c} & \textbf{d} & \textbf{e} & \textbf{f} & \textbf{g} & \textbf{h} & $\boldsymbol \vdash$ & $\boldsymbol \dashv$ \\ \hline
-						\textbf{S'} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{1\} & \{\} \\
-						\textbf{S} & \{2\} & \{\} & \{2\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} \\
-						\textbf{A} & \{3\} & \{\} & \{4\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} & \{\} \\
-						\textbf{B} & \{\} & \{\} & \{\} & \{\} & \{5\} & \{\} & \{6\} & \{\} & \{\} & \{\} \\ \hline
+						\textbf{S'} & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{1}$ & $\set{}$ \\
+						\textbf{S} & $\set{2}$ & $\set{}$ & $\set{2}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ \\
+						\textbf{A} & $\set{3}$ & $\set{}$ & $\set{4}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ \\
+						\textbf{B} & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{5}$ & $\set{}$ & $\set{6}$ & $\set{}$ & $\set{}$ & $\set{}$ \\ \hline
 					\end{tabular}
 				\end{center}
 				
@@ -2615,7 +2618,7 @@
 					push $\vdash$\;
 					\For{c in $\vdash x \dashv$}{
 						\While{top of stack is some $A \in N$}{
-							assert Predict$[A, c]$ = $\{A \to X_0 X_1 \ldots X_m\}$\;
+							assert Predict$[A, c]$ = $\set{A \to X_0 X_1 \ldots X_m}$\;
 							pop stack\;
 							push $X_m$\;
 							push $X_{m - 1}$\;
@@ -2637,12 +2640,12 @@
 						$\gamma$ & input read & not read & stack (top \ldots bottom) & action \\ \hline
 						$\vdash S \dashv$ & $\epsilon$ & $\vdash abhg \dashv$ & $\vdash S \dashv$ & assert $\vdash = \vdash$ \\
 						$\vdash S \dashv$ & $\vdash$ & $abhg \dashv$ & $S \dashv$ & read $\vdash$ \\
-						$\vdash AhB \dashv$ & $\vdash$ & $abhg \dashv$ & $AhB \dashv$ & Predict[S, a] = $\{S \to AhB\}$ \\
-						$\vdash abhB \dashv$ & $\vdash$ & $abhg \dashv$ & $abhB \dashv$ & Predict[A, a] = $\{A \to ab\}$ \\
+						$\vdash AhB \dashv$ & $\vdash$ & $abhg \dashv$ & $AhB \dashv$ & Predict[S, a] = $\set{S \to AhB}$ \\
+						$\vdash abhB \dashv$ & $\vdash$ & $abhg \dashv$ & $abhB \dashv$ & Predict[A, a] = $\set{A \to ab}$ \\
 						$\vdash abhB \dashv$ & $\vdash a$ & $bhg \dashv$ & $bhB \dashv$ & assert $a = a$, read $a$ \\
 						$\vdash abhB \dashv$ & $\vdash ab$ & $hg \dashv$ & $hB \dashv$ & assert $b = b$, read $b$ \\
 						$\vdash abhB \dashv$ & $\vdash abh$ & $g \dashv$ & $B \dashv$ & assert $h = h$, read $h$ \\
-						$\vdash abhg \dashv$ & $\vdash abh$ & $g \dashv$ & $g \dashv$ & Predict[B, g] = $\{B \to g\}$ \\
+						$\vdash abhg \dashv$ & $\vdash abh$ & $g \dashv$ & $g \dashv$ & Predict[B, g] = $\set{B \to g}$ \\
 						$\vdash abhg \dashv$ & $\vdash abhg$ & $\dashv$ & $\dashv$ & assert $g = g$ \\
 						$\vdash abhg \dashv$ & $\vdash abhg \dashv$ & $\epsilon$ & $\epsilon$ & assert stack = $\epsilon$ \\ \hline
 					\end{tabular}
@@ -2651,14 +2654,14 @@
 
 				\textbf{Constructing the Predict Function}: we'll need some helper functions.
 				\begin{itemize}
-					\item first[$\alpha$] = $\{a | \alpha \stackrel{\star}{\implies} a \beta\}$. For example, first($A$) = $\{a, c\}$, and first($AbB$) = $\{a\}$.
+					\item first[$\alpha$] = $\set{a | \alpha \stackrel{\star}{\implies} a \beta}$. For example, first($A$) = $\set{a, c}$, and first($AbB$) = $\set{a}$.
 					\item nullable[$\alpha$] := $\alpha \stackrel{\star}{\implies} \epsilon$.
-					\item follow[$A$] := $\{b | S' \stackrel{\star}{\implies} \alpha A b \beta\}$. That is, in \emph{some} sentential form, $A$ is followed by these elements $b$.
+					\item follow[$A$] := $\set{b | S' \stackrel{\star}{\implies} \alpha A b \beta}$. That is, in \emph{some} sentential form, $A$ is followed by these elements $b$.
 				\end{itemize}
 
 				Now, we can define Predict:
 				\begin{align*}
-					\text{Predict}[A, a] = \{A \to \alpha \in R | a \in \text{first}(\alpha) \text{ OR } (\text{nullable}(\alpha) \text{ AND } a \in \text{follow}(A)\}
+					\text{Predict}[A, a] = \set{A \to \alpha \in R | a \in \text{first}(\alpha) \text{ OR } (\text{nullable}(\alpha) \text{ AND } a \in \text{follow}(A)}
 				\end{align*}
 
 				In the previous example, we didn't use the nullable rule because we did not have any rules leading to $\epsilon$.
@@ -2672,7 +2675,7 @@
 						S &\to aab
 					\end{align*}
 
-					This grammar is not LL(1), because Predict[$S$, $a$] = $\{S \to ab, S \to aab\}$. In particular, |Predict[$A$, $a$]| $\not \le 1$ for all $A, a$.
+					This grammar is not LL(1), because Predict[$S$, $a$] = $\set{S \to ab, S \to aab}$. In particular, |Predict[$A$, $a$]| $\not \le 1$ for all $A, a$.
 					\\ \\
 					We can fix this (and make it an LL(1) grammar) by changing $R$ to be the following set of rules:
 					\begin{align*}
@@ -2684,9 +2687,9 @@
 
 					In this case, we have:
 					\begin{align*}
-						\text{Predict}[S, a] &= \{S \to ab\} \\
-						\text{Predict}[B, a] &= \{B \to ab\} \\
-						\text{Predict}[B, b] &= \{B \to b\}
+						\text{Predict}[S, a] &= \set{S \to ab} \\
+						\text{Predict}[B, a] &= \set{B \to ab} \\
+						\text{Predict}[B, b] &= \set{B \to b}
 					\end{align*}
 
 					Now, |Predict[$A$, $a$]| $\le 1$ for all $A, a$, so this is an LL(1) grammar for the same language.
@@ -2701,12 +2704,12 @@
 
 					Note that the third rule is $B$ mapping to nothing. That is, $B \to$ is nullable. We get these results from our Predict function:
 					\begin{align*}
-						\text{Predict}[S, a] &= \{S \to aBb\} \\
-						\text{Predict}[B, a] &= \{B \to a\} \\
-						\text{Predict}[B, b] &= \{B \to \}
+						\text{Predict}[S, a] &= \set{S \to aBb} \\
+						\text{Predict}[B, a] &= \set{B \to a} \\
+						\text{Predict}[B, b] &= \set{B \to}
 					\end{align*}
 
-					So, we have that $B \to $ is nullable and follow($B$) = $\{b\}$.
+					So, we have that $B \to $ is nullable and follow($B$) = $\set{b}$.
 				\end{ex}
 
 				If you use LL(1), you'll have to forget about left recursion, and therefore forget about syntax-directed translation as well.
@@ -2953,7 +2956,7 @@
 				\begin{algorithm}[H]
 					push $\vdash$\;
 					\For{$c$ in $x \dashv$}{
-						\While{Reduce[top of stack, c] = $\{A \to \alpha\}$}{
+						\While{Reduce[top of stack, c] = $\set{A \to \alpha}$}{
 							pop $|\alpha|$ times\;
 							push Goto[(new) top of stack, c]\;
 						}

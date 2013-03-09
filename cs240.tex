@@ -5,6 +5,7 @@
 \usepackage{amsfonts}
 \usepackage{amssymb}
 \usepackage{amsthm}
+\usepackage{mathtools}
 \usepackage{pgfplots}
 \usepackage[lined]{algorithm2e}
 \usepackage{hyperref}
@@ -21,6 +22,8 @@
 
 \setlength{\marginparwidth}{1.5in}
 \setlength{\algomargin}{0.75em}
+
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
 
 \definecolor{darkish-blue}{RGB}{25,103,185}
 
@@ -238,7 +241,7 @@
 				\underbrace{2n^2}_\text{specific function} \in \underbrace{O(n^2))}_\text{set of functions}
 			\end{align*}
 			
-			The use of the equality operator ($=$) in order notation is not the same as in most other areas of mathematics, since a single element of a set cannot strictly be equal to the set itself (even $a \ne \{a\}$). The $=$ in order notation is not a true equality -- it's just notation. The $\in$ operator is semantically more correct.
+			The use of the equality operator ($=$) in order notation is not the same as in most other areas of mathematics, since a single element of a set cannot strictly be equal to the set itself (even $a \ne \set{a}$). The $=$ in order notation is not a true equality -- it's just notation. The $\in$ operator is semantically more correct.
 		
 		\subsection{Performance of Algorithms}
 			We have made some progression in how we determine the performance of algorithms.
@@ -317,7 +320,7 @@
 		\subsection{Timing Functions}
 			A timing function is a function $T_{\mathcal{A}}$ such that:
 			\begin{align*}
-				T_{\mathcal{A}}: \{ Q \} \to \mathbb{R}^{+}
+				T_{\mathcal{A}}: \set{Q } \to \mathbb{R}^{+}
 			\end{align*}
 			where $\mathbb{R}^{+}$ is the set of positive real numbers.
 			\\ \\
@@ -325,9 +328,9 @@
 			\\ \\
 			We also want to define a general timing function for a particular problem, regardless of algorithm: 
 			\begin{align*}
-				T(n) &= max \{T_{ \mathcal{A}}(Q) \} \\ 
-				T_{avg}(n) &= avg \{ T_{\mathcal{A}}(Q) \} \\ 
-				T_{min}(n) &= min \{ T_{\mathcal{A}}(Q) \} \\
+				T(n) &= max \set{T_{ \mathcal{A}}(Q) } \\ 
+				T_{avg}(n) &= avg \set{T_{\mathcal{A}}(Q) } \\ 
+				T_{min}(n) &= min \set{T_{\mathcal{A}}(Q) } \\
 				\vdots&
 			\end{align*}
 
@@ -469,7 +472,7 @@
 					\hline 2 & -4 & 1 & 3 & -2 & 8 & -1 \\ \hline
 				\end{tabular}
 				\\ \\
-				The running time of this program is $max \bigg\{ \sum_{i = 1}^{j} A[k] \big| 1 \le i \le j \le n \bigg\}$.
+				The running time of this program is $max \set{\sum_{i = 1}^{j} A[k] \big| 1 \le i \le j \le n}$.
 			\end{ex}
 
 			\begin{ex}
@@ -568,7 +571,7 @@
 			\begin{enumerate}
 				\item $f(n) = \Theta(a \cdot f(n))$ for $a > 0$.
 				\item Transitivity. If $f(n) = O(g(n))$ and $g(n) = O(h(n))$, then $f(n) = O(h(n))$.
-				\item $[f(n) + g(n)] = \Theta(\max\{ f(n), g(n) \})$
+				\item $[f(n) + g(n)] = \Theta(\max\set{f(n), g(n) })$
 				\item $a_0 + a_1 x^1 + a_2 x^2 + \ldots + a_n x^n = \Theta(x^n)$, where $a_i$ are constants, $x > 1$, and $a_n > 0$. This is just a common case of (3).
 				\item $n^k = O(a^n)$ for $a > 1$.
 				\item $\log^{k} n = o(n^b)$ for $k > 0$ and $b > 0$ (where $b \in \mathbb{R}$, not necessarily the base of the logarithm).
@@ -771,7 +774,7 @@
 						Here's the pseudocode for the boogie down process: \\
 						\begin{algorithm}[H]
 							\While( [v has at least one child] ){$2v + 1 \le$ last}{
-								u = argmin\{A[2v + 1], A[2v + 2]\}; // argmin returns the array index of the min \\
+								u = argmin$\set{A[2v + 1], A[2v + 2]}$; // argmin returns the array index of the min \\
 								\eIf{$A[u].p < A[v].p$}{
 									swap(u, v)\;
 									v = u\;
@@ -965,7 +968,7 @@
 				\begin{align*}
 					T(n) &= cn + \frac{1}{n}(T(n - 1) + T(1)) + \frac{1}{n}(T(n - 2) + T(2)) + \ldots + \frac{1}{n}(T(1) + T(n - 1)) \\
 					&= \frac{1}{n} \sum_{i = 0}^{n - 1}(T(i) + T(n - i - 1)) + \underbrace{\Theta(n)}_{\text{partition step}} \\
-					&\le \frac{1}{n} \sum_{i = 0}^{n - 1} 2 \max \{T(i), T(n - i - 1) \} + \Theta(n) \\
+					&\le \frac{1}{n} \sum_{i = 0}^{n - 1} 2 \max \set{T(i), T(n - i - 1) } + \Theta(n) \\
 					&= \frac{1}{n} \cdot \frac{1}{2}(T\left(\frac{3i}{4}\right)) + \frac{1}{n} \cdot \frac{1}{2} T(i) + cn
 				\end{align*}
 
@@ -1219,7 +1222,7 @@
 
 				If the difference is some other value ($\pm 2$, etc.), then the tree is skewed enough that the tree is no longer an AVL tree. It needs to be re-balanced slightly in order to become an AVL tree again.
 				\\ \\
-				\textbf{Insertion on an AVL tree}: first, do a standard BST insertion. Then, recompute all of the height (balance) expressions. If the expressions are all still $\in \{ -1, 0, 1 \}$, then do nothing. Otherwise, we need to rebalance.
+				\textbf{Insertion on an AVL tree}: first, do a standard BST insertion. Then, recompute all of the height (balance) expressions. If the expressions are all still $\in \set{-1, 0, 1 }$, then do nothing. Otherwise, we need to rebalance.
 
 				\subsubsection{Right Rotation}
 					If the balance of a particular subtree is -2, then a right rotation should be applied to that subtree.
@@ -1574,13 +1577,13 @@
 
 		This approach is okay if $n \approx m$, but if $n$ is sufficiently less than $m$, we should use hashing instead.
 		\\ \\
-		We define a hash function $h: \{0, 1, \ldots, m - 1\} \to \{1, 2, \ldots, \Theta(n)\}$. That is, we define $h: U \to 0 \ldots |A| = 0 \ldots m - 1$, where $U$ is the key universe.
+		We define a hash function $h: \set{0, 1, \ldots, m - 1} \to \set{1, 2, \ldots, \Theta(n)}$. That is, we define $h: U \to 0 \ldots |A| = 0 \ldots m - 1$, where $U$ is the key universe.
 		\\ \\
 		Using the hashing method, we use the same code as before except instead of using the $k$-th index of the array, we use the $h(k)$-th index for insertion, searching, and deletion.
 		\\ \\
 		We say there is a \textbf{collision} in a hash function if two different keys $k_1$ and $k_2$ exist such that $k_1 \ne k_2$ but $h(k_1) = h(k_2)$. Even if you have a nice hash function, collisions \emph{will} happen, so we need to deal with them in some way. For example, with the birthday paradox, $\sqrt{m}$ keys have a collision.
 		\\ \\
-		Choosing a good hash function is hard. Let's look for an $h: \{\text{ keys }\} \to \{0, 1, \ldots, m\}$ (where $m$ is the size of the hash table). There are two main approaches. \lecture{February 26, 2013}
+		Choosing a good hash function is hard. Let's look for an $h: \set{\text{ keys }} \to \set{0, 1, \ldots, m}$ (where $m$ is the size of the hash table). There are two main approaches. \lecture{February 26, 2013}
 		\begin{enumerate}
 			\item \textbf{h(k) = k mod m}. We know that mod $m$ behaves a lot nicer if $m$ is prime, so we're interested in choosing a prime $m$ that is large enough to be the size of the table.
 				\\ \\
@@ -1652,7 +1655,7 @@
 				\\ \\
 				The key $k$ now lives in position $h_1(k)$ or $h_1(k) + h_2(k)$. Observe that in general, even if $h_1(k_1) = h_1(k_2)$ (that is, you have a collision), $h_2(k_1) \ne h_2(k_2)$, since they are different hash functions. It's unlikely that you'll have a collision in both the primary and secondary hashes, although it is possible.
 				\\ \\
-				More formally, we define $h_1: \{\text{ set of keys }\} \to \{0, 1, \ldots, m - 1\}$ and $h_2: \{\text{ set of keys }\} \to \{1, \ldots, m - 1\}$. Notice that the definition of $h_2$ excludes zero in the range because $h_2$ is a displacement and we don't want to cause a displacement of zero (since that element is already full).
+				More formally, we define $h_1: \set{\text{ set of keys }} \to \set{0, 1, \ldots, m - 1}$ and $h_2: \set{\text{ set of keys }} \to \set{1, \ldots, m - 1}$. Notice that the definition of $h_2$ excludes zero in the range because $h_2$ is a displacement and we don't want to cause a displacement of zero (since that element is already full).
 				\\ \\
 				What happens if the secondary ($h_1(k) + h_2(k)$-th position) is already occupied as well? We continue to add $h_2(k)$ until an empty position is found. Searching works the same way \textendash{} you keep adding $h_2$ until you find an empty element.
 				\\ \\
