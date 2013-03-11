@@ -31,6 +31,7 @@
 \DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
 
 \crefname{ex}{Example}{Examples}
+\crefname{proposition}{Proposition}{Propositions}
 
 \definecolor{darkish-blue}{RGB}{25,103,185}
 
@@ -2994,9 +2995,314 @@
 				If a graph has a cycle with an odd number of edges, then it is not bipartite.
 			\end{proposition}
 
+			\lecture{March 11, 2013}
+			This graph is bipartite:
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [gdot={0}{}] at (0,0) {};
+					\node [rdot={0}{}] at (1,0) {};
+					\node [gdot={0}{}] at (2,0) {};
+					\node [rdot={0}{}] at (0,1) {};
+					\node [gdot={0}{}] at (1,1) {};
+					\node [rdot={0}{}] at (2,1) {};
+
+					\draw (0,0) -- (2,0) -- (2,1) -- (0,1) -- (0,0);
+					\draw (1,1) -- (1,0);
+				\end{tikzpicture}
+			\end{center}
+
+			But this one is not:
+			\begin{center}
+				\begin{tikzpicture}%[scale=1.5]
+					\node [rdot={0}{}] at (1,0) {};
+					\node [gdot={0}{}] at (3,0) {};
+					\node [rdot={0}{}] at (0,1) {};
+					\node [rdot={0}{}] at (4,1) {};
+					\node [gdot={0}{}] at (2,2) {};
+
+					\draw (1,0) -- (3,0) -- (4,1) -- (2,2) -- (0,1);
+					\draw (0,1) -- (1,0) node [midway,fill=white] {$\ddot\frown$};
+				\end{tikzpicture}
+			\end{center}
+
 			\begin{proof}
-				Butchered. We'll do it next time.
+				Let $C = V_1, V_2, \ldots, V_{2n}$, where $V_1 = V_{2n}$.
+				\\ \\
+				Suppose there exists partition $X, Y$. We may assume $V_1 \in X, V_2 \in Y, V_3 \in X, \ldots$. This implies that $V_{2n} \in Y$ since all vertices with even indices are members of $Y$. 
+				\\ \\
+				Notice that $V_1 \in X$ and $V_{2n} \in Y$, but $V_1 = V_{2n}$. This is a contradiction.
 			\end{proof}
+
+			We want to show that this is the \emph{only} reason why a graph would not be bipartite.
+			\begin{proposition}
+				A graph is bipartite if and only if all its components are bipartite.
+			\end{proposition}
+			
+			The proof of this proposition is left as an exercise.
+			\begin{proposition}
+				Trees are bipartite.
+			\end{proposition}
+
+			For example, this tree is bipartite:
+			\begin{center}
+				\begin{tikzpicture}%[scale=1.5]
+					\node [gdot={0}{}] at (0,0) {};
+					\node [rdot={0}{}] at (1,1) {};
+					\node [gdot={0}{}] at (0,2) {};
+
+					\node [gdot={0}{}] at (3,1) {};
+					\node [rdot={0}{}] at (4,0) {};
+					\node [rdot={0}{}] at (4,2) {};
+					\node [gdot={0}{}] at (5,1) {};
+					\node [gdot={0}{}] at (5,3) {};
+
+					\draw (0,0) -- (1,1) -- (0,2);
+					\draw (1,1) -- (3,1) -- (4,0);
+					\draw (3,1) -- (4,2) -- (5,1);
+					\draw (4,2) -- (5,3);
+				\end{tikzpicture}
+			\end{center}
+
+			There are a couple of different proof techniques we could use to prove this proposition.
+			\begin{enumerate}
+				\item We could call one vertex $V_1$ and then define even/odd vertices based on whether their distance from $V_1$ is even or odd (since there exists a unique path from $V_1$ to any other vertex in a tree). 
+				\item More simplistically, we could build up the partition recursively. As we add an additional edge, each endpoint of the edge should be in the opposite partition.
+			\end{enumerate}
+
+			We'll use approach (2) to prove this proposition.
+			\begin{proof}
+				Let $T = (V, E)$. We're going to perform induction on $|V|$.
+				\\ \\
+				Base case: $|V| = 1$, i.e. $|V| = \set{v}$, set $X = \set{v}, Y = \emptyset$.
+				\\ \\
+				Otherwise, $|V| \ge 2$. Since $T$ is a tree, there exists vertex $u$ of degree 1. Then, $u$ is adjacent to a unique vertex $w$.
+				\\ \\
+				Let $T'$ be obtained by removing $uv$ and $u$. Note that $T'$ is still a tree. We can verify that fact by seeing that we're certainly not adding any cycles (not possible when removing an edge) and since $u$ has degree 1, the tree remains connected.
+				\\ \\
+				By induction, there exists a partition $X', Y'$ of the vertices of $T'$ such that every edge of $T'$ has one end in $X'$ and one end in $Y'$.
+				\\ \\
+				If $w \in X'$ then $X = X'$ and $Y = Y' \cup \set{u}$. Otherwise (if $w \in Y'$), $X = X' \cup \set{u}$ and $Y = Y'$.
+			\end{proof}
+
+			\begin{theorem}
+				$G = (V, E)$ is bipartite (1) if and only if $G$ has no odd cycles (2).
+			\end{theorem}
+
+			\begin{proof}
+				We proved NOT (2) implies NOT (1), which is equivalent to proving (1) implies (2). Now, we'll prove the other direction: (2) implies (1).
+				\\ \\
+				Due to the proposition from earlier, we may assume $G$ is connected, without loss of generality. This implies that $G$ contains a spanning tree $T = (V, E')$.
+				\\ \\
+				We showed that $T$ is bipartite. Let $X, Y$ be the corresponding partition of $V$.
+				\\ \\
+				\underline{Claim}: for all $ab \in E$, $a \in X$ and $b \in Y$, or vice versa ($a \in Y, b \in X$). We may assume $ab \in E \backslash E'$.
+				\\ \\
+				Let $P$ be the unique path in $T$ between $a$ and $b$. Suppose $a, b \in X$ (or $a, b \in Y$). Then $P$ has an even number of edges.
+				\\ \\
+				This implies that the cycle $P \cup \set{ab}$ is an odd cycle, which is a contradiction.
+			\end{proof}
+			
+			\subsubsection{Graph Coloring}
+				\begin{problem}
+					Assign colors to vertices such that every edge has endpoints of different colors. The goal is to use as few colors as possible.
+				\end{problem}
+
+				What graphs can be colored with two colors? Easy: bipartite graphs.
+				\\ \\
+				What graphs can be colored with three colors? No clue. There's no efficient or reliable way of coloring an arbitrary graph with any constant (even very large) number of colors.
+
+		\subsection{Planar Graphs}
+			We will allow:
+			\begin{itemize}
+				\item Loops:
+					\begin{center}
+						\begin{tikzpicture}[scale=1.5]
+							\node [dot={0}{},draw] {} edge [in=30,out=90,loop] ();
+						\end{tikzpicture}
+					\end{center}
+				\item Parallel edges:
+					\begin{center}
+						\begin{tikzpicture}[scale=1.5]
+							\node [dot={0}{}] at (0,0) {};
+							\node [dot={0}{}] at (2,0) {};
+
+							\draw (0,0) to[out=90,in=90] (2,0);
+							\draw (0,0) to [out=-90,in=-90] (2,0);
+						\end{tikzpicture}
+					\end{center}
+			\end{itemize}
+
+			\begin{defn}
+				A \textbf{planar embedding} is a drawing of a graph where no two edges cross.
+			\end{defn}
+
+			\begin{ex}
+				This is not a planar embedding of a graph $G$ because two edges cross:
+				\begin{center}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (1,1) {};
+
+						\draw (0,1) -- (1,1) node [midway,fill=white] {1};
+						\draw (0,0) -- (0,1) node [midway,fill=white] {2};
+						\draw (0,0) -- (1,0) node [midway,fill=white] {3};
+						\draw (1,0) -- (0,1) node [near start,fill=white] {4};
+						\draw (0,0) -- (1,1) node [near end,fill=white] {5};
+					\end{tikzpicture}
+				\end{center}
+
+				This is a planar embedding for the same graph:
+				\begin{center}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (1,1) {};
+
+						\draw (0,1) -- (1,1) node [midway,fill=white] {1};
+						\draw (0,0) -- (0,1) node [midway,fill=white] {2};
+						\draw (0,0) -- (1,0) node [midway,fill=white] {3};
+						\draw (1,0) -- (0,1) node [midway,fill=white] {4};
+
+						\draw (0,0) to[in=190,out=-30] (1.5,-0.5) to[in=0,out=80] (1,1);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+
+			\underline{Observation}: the same graph can have many different planar embeddings. We'll formally define ``different'' a bit later.
+			
+			\begin{ex}
+				Here are two planar embeddings of the same graph $G_1$:
+				\begin{center}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (3,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (2,1) {};
+						\node [dot={0}{}] at (3,1) {};
+
+						\draw (0,1) -- (2,1) node [midway,fill=white] {1};
+						\draw (0,0) -- (0,1) node [midway,fill=white] {2};
+						\draw (0,0) -- (2,0) node [midway,fill=white] {3};
+						\draw (2,0) -- (2,1) node [midway,fill=white] {4};
+						\draw (2,1) -- (3,1) node [midway,fill=white] {5};
+						\draw (3,0) -- (3,1) node [midway,fill=white] {6};
+						\draw (2,0) -- (3,0) node [midway,fill=white] {7};
+					\end{tikzpicture}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (2,0.25) {};
+						\node [dot={0}{}] at (3,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (2,0.75) {};
+						\node [dot={0}{}] at (3,1) {};
+
+						\draw (0,1) -- (3,1) node [midway,fill=white] {1};
+						\draw (0,0) -- (0,1) node [midway,fill=white] {2};
+						\draw (0,0) -- (3,0) node [midway,fill=white] {3};
+						\draw (3,0) -- (3,1) node [midway,fill=white] {4};
+						\draw (3,1) -- (2,0.75) node [midway,fill=white] {5};
+						\draw (2,0.75) -- (2,0.25) node [midway,fill=white] {6};
+						\draw (3,0) -- (2,0.25) node [midway,fill=white] {7};
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+
+			\begin{ex}
+				Here are two planar embeddings of the same graph $G_2$ that look similar, except the edges are labelled differently:
+				\begin{center}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (1,2) {};
+
+						\draw (0,0) -- (1,2) node [midway,fill=white] {1};
+						\draw (1,2) -- (2,0) node [midway,fill=white] {2};
+						\draw (0,0) -- (2,0) node [midway,fill=white] {3};
+						\draw (0,0) -- (1,1) node [midway,fill=white] {4};
+						\draw (1,1) -- (1,2) node [midway,fill=white] {5};
+						\draw (1,1) -- (2,0) node [midway,fill=white] {6};
+					\end{tikzpicture}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (1,2) {};
+
+						\draw (0,0) -- (1,2) node [midway,fill=white] {1};
+						\draw (1,2) -- (2,0) node [midway,fill=white] {5};
+						\draw (0,0) -- (2,0) node [midway,fill=white] {4};
+						\draw (0,0) -- (1,1) node [midway,fill=white] {3};
+						\draw (1,1) -- (1,2) node [midway,fill=white] {2};
+						\draw (1,1) -- (2,0) node [midway,fill=white] {6};
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+
+			\begin{defn}
+				A graph is \textbf{planar} if there exists a planar embedding.
+			\end{defn}
+
+			\begin{ex}
+				This graph is planar:
+				\begin{center}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (2,1) {};
+						\node [dot={0}{}] at (1,2) {};
+
+						\draw (0,0) -- (2,0) -- (2,1) -- (1,2) -- (0,1) -- (0,0) -- (2,1);
+						\draw (0,1) -- (2,0);
+						\draw (0,0) -- (1,2);
+						\draw (0,0) -- (2,1);
+					\end{tikzpicture}
+				\end{center}
+
+				It is possible to find a planar embedding for this graph.
+			\end{ex}
+
+			\begin{ex}
+				These two graphs are not planar:
+				\begin{center}
+					\begin{tikzpicture}
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (3,0) {};
+						\node [dot={0}{}] at (0,3) {};
+						\node [dot={0}{}] at (4,3) {};
+						\node [dot={0}{}] at (2,4) {};
+						
+						\draw (1,0) -- (3,0) -- (4,3) -- (2,4) -- (0,3) -- (1,0);
+						\draw (1,0) -- (2,4) -- (3,0) -- (0,3) -- (4,3) -- (1,0);
+					\end{tikzpicture}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (0,2) {};
+						\node [dot={0}{}] at (1,2) {};
+
+						\draw (0,0) -- (1,0);
+						\draw (0,0) -- (1,1);
+						\draw (0,0) -- (1,2);
+
+						\draw (0,1) -- (1,0);
+						\draw (0,1) -- (1,1);
+						\draw (0,1) -- (1,2);
+
+						\draw (0,2) -- (1,0);
+						\draw (0,2) -- (1,1);
+						\draw (0,2) -- (1,2);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+	
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
