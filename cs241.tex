@@ -2966,4 +2966,124 @@
 				\end{algorithm}
 				
 				In an LR(1) parse, if you ever shift $\dashv$, you know for a fact that your parse succeeded.
+		\subsection{Building a Parse Tree From a Bottom-Up Parse} \lecture{March 11, 2013}
+			A parse tree is a much more general and flexible representation over a rightmost reversed derivation.
+			\\ \\
+			\underline{Key}: in addition to the (parse) stack, use a parallel tree stack. For every symbol on the stack, we'll have a corresponding parse (sub)tree on the tree stack.
+			
+			\begin{ex}
+				We have an augmented grammar with this set of rules $R$:
+				\begin{align*}
+					S' &\to{} \vdash S \dashv \\
+					S &\to AhB \\
+					A &\to ab \\
+					A &\to cd \\
+					B &\to ef \\
+					B &\to g
+				\end{align*}
+
+				If we have input $x = abhg$, the outputted parse tree should be as follows.
+				\begin{figure}[H]
+					\Tree [.S [.A [.a ] [.b ] ] [.h ] [.B [.g ] ] ]
+				\end{figure}
+
+				The parse would be as follows.
+				\begin{center}
+					\begin{tabular}{|c|c|c|c|c|}
+						\hline
+						tree stack & parse stack & input read & input not read & action \\ \hline
+						$\vdash$ & $\vdash$ & $\epsilon$ & abhg $\dashv$ & initialization \\
+						$\vdash$ a & $\vdash$ a & a & bhg $\dashv$ & shift a \\
+						$\vdash$ ab & $\vdash$ ab & ab & hg $\dashv$ & shift b \\
+						$\vdash$ \Tree [.A [.a ] [.b ] ] & $\vdash$ A & ab & hg $\dashv$ & reduce $A \to ab$ \\
+						$\vdash$ \Tree [.A [.a ] [.b ] ] h & $\vdash$ Ah & abh & g $\dashv$ & shift h \\
+						$\vdash$ \Tree [.A [.a ] [.b ] ] hg & $\vdash$ Ahg & abhg & $\dashv$ & shift g \\
+						$\vdash$ \Tree [.A [.a ] [.b ] ] h \Tree [.B [.g ] ] & $\vdash$ AhB & abhg & $\dashv$ & reduce $B \to g$ \\
+						$\vdash$ \Tree [.S [.A [.a ] [.b ] ] [.h ] [.B [.g ] ] ] & $\vdash$ S & abhg & $\dashv$ & reduce $S \to AhB$ \\
+						$\vdash$ \Tree [.S [.A [.a ] [.b ] ] [.h ] [.B [.g ] ] ] $\dashv$ & $\vdash$ S $\dashv$ & abhg $\dashv$ & $\epsilon$ & shift $\dashv$ \\ \hline
+					\end{tabular}
+				\end{center}
+			\end{ex}
+
+			To construct the tree stack, you'll likely want to use a linked implementation to make reference to the structures you built up in previous steps.
+			\\ \\
+			The pseudocode for building a parse tree is as follows. \\ \\
+			\begin{algorithm}[H]
+				stack = Goto[stack, $\vdash$]\;
+				tree\_stack = makeleaf($\vdash$)\;
+				
+				\For{every $c$ in $x \dashv$}{
+					\While{reduce $A \to \alpha$}{
+						// LR(1) reduction: \\
+						pop $|\alpha|$ symbols from stack\;
+						push Goto[top of stack, c]\;
+						
+						// Tree build: \\
+						pop $|\alpha$ subtrees from the tree\_stack\;
+						push makenode(root = A, subtrees = nodes that were just popped)\;
+					}
+					push Goto[top of stack, c]\;
+					push makeleaf(c) onto tree\_stack\;
+				}
+				// Parse tree is now the second element on the tree\_stack. \\
+				pop tree\_stack\;
+				// Parse tree is now on the top of the tree\_stack.
+			\end{algorithm}
+			To perform syntax-directed translation, you just need to traverse the parse tree to determine meaning for each subtree.
+			
+			\subsubsection{Notes about Assignment 8}
+				Questions 1 and 2 are about reversed rightmost derivations, with the questions being similar to ones asked on assignment 7.
+				\\ \\
+				Question 3 asks you to write a LR(1) parser. You're given a context-free grammar (CFG) and an LR(1) DFA (including Reduce and Goto). If $x \in L(G)$, you'll have to output a derivation for $x$.
+				\\ \\
+				Question 4 asks you to write a parser for WLPP. The input will be the output from the scanners we used in assignment 6. The output must be a WLPPI file, which is very much like a CFG file \textendash{} it contains a leftmost derivation. You're given the grammar and a DFA, but you're not allowed to read the DFA from a file. You may want to write a program to generate the relevant code for including the DFA in your parser.
+				\\ \\
+				Note that for question 4, you need to produce a leftmost derivation. However, you would have already built a LR(1) parser for question 3. So, use your parser to build a parse tree and then perform a pre-order traversal to get a leftmost derivation.
+
+			\subsubsection{How to Construct the LR(1) DFA (SLR(1) Method)}
+				% Not included on the exam, but for your interest / possible use on assignments.
+				There are three basic steps to constructing a LR(1) DFA using the SLR(1) method:
+				\begin{enumerate}
+					\item Define an NFA that recognizes valid stacks (it implements the shift operation).
+					\item Convert the NFA to a DFA with subset construction.
+					\item Add extra transition states indicating when to reduce.
+				\end{enumerate}
+
+				For each rule in the grammar you're given, you must construct several rules each placing a dot in a unique position on the right-hand side of the rule. These will represent states in the DFA. 
+				\\ \\
+				Here are the states for the augmented grammar presented earlier.
+				\begin{align*}
+					S' &\to . \vdash S \dashv \\
+					S' &\to \vdash . S \dashv \\
+					S' &\to \vdash S . \dashv \\
+					S' &\to \vdash S \dashv .
+					\\ \\
+					S &\to .AhB \\
+					S &\to A.hB \\
+					S &\to Ah.B \\
+					S &\to AhB.
+					\\ \\
+					A &\to .ab \\
+					A &\to a.b \\
+					A &\to ab.
+					\\ \\
+					A &\to .cd \\
+					A &\to c.d \\
+					A &\to cd.
+					\\ \\
+					B &\to .ef \\
+					B &\to e.f \\
+					B &\to ef.
+					\\ \\
+					B &\to .g \\
+					B &\to g.
+				\end{align*}
+
+				Whenever you have a dot preceding a symbol, you move the dot to the other side of that symbol and make \emph{that} rule a final state.
+				\\ \\
+				Whenever you have a dot before a nonterminal, you also add an epsilon transition to rules that have the corresponding nonterminal as their left-hand side.
+				\\ \\
+				To convert the NFA to a DFA, use subset construction. Since we have $\epsilon$ transitions, you'll also need to take $\epsilon$-closure into account. Once all the states are built up with subset construction, you'll also want transitions to reduction rules for $A$ (for example) on a symbol $h$ (for example) if $h \in \text{follow}(A)$. % TODO - draw DFA with tikz (issue #15).
+				\\ \\
+				It \emph{might} be time to perform a reduction when you're on the very right side of the rule. Don't go down a blind alley, though \textendash{} consult your follow function to ensure a reduction is desired.
 \end{document}
