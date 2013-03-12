@@ -1898,5 +1898,102 @@
 			\\ \\
 			Linked lists make insertions easy, but we cannot binary search them. So, we make another linked list in a level above, and this linked list contains just some of the elements, which will act as shortcuts. We make more and more layers of these shortcuts, each level up containing larger and larger jumps, to further optimize searching.
 			\\ \\
-			If you insert in the bottom layer, the shortcuts still work and don't need to be changed \textendash{} the shortcut just becomes a bit longer. If the shortcut becomes too large, simply break the shortcut into two.
+			If you insert in the bottom layer, the shortcuts still work and don't need to be changed \textendash{} the shortcut just becomes a bit longer. If the shortcut becomes too large, simply break the shortcut into two. \lecture{March 12, 2013}
+			\\ \\
+			To search in a skip list, you start at the top level and traverse from left to right until you overshoot, then you go back one shortcut and go down into a deeper level. Continue to do this recursively until you reach the bottom level / find the element you're looking for. We say an element has a \textbf{tower} on top of it if it has shortcuts sitting on levels above.
+			\\ \\
+			The pseudocode for searching in a skip list is as follows (where $L$ is the skip list and $k$ is a key). \\ \\
+			\begin{algorithm}[H]
+				p = topmost left position of $L$\;
+				S = stack of positions, initially containing $p$\;
+				\While{below(p) $\ne$ null}{
+					p = below(p)\;
+					\While{key(after(p)) < k}{
+						p = after(p)\;
+					}
+					push $p$ onto $S$\;
+				}
+				\Return{S}
+			\end{algorithm}
+
+
+			We ideally want the shortcuts to be jumps that increase by a power of 2 for each higher level.
+			\\ \\
+			How do we know when to create new shortcuts as new elements are being inserted? You could do some ``fancy bookkeeping'', or you could take a much simpler approach: toss a coin. On average, every two elements will have a tower. No bookkeeping is necessary \textendash{} just believe in the probabilities!
+			\\ \\
+			On the expectation, you'll be able to search in $O(\lg n)$ steps.
+			\\ \\
+			To insert into a skip list, you'll first need to find the position with skip-search, and then you'll toss a coin several times to determine how high the tower will be for that element. You'll continue to toss a coin until you get tails. The number of heads tossed will be the height of the tower.
+			\\ \\
+			To actually implement insertion, we have to remember (in a stack) the path we took to reach the lower level, in order to hook up towers as necessary.
+			\\ \\
+			We always want the top level to only contain the $- \infty$ and $+ \infty$ shortcuts. If we add a shortcut to the top level through our coin trickery, you must create a new top level containing only $\pm \infty$ shortcuts. This ensures that it remains possible to jump to the end of the list in one operation.
+			\\ \\
+			Similarly, if a deletion causes you to have two top levels containing only $\pm \infty$ shortcuts, you should remove one of those levels to eliminate the unnecessary redundancy.
+			\\ \\
+			When performing a search for an element $k$, it's often more beneficial to find the predecessor of $k$ (which can be denoted $k - \epsilon$) instead. This allows us to slice (delete) the $k$-th element while being able to update the pointers on both sides of $k$ accordingly.
+			\\ \\
+			In the expected case, we'll use $\Theta(n)$ space, because we'll use $n + 2$ elements at the lowest level (level 0), $\frac{n}{2} + 2$ elements at level 1, $\frac{n}{4} + 2$ at level 2, and so on. According to Zeno's identity, this means we'll use $2n + \lg n = \Theta(n)$ space.
+			\\ \\
+			The expected height is $\Theta(\lg n)$, but at most it'll be $3 \lg n$ with probability over $1 - \frac{1}{n^2}$. If your height ever exceeds $3 \lg n$, it's likely that your coin is broken!
+			\\ \\
+			The expected time for the insert, search, and delete operations is $\Theta(\lg n)$.
+			\\ \\
+			Skip lists are used a lot in practice because they have a simplistic implementation. Implement a skip list if you're okay with the expected case, and don't have to worry about the worst case.
+
+	\section{Eras of Computing}
+		We've gone through several eras of computing since the 1940s.
+		\subsection{World War II (1940-1955)}
+			Cryptography was one of the main uses for computing at this time. Computers were also used for numerical analysis, specifically for calculating trajectories and for developing the atomic bombs.
+			\\ \\
+			IBM claimed only five computers were needed in the world at this time, because you only really needed them if you were doing cryptography work or if you wanted to bomb a country.
+			\\ \\
+			At this point in time, computing was mostly about numbers.
+
+		\subsection{Databases (1955-1970)}
+			Databases were the next big thing. Suddenly, companies discovered they could be more productive using electronic database systems rather than ancient paper filing and sorting methods.
+			\\ \\
+			Every company wanted a database, which increased the market for computers somewhat significantly.
+			\\ \\
+			At this point in time, computing was mostly concerned with structured data.
+
+		\subsection{Wang Word Processor (1970-1990)}
+			Word processors were introduced around 1970. The Wang word processor was popular at the time.
+			\\ \\
+			Even smaller companies now wanted computers. Word processors greatly increased productivity over the old typewriting method, especially when it came to editing. If you made a mistake with a typewriter, you'd have to re-type the entire page.
+			\\ \\
+			At this point in time, computing was all about text.
+		
+		\subsection{Internet (1990-2005)}
+			The Internet was the next big thing. The web was popularized, and it provided communication methods like never before.
+			\\ \\
+			Companies adopted the Internet because it had email. If the Internet didn't have email, and instead just had distractions, companies would not have adopted it and it would be only at homes (similar to how cable TV is only typically available at homes).
+			\\ \\
+			At this point in time, computing was about larger amounts of text.
+		
+		\subsection{Consumers of Data \& Statistical Analysis (Current)}
+			Consumer devices have been popularized, such as mobile phones (iPhone) and tablets (iPad). Consumers are consuming digital data as part of their daily lives.
+			\\ \\
+			Statistical analysis is about looking for trends. Machine learning also stems out of statistical analysis. For example: ads on Facebook are targeted to you specifically based on your profile and its history, based on statistical analysis.
+	
+	\section{Multi-Dimensional Data}
+		In today's world, we want to perform searching across multiple dimensions. For example, we may want to find all employees who make between \$75,000 and \$200,000 and have been at the company for less than 10 years. Or, we may want to search for a computer based on a particular set of specs. If we were Yahoo! executive Marissa Mayer, we may want to determine which employees are unproductive and highly paid, in order to come to the conclusion that most of those people work from home.
+		\\ \\
+		Each attribute of each of these searches is a dimension. We can use the power of mathematics to our advantage here, to find neighbouring elements in $d$-dimensional space, for instance.
+		
+		\subsection{Range Searches}
+			We can use a simple binary search tree to search for a range. We search for the lower bound element or its predecessor and the upper bound element or its successor. We then return everything between the two, and maybe part of the path that was followed (depending on which direction you followed at each step in the path). In some cases, we may need to ``barf out the entire tree.'' AVL trees and B-trees could be modified in a similar way to achieve the same result.
+			\\ \\
+			In terms of performance, it would take $O(\lg n)$ steps for the lower bound search, $O(\lg n)$ steps for the upper bound search, no outside nodes, and $O(k)$ for the inside nodes, where $k$ is the number of reported items. The overall running time is $O(\lg n + k)$. That means this query will take longer if it has to return more data.
+
+		\subsection{2-Dimensional Range Search}
+			We'll use \textbf{quadtrees} to perform two-dimensional range searches. Each element is a coordinate $(x_i, y_i)$.
+			\\ \\
+			We can illustrate a quadtree by plotting each coordinate, drawing a bounding box around it, and splitting the box into four equal quadrants. The four quadrants are then each split into 4 recursively until each quadrant contains only one point.
+			\\ \\
+			To search, you continue to recurse on the portions that intersect your search window.
+			\\ \\
+			A quadtree's size is not in proportion to the number of keys. It is instead proportional to the closeness (distribution) or the data, because if the elements are very close to one another, more quadrant splits will need to occur.
+			\\ \\
+			You may be interested in \href{http://www.cs.utah.edu/~croberts/courses/cs7962/project/}{this quadtree Java applet from the University of Utah}, which is useful for visualizing how quadtree splits work.
 \end{document}
