@@ -3086,4 +3086,97 @@
 				To convert the NFA to a DFA, use subset construction. Since we have $\epsilon$ transitions, you'll also need to take $\epsilon$-closure into account. Once all the states are built up with subset construction, you'll also want transitions to reduction rules for $A$ (for example) on a symbol $h$ (for example) if $h \in \text{follow}(A)$. % TODO - draw DFA with tikz (issue #15).
 				\\ \\
 				It \emph{might} be time to perform a reduction when you're on the very right side of the rule. Don't go down a blind alley, though \textendash{} consult your follow function to ensure a reduction is desired.
+
+	\section{The Big Picture: Building a Compiler} \lecture{March 13, 2013}
+		At the end of the day, we want to be able to take a WLPP source file, send it into a compiler, and get MIPS assembly object code, which has equivalent meaning. We could then feed the produced object code and send it into an assembler to get MIPS binary machine code, if we wanted.
+		\\ \\
+		The compiler portion consists of a scanner (from A7), which produces some output that will be fed into a parser (from A8), which will produce a WLPPI file. The WLPPI file will be the input for context sensitive analysis (from A9), which will produce a symbol table and a decorated parse tree, both of which will be fed into synthesis (from A10), where code generation occurs.
+		
+		\subsection{Context-Sensitive Analysis}
+			Context-sensitive analysis involves all syntax rules that are not conveniently expressed (or are not possible to express) in the scanner and parser. In WLPP, these are rules pertaining to symbols and their types.
+			\\ \\
+			Symbols have the following rules:
+			\begin{itemize}
+				\item Every symbol that is used must be declared.
+				\item Every symbol that is declared must be declared at most once.
+			\end{itemize}
+
+			Types have the following rule:
+			\begin{itemize}
+				\item Every expression must have a valid type. In WLPP, types are \verb+int+ and \verb+int *+.
+			\end{itemize}
+
+			\subsubsection{Building a Symbol Table}
+				We'll use syntax-directed translation to gather all symbols. During this process, we'll ensure each symbol is declared only once. We'll then create a multiset of symbols.
+				\\ \\
+				Let's say we have this parse (sub)tree:
+				\begin{figure}[H]
+					\Tree [.dcl [.type [.INT ] ] [.ID ] ]
+				\end{figure}
+
+				Each terminal symbol (ID) will be annotated with its lexeme, such as \verb+fred+. We'll then get that symbols = $\set{\text{fred}}$.
+				\\ \\
+				Now, suppose we have the following production rule:
+				\begin{align*}
+					\text{dcls} \to \text{dcls dcl BECOMES INT SEMI}
+				\end{align*}
+
+				This rule would give us the following parse tree:
+				\begin{figure}[H]
+					\qroofx=2
+					\qroofy=2
+					\Tree [.dcls [.dcls \qroof{(\{wilma, pebbles\})}. ] [.dcl \qroof{(\{fred\})}. ] [.BECOMES ] [.INT ] [.SEMI ] ]
+				\end{figure}
+
+				We recursively determine the symbols for the subtrees, and then decorate the root element with the complete symbol list (the union). Since this is a multiset, you can check to ensure there were no duplicate declarations. This ensures the second rule for symbols was not violated.
+				\\ \\
+				Each expression gets a type evaluated for it:
+				\begin{align*}
+					\underbrace{\underbrace{1}_{\text{type = int}} + \underbrace{2}_{\text{type = int}}}_{\text{type = int}}
+				\end{align*}
+
+				This gets slightly more complicated when we don't have constants. For instance:
+				\begin{align*}
+					\underbrace{1}_{\text{type = int}} + \underbrace{\text{fred}}_{\text{type TBD}}
+				\end{align*}
+
+				Note that in this case, we need to check our symbol table for \verb+fred+'s type, to determine if it's \verb+int+ or \verb+int *+. So, the symbol table will need to keep track of each symbol's identifier and type (and value as well).
+				\\ \\
+				Suppose we have this expression:
+				\begin{align*}
+					\underbrace{\text{wilma}}_{\text{type TBD}} + \underbrace{\text{fred}}_{\text{type TBD}}
+				\end{align*}
+
+				We could construct a table to represent all of the possibilities:
+				\begin{center}
+					\begin{tabular}{|c|c|c|}
+						\hline
+						\textbf{wilma} & \textbf{fred} & \textbf{result} \\ \hline
+						int & int & int \\
+						int & int * & int * \\
+						int * & int & int * \\
+					int * & int * & error \\ \hline
+					\end{tabular}
+				\end{center}
+
+				Note that this last entry is an error because adding two pointers together does not make any sense.
+				\\ \\
+				Let's look at another example. Let's say we have this expression:
+				\begin{align*}
+					\underbrace{\text{betty}}_{\text{type TBD}} - \underbrace{\text{barney}}_{\text{type TBD}}
+				\end{align*}
+
+				Once again, we could construct a table to represent all of the possibilities:
+				\begin{center}
+					\begin{tabular}{|c|c|c|}
+						\hline
+						\textbf{betty} & \textbf{barney} & \textbf{result} \\ \hline
+						int & int & int \\
+						int* & int & int* \\
+						int & int* & error \\
+						int* & int* & int \\ \hline
+					\end{tabular}
+				\end{center}
+
+				In this example, the error is caused by the fact that no negative pointers exist. The \verb+int* int*+ case is valid in this example because subtracting one pointer from another results in an integer offset value.
 \end{document}
