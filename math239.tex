@@ -3691,7 +3691,99 @@
 				\end{tikzpicture}
 			\end{center}
 
-			There are also two more graphs ($k = 3, l = 5$ and $k = 5, l = 3$), which we won't show here for simplicity.
+			There are also two more graphs ($k = 3, l = 5$ and $k = 5, l = 3$), which we won't show here for simplicity. 
+			
+			% Eric Katz gave this lecture.
+			\subsubsection{Review of Planar Graphs} \lecture{March 18, 2013}
+				\begin{itemize}
+					\item $\deg(f)$ is the length of the boundary walk about the face $f$.
+					\item Handshake Lemma: $$ \sum_{v \in V} \deg(v) = 2q $$
+					\item Dual Handshake Lemma: $$ \sum_{f \in \text{faces}} \deg(f) = 2q $$
+					\item Euler's Formula: $$p - q + s = 1 + c$$ (where $p$ is the number of vertices, $q$ is the number of edges, $s$ is the number of faces (earlier, we denoted this as $f$), and $c$ is the number of components.)
+				\end{itemize}
+
+			\subsubsection{Planar Solids}
+				There are solids that correspond to the five platonic graphs. What do they have in common? Every vertex has the same degree \emph{and} every face has the same degree. 
+				\\ \\
+				We'll now finally define planar graphs formally.
+				\begin{defn}
+					A \textbf{planar graph} is a graph such that there are integers $k, l \ge 3$ such that every vertex has degree $k$ and every face has degree $l$.
+				\end{defn}
+
+				Does the data of $(k, l)$ determine the graph? Yes! When drawing these graphs, they are unique because there are no ambiguous decisions to be made.
+				\\ \\
+				Which values of $(k, l)$ are possible? If we try drawing the graphs for $(4,4)$ and $(5,4)$, we'll see that as we're constructing them, they'd each need to be infinite in size to satisfy the $k$ and $l$ constraints. Since these graphs cannot be finite, we say $(4,4)$ and $(5,4)$ are two particular instances of $(k, l)$ for which the constraints are not satisfied.
+				\\ \\
+				\underline{Idea}: use the facts about planar graphs to constrain $(k, l)$.
+				
+				\begin{itemize}
+					\item By the handshake lemma, $\sum \deg(v) = kp = 2q$.
+					\item By the dual handshake lemma, $\sum \deg(f) = ls = 2q$. This implies that $p = \frac{2q}{k} = s = \frac{2q}{l}$. This is known as the duality of graphs.
+					\item By Euler's formula, $p - q + s = 2$.
+				\end{itemize}
+
+				This gives us:
+				\begin{align*}
+					\frac{2q}{k} - q + \frac{2q}{l} = 2 &> 0 \\
+					\frac{2}{k} - 1 + \frac{2}{l} = \frac{2}{q} &> 0 \\
+					\frac{2}{k} + \frac{2}{l} &> 1 \\
+					2l + 2k &> kl \\
+					kl - 2k - 2l &< 0 \\
+					kl - 2k - 2l + 4 - 4 &< 0 \\
+					(k-2)(l-2) &< 4 
+				\end{align*}
+
+				So, we know that $k \ge 3$ and $l \ge 3$. This gives us:
+				\begin{align*}
+					&(k-2)(l-2) < 4 \\
+					\implies& k - 2, l - 2 \ge 1 \text{ and } k-2, l-2 < 4 \\
+					\implies& k, l \le 5 
+				\end{align*}
+
+				All of this gives us:
+				\begin{itemize}
+					\item If $k = 3$, then $l$ can be 3, 4, or 5.
+					\item If $k = 4$, then $l$ can only be 3.
+					\item If $k = 5$, then $l$ can only be 3.
+				\end{itemize}
+
+				\begin{theorem}
+					If $G$ is a platonic graph, then $(k, l)$ must be one of (3, 3), (3, 4), (3, 5), (4, 3), or (5, 3).
+				\end{theorem}
+
+				Does each of these possibilities of $(k, l)$ occur for a platonic graph? That is, we know these are all \emph{possibilities}, but are they all \emph{actually} possible? For any choice of $(k, l)$, how many platonic graphs are there? 
+				\\ \\
+				\underline{Claim}: each of the five possibilities for $(k, l)$ can be achieved by a platonic graph.
+				\begin{proof}
+					Just use the five platonic solids that we know. % This is literally the entire proof as written on the board.
+					\begin{itemize}
+						\item (3, 3): tetrahedron.
+						\item (3, 4): cube.
+						\item (3, 5): dodecahedron.
+						\item (4, 3): octahedron.
+						\item (5, 3): icosahedron.
+					\end{itemize}
+				\end{proof}
+
+				\underline{Claim}: the only platonic graphs are the five coming from platonic solids.
+				\begin{proof}
+					Just try to draw six platonic graphs. As you keep drawing, the graph will be uniquely determined.
+				\end{proof}
+
+				How many faces, edges, and vertices does each have?
+				\begin{align*}
+					q \left( \frac{2}{k} + \frac{2}{l} + 1 \right) &= 2 \\
+					p &= \frac{2q}{k} \\
+					s &= \frac{2q}{l} \\ \\
+					\implies q &= \frac{2}{\frac{2}{k} + \frac{2}{l} - 1} \\
+					&= \frac{2kl}{2l + 2k - kl}
+					\\ \\
+					\implies s &= \frac{2q}{l} \\
+					&= \frac{4k}{2l + 2k - kl}
+				\end{align*}
+
+				We can verify this. If $(k, l) = (3, 5)$, then $s = \frac{12}{10 + 6 - 15} = 12$, as expected.
+
 
 	\newpage
 	\section*{Clicker Questions}
