@@ -3335,6 +3335,139 @@
 			jr $31
 			\end{verbatim}
 
-			
+			\textbf{Code Generation Conventions So Far}: \lecture{March 18, 2013}
+			\begin{itemize}
+				\item \$1 \textendash{} first parameter (to be changed).
+				\item \$2 \textendash{} second parameter (to be changed).
+				\item \$3 \textendash{} result from every code fragment.
+				\item \$4 \textendash{} contains 4 (for use when we're constantly pushing/popping the stack).
+				\item \$30 \textendash{} stack. Use as necessary, but reset \$30 after every code fragment.
+				\item \$31 \textendash{} return address. Do not clobber.
+				\item Every result is an int (to be changed since int* is also a type in WLPP).
+			\end{itemize}
 
+			The three conventions that I said we'll change were simplifying assumptions we made earlier. We're going to change those assumptions a bit now.
+
+			\subsubsection{Variables}
+				Variables have declarations and uses, which need to be handled in different ways.
+				\\ \\
+				Take this code, for instance:
+				\begin{verbatim}
+				int fred = 17;
+				int* barney = NULL;
+				\end{verbatim}
+
+				The decorated parse tree for the first line in the code snippet above is:
+				\begin{figure}[H]
+					\Tree [.dcls [.dcls ] [.{dcl (fred : int)} [.{type (int)} [.INT ] ] [.{ID (fred)} ] ] [.BECOMES ] [.{NUM (17)} ] [.SEMI ] ]
+				\end{figure}
+
+				We will have constructed our symbol table to be:
+				\begin{center}
+					\begin{tabular}{|c|c|}
+						\hline
+						\textbf{Symbol} & \textbf{Type} \\ \hline
+						fred & int \\
+						barney & int* \\ \hline
+					\end{tabular}
+				\end{center}
+
+				First, we perform the context-sensitive analysis. This ensures that (int, 17) and (int*, barney) are valid pairings.
+				\\ \\
+				Next, we need to pick a representation for the variables. Note that we can't use registers only because there are a finite number of them. Instead, we should use RAM. We could use both, but we won't because it's simpler to keep all of our variables in one place.
+				\\ \\
+				There are two choices for selecting locations in RAM to store variables:
+				\begin{itemize}
+					\item Declare a garbage \verb+.word+. However, these variables will act as static variables, which is not always desired (especially when handling recursive programs).
+					\item Use the stack. We're going to use the \textbf{stackframe storage allocation} algorithm.
+				\end{itemize}
+
+				At entry to the prologue of our code, we have a stack pointer, \$30. We'll reserve a large block of storage \textendash{} enough for every variable \textendash{} on the stack.
+				\\ \\
+				To do this, we decrement the stack pointer (\$30) to below the stackframe and we store a \textbf{frame pointer} in a different register (say, \$29).
+				\\ \\
+				Suppose there are $n$ declared variables in our program. We must arbitrarily assign each variable a distinct number $0 \le i < n$. The address in RAM of variable $i$ is $4i + \$29$. Let's say our symbol table now contains:
+				\begin{center}
+					\begin{tabular}{|c|c|c|}
+						\hline
+						\textbf{Symbol} & \textbf{Type} & $\boldsymbol{i}$ \\ \hline
+						fred & int & 0 \\
+						barney & int* & 1 \\ \hline
+					\end{tabular}
+				\end{center}
+
+				The address of fred in RAM would be $4(0) + \$29 = \$29$. The address for barney would be $4(1) + \$29 = 4 + \$29$.
+				\\ \\
+				The MIPS assembly code to get the value of a variable would be \verb+lw $3, 4i($29)+. Similarly, the assembly code to place a variable into RAM would be \verb+sw $5, 4i($29)+, where \$5 is a register holding the value of the variable presently.
+				\\ \\
+				There is a gotcha with this approach, however. The value of 4i in the \verb+lw+ instruction must be a 16-bit number, which means we can only create $\approx 8,000$ variables using this method. Just between you, me, and Marmoset, there will not be more than 8,000 variables on this assignment, so this approach is okay for our use.
+				\\ \\
+				What kind of code do we need for all of this? If we have the line \verb+int fred = 17;+, we will construct a symbol table containing just ``fred'' (int) = 0. Once the context-sensitive analysis determines that int and 17 are a valid type match, we can generate the code which will be similar to this:
+				\begin{verbatim}
+				lis $3
+				.word 17
+				sw $3, 0($29)
+				\end{verbatim}
+
+				Now, suppose instead we have \verb+int* barney = NULL;+. After context-sensitive analysis, we could generate code like this:
+				\begin{verbatim}
+				add $3, $0, $0 ;; 0 represents NULL in this case
+				sw $3, 4($29)
+				\end{verbatim}
+				
+				Note that the representation for NULL is conventionally zero.
+				\\ \\
+				When representing variables of type int*, there are a few possibilities. You could store a word number, or an offset in an array, but what's highly recommended is that you store the RAM address itself.
+				\\ \\
+				What about \verb+wain+'s parameters? We have the following WLPP code:
+				\begin{verbatim}
+				int wain(dcl, dcl) {
+				    // ...
+				}
+				\end{verbatim}
+
+				Each \verb+dcl+ expands into a parse subtree like these:
+				\begin{figure}[H]
+					\Tree [.dcl [.type [.INT ] [.$\star$ ] ] [.{ID (homer)} ] ]
+					\Tree [.dcl [.type [.INT ] ] [.{ID (marge)} ] ]
+				\end{figure}
+
+				Earlier, we represented \verb+homer+ as \$1 and \verb+marge+ as \$2. However, we want to treat these just like the other variables, by storing them in RAM. Just like normal variable declarations, they are assigned $i$ values and are placed in RAM accordingly. For example, if the $i$ values were 2 and 3 for \verb+homer+ and \verb+marge+, respectively, then the following MIPS code would place them in RAM.
+				\begin{verbatim}
+				sw $1, 8($29)  ;; homer
+				sw $2, 12($29) ;; marge
+				\end{verbatim}
+
+				Now, let's look at another simplification we made earlier: the plus operation. Suppose we had the code \verb|homer + marge|. The MIPS assembly code that could be produced is Code(homer + marge) =
+				\begin{verbatim}
+				lw $3, 8($29)  ;; homer
+				sw $3, -4($30) ;; push $3 onto stack
+				sub $30, $30, $4
+				lw $3, 12($29)
+				add $30, $30, $4
+				lw $5, 0($30)  ;; pop into $5
+				add $3, $3, $3 ;; multiply
+				add $3, $3, $3 ;; by 4
+				add $3, $5, $3
+				\end{verbatim}
+
+				When generating MIPS assembly code for \verb|expr + term|, you must perform many comparisons to determine how to handle various types. The algorithm for this would be something like this: \\
+				\begin{algorithm}[H]
+					\uIf{type(expr) == int*}{
+						\If{type(term) == int}{
+							// ...
+						}
+					}
+					\uElseIf{type(expr) == int and type(term) == int}{
+						// ...
+					}
+					\uElseIf{...various other cases...}{
+						// ...
+					}
+					\Else{ERROR}
+				\end{algorithm}
+
+				This is an important step because the code you generate will actually differ depending on the combination of types.
+				\\ \\
+				When performing context-sensitive analysis, don't recompute the type all over the place (such as in recursive calls). Decorate your parse tree instead. Also, make sure you're passing around reference parameters whenever possible. Otherwise, you'll end up with a program with worse complexity.
 \end{document}
