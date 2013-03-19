@@ -1986,14 +1986,124 @@
 			\\ \\
 			In terms of performance, it would take $O(\lg n)$ steps for the lower bound search, $O(\lg n)$ steps for the upper bound search, no outside nodes, and $O(k)$ for the inside nodes, where $k$ is the number of reported items. The overall running time is $O(\lg n + k)$. That means this query will take longer if it has to return more data.
 
-		\subsection{2-Dimensional Range Search}
+		\subsection{2-Dimensional Range Search with Quadtrees}
 			We'll use \textbf{quadtrees} to perform two-dimensional range searches. Each element is a coordinate $(x_i, y_i)$.
 			\\ \\
-			We can illustrate a quadtree by plotting each coordinate, drawing a bounding box around it, and splitting the box into four equal quadrants. The four quadrants are then each split into 4 recursively until each quadrant contains only one point.
+			We can illustrate a quadtree by plotting each coordinate, drawing a bounding box around it, and splitting the box into four equal quadrants. The four quadrants are then each split into four recursively until each quadrant contains only one point.
 			\\ \\
-			To search, you continue to recurse on the portions that intersect your search window.
+			A quadtree's size is not in proportion to the number of keys. It is instead proportional to the closeness (distribution) of the data, because if the elements are very close to one another, more quadrant splits will need to occur. Your quadtree could become very deep if two points are very close to each other.
 			\\ \\
-			A quadtree's size is not in proportion to the number of keys. It is instead proportional to the closeness (distribution) of the data, because if the elements are very close to one another, more quadrant splits will need to occur.
+			You may be interested in \href{http://www.cs.utah.edu/~croberts/courses/cs7962/project/}{this quadtree Java applet from the University of Utah}, which is useful for visualizing how quadtree splits work. \lecture{March 14, 2013}
 			\\ \\
-			You may be interested in \href{http://www.cs.utah.edu/~croberts/courses/cs7962/project/}{this quadtree Java applet from the University of Utah}, which is useful for visualizing how quadtree splits work.
+			Quadrants are typically labelled NW, NE, SW, and SE. When written as a tree, they're usually written in the following order.
+			\begin{figure}[H]
+				\Tree [.R [.NW ] [.NE ] [.SW ] [.SE ] ]
+			\end{figure}
+
+			The operations for quadtrees are fairly similar to what we've seen before, with a few minor changes.
+			\begin{itemize}
+				\item Search is similar to an insertion on a binary search tree. You continue to recurse on the portions that intersect your search window.
+				\item Insertion is similar to BST insertion, except after you insert you may need to perform additional divisions.
+				\item Deletions may require merging of quadrants.
+			\end{itemize}
+
+			The algorithm for a range search in a quadtree is as follows. QTree-RangeSearch($T$, $R$) (where $T$ is a quadtree node and $R$ is the query rectangle): \\
+			\begin{algorithm}[H]
+				\If{$T$ is a leaf}{
+					\If{$T$.point $\in R$}{
+						report $T$.point\;
+					}
+				}
+				\For{each child $C$ of $T$}{
+					\If{$C$.region $\cap R \ne \emptyset$}{
+						QTree-RangeSearch($C$, $R$)\;
+					}
+				}
+			\end{algorithm}
+
+			The running time of this is $\Theta(n + h)$ in the worst case, even if the answer is $\emptyset$. Why is this? If you have a bunch of points just outside of the query rectangle, the algorithm believes that any of those points \emph{could possibly} be included in the query rectangle, which causes many recursive calls to check all of them.
+			\\ \\
+			We'll define $d_{\text{min}}$ and $d_{\text{max}}$ to be the minimum or maximum distance between two points in $P$, respectively. We say the \textbf{spread factor} of points $P$ is $\beta(P) = \frac{d_{\text{max}}}{d_{\text{min}}}$. The height of the quadtree is $h \in \Theta(\lg_2 \frac{d_{\text{max}}}{d_{\text{min}}})$. The complexity to build the initial tree is $\Theta(nh)$.
+			\\ \\
+			You wouldn't use quadtrees if you care about the behaviour in the worst case. If you don't care about the worst case, quadtrees are easy to compute and handle, so they might be useful. If you do care about the worst case, you may want to look into a different data structure, such as KD trees.
+		\subsection{KD Trees}
+			The key problem with quadtrees is that after our splits, most points might land in one particular quadrant. This happens because we split evenly into four according to the size of the bounding box, not by the positions of the points themselves.
+			\\ \\
+			\underline{Idea}: split the points into two (roughly) equal subsets. This is the idea behind KD trees, which originally stood for $k$-dimensional trees. We're guaranteeing by construction that half of the points are on each side of the division.
+			\\ \\
+			The root of the KD tree is the first division. Each internal node in a KD tree represents a division. Then, alternating lines represent vertical/horizontal divisions (i.e. all even levels are vertical and all odd levels are horizontal splits, or vice versa).
+			\\ \\
+			A summary of the range search algorithm in a KD tree is as follows. kd-rangeSearch($T$, $R$) (where $T$ is a kd-tree node and $R$ is the query rectangle): \\
+			\begin{algorithm}[H]
+				\lIf{$T$ is empty}{\Return}
+				\If{$T$.point $\in R$}{
+					report $T$.point\;
+				}
+				\For{each child $C$ of $T$}{
+					\If{$C$.region $\cap R \ne \emptyset$}{
+						kd-rangeSearch($C$, $R$)\;
+					}
+				}
+			\end{algorithm}
+
+			A more detailed version of this algorithm is as follows. kd-rangeSearch($T$, $R$, split[$\leftarrow$ `x']): \\
+			\begin{algorithm}[H]
+				\lIf{$T$ is empty}{\Return}
+				\If{$T$.point $\in R$}{
+					report $T$.point\;
+				}
+				\If{split = `x'}{
+					\If{$T$.point.x $\ge$ $R$.leftSide}{
+						kd-rangeSearch($T$.left, $R$, `y')\;
+					}
+					\If{$T$.point.x < $R$.rightSide}{
+						kd-rangeSearch($T$.right, $R$, `y')\;
+					}
+				}
+				\If{split = `y'}{
+					\If{$T$.point.y $\ge$ $R$.bottomSide}{
+						kd-rangeSearch($T$.left, $R$, `x')\;
+					}
+					\If{$T$.point.y < $R$.topSide}{
+						kd-rangeSearch($T$.right, $R$, `x')\;
+					}
+				}
+			\end{algorithm}
+
+			When analyzing the quadtree's worst case in the context of KD trees, we can create a division wherever we'd like, so we can eliminate many of those points near the boundaries all at once. This is much better than quadtrees.
+			\\ \\
+			The complexity of searching a KD tree is $O(k + U)$, where $k$ is the number of reported keys, and $U$ is the number of regions we check unsuccessfully (that is, regions that intersect but are not fully in $R$). In this case, we're concerned with points that are not in the output but are \emph{close} to the query rectangle.
+			\\ \\
+			Let $Q(n)$ be the time taken by the upper horizontal line to process points near the boundary, out of $n$ initial points. We have:
+			\begin{align*}
+				Q(n) &= Q\left( \frac{n}{4} \right) + Q\left( \frac{n}{4} \right) \\
+				&= 2Q\left( \frac{n}{4} \right) + \Theta(1) \\
+				&= 2Q\left( \frac{n}{4} \right) + c \\
+				&= 4Q\left( \frac{n}{6} \right) + 2c + c \\
+				&= 8Q\left( \frac{n}{64} \right) + 4c + 2c + c \\
+				&= 2^{\log_4 n} \cdot Q(1) + \sum_{i = 1}^{\log_4 n} 2^i \cdot c \\
+				&= O(2^{\log_4 n}) \\
+			\end{align*}
+
+			But what's $2^{\log_4 n}$? We can simplify that:
+			\begin{align*}
+				2^{\log_4 n} = 2^{\frac{\log_2 n}{\log_2 4}} = \left(2^{\log_2 n} \right)^{\frac{1}{\log_2 4}} = n^{\frac{1}{2}} = \sqrt{n}
+			\end{align*}
+
+			We're making progress! This algorithm isn't as good as $\lg n$ performance would be, but $\sqrt{n}$ is still better than $n$. So, the complexity if $O(k + \sqrt{n})$, where $k$ is the number of points in the output.
+			\\ \\
+			KD trees also work in the more general case of $k$-dimensional space (hence their name). Each split could be a plane, or a hyperplane \textendash{} whatever's necessary depending on the dimension.
+			\\ \\
+			The time to construct a KD tree is $n \lg n$, and the range query time is $O(n^{1 - \frac{1}{d}} + k)$. KD trees are unbeatable in practice. However, note that in the worst case, as $d \to \infty$, the range query time approaches $O(n + k)$.
+
+		\subsection{Range Trees}
+			Simply put, a range tree is a tree of trees. For every node in the $x$ coordinate, we build a tree of elements with their $y$-coordinates. You can picture this as a standard BST, except each root node has an additional tree out the side of it, that contains the corresponding $y$-coordinates.
+			\\ \\
+			To perform a search, we find the path in $2 \lg n$ time, then for each node in the path, we launch a traversal down that tree, too. This extends to more dimensions. The time this takes is $2 \lg n \times 2 \lg n = 4 \lg^2 n$.
+			\\ \\
+			In the worst case, storage takes $O(n \lg^{d - 1} n)$, or $O(n \lg^d n)$ if we're implementing it in a lazy way. Construction time is $O(n \lg^{d - 1} n)$, which is slower than the construction time for KD trees. The range search time, in the worst case, is much better than KD trees: $O(\lg^d n + k)$ time.
+			\\ \\
+			Emil Stefanov has a \href{http://www.emilstefanov.net/Projects/RangeSearchTree.aspx}{webpage that discusses multi-dimensional range search trees} further.
+			\\ \\
+			It'd be nice if at construction time we could determine if the given data is ``good'' data for a KD tree. If not, we could then switch to range tree mode. However, no one has fully solved this problem yet \textendash{} it's difficult to determine if certain data is ``good'' KD data or not.
 \end{document}
