@@ -1,4 +1,5 @@
 \documentclass[]{article}
+\usepackage{etex}
 \usepackage[margin = 1.5in]{geometry}
 \setlength{\parindent}{0in}
 \usepackage{amsmath}
@@ -10,6 +11,7 @@
 \usepackage[lined]{algorithm2e}
 \usepackage{hyperref}
 \usepackage{qtree}
+\usepackage{xytree}
 \usepackage{float}
 \usepackage{cleveref}
 \usepackage[T1]{fontenc}
@@ -2106,4 +2108,212 @@
 			Emil Stefanov has a \href{http://www.emilstefanov.net/Projects/RangeSearchTree.aspx}{webpage that discusses multi-dimensional range search trees} further.
 			\\ \\
 			It'd be nice if at construction time we could determine if the given data is ``good'' data for a KD tree. If not, we could then switch to range tree mode. However, no one has fully solved this problem yet \textendash{} it's difficult to determine if certain data is ``good'' KD data or not.
+	
+	\section{Tries \& String Matching} \lecture{March 19, 2013} % Alejandro Salinger gave this lecture.
+		A \textbf{trie}, also known as a radix tree, is a dictionary for binary strings. It's based on bit-wise (or, more specifically, character-by-character) comparisons. A particular string is represented by the path required to reach its node.
+		\\ \\
+		A trie has the following structure:
+		\begin{itemize}
+			\item Items (keys) are stored only in the leaf nodes.
+			\item A left child corresponds to a 0-bit.
+			\item A right child corresponds to a 1-bit.
+		\end{itemize}
+
+		Keys in a trie can each have a different number of bits, if they'd like. Tries are \underline{prefix-free}, which means no key may be the prefix of another key in the trie.
+		\\ \\
+		Searching a trie is pretty straight-forward. You start at the root and follow the path corresponding to the bits (characters) of the key. If the path does not exist or the key was found but is not a leaf, then the string is not in the trie.
+		\\ \\
+		It's a bit less than ideal that we cannot store prefixes under this definition, but in some applications this can still be useful.
+		\\ \\
+		Performing an insert operation on a trie is a bit more involved. If we want to insert $x$ into the trie, we would have to:
+		\begin{itemize}
+			\item First, search for $x$ as described above.
+			\item If we finish at a leaf with key $x$, then $x$ is already in the trie. Do nothing.
+			\item If we finish at a leaf with a key $y \ne x$, then $y$ is a prefix of $x$. Therefore, we cannot insert $x$ because our keys are prefix-free.
+			\item If we finish at an internal node and there are no extra bits, then we cannot insert $x$ because our keys are prefix-free.
+			\item If we finish at an internal node and there are extra bits, expand the trie by adding necessary nodes that correspond to the extra bits.
+		\end{itemize}
+
+		Deletion is as follows.
+		\begin{itemize}
+			\item Search for $x$ to find the leaf $v_x$.
+			\item Delete $v_x$ and all ancestors of $v_x$ until we reach an ancestor that has two children.
+		\end{itemize}
+
+		Deletion effectively removes the node itself, and any additional parent nodes that were present specifically to allow for this (now-deleted) node to exist.
+		\\ \\
+		All of these operations take $\Theta(|x|)$ time on an input $x$. That is, the time these operations each take is proportional to the size of the input, not the number of elements in the data structure. This is one of the key differences between tries and the other data structures we've seen so far \textendash{} most of the other data structures have performance in terms of the number of elements in the data structure.
+
+		\subsection{Patricia Tries (Compressed Tries)}
+			Patricia tries are an improvement over standard tries because they reduce the amount of storage needed by eliminating nodes with only one child. Patricia (apparently) stands for ``Practical Algorithm To Retrieve Information Coded In Alphanumeric.''
+			\\ \\
+			In a Patricia tree, every path of one-child nodes is compressed into a single edge. Each node storages an index indicating the next bit to be tested during a search. A compressed trie storing $n$ keys always has $n - 1$ internal nodes, which is just like a binary search tree. This is much nicer than storing all of those extraneous nodes.
+			\\ \\
+			Note that all internal nodes must have exactly two children. No node that isn't a leaf has less than two children.
+			\\ \\
+			Searching in a Patricia tree is similar to before, with one minor change:
+			\begin{itemize}
+				\item Follow the proper path from the root down the tree to a leaf.
+				\item If the search ends in an internal node, we didn't find the element in the trie, so it's an unsuccessful search.
+				\item If the search ends in a leaf, we need to check again if the key stored at the leaf is indeed $x$.
+			\end{itemize}
+
+			We need to perform that additional check because some of the bits we skipped through compression might differ from the key we're actually looking for. We need to do a character-by-character (or bit-by-bit in the case of binary strings) comparison to ensure we found the proper $x$ in the trie.
+			\\ \\
+			Deletion is also similar to before, with one minor change:
+			\begin{itemize}
+				\item Perform a search on the trie to find a leaf.
+				\item Delete the leaf \emph{and} its parent.
+			\end{itemize}
+
+			Deleting the leaf's parent is important because once the leaf is removed, the parent will only have one child. However, we said earlier that each internal node must have exactly two children. So, we can eliminate the parent and push up the sibling of the leaf we deleted.
+			\\ \\
+			Insertion is non-trivial, however. Insertion requires a little more thinking:
+			\begin{itemize}
+				\item Perform a search for $x$ in the trie.
+				\item If the search ends at a leaf $L$ with key $y$:
+					\begin{itemize}
+						\item Compare $x$ and $y$ to determine the first index $i$ where they differ.
+						\item Create a new node $N$ with index $i$.
+						\item Insert $N$ along the path from the root to $L$ so that the parent of $N$ has index $< i$ and one child of $N$ is either $L$ or an existing node on the path from the root to $L$ that has index $> 1$.
+						\item Create a new leaf node containing $x$ and make it the second child of $N$.
+					\end{itemize}
+				\item If the search ends at an internal node, find the key corresponding to that internal node and proceed in a similar way to the previous case.
+			\end{itemize}
+
+
+		\subsection{Multiway Tries}
+			Multiway tries are used to represent strings over \emph{any} fixed alphabet $\Sigma$, not just the binary strings. Any node will have at most $|\Sigma|$ children. We still have the prefix restriction from earlier, however.
+			\\ \\
+			If we wanted to remove the prefix-free restriction that we discussed earlier, we can append a special end-of-word character (say, \$) that is not in the alphabet to \emph{all} keys in the trie.
+			\\ \\
+			You can compress multiway tries as well, in the same way as with Patricia tries were compressed when we were dealing with just binary strings.
+
+		\subsection{Pattern Matching}
+			Pattern matching is the act of searching for a string (a pattern / needle) in a large body of text (a haystack).
+			\\ \\
+			We're given T[0 .. n - 1], which is the haystack of text, and P[0 .. m - 1], which is the pattern (needle) we're searching for. We want to return $i$ such that:
+			\begin{align*}
+				P[j] = T[i + j] \text{ for } 0 \le j \le m - 1
+			\end{align*}
+
+			We might be interested in the first occurrence or maybe all occurrences. Searching for patterns has many applications, for example, CTRL-F in many pieces of software.
+			\\ \\
+			Let's make a few formal definitions before jumping into the algorithms.
+
+			\begin{defn}
+				A \textbf{substring} $T[i..j]$ is a string of length $j - i + 1$ which consists of characters $T[i], \ldots, T[j]$ in order, where $0 \le i \le j < n$.
+			\end{defn}
+
+			\begin{defn}
+				A \textbf{prefix} of $T$ is a substring $T[0..i]$ of $T$ for some $0 \le i < n$.
+			\end{defn}
+
+			\begin{defn}
+				A \textbf{suffix} of $T$ is a substring $T[i..n - 1]$ of $T$ for some $0 \le i \le n - 1$.
+			\end{defn}
+
+			Pattern matching algorithms consist of guesses and checks.
+			\begin{defn}
+				A \textbf{guess} is a position $i$ such that $P$ might start at $T[i]$.
+			\end{defn}
+
+			Note that valid guesses are initially $0 \le i \le n - m$.
+
+			\begin{defn}
+				A \textbf{check} of a guess is a single position $j$ with $0 \le j < m$ where we compare $T[i + j]$ to $P[j]$.
+			\end{defn}
+
+			We must perform $m$ checks of a single correct guess, but may make much fewer checks for incorrect guesses.
+			
+			\subsubsection{Brute-Force Pattern Matching}
+				The easiest algorithm to think about is the brute force algorithm, which is as follows. BruteForcePM(T[0..n - 1], P[0..m - 1]) (where $T$ is a string of length $n$ representing the full text and $P$ is a string of length $m$ representing the pattern): \\
+				\begin{algorithm}[H]
+					\For{i = 0 to n - m}{
+						match = true\;
+						j = 0\;
+						\While{j < m and match}{
+							\uIf{T[i + j] = P[j]}{
+								j = j + 1\;
+							}
+							\Else{
+								match = false\;
+							}
+						}
+						\If{match}{
+							\Return{i}
+						}
+					}
+					\Return{FAIL}
+				\end{algorithm}
+
+				For example, let's say we're looking for $P = abba$ in $T = abbbababbab$. This is how the guesses and checks would be performed:
+				\begin{center}
+					\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
+						\hline
+						\textbf{a} & \textbf{b} & \textbf{b} & \textbf{b} & \textbf{a} & \textbf{b} & \textbf{a} & \textbf{b} & \textbf{b} & \textbf{a} & \textbf{b} \\ \hline
+						a & b & b & \textcolor{red}{a} & & & & & & & \\
+						& \textcolor{red}{a} & & & & & & & & & \\
+						& & \textcolor{red}{a} & & & & & & & & \\
+						& & & \textcolor{red}{a} & & & & & & & \\
+						& & & & a & b & \textcolor{red}{a} & & & & \\
+						& & & & & \textcolor{red}{a} & & & & & \\
+						& & & & & & \textcolor{green}{a} & \textcolor{green}{b} & \textcolor{green}{b} & \textcolor{green}{a} & \\
+						\hline
+					\end{tabular}
+				\end{center}
+
+				In the worst case, this algorithm takes $\Theta((n - m + 1)m)$ time. If $m \le \frac{n}{2}$, then it takes $\Theta(mn)$.
+				\\ \\
+				We can do better than this. Some of the failed checks have determined that certain guesses are guaranteed to be invalid (the first character doesn't match, for instance).
+				\\ \\
+				More sophisticated algorithms, such as KMP and Boyer-Moore, do extra processing on the pattern, and eliminate guesses based on completed matches and mismatches.
+			\subsubsection{KMP Pattern Matching}
+				KMP stands for Knuth-Morris-Pratt, who were the computer scientists who came up with this algorithm in 1977. The algorithm compares the pattern to the text left-to-right, except it shifts the pattern more intelligently than the brute-force algorithm.
+				\\ \\
+				When we have a mismatch, we ask what the largest safe shift is, based on what we already know from previous matches. We can shift by finding the largest prefix of $P[0..j]$ that is a suffix of $P[1..j]$.
+				\\ \\
+				KMP stores a \textbf{failure array}, which contains the length of the largest prefix of $P[0..j]$ that is also a suffix of $P[1..j]$. This is the preprocessing that the algorithm performs on the algorithm. If a mistmatch occurs at $P[j] \ne T[i]$, we set $j$ to the value of $F[j - 1]$, where $F$ is the failure array.
+				\\ \\
+				This is the failure array $F$ for $P = abacaba$:
+				\begin{center}
+					\begin{tabular}{|c|c|c|c|}
+						\hline
+						$j$ & $P[i..j]$ & $P$ & $F[j]$ \\ \hline
+						0 & & abacaba & 0 \\
+						1 & b & abacaba & 0 \\
+						2 & ba & abacaba & 1 \\
+						3 & bac & abacaba & 0 \\
+						4 & baca & abacaba & 1 \\
+						5 & bacab & abacaba & 2 \\
+						6 & bacaba & abacaba & 3 \\ \hline
+					\end{tabular}
+				\end{center}
+
+				The KMP algorithm is as follows. KMP($T$, $P$) (where $T$ is a string of length $n$ representing the full text and $P$ is a string of length $m$ representing the pattern): \\
+				\begin{algorithm}[H]
+					F = failureArray(P)\;
+					i = 0\;
+					j = 0\;
+					\While{i < n}{
+						\uIf{$T[i] = P[j]$}{
+							\uIf{$j = m - 1$}{
+								\Return{i - j // match}
+							}
+							\Else{
+								i = i + 1\;
+								j = j + 1\;
+							}
+						}
+						\Else{
+							\uIf{$j > 0$}{
+								j = $F[j - 1]$\;
+							}
+							\Else{
+								i = i + 1\;
+							}
+						}
+					}
+					\Return{-1 // no match}
+				\end{algorithm}
 \end{document}
