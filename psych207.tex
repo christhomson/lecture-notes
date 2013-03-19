@@ -1082,4 +1082,81 @@
 				\item Neither of these views are pure deficits \textendash{} someone with Wenicke's aphasia may be able to understand \emph{some} things (such as ``I don't understand'').
 				\item Other aphasias include Anomia (naming deficit), Alexia (visual language impairment), Agraphia (inability to write), and Alexia without agraphia (can write, but cannot read what they have written).
 			\end{itemize}
+
+	\section{Thinking \& Problem Solving} \lecture{March 19, 2013}
+		\subsection{What is Thinking?}
+			\begin{itemize}
+				\item Most definitions of thinking are quite vague because it's tough to define.
+				\item Thinking is ``going beyond the information given'' (Bruner, 1957).
+				\item Thinking is a ``complex and high-level skill that fills up gaps in the evidence'' (Bartlett, 1958).
+				\item Thinking is the ``process of searching through a problem space'' (Newell \& Simon, 1972).
+				\item Thinking is ``what we do when we are in doubt about how to act, what to believe, or what to desire'' (Baron, 1994).
+				\item Thinking could either be focused or unfocused. Focused thinking is goal-based, problem solving. Unfocused thinking is daydreaming and unintentional.
+				\item People tend to think creative thinking falls under unfocused thinking, but Fugelsang argues that creative thinking does require goals / problem solving techniques.
+				\item Problems could be either well-defined (have a beginning and end, and have rules or guidelines), or they could be ill-defined otherwise.
+				\item The vast majority of psychologists tend to research focused problem solving in well-defined problems. 
+				\item There's a lot of mystery/magic that happens in order to solve a problem. It's a huge black box. It's unconstrained.
+				\item Ill-defined problems potentially have no clear solution. It's hard to find a clear solution path for the problem. Specifically, it's hard to account for all potential variables.
+			\end{itemize}
+
+		\subsection{Problem Solving Techniques}
+			\subsubsection{Generate and Test}
+				\begin{itemize}
+					\item Generate a number of solutions, and then test the solutions.
+					\item This is a useful technique if there are a very limited number of possibilities.
+					\item It's a problematic approach if there are too many possibilities, if there is no guidance over generation, or if you can't keep track of the possibilities that have already been tested.
+					\item This is essentially the brute force or exhaustive search approach.
+					\item Fugelsang claims that generation is not entirely random. It's often guided by frequency, recency, availability, familiarity, etc.
+				\end{itemize}
+
+			\subsubsection{Means-Ends Analysis}
+				\begin{itemize}
+					\item Every problem is a problem space.
+					\item A problem space contains:
+						\begin{itemize}
+							\item \textbf{Initial state}: conditions at the beginning of the problem.
+							\item \textbf{Goal state}: conditions at the end of the problem.
+							\item \textbf{Intermediate states}: the various conditions that exist along the path(s) between the initial and goal states.
+							\item \textbf{Operators}: permissible moves that can be made towards the problem's solution (transitions, essentially).
+						\end{itemize}
+					\item We aim to reduce the difference between the initial state and the goal state.
+					\item Sometimes you have to move further away (back) from the goal state in order to make progress, like when solving a Rubik's Cube. Means-End analysis breaks down a bit in these cases.
+					\item Involves generating a goal and several sub-goals along the way.
+					\item Any sequence of moves beginning at the initial state and ending at the final state is considered a solution path. In many cases there are multiple solution paths.
+					\item The Tower of Hanoi (moving the tower of discs from one peg to another) works well with means-end analysis.
+					\item Other CS students will appreciate this as being similar to a nondeterministic finite automaton (NFA).
+				\end{itemize}
+
+			\subsubsection{Working Backwards}
+				\begin{itemize}
+					\item Start at the goal state and create sub-goals that work towards the initial state.
+					\item Steps will be the same, but the reasoning for taking those steps would be different than when working forwards.
+					\item Working backwards is just yet another possible solution path(s).
+					\item Similar to means-end analysis in that we create sub-goals to reduce differences between the current state and goal state.
+				\end{itemize}
+
+			\subsubsection{Backtracking}
+				\begin{itemize}
+					\item Problem solving often involves making working assumptions.
+					\item In order to correct mistakes in problem solving, we need to remember our assumptions, assess which assumptions failed, and correct our assumptions appropriately.
+					\item Essentially, when we make a mistake, we need to move back to the state where we were most right, then change the next steps to stay on track.
+				\end{itemize}
+
+			\subsubsection{Reasoning by Analogy}
+				\begin{itemize}
+					\item Analogies work by making comparisons between two situations and applying the solution from one of the situations to the other.
+					\item We often find an existing domain to help explain something new.
+					\item Analogies are especially useful in explaining unobservable phenomenon.
+					\item It's sometimes hard to know if analogies helped develop a discovery or if it was generated after the fact to help explain the discovery.
+					\item Massive scientific discoveries must build upon knowledge that's already known. That's what analogies achieve.
+					\item The structure of atoms is analogous to the structure of the solar system.
+					\item Darwin discussed how the use of analogies helped him develop his theory on evolution.
+					\item Recall: the computer metaphor of mind (where our short-term memory is analogous to RAM and long-term memory is analogous to a hard drive).
+					\item Analogies involve similar structures, but the two situations can differ superficially.
+					\item The tumor problem: given a human being with a tumor, and rays that destroy organic tissue at sufficient intensity, by what procedure can one free him of the tumor by these rays and at the same time avoid destroying the healthy tissue that surrounds it?
+					\item The tumor/fortress analogy is structurally very similar, but superficially very different.
+					\item Without the fortress story, 10\% of people came up with an appropriate strategy for handling the brain tumor. With the fortress story, that jumped up to 30\%. After being told there's a hint in the fortress story, then being told the fortress story, that jumped up to 75\% of people.
+					\item Improving personal performance with generating analogies improves with practice.
+					\item The tumor/fortress analogy is an example of a cross-domain analogy. Cross-domain analogies are harder to handle due to their superficial dissimilarity. 
+				\end{itemize}
 \end{document}
