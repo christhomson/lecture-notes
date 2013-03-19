@@ -3179,4 +3179,162 @@
 				\end{center}
 
 				In this example, the error is caused by the fact that no negative pointers exist. The \verb+int* int*+ case is valid in this example because subtracting one pointer from another results in an integer offset value.
+		\subsection{Code Generation} \lecture{March 15, 2013}
+			Let's say our compiler is given the following WLPP source code.
+			\begin{verbatim}
+			int wain(int a, int b) {
+			    return 1 + 2;
+			}
+			\end{verbatim}
+
+			We expect the compiler to output object code. Ideally, we'd get object code like this:
+			\begin{verbatim}
+			lis $3
+			.word 3
+			jr $31
+			\end{verbatim}
+
+			Throughout the code generation process, we're going to obey our usual MIPS conventions. That is, \$1 and \$2 are input parameter registers, \$3 is the register containing the returned value (or value to return), \$30 is a stack, and \$31 is a return address.
+			\\ \\
+			Generating the object code described above is difficult. Instead, our compilers will likely produce much more verbose (but equivalent) code like this:
+			\begin{verbatim}
+			lis $4
+			.word 4
+			lis $3  ;; expr -> term -> factor -> NUM (1) subtree
+			.word 1 
+			sub $3, -4($30)
+			sub $30, $30, $4
+			lis $5 ;; term -> factor -> NUM (2) subtree
+			.word 2
+			add $30, $30, $1
+			lw $5, -4($30)
+			add $3, $5, $3
+			jr $31
+			\end{verbatim}
+
+			Note that the annotated lines above correspond to the subtrees in this (partial) parse tree:
+			\begin{figure}[H]
+				\Tree [.expr [.expr [.term [.factor [.{NUM (1)} ] ] ] ] [.+ ] [.term [.factor [.{NUM (2)} ] ] ] ]
+			\end{figure}
+			
+			\textbf{Conventions Used in this Object Code}:
+			\begin{itemize}
+				\item \$4 always contains 4.
+				\item Every expr, term, and factor puts its \underline{result} into \$3.
+				\item The stack is available as usual.
+			\end{itemize}
+
+			In reality, we don't care about sub-subtrees. We only really care about this subtree, with the expr and term decorated with the associated code from the sub-subtree which is now hidden:
+			\begin{figure}[H]
+				\qroofx=5
+				\qroofy=5
+				\Tree [.expr [.{expr (C1)} \qroof{?}. ] [.+ ] [.{term (C2)} \qroof{?}. ] ] \\
+			\end{figure}
+			
+			In the above tree, C1 decorating that instance of expr with:
+			\begin{verbatim}
+			lis $3
+			.word 1
+			\end{verbatim}
+			
+			Similarly, C2 is decorating that instance of term with:
+			\begin{verbatim}
+			lis $3
+			.word 2
+			\end{verbatim}
+
+			The code produced follows this general format:
+			\begin{verbatim}
+			;; prologue code goes here (set $4, save registers, etc.)
+			lis $3
+			.word 1
+			sw $3, -4($30) ;; save value on stack
+			sub $30, $30, $4
+
+			lis $3
+			.word 2
+			add $30, $30, $4
+			lw $5, -4($30)
+
+			add $3, $3, $5
+			;; return housekeeping code goes here
+			\end{verbatim}
+
+			We'll define the \& symbol to mean concatenation, in this case.
+			\\ \\
+			Code ($\text{expr}_0 \to \text{expr}_1 + \text{term})$ =
+			\begin{verbatim}
+			code(expr_1) &
+			"sw $3, -4($30)
+			sub $30, $30, $4" & ;; push $3
+			code(term) &
+			"add $30, $30, $4
+			lw $5, -4($30)" &   ;; pop $3
+			"add $3, $5, $3"    ;; code(+)
+			\end{verbatim}
+
+			Similarly, Code($\text{procedure} \to \ldots$) =
+			\begin{verbatim}
+			"lis $4
+			.word 4" & ;; prologue
+			code(dcl_1) &
+			code(dcl_2) &
+			code(dcls) &
+			code(statements) &
+			code(expr) &
+			"jr $31" ;; epilogue
+			\end{verbatim}
+
+			An alternate way of generating Code($\text{expr} \to \text{expr} + \text{term}$) =
+			\begin{verbatim}
+			code(term) &
+			"sw $3, -4($30)
+			sub $30, $30, $4" &
+			code(expr) &
+			"add $30, $30, $4 ;; pop stack
+			lw $5, -4($30)
+			add $3, $3, $5"   ;; perform addition
+			\end{verbatim}
+
+			Let's examine the following WLPP code:
+			\begin{verbatim}
+			int wain(int a, int b) {
+			    return a + b;
+			}
+			\end{verbatim}
+
+			Let's look at more conventions, specifically how to represent parameters. For now, (and we'll probably change this later when we represent variables), \$1 is the first parameter and \$2 is the seco.nd parameter. We're going to need to expand our symbol table to include how each symbol is represented:
+			
+			\begin{center}
+				\begin{tabular}{|c|c|c|}
+					\hline
+					Symbol & Type & Representation \\ \hline
+					a & int & \$1 \\
+					b & int & \$2 \\ \hline
+				\end{tabular}
+			\end{center}
+
+			Now, we can look at Code($\text{factor} \to \text{ID}$) =
+			\begin{verbatim}
+			"add $3, $0, " & representation(lexeme(ID)) ;; lookup in symbol table
+			\end{verbatim}
+
+			For example, for variable a, Code(a) = \verb+add $3, $0, $1+, and for variable b, Code(b) = \verb+add $3, $0, $2+.
+			\\ \\
+			So, the object code equivalent to the WLPP program above is:
+			\begin{verbatim}
+			lis $4
+			.word 4
+			add $3, $0, $1
+			sw $3, -4($30)
+			sub $30, $30, $4
+			add $3, $0, $2
+			add $30, $30, $4
+			lw $5, -4($30)
+			add $3, $5, $3
+			jr $31
+			\end{verbatim}
+
+			
+
 \end{document}
