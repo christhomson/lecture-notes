@@ -3541,10 +3541,157 @@
 				\\ \\
 				Note $G'$ has a planar embedding obtained by erasing edge $e$. $G'$ is connected because $e$ is not a bridge of $G$.
 				\\ \\
-				By induction, $p' - q- + f' = 2$, where $p'$ is the number of vertices of $G'$, $q'$ is the number of edges of $G'$, and $f'$ is the number of faces in the embedding of $G'$.
+				By induction, $p' - q + f' = 2$, where $p'$ is the number of vertices of $G'$, $q'$ is the number of edges of $G'$, and $f'$ is the number of faces in the embedding of $G'$.
 				\\ \\
 				We know that $p' = p$ and $q' = (q - 1)$, but we need to show that $f' = (f - 1)$. $f' = (f - 1)$ follows from the Jordan Curve Theorem, because by adding another edge we're adding an additional boundary which creates a new face.
 			\end{proof}
+			
+			\begin{defn} \lecture{March 15, 2013}
+				A graph is \textbf{simple} if it has no parallel edges and it has no loops.
+			\end{defn}
+
+			\begin{proposition}
+				Let $G$ be a simple planar graph. Then:
+				\begin{enumerate}
+					\item $q \le 3p - 6$.
+					\item $q \le 2p - 4$ when $G$ has no triangle (no cycle of length 3).
+				\end{enumerate}
+			\end{proposition}
+
+			\begin{proof}
+				We'll prove each part of this proposition in turn.
+				\begin{enumerate}
+					\item 
+						The fact that $G$ is planar implies that there exists a planar embedding with $f$ faces. Since the graph is simple, every face $F$ must have $\deg(F) \ge 3$. So, we know:
+						\begin{align*}
+							2q &= \sum_{F \in \text{faces}} \underbrace{\deg(F)}_{\ge 3} \\
+							\implies 2q &\ge 3f \\
+							&\ge 3(2 - p + q) \\
+							&\ge 6 - 3p + 3q \\
+							\implies 6 - 3p + q &\le 0
+						\end{align*}
+
+						Euler's formula can be used as a general trick when we want to compare two of these quantities.
+
+					\item 
+						Now, let's also exclude triangles (cycles of length 3). We have:
+						\begin{align*}
+							2q &= \sum_{F \in \text{faces}} \underbrace{\deg(F)}_{\ge 4} \\
+							\implies 2q &\ge 4f \\
+							&\ge 4(2 - p + q) \\
+							&\ge 8 - 4p + 4q \\
+							\implies q \le 2p - 4
+						\end{align*}
+				\end{enumerate}
+			\end{proof}
+
+			Let $K_n$ denote the complete graph with $n$ vertices. Is $K_5$ planar?
+			\begin{center}
+				\begin{tikzpicture}
+					\node [dot={0}{}] at (1,0) {};
+					\node [dot={0}{}] at (3,0) {};
+					\node [dot={0}{}] at (0,3) {};
+					\node [dot={0}{}] at (4,3) {};
+					\node [dot={0}{}] at (2,4) {};
+				
+					\draw (1,0) -- (3,0) -- (4,3) -- (2,4) -- (0,3) -- (1,0);
+					\draw (1,0) -- (2,4) -- (3,0) -- (0,3) -- (4,3) -- (1,0);
+				\end{tikzpicture}
+			\end{center}
+
+			Well, how many edges can a planar graph with 5 vertices have? Note that \# of edges $\le 3 \times 5 - 6 = 9$. But $K_5$ has $\binom{5}{2} = 10$ edges. So, no, $K_5$ is not planar.
+			\\ \\
+			Let $K_{m, n}$ denote the complete bipartite graph with $m$ vertices and $n$ vertices in each part of the partition. Is $K_{3,3}$ planar?
+
+			\begin{center}
+				\begin{tikzpicture}[scale=2]
+					\node [dot={0}{}] at (0,0) {};
+					\node [dot={0}{}] at (1,0) {};
+					\node [dot={0}{}] at (0,1) {};
+					\node [dot={0}{}] at (1,1) {};
+					\node [dot={0}{}] at (0,2) {};
+					\node [dot={0}{}] at (1,2) {};
+
+					\draw (0,0) -- (1,0);
+					\draw (0,0) -- (1,1);
+					\draw (0,0) -- (1,2);
+
+					\draw (0,1) -- (1,0);
+					\draw (0,1) -- (1,1);
+					\draw (0,1) -- (1,2);
+
+					\draw (0,2) -- (1,0);
+					\draw (0,2) -- (1,1);
+					\draw (0,2) -- (1,2);
+				\end{tikzpicture}
+			\end{center}
+
+			We have $9 \le 3 \times 6 - 6$, which does not yield a contradiction. However, $K_{3,3}$ is bipartite, so we know there's no cycle of length 3. Applying (2), we get $9 \le 2 \times 6 - 4 \not \le 8$, which is a contradiction. Therefore, $K_{3,3}$ is not planar.
+
+		\subsection{Platonic Graphs}
+			\begin{defn}
+				A graph is \textbf{platonic} if it has a planar embedding such that every face has degree $l \ge 3$ and every vertex has degree $k \ge 3$.
+			\end{defn}
+
+			\begin{theorem}
+				There exist only five platonic graphs.
+			\end{theorem}
+
+			The platonic graph where $k = 3, l = 3$ is:
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={0}{}] at (0,0) {};
+					\node [dot={0}{}] at (2,0) {};
+					\node [dot={0}{}] at (1,1) {};
+					\node [dot={0}{}] at (1,2) {};
+
+					\draw (0,0) -- (1,1) -- (2,0) -- (0,0);
+					\draw (1,1) -- (1,2);
+
+					\draw (0,0) to[out=130,in=180] (1,2);
+					\draw (2,0) to[out=60,in=0] (1,2);
+				\end{tikzpicture}
+			\end{center}
+
+			The platonic graph where $k = 3, l = 4$ is:
+			\begin{center}
+				\begin{tikzpicture}%[scale=1.5]
+					\node [dot={0}{}] at (0,0) {};
+					\node [dot={0}{}] at (4,0) {};
+					\node [dot={0}{}] at (0,4) {};
+					\node [dot={0}{}] at (4,4) {};
+
+					\node [dot={0}{}] at (1,1) {};
+					\node [dot={0}{}] at (3,1) {};
+					\node [dot={0}{}] at (1,3) {};
+					\node [dot={0}{}] at (3,3) {};
+
+					\draw (0,0) -- (4,0) -- (4,4) -- (0,4) -- (0,0);
+					\draw (1,1) -- (1,3) -- (3,3) -- (3,1) -- (1,1);
+					\draw (0,0) -- (1,1);
+					\draw (4,4) -- (3,3);
+					\draw (0,4) -- (1,3);
+					\draw (4,0) -- (3,1);
+				\end{tikzpicture}
+			\end{center}
+
+			The platonic graph where $k = 4, l = 3$ is:
+			\begin{center}
+				\begin{tikzpicture}%[scale=1.5]
+					\node [dot={0}{}] at (0,2) {};
+					\node [dot={0}{}] at (1,1) {};
+					\node [dot={0}{}] at (2,2) {};
+					\node [dot={0}{}] at (2,0) {};
+					\node [dot={0}{}] at (3,1) {};
+					\node [dot={0}{}] at (4,2) {};
+
+					\draw (0,2) -- (4,2) -- (2,0) -- (0,2);
+					\draw (1,1) -- (2,2) -- (3,1) -- (1,1);
+					\draw (0,2) to[out=60,in=120] (4,2) to[out=-60,in=20] (2,0) to[out=160,in=-120] (0,2);
+				\end{tikzpicture}
+			\end{center}
+
+			There are also two more graphs ($k = 3, l = 5$ and $k = 5, l = 3$), which we won't show here for simplicity.
 
 	\newpage
 	\section*{Clicker Questions}
@@ -3632,5 +3779,56 @@
 				\end{center}
 
 				$W$ is a walk but not a cycle nor a path.
+			\item \lecture{March 15, 2013}
+				Let $T$ be a tree with 123 vertices. How many bridges does it have? 122, since no edge is in a cycle in a tree, and the number of edges is equal to the number of vertices minus one (in a tree).
+			\item Let $G$ be a graph with $p$ vertices and $q$ edges. Suppose $G$ has 17 components and no cycles. Then $q = p + 17$. Each of the 17 components is a tree, and every tree has one more vertex than edges.
+			\item Let $G$ be a bipartite graph with partitions $X, Y$. Suppose $G$ is $k \ge 1$ regular. Is $|X| = |Y|$ true? Yes, always, since $|X|k$ is equal to the number of edges, which equals $|Y|k$.
+			\item Is the following graph $G$ planar?
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (2,1) {};
+						\node [dot={0}{}] at (0.5,0.5) {};
+
+						\draw (0,0) -- (2,0) -- (2,1) -- (0,1) -- (0,0) -- (0.5,0.5) -- (0,1);
+						\draw (0.5,0.5) -- (2,0) -- (0,1);
+						\draw (0,0) -- (2,1);
+					\end{tikzpicture}
+				\end{center}
+
+				Yes, $G$ is planar. Here's a planar embedding for $G$:
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (-0.5,-0.5) {};
+
+						\draw (0,0) -- (1,0) -- (1,1) -- (0,1) -- (0,0) -- (1,1);
+						\draw (0,0) -- (-0.5,-0.5) to[out=80,in=215] (0,1);
+						\draw (-0.5,-0.5) to[out=310,in=210] (1,0) to[out=30,in=-30] (1.25,1.25) to[out=120,in=60] (0,1);
+					\end{tikzpicture}
+				\end{center}
+			\item Consider the following graph:
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (3,0) {};
+						\node [dot={0}{}] at (1,2) {};
+						\node [dot={0}{}] at (2,1) {};
+						\node [dot={0}{}] at (3,1) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [draw=none] at (1,0.5) {$F$};
+
+						\draw (1,0) -- node [midway, fill=white] {6} (0,1) -- node [midway,fill=white] {1} (1,2) -- node [midway,fill=white] {2} (2,1) -- node [midway,fill=white] {3} (3,1) -- node [midway,fill=white] {4} (3,0) -- node [midway,fill=white] {5} (1,0) -- node [midway,fill=white] {7} (2,1) -- node [midway,fill=white] {8} (1,1);
+					\end{tikzpicture}
+				\end{center}
+
+				What is the boundary walk for $F$? 7, 8, 8, 2, 1, 6. (Note that 8 is included twice.)
+			\item Can 2, 2, 3, 3, 4, 4, 5, 6 be the degree sequence for the faces of a planar embedding? No. There must be an even number of odd faces.
 		\end{itemize}
 \end{document}
