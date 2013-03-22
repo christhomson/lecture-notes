@@ -3303,7 +3303,7 @@
 			}
 			\end{verbatim}
 
-			Let's look at more conventions, specifically how to represent parameters. For now, (and we'll probably change this later when we represent variables), \$1 is the first parameter and \$2 is the seco.nd parameter. We're going to need to expand our symbol table to include how each symbol is represented:
+			Let's look at more conventions, specifically how to represent parameters. For now, (and we'll probably change this later when we represent variables), \$1 is the first parameter and \$2 is the second parameter. We're going to need to expand our symbol table to include how each symbol is represented:
 			
 			\begin{center}
 				\begin{tabular}{|c|c|c|}
@@ -3469,5 +3469,140 @@
 
 				This is an important step because the code you generate will actually differ depending on the combination of types.
 				\\ \\
-				When performing context-sensitive analysis, don't recompute the type all over the place (such as in recursive calls). Decorate your parse tree instead. Also, make sure you're passing around reference parameters whenever possible. Otherwise, you'll end up with a program with worse complexity.
+				When performing context-sensitive analysis, don't recompute the type all over the place (such as in recursive calls). Decorate your parse tree instead. Also, make sure you're passing around reference parameters whenever possible. Otherwise, you'll end up with a program with worse complexity. \lecture{March 20, 2013}
+				\\ \\
+				We have (at least) two choices when generating Code(expr + term). The first approach evaluates expr first:
+				\begin{verbatim}
+				code(expr)
+				push $3
+				code(term)
+				pop $5
+				add $3, $5, $3
+				\end{verbatim}
+
+				Or, we could evaluate the second operand (term) first:
+				\begin{verbatim}
+				code(term)
+				push $3
+				code(expr)
+				pop $5
+				add $3, $3, $5
+				\end{verbatim}
+
+				This applies similarly for subtraction and multiplication. You shouldn't assume commutability for the \verb+add+ instruction \textendash{} pass the operands in their correct order, even if it does not matter in some cases. In general, for Code(foo OP bar), we have the choice between:
+				\begin{verbatim}
+				code(foo)
+				push
+				code(bar)
+				pop
+				operations for OP
+				\end{verbatim}
+
+				And:
+				\begin{verbatim}
+				code(bar)
+				push
+				code(foo)
+				pop
+				operations for OP
+				\end{verbatim}
+
+				Moving along, we also can trivially determine these code fragments:
+				\begin{itemize}
+					\item Code(expr $\to$ term) = Code(term)
+					\item Code(term $\to$ factor) = Code(factor)
+					\item Code(factor $\to$ LPAREN expr RPAREN) = Code(expr)
+				\end{itemize}
+
+				You might be able to be clever and make your compiler look ahead and realize that Code(bar) doesn't use \$6 (for instance), so Code(foo) could put its result in \$6 directly in order to skip the stack steps. This might be something to try for the bonus, but otherwise, use the \$3 stack-based approach for simplicity to get things working.
+				\\ \\
+				Let's look at printing next. We don't want to reproduce all the print code every time we want to print something. Instead, we'll use a procedure. Recall the WLPP grammar rule for printing:
+				\begin{align*}
+					\text{statememt} &\to \text{PRINTLN LPAREN expr RPAREN SEMI} \\
+				\end{align*}
+
+				Also, recall the generalized code for an arbitrary procedure:
+				\begin{verbatim}
+				;; prologue
+				push $31
+				  .
+				  .
+				  .
+				;; epilogue
+				pop $31
+				jr $31
+				print: ...
+				\end{verbatim}
+
+				So, Code(statement $\to$ PRINTLN LPAREN expr RPAREN SEMI) =
+				\begin{verbatim}
+				code(expr)
+				add $1, $3, $0 ;; set up the parameter for the print procedure
+				lis $5
+				.word print
+				jalr $5        ;; clobbers $31
+				\end{verbatim}
+
+				Note that we changed \$1! That was the parameter for wain. However, remember we earlier placed \$1's value into a variable on the stack, so everything's okay.
+				\\ \\
+				\verb+jalr $5+ clobbers \$31. This isn't a huge problem, all we have to do is push \$31 onto our stack in the prologue and pop it just prior to the \verb+jr $31+ call in our prologue.
+				\\ \\
+				Let's generate the code for the rule: statements $\to$ statements statement. The safest choice for this would be to generate:
+				\begin{verbatim}
+				code(statements)
+				code(statement)
+				\end{verbatim}
+
+				What if we wanted to generate the code differently such that the statement's code was placed prior to the rest of the statements? That is, what if we wanted to generate code like this:
+				\begin{verbatim}
+				code(statement)
+				code(statements)
+				\end{verbatim}
+
+				Is that correct? It might be. We have no way of guaranteeing it in every case. The order of some object code matters, sometimes. It's generally unsafe to do this.
+				\\ \\
+				Let's look at this rule: statement $\to$ lvalue BECOMES expr SEMI. We first need to decide on a representation for an lvalue. Here are all the rules for what an lvalue can be:
+				\begin{align*}
+					\text{lvalue} &\to \text{ID} \\
+					\text{lvalue} &\to \text{STAR factor} \\
+					\text{lvalue} &\to \text{LPAREN lvalue RPAREN}
+				\end{align*}
+
+				How should we represent an lvalue? Well, we can't just place them in registers, for a couple of reasons. First, there is the limitation on the number of registers we have available for our use. More importantly, however, is the fact that when we change the value (since an lvalue by definition is going to be changed), we want it to be updated in its permanent location in RAM.
+				\\ \\
+				We'll take the stupidly simple approach of making each lvalue an address in RAM.
+				\\ \\
+				Let's determine Code(statement $\to$ lvalue BECOMES expr SEMI):
+				\begin{verbatim}
+				code(expr)
+				push $3
+				code(lvalue) ;; places address of lvalue into $3
+				pop $5
+				sw $5, 0($3)
+				\end{verbatim}
+
+				Alternatively, we can switch up the order of evaluation:
+				\begin{verbatim}
+				code(lvalue)
+				push $3
+				code(expr)
+				pop $5
+				sw $3, 0($5)
+				\end{verbatim}
+
+				In this case, it doesn't matter whether we evaluate (or generate code) for the lvalue or the expr first, so both of these approaches are equally acceptable.
+				\\ \\
+				Let's look at Code(lvalue $\to$ ID). We know that variables are just offsets in the stackframe. We can get the offset of the ID from the symbol table. We need the \emph{address} of that location, though. So, we get Code(lvalue $\to$ ID) =
+				\begin{verbatim}
+				list $3
+				.word offset(ID)
+				add $3, $3, $29
+				\end{verbatim}
+
+				You may think it'd be easier to just return the offset, rather than a memory address. That isn't easier, however, because we still have the following rules to deal with:
+				\begin{itemize}
+					\item Code(lvalue $\to$ STAR factor) = Code(factor), with the assertion that type(factor) = int $\star$.
+					\item Code(lvalue $\to$ LPAREN lvalue RPAREN) = Code(lvalue).
+					\item Code(factor $\to$ AMP lvalue) = Code(lvalue). Note that factor must be of type int $\star$, lvalue must be of type int, and the Code(lvalue) will always contain an address, as needed for these types.
+				\end{itemize}
 \end{document}
