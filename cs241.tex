@@ -3515,10 +3515,11 @@
 				\end{itemize}
 
 				You might be able to be clever and make your compiler look ahead and realize that Code(bar) doesn't use \$6 (for instance), so Code(foo) could put its result in \$6 directly in order to skip the stack steps. This might be something to try for the bonus, but otherwise, use the \$3 stack-based approach for simplicity to get things working.
-				\\ \\
+			
+			\subsubsection{Statements}
 				Let's look at printing next. We don't want to reproduce all the print code every time we want to print something. Instead, we'll use a procedure. Recall the WLPP grammar rule for printing:
 				\begin{align*}
-					\text{statememt} &\to \text{PRINTLN LPAREN expr RPAREN SEMI} \\
+					\text{statement} &\to \text{PRINTLN LPAREN expr RPAREN SEMI} \\
 				\end{align*}
 
 				Also, recall the generalized code for an arbitrary procedure:
@@ -3604,5 +3605,141 @@
 					\item Code(lvalue $\to$ STAR factor) = Code(factor), with the assertion that type(factor) = int $\star$.
 					\item Code(lvalue $\to$ LPAREN lvalue RPAREN) = Code(lvalue).
 					\item Code(factor $\to$ AMP lvalue) = Code(lvalue). Note that factor must be of type int $\star$, lvalue must be of type int, and the Code(lvalue) will always contain an address, as needed for these types.
+				\end{itemize}
+
+			\subsubsection{Control Structures \& Tests} \lecture{March 22, 2013}
+				We want to be able to generate code for rules like this:
+				\begin{align*}
+					\text{statement} &\to \text{WHILE LPAREN test RPAREN LBRACE statements RBRACE}
+				\end{align*}
+
+				We first need to be able to generate code for a test. Let's look at this rule: test $\to \text{expr}_1$ LT $\text{expr}_2$. This allows us to write WLPP code like:
+				\begin{verbatim}
+				while(a < b) {
+					a = a + 1;
+				}
+				\end{verbatim}
+
+				A \textbf{test} is essentially a boolean value. We'll follow the convention that a boolean value is represented as 0 = false, 1 = true. Note that this is not exactly how booleans are represented in languages like C++ (where instead, any non-zero value is true).
+				\\ \\
+				Code(test $\to \text{expr}_1$ LT $\text{expr}_2$):
+				\begin{verbatim}
+				code(expr_1)
+				push $3
+				code(expr_2)
+				pop $5
+				slt $3, $5, $3
+				\end{verbatim}
+
+				Now that we've generated the code for a test, we can proceed to generate code different control structures like loops and branching.
+				\\ \\
+				Code(statement $\to$ WHILE LPAREN test RPAREN LBRACE statements RBRACE):
+				\begin{verbatim}
+				loop:
+				    code(test)
+				    beq $3, $0, quit
+				    code(statements)
+				    beq $0, $0, loop
+
+				quit:
+				\end{verbatim}
+
+				There are a couple of problems with the code we generated. If we have multiple loops in our program, we'll have multiple loop and quit labels. To solve this, you should affix a unique identifier to the labels, and for readability, you may want to use the same identifier for the loop/quit labels that correspond with each other.
+				\\ \\
+				The other problem is if our loop is over $\approx$ 32,000 instructions long, since the $i$ value that \verb+beq+ accepts as its third operand must be a 16-bit integer. Here's one way we could solve this:
+				\begin{verbatim}
+				loop123:
+				    code(test)
+				    bne $3, $0, cont123
+				    lis $5
+				    .word quit123
+				    jr $5
+
+				cont123:
+				    code(statements)
+				    lis $5
+				    .word loop123
+				    jr $5
+
+				quit123:
+				\end{verbatim}
+
+				You could make your code dynamically choose between these two methods, depending of the length of code(statements). All control structures are subject to this caveat.
+				\\ \\
+				Let's now look at Code(statement $\to$ IF LPAREN test RPAREN LBRACE $\text{statements}_1$ BRACE ELSE LBRACE $\text{statements}_2$ RBRACE):
+				\begin{verbatim}
+				    code(test)
+				    beq $3, $0, else123
+				    code(statements_1) ;; true part
+				    beq $0, $0, done123
+				
+				else123:
+				    code(statements_2) ;; false part
+
+				done123:
+				\end{verbatim}
+
+				Alternatively, we could've generated this code:
+				\begin{verbatim}
+				    code(test)
+				    bne $3, $0, true123
+
+				    code(statements_2)
+				    beq $0, $0, done123
+
+				true123:
+				    code(statements_1)
+
+				done123:
+				\end{verbatim}
+
+				The choice between these two is somewhat arbitrary.
+				\\ \\
+				One other approach to this is to take advantage of places in your code that can contain code that will never be executed (such as after \verb+jr $31+). You could have:
+				\begin{verbatim}
+				    code(test)
+				    bne $3, $0, true123
+				                                                true123: ;; out of line, somewhere
+				                                                    statements_1
+				    statements_2                                    beq $0, $0, done123
+ 
+				done123:
+				\end{verbatim}
+
+				If the true part very rarely occurs, you take zero branches on the else case, which is nice. This would save some execution time.
+				\\ \\
+				Let's take a look at more test rules.
+				\begin{itemize}
+					\item Code(test $\to \text{expr}_1$ GT $\text{expr}_2$) $\equiv$ Code(test $\to \text{expr}_2$ LT $\text{expr}_1$).
+					\item Code(test $\to \text{expr}_1$ GE $\text{expr}_2$) $\equiv$ not(Code(test $\to \text{expr}_1$ LT $\text{expr}_2$)). According to our convention, 0 = false and 1 = true, so not($x$) = $1 - x$. So, we get:
+						\\ \\
+						Code(test $\to \text{expr}_1$ GE $\text{expr}_2$):
+						\begin{verbatim}
+						code(expr_1 LT expr_2)
+						lis $11 ;; not $3
+						.word 1
+						sub $3, $11, $3
+						\end{verbatim}
+
+						We should move the populating of \$11 into our prologue, and add \$11 = 1 to our list of conventions.
+
+					\item Code(test $\to \text{expr}_1$ LE $\text{expr}_2$) $\equiv$ Code(test $\to \text{expr}_2$ GE $\text{expr}_1$).
+					\item Code(test $\to \text{expr}_1$ NE $\text{expr}_2$) $\equiv$ Code(test $\to \text{expr}_1$ LT $\text{expr}_2$) OR Code(test $\to \text{expr}_2$ LT $\text{expr}_1$). We can generate this code like so:
+						\begin{verbatim}
+						code(expr_1)
+						push $3
+						code(expr_2)
+						pop $5
+						slt $6, $5, $3
+						slt $7, $3, $5
+						add $3, $6, $7
+						\end{verbatim}
+
+						Note that the final line is an OR, except this implementation of OR does not work in general. It only works here because we know both conditions won't be true simultaneously. In other cases, we would need to handle the case where both conditions are true, and then our possible truth values would be 1 and 2.
+					\item Code(test $\to \text{expr}$ EQ $\text{expr}_2)$ $\equiv$ not(Code(test $\to \text{expr}_1$ NE $\text{expr}_2$)). The code for this is:
+						\begin{verbatim}
+						code(expr_1 NE expr_2)
+						sub $3, $11, $3
+						\end{verbatim}
 				\end{itemize}
 \end{document}
