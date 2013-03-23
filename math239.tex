@@ -3784,7 +3784,241 @@
 
 				We can verify this. If $(k, l) = (3, 5)$, then $s = \frac{12}{10 + 6 - 15} = 12$, as expected.
 
+			% Eric Katz gave this lecture.
+			\subsubsection{Non-Planar Graphs} \lecture{March 20, 2013}
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (0,2) {};
+						\node [dot={0}{}] at (2,2) {};
+						\node [dot={0}{}] at (1,3) {};
 
+						\draw (0,0) -- (2,0) -- (2,2) -- (1,3) -- (0,2) -- (0,0);
+						\draw (2,0) -- (0,2) -- (2,2);
+						\draw (0,0) -- (2,2);
+						\draw (0,0) to[in=180,out=120] (1,3);
+						\draw (2,0) to[in=0,out=60] (1,3);
+						\node[draw=none] at (1,-0.25) {$K_5$};
+	 				\end{tikzpicture}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (1,2) {};
+						\node [dot={0}{}] at (3,0) {};
+						\node [dot={0}{}] at (3,2) {};
+						\node [dot={0}{}] at (4,1) {};
+
+						\draw (1,2) -- (0,1) -- (1,0) -- (3,0) -- (4,1) -- (3,2) -- (1,2);
+						\draw (1,0) -- (3,2);
+						\draw (1,2) -- (3,0);
+						\draw (0,1) to[out=90,in=180] (2,2.5) to[out=0,in=90] (4,1);
+						\node[draw=none] at (2, -0.25) {$K_{3, 3}$};
+					\end{tikzpicture}
+				\end{center}
+				$K_5$ and $K_{3,3}$ are non-planar because they have edges that unavoidably must cross. Are there any other planar graphs? Yes! You can just add more edges to $K_5$ or $K_{3,3}$. We could also add some vertices in the middle or edges, if we'd like. 
+				\\ \\
+				The two following graphs are also non-planar, and are built by adding more edges and vertices to $K_5$, respectively.
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (0,2) {};
+						\node [dot={0}{}] at (2,2) {};
+						\node [dot={0}{}] at (1,2) {};
+						\node [dot={0}{}] at (1,3) {};
+
+						\draw (0,0) -- (2,0) -- (2,2) -- (1,3) -- (0,2) -- (0,0);
+						\draw (2,0) -- (0,2) -- (2,2);
+						\draw (0,0) -- (2,2);
+						\draw (0,0) to[in=180,out=120] (1,3);
+						\draw (2,0) to[in=0,out=60] (1,3);
+						\draw (1,3) -- (1,2) -- (0,0);
+						\draw (1,2) -- (2,0);
+	 				\end{tikzpicture}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (0,2) {};
+						\node [dot={0}{}] at (2,2) {};
+						\node [dot={0}{}] at (1,3) {};
+						\node [dot={0}{}] at (1,2) {};
+						\node [dot={0}{}] at (0,0.25) {};
+						\node [dot={0}{}] at (0,0.5) {};
+						\node [dot={0}{}] at (0,0.75) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (0,1.25) {};
+						\node [dot={0}{}] at (0,1.5) {};
+						\node [dot={0}{}] at (0,1.75) {};
+						\node [dot={0}{}] at (2,0.25) {};
+						\node [dot={0}{}] at (2,0.5) {};
+						\node [dot={0}{}] at (2,0.75) {};
+						\node [dot={0}{}] at (2,1) {};
+						\node [dot={0}{}] at (2,1.25) {};
+						\node [dot={0}{}] at (2,1.5) {};
+						\node [dot={0}{}] at (2,1.75) {};
+						
+						\draw (0,0) -- (2,0) -- (2,2) -- (1,3) -- (0,2) -- (0,0);
+						\draw (2,0) -- (0,2) -- (2,2);
+						\draw (0,0) -- (2,2);
+						\draw (0,0) to[in=180,out=120] (1,3);
+						\draw (2,0) to[in=0,out=60] (1,3);
+	 				\end{tikzpicture}
+				\end{center}
+				
+				\begin{defn}
+					A graph $H$ is a \textbf{subdivision} of a graph $G$ if $H$ is obtained from $G$ by replacing each edge by a path.
+				\end{defn}
+				
+				\begin{ex}
+					Here's a graph $G$ and a subdivision of $G$.
+					\begin{center}
+						\begin{tikzpicture}[scale=2]
+							\node [dot={0}{}] at (0,0) {};
+							\node [dot={0}{}] at (0,1) {};
+							\node [dot={0}{}] at (1,0) {};
+							\node [dot={0}{}] at (1,1) {};
+							
+							\draw (0,0) -- (1,0) -- (1,1) -- (0,1) -- (0,0);
+							\draw (1,0) -- (0,1);
+							\draw (0,0) to[out=150,in=190] (0,1.25) to[out=10,in=90] (1,1);
+						\end{tikzpicture}
+						\begin{tikzpicture}[scale=2]
+							\node [dot={0}{}] at (0,0) {};
+							\node [dot={0}{}] at (0,1) {};
+							\node [dot={0}{}] at (1,0) {};
+							\node [dot={0}{}] at (1,1) {};
+							\node [dot={0}{}] at (0,0.25) {};
+							\node [dot={0}{}] at (0,0.5) {};
+							\node [dot={0}{}] at (0,0.75) {};
+							\node [dot={0}{}] at (0.33,0) {};
+							\node [dot={0}{}] at (0.66,0) {};
+							\node [dot={0}{}] at (0.85,0) {};
+							\node [dot={0}{}] at (0.5,0.5) {};
+							\node [dot={0}{}] at (1,0.25) {};
+							\node [dot={0}{}] at (1,0.5) {};
+							\node [dot={0}{}] at (1,0.75) {};
+							\node [dot={0}{}] at (0.75,1) {};
+							\node [dot={0}{}] at (0.25,1) {};
+							\node [dot={0}{}] at (0.15,1) {};
+							\node [dot={0}{}] at (0,1.25) {};
+							
+							\draw (0,0) -- (1,0) -- (1,1) -- (0,1) -- (0,0);
+							\draw (1,0) -- (0,1);
+							\draw (0,0) to[out=150,in=190] (0,1.25) to[out=10,in=90] (1,1);
+						\end{tikzpicture}
+					\end{center}
+					
+					In addition, the following is \emph{not} a subdivision of $G$ because a vertex was introduced where there was previously a crossing:
+					\begin{center}
+						\begin{tikzpicture}[scale=2]
+							\node [dot={0}{}] at (0,0) {};
+							\node [dot={0}{}] at (0,1) {};
+							\node [dot={0}{}] at (1,0) {};
+							\node [dot={0}{}] at (1,1) {};
+							\node [dot={0}{}] at (0.5,0.5) {};
+							
+							\draw (0,0) -- (1,0) -- (1,1) -- (0,1) -- (0,0);
+							\draw (1,0) -- (0,1);
+							\draw (0,0) -- (1,1);
+						\end{tikzpicture}
+					\end{center}
+				\end{ex}
+				
+				\begin{theorem}[Lemma]
+					If $G$ has a subgraph that is a subdivision of $K_5$ or $K_{3,3}$, then $G$ is not planar.
+				\end{theorem}
+				
+				\begin{ex}
+					Consider the following graph, $G$.
+					\begin{center}
+						\begin{tikzpicture}[scale=1.5]
+							\node [dot={0}{}] at (0,0) {};
+							\node [dot={0}{}] at (1,0) {};
+							\node [dot={0}{}] at (2,0) {};
+							\node [dot={0}{}] at (3,0) {};
+							\node [dot={0}{}] at (4,0) {};
+							\node [dot={0}{}] at (5,0) {};
+							\node [dot={0}{}] at (6,0) {};
+							
+							\node [dot={0}{}] at (0,1) {};
+							\node [dot={0}{}] at (1,1) {};
+							\node [dot={0}{}] at (2,1) {};
+							\node [dot={0}{}] at (3,1) {};
+							\node [dot={0}{}] at (4,1) {};
+							\node [dot={0}{}] at (5,1) {};
+							\node [dot={0}{}] at (6,1) {};
+							
+							\draw (0,0) -- (6,0) -- (6,1) -- (0,1) -- (0,0);
+							\draw (1,0) -- (1,1);
+							\draw (2,0) -- (2,1);
+							\draw (3,0) -- (3,1);
+							\draw (4,0) -- (4,1);
+							\draw (5,0) -- (5,1);
+							
+							\draw (0,0) .. controls (7,-0.5) .. (6,1);
+							\draw (0,1) .. controls (7,1.5) .. (6,0);
+						\end{tikzpicture}
+					\end{center}
+					Katz claims he has a bridge in New York and some cheap land in Florida to sell you, and he claims he has a planar embedding for $G$. Why must he be lying?
+					\\ \\
+					Essentially, we know he's lying about having a planar embedding for $G$, since then he could erase subdivisions and get a planar embedding for $K_{3, 3}$. Let's state that more formally.
+					
+					\begin{proof}
+						Suppose $G$ is planar. Then, take a planar embedding of $G$. Since $H$ is a subgraph of $G$, we get a planar embedding of $H$. Undo that subdivision. Then we get a planar embedding of $K_{3, 3}$ or $K_5$, and that's ``unpossible.''
+					\end{proof}
+				\end{ex}
+			\subsubsection{Kuratowski's Theorem}
+				\begin{theorem}[Kuratowski's Theorem]
+					A graph $G$ is non-planar if and only if it contains a subdivision of $K_{3,3}$ or $K_5$.
+				\end{theorem}
+				
+				\begin{defn}
+					The \textbf{crossing number} of a graph $G$ is the minimum number of crossings in drawings of $G$.
+				\end{defn}
+				
+				That is, there may be some ways to draw non-planar graphs that are smarter than other ways. Smarter ways involve drawing the graph in such a way that the crossing number is minimized.
+				\\ \\
+				\underline{Observation}: a graph is planar if and only if it has crossing number zero.
+				\\ \\
+				It's generally hard to compute crossing numbers. It's an open question to choose the crossing number of $K_{m, n}$, since we'd have to check all possible drawings.
+				\\ \\
+		\subsection{Graph Coloring}
+			\begin{defn}
+				Let $n$ be a positive integer. A \textbf{graph coloring} is an assignment of one of $\set{1, 2, \ldots, n}$ to each vertex such that no edge connects vertices with the same label.
+			\end{defn}
+			
+			\begin{ex}
+				This is $K_4$:
+				\begin{center}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (1,2) {};
+
+						\draw (0,0) -- (1,2) {};
+						\draw (1,2) -- (2,0) {};
+						\draw (0,0) -- (2,0) {};
+						\draw (0,0) -- (1,1) {};
+						\draw (1,1) -- (1,2) {};
+						\draw (1,1) -- (2,0) {};
+					\end{tikzpicture}
+				\end{center}
+			
+				Since every vertex of $K_4$ has an edge to every other vertex, every edge needs its own color.
+			\end{ex}
+
+			\underline{Note}: $K_n$ needs $n$ colors. You must color every vertex differently.
+			\\ \\
+			\underline{Note}: $K_{m, n}$ needs two colors, because it's a bipartite graph.
+			
+			\begin{theorem}[Four Color Theorem]
+				Every planar graph is 4-colorable.
+			\end{theorem}
+			
+			The four color theorem is known to be true, but it's not known to be true in a nice way. The proof is basically a bunch of counterexamples. The proof also involved a computer to generate various cases.
+			
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
