@@ -2316,4 +2316,180 @@
 					}
 					\Return{-1 // no match}
 				\end{algorithm}
+
+				\begin{ex} \lecture{March 21, 2013}
+					We have $T$ = \underline{abaxyabacabb}aababacaba, and $P$ = abacaba. Let's run the KMP algorithm on this.
+
+					\begin{center}
+						\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+							0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 10 & 11 \\
+							a & b & a & x & y & a & b & a & c & a & b & b \\ \hline \hline
+							a & b & a & c & & & & & & & & \\
+							& & (a) & b & & & & & & & & \\
+							& & & a & & & & & & & & \\
+							& & & & a & & & & & & & \\
+							& & & & & a & b & a & c & a & b & a \\
+							& & & & & & & & & (a) & (b) & a \\ \hline
+						\end{tabular}
+					\end{center}
+				\end{ex}
+
+				Here's how to compute the failure array. FailureArray($P$) (where $P$ is a string of length $m$ representing the pattern): \\
+				\begin{algorithm}[H]
+					F[0] = 0\;
+					i = 1\;
+					j = 0\;
+					\While{i < m}{
+						\uIf{P[i] = P[j]}{
+							F[i] = j + 1\;
+							i = i + 1\;
+							j = j + 1\;
+						}
+						\uElseIf{j > 0}{
+							j = F[j - 1]\;
+						}
+						\Else{
+							F[i] = 0\;
+							i = i + 1\;
+						}
+					}
+				\end{algorithm}
+
+				Computing the failure array in $\Theta(m)$ time. At each iteration of the while loop, either $i$ increases by one or the guess index ($i - j$) increases by at least one ($F[j - 1] < j$). There are no more than $2m$ iterations of the while loop.
+				\\ \\
+				The KMP algorithm as a whole takes running time $\Theta(n)$. The algorithm relies on computing the failure array, which takes $\Theta(m)$ time. As before, each iteration of the while loop either increases $i$ by one or the guess index ($i - j$) will increase by at least one ($F[j - 1] < j$). There are no more than $2n$ iterations of this while loop, either.
+
+			\subsubsection{Boyer-Moore Algorithm}
+				The Boyer-Moore algorithm is based on three key ideas.
+				\begin{itemize}
+					\item \textbf{Reverse-order searching}. $P$ is compared with a subsequence of $T$ moving backwards.
+					\item \textbf{Bad character jumps}. When a mismatch occurs at $T[i] = c$:
+						\begin{itemize}
+							\item If $P$ contains $c$, we can shift $P$ to align the last occurrence of $c$ in $P$ with $T[i]$.
+							\item Otherwise, we can shift $P$ to align $P[0]$ with $T[i + 1]$.
+						\end{itemize}
+					\item \textbf{Good suffix jumps}. If we already matched a suffix of $P$ and then we get a mismatch, then we can shift $P$ forward to align with the previous occurrence of that suffix (with a mismatch from the actual suffix). This is similar to how failure arrays work in the KMP algorithm.
+				\end{itemize}
+
+				Let's look at two examples of bad character jumps.
+
+				\begin{ex}
+					We have $P$ = aldo, and $T$ = whereiswaldo. The bad character jumps occur like this:
+					\begin{center}
+						\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|c|}
+							a & l & d & o & & & & & & & & \\
+							w & h & e & r & e & i & s & w & a & l & d & o \\ \hline \hline
+							& & & o & & & & & & & & \\
+							& & & & & & & o & & & & \\
+							& & & & & & & & \color{green}{a} & \color{green}{l} & \color{green}{d} & \color{green}{o} \\ \hline
+						\end{tabular}
+					\end{center}
+
+					Six checks (comparisons) were performed.
+				\end{ex}
+
+				\begin{ex}
+					We have $P$ = moore, and $T$ = boyermoore. The bad character jumps occur like this:
+					\begin{center}
+						\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|}
+							m & o & o & r & e & & & & & \\
+							b & o & y & e & r & m & o & o & r & e \\ \hline \hline
+							& & & & \color{red}{e} & & & & & \\
+							& & & & (r) & \color{red}{e} & & & & \\
+							& & & & & \color{green}{(m)} & \color{green}{o} & \color{green}{o} & \color{green}{r} & \color{green}{e} \\ \hline
+						\end{tabular}
+					\end{center}
+
+					Seven checks (comparisons) were performed.
+				\end{ex}
+
+				The bad character rule allows us to skip many characters if we check a character that is not contained in the pattern at all.
+				\\ \\
+				When aiming for a good suffix jump, be weary about a suffix of the suffix that may appear elsewhere in the pattern.
+				\\ \\
+				Both the bad character and good suffix jumps are safe shifts. The algorithm will check for both and apply the one that results in the largest jump.
+				\\ \\
+				To achieve all of this, we need a \textbf{last occurrence function}. A last occurrence function preprocesses the pattern $P$ and the alphabet $\Sigma$. This function maps the alphabet to integers.
+				\\ \\
+				$L(c)$ is defined as the largest index $i$ such that $P[i] = c$, or -1 if no such index exists.
+
+				\begin{ex}
+					Consider the alphabet $\Sigma = \set{a, b, c, d}$ and the pattern $P$ = abacab. The corresponding last occurrence function would be:
+					\begin{center}
+						\begin{tabular}{|c||c|c|c|c|}
+							\hline
+							c & a & b & c & d \\ \hline
+							L(c) & 4 & 5 & 3 & -1 \\ \hline
+						\end{tabular}
+					\end{center}
+				\end{ex}
+
+				The last occurrence function can be computed in $O(m + |\Sigma|)$ time. In practice, we store the mapping $L$ in an array of size $|\Sigma|$.
+
+				Similarly, we have a \textbf{suffix skip array}, which also preprocesses $P$ to build a table. It's similar to the failure array of the KMP algorithm, but with an extra condition.
+				\begin{defn}
+					The \textbf{suffix size array} $S$ of size $m$ is the array of $S[i]$ (for $0 \le i < m$) such that $S[i]$ is the largest index $j$ such that $P[i + 1..m - 1] = P[j + 1..j+ m - 1 - i]$ and $P[j] \ne P[i]$.
+				\end{defn}
+
+				We consider negative indices to make the given condition true. These indices correspond to letters that we may not have checked so far. Essentially, we're saying that a suffix starting at index $i + 1$ is equal to some substring earlier in the pattern.
+
+				\begin{ex}
+					Consider the pattern $P$ = bonobobo. The suffix skip array would be computed to be:
+					\begin{center}
+						\begin{tabular}{|c||c|c|c|c|c|c|c|c|c|}
+							\hline 
+							$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\ \hline
+							$P[i]$ & b & o & n & o & b & o & b & o \\
+							$S[i]$ & -6 & -5 & -4 & -3 & 2 & -1 & 2 & 7 \\ \hline
+						\end{tabular}
+					\end{center}
+				\end{ex}
+
+				Like the failure array in the KMP algorithm, this array is computed in $\Theta(m)$ time.
+				\\ \\
+				The Boyer-Moore algorithm is as follows. \\
+				\begin{algorithm}[H]
+					L = last occurrence array computed from $P$\;
+					S = suffix skip array computed from $P$\;
+					i = m - 1\;
+					j = m - 1\;
+					\While{i < n and j $\ge$ 0}{
+						\uIf{T[i] = P[j]}{
+							i = i - 1\;
+							j = j - 1\;
+						}
+						\Else{
+							i = i + m - 1 - min(L[T[i]], S[j])\;
+							j = m - 1\;
+						}
+					}
+					\lIf{j == -1}{\Return{i + 1}}
+					\lElse{\Return{FAIL}}
+				\end{algorithm}
+
+				Note that the min(...) in the algorithm corresponds to the maximum safe jump between a bad character jump and a good suffix jump.
+				\\ \\
+				In the worst case, the Boyer-Moore algorithm runs in $O(n + |\Sigma|)$ time. The worst case is when $T = aaa \ldots aa$ and $P = aaa$. On typical English text (based on frequencies), the algorithm probes just (approximately) 25\% of the characters in $T$. This means it's faster than the KMP algorithm, on English text.
+
+			\subsubsection{Suffix Trees (Suffix Tries)}
+				We sometimes want to search for many patterns $P$ within the same fixed text $T$. We could preprocess the text $T$ instead of preprocessing the pattern $P$.
+				\\ \\
+				\underline{Observation}: $P$ is a substring of $T$ if and only if $P$ is a prefix of some suffix of $T$.
+				\\ \\
+				We could build a compressed trie that stores all suffixes of $T$. We insert suffixes in decreasing order of length. If a suffix is a prefix of another suffix, we don't bother inserting it. On each node, we store two indexes $l, r$ where the node corresponds to substring $T[l..r]$ (do this for internal nodes \emph{and} leaf nodes).
+				\\ \\
+				Searching for a pattern $P$ (of length $m$) is similar to search in a compressed trie, except we're looking for a prefix and not an exact match. The search is unsuccessful if we reach a leaf with the corresponding string length less than $m$. Otherwise, we reach a node (leaf or internal) with a corresponding string length of at least $m$. You only need to check the first $m$ characters of that string to see if it is actually a match.
+
+			\subsubsection{Overview of Pattern Matching Strategies}
+				Let's provide a brief overview of the various pattern matching strategies we discussed.
+
+				\begin{center}
+					\begin{tabular}{|c||c|c|c|c|}
+						\hline
+						& Brute-Force & KMP & Boyer-Moore & Suffix Trees \\ \hline
+						Preprocessing: & & $O(m)$ & $O(m + |\Sigma|)$ & $O(n^2)$ \\
+						Search time: & $O(nm)$ & $O(n)$ & $O(n)$ (often better) & $O(m)$ \\
+						Extra space: & & $O(m)$ & $O(m + |\Sigma|)$ & $O(n)$ \\ \hline
+					\end{tabular}
+				\end{center}
 \end{document}
