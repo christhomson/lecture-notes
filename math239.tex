@@ -3985,7 +3985,7 @@
 				\\ \\
 		\subsection{Graph Coloring}
 			\begin{defn}
-				Let $n$ be a positive integer. A \textbf{graph coloring} is an assignment of one of $\set{1, 2, \ldots, n}$ to each vertex such that no edge connects vertices with the same label.
+				Let $n$ be a positive integer. A \textbf{graph coloring} is an assignment of one of $\set{1, 2, \ldots, n}$ to each vertex such that no edge connects vertices with the same label. (In other words, no two adjacent vertices are assigned the same color.)
 			\end{defn}
 			
 			\begin{ex}
@@ -4017,8 +4017,255 @@
 				Every planar graph is 4-colorable.
 			\end{theorem}
 			
-			The four color theorem is known to be true, but it's not known to be true in a nice way. The proof is basically a bunch of counterexamples. The proof also involved a computer to generate various cases.
+			The four color theorem is known to be true, but it's not known to be true in a nice way. The proof is basically a bunch of counterexamples. The proof also involved a computer to generate various cases. \lecture{March 22, 2013}
+			\\ \\
+			We only consider simple graphs when discussing graph coloring. We can't color loops, for instance.
+			\\ \\
+			We can expand on the four color theorem and also introduce two very similar theorems.
 			
+			\begin{theorem}[Five Color Theorem]
+				Every simple planar graph can be 5-colored.
+			\end{theorem}
+
+			\begin{theorem}[Six Color Theorem]
+				Every simple planar graph can be 6-colored.
+			\end{theorem}
+
+			We know that simple planar graphs cannot have too many edges. This implies that there exists a vertex of low degree. We'll use this information to derive a lemma.
+			\begin{theorem}[Lemma]
+				Let $G = (V, E)$ be a simple graph. There exists a vertex $v \in V$ of degree $< k$. ($k = 6$)
+			\end{theorem}
+
+			\begin{proof}
+				Assume that for all $v \in V$, $\deg(v) \ge k$. We have:
+				\begin{align*}
+					2q = \sum_{v \in V} \underbrace{\deg(v)}_{\ge k} \ge pk
+				\end{align*}
+
+				We also know that $q \le 3p - 6$, since $G$ is a simple planar graph. That means $2q \le 6p - 12$. Combining these expressions, we get that $pk \le 2q$, so $pk \le 6p - 12$. We get a contradiction for $k \ge 6$.
+			\end{proof}
+
+			So, we can update our lemma's statement with $k = 6$.
+			\\ \\
+			Let's now prove the six color theorem.
+			\begin{proof}
+				Let $G = (V, E)$ be a simple planar graph. By induction on $k = |V|$:
+				\\ \\
+				\underline{Base case}: $|V| = 1$. You can color this vertex any color.
+				\\ \\
+				Assume for $k \ge 2$ that we can 6-color every simple planar graph with $\le k - 1$ vertices.
+				\\ \\
+				By the lemma we just introduced, there exists some $v \in V$ such that $\deg(v) \le 5$.
+				\\ \\
+				Let $H = G \backslash v$ be the graph obtained by deleting $v$ from $G$. Note that $H$ is a simple planar graph. By induction, there exists a 6-coloring of $H$.
+				\\ \\
+				Since $\deg(v) \le 5$, one color, say $c$, does not appear among the vertices adjacent to $v$. Pick color $c$ for $v$.
+			\end{proof}
+
+			Before we can prove the five color theorem, we need one more ingredient: contraction.
+
+			\begin{defn}
+				Let $G = (V, E$ be a graph, and $e = uv \in E$. Then $G/e$ is the graph obtained by identifying $u$ and $v$ in $G$ and deleting $e$. We call this \textbf{contracting} the edge.
+			\end{defn}
+
+			\begin{ex}
+				Consider the following graph.
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (4,0) {};
+						\node [dot={0}{}] at (0,2) {};
+						\node [dot={0}{}] at (4,2) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (3,1) {};
+
+						\draw (0,0) -- (4,0) -- (4,2) -- (0,2) -- (0,0);
+						\draw (0,0) -- (1,1) -- node [midway,fill=white] {$e$} (3,1) -- (4,0);
+						\draw (1,1) -- (4,2);
+						\draw (3,1) -- (0,2);
+					\end{tikzpicture}
+				\end{center}
+
+				If we were to contract edge $e$, we would get the following graph:
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (4,0) {};
+						\node [dot={0}{}] at (0,2) {};
+						\node [dot={0}{}] at (4,2) {};
+						\node [dot={0}{}] at (2,1) {};
+
+						\draw (0,0) -- (4,0) -- (4,2) -- (0,2) -- (0,0);
+						\draw (0,0) -- (2,1) -- (4,0);
+						\draw (2,1) -- (0,2);
+						\draw (2,1) -- (4,2);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+
+			When you apply contraction, you could introduce loops into the graph. Be careful.
+			
+			\begin{ex}
+				We'll take a graph and then contract edge 5, then contract edge 6. Notice that this introduces a loop into the graph.
+				\begin{center}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (1.5,0.5) {};
+						
+						\draw (0,0) -- node [midway,fill=white] {3} (1,0) -- node [midway,fill=white] {4} (1,1) -- node [midway,fill=white] {1} (0,1) -- node [midway,fill=white] {2} (0,0);
+						\draw (1,0) -- node [midway,fill=white] {6} (1.5,0.5) -- node [midway,fill=white] {5} (1,1);
+					\end{tikzpicture}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (1,1) {};
+						
+						\draw (0,0) -- node [midway,fill=white] {3} (1,0) -- node [midway,fill=white] {4} (1,1) -- node [midway,fill=white] {1} (0,1) -- node [midway,fill=white] {2} (0,0);
+						\draw (1,0) to[out=0,in=0] node [midway,fill=white] {6} (1,1);
+					\end{tikzpicture}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (0.5,0.5) {};
+
+						\node [dot={0}{}] at (0,1) {};
+						
+						\draw (0,0) -- node [midway,fill=white] {3} (0.5,0.5) -- node [midway,fill=white] {1} (0,1) -- node [midway,fill=white] {2} (0,0);
+						\draw (0.5,0.5) to[out=-20,in=-90] (1,0.5) to[out=90,in=20] node [midway,fill=white] {4} (0.5,0.5);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+
+			\begin{proposition}
+				If $G$ is planar, then $G/e$ is planar.
+			\end{proposition}
+			
+			Our goal is to 5-color a planar graph. We can do this by taking a graph with five vertices, removing a vertex, applying colors, then adding back the vertex that we removed.
+			
+			\begin{ex}
+				We're going to 5-color the following graph.
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (0,2) {};
+						\node [dot={0}{}] at (2,2) {};
+						
+						\draw (0,0) -- (1,1) -- (2,2);
+						\draw (0,2) -- (1,1) -- (2,0);
+					\end{tikzpicture}
+				\end{center}
+				
+				First, we'll remove the vertex in the middle and color the remaining vertices:
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{3}] at (0,0) {};
+						\node [dot={0}{4}] at (2,0) {};
+						\node [dot={0}{1}] at (0,2) {};
+						\node [dot={0}{2}] at (2,2) {};
+					\end{tikzpicture}
+				\end{center}
+				
+				Then, we'll put the middle vertex back and give it the remaining color:
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{3}] at (0,0) {};
+						\node [dot={0}{4}] at (2,0) {};
+						\node [dot={0}{5}] at (1,1) {};
+						\node [dot={0}{1}] at (0,2) {};
+						\node [dot={0}{2}] at (2,2) {};
+						
+						\draw (0,0) -- (1,1) -- (2,2);
+						\draw (0,2) -- (1,1) -- (2,0);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+			
+			\begin{ex}
+				Let's now look at a slightly more complex graph \textendash{} a graph with six vertices.
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (0,2) {};
+						\node [dot={0}{}] at (2,2) {};
+						\node [dot={0}{}] at (2,1) {};
+						
+						\draw [red, ultra thick] (0,2) -- (1,1) -- (2,1);
+						\draw (0,0) -- (1,1) -- (2,2);
+						\draw (0,2) -- (1,1) -- (2,0);
+						\draw (1,1) -- (2,1);
+					\end{tikzpicture}
+				\end{center}
+				
+				We're going to contract the edges indicated in red, and then assign colors to the remaining vertices.
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{3}] at (0,0) {};
+						\node [dot={0}{2}] at (2,0) {};
+						\node [dot={0}{4}] at (1,1) {};
+						\node [dot={0}{1}] at (2,2) {};
+						
+						\draw (0,0) -- (1,1) -- (2,2);
+						\draw (1,1) -- (2,0);
+					\end{tikzpicture}
+				\end{center}
+				
+				Finally, let's uncontract and assign a color to the re-introduced vertices.
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{3}] at (0,0) {};
+						\node [dot={0}{2}] at (2,0) {};
+						\node [dot={90}{5}] at (1,1) {};
+						\node [dot={0}{4}] at (0,2) {};
+						\node [dot={0}{1}] at (2,2) {};
+						\node [dot={0}{4}] at (2,1) {};
+				
+						\draw [red, ultra thick] (0,2) -- (1,1) -- (2,1);
+						\draw (0,0) -- (1,1) -- (2,2);
+						\draw (0,2) -- (1,1) -- (2,0);
+						\draw (1,1) -- (2,1);
+					\end{tikzpicture}
+				\end{center}
+				
+				Note that in this example, it could've been possible for a loop to be created, if the two endpoints of the red path had an edge.
+			\end{ex}
+			
+			We know there must exist a pair of vertices that do not have an edge between them. Otherwise, we'd have $K_5$, but we were told the graph is planar.
+			\\ \\
+			Let's now prove the five color theorem.
+			
+			\begin{proof}
+				Let $G = (V, E)$ be a simple planar graph. By induction on $k = |V|$:
+				\\ \\
+				\underline{Base case}: $|V| = k = 1$. You can color this vertex any color.
+				\\ \\
+				Assume for $k \ge 2$ that every simple planar graph with $\le k - 1$ vertices is 5-colorable.
+				\\ \\
+				\underline{Case 1} (there exists a vertex of degree $\le 4$):
+				\\ \\
+				Let $H = G \backslash v$ be the graph obtained by deleting $v$ from $G$. Note that $H$ is a simple planar graph. By induction, there exists a 5-coloring of $H$.
+				\\ \\
+				Since $\deg(v) \le 5$, one color, say $c$, does not appear among the vertices adjacent to $v$. Pick color $c$ for $v$.
+				\\ \\
+				Otherwise, for all $v \in V$, $\deg(v) \ge 5$. By lemma, we have Case 2.
+				\\ \\
+				\underline{Case 2} (there exists $v \in V$ with $\deg(v) = 5$):
+				\\ \\
+				We claim that there exists $a, b \in V$, adjacent to $v$, such that $a, b$ are not adjacent (otherwise, $G$ contains $K_5$, so $G$ would not be planar).
+				\\ \\
+				Let $H = (G/av)/vb$. Because of our claim, $H$ has no loop. By induction, there exists a 5-coloring of $H$.
+				\\ \\
+				Extend the coloring of $H$ to $G$ such that vertices $a, b$ of $G$ are assigned the same color as the vertex $a = b = v$ in $H$.
+				\\ \\
+				Thus, we have colored all vertices of $G$ except $v$, and the same color appears twice among the neighbors of $v$. We can pick color $c$, unused among the neighbors of $v$, to color $v$.
+			\end{proof}
+
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
