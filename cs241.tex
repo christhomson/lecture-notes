@@ -3595,7 +3595,7 @@
 				\\ \\
 				Let's look at Code(lvalue $\to$ ID). We know that variables are just offsets in the stackframe. We can get the offset of the ID from the symbol table. We need the \emph{address} of that location, though. So, we get Code(lvalue $\to$ ID) =
 				\begin{verbatim}
-				list $3
+				lis $3
 				.word offset(ID)
 				add $3, $3, $29
 				\end{verbatim}
