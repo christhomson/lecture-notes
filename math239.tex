@@ -4376,7 +4376,176 @@
 		Our goal for the remainder of the course: we want to find an algorithm to produce a matching with as many edges as possible. That's a tough goal, so well restrict ourselves to finding a maximum matching in bipartite graphs only.
 		\\ \\
 		Ideally, the algorithm will be fast and easily verifiable. We need to be able to quickly produce a result, and we need to be able to easily convince someone that it is indeed a \emph{maximum} matching.
+		
+		\begin{ex} \lecture{March 27, 2013}
+			Find a maximum matching (a matching with as many edges as possible) for the following graph.
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={0}{}] at (0,1) {};
+					\node [dot={0}{}] at (1,0) {};
+					\node [dot={0}{}] at (1,2) {};
+					\node [dot={0}{}] at (3,0) {};
+					\node [dot={0}{}] at (3,2) {};
+					\node [dot={0}{}] at (4,1) {};
+					
 
+					\draw[green, ultra thick] (0,1) -- (1,2);
+					\draw[green, ultra thick] (1,0) -- (3,0);
+					\draw[green, ultra thick] (3,2) -- (4,1);
+					\draw (0,1) -- (1,0) -- (1,2);
+					\draw (3,2) -- (3,0) -- (4,1);
+					\draw[red, thin] (1,0) -- (3,0);
+					\draw[red, thin] (1,2) -- (3,2);
+				\end{tikzpicture}
+			\end{center}
+			
+			(The bottom-center edge is both green and red.)
+
+			The red edges represent a matching that is not maximum. The green edges represent a maximum matching, as required.
+		\end{ex}
+		
+		\subsection{Application: co-op}
+			Let $A$ be a set of applicants, and let $J$ be a set of jobs. For all $a \in A$ and $j \in J$, we know if applicant $a$ is qualified for job $j$.
+			\\ \\
+			Suppose $A = \set{\text{alice}, \text{bob}, \text{carol}}$ and $J = \set{1, 2, 3, 4}$. We also have that:
+			\begin{itemize}
+				\item Alice is qualified for jobs 1 and 3.
+				\item Bob is qualified for jobs 2 and 4.
+				\item Carol is qualified for jobs 1, 2, and 4.
+			\end{itemize}
+			
+			We want to assign applicants to jobs such that:
+			\begin{itemize}
+				\item No applicant is assigned two or more jobs.
+				\item No job is assigned two or more applicants.
+			\end{itemize}
+			
+			We want to represent this as a graph problem. Note that it's a bipartite graph, as illustrated here:
+			
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [gdot={180}{carol}] at (0,0) {};
+					\node [gdot={180}{bob}] at (0,1) {};
+					\node [gdot={180}{alice}] at (0,2) {};
+					
+					\node [rdot={0}{4}] at (1,0) {};
+					\node [rdot={0}{3}] at (1,1) {};
+					\node [rdot={0}{2}] at (1,2) {};
+					\node [rdot={0}{1}] at (1,3) {};
+					
+					\draw (0,0) -- (1,0) -- (0,1) -- (1,2) -- (0,0);
+					\draw (0,0) -- (1,3) -- (0,2) -- (1,1);
+				\end{tikzpicture}
+			\end{center}
+
+			The edges represent all cases where a particular applicant is considered to be qualified for a job. The vertices are partitioned into applicants and jobs.
+			\\ \\
+			We want to assign as many applicants to jobs as possible. That's equivalent to saying we want to find a maximum matching.
+			
+			\subsection{Saturation}
+				In order for us to move on, we need a few definitions.
+				\begin{defn}
+					Let $G$ be a graph with matching $M$. Vertex $v$ is \textbf{saturated} if $v$ is the endpoint of an edge of $M$.
+				\end{defn}
+				
+				\begin{ex}
+					Consider the following matching $M$, illustrated as green edges:
+					\begin{center}
+						\begin{tikzpicture}[scale=1.5]
+							\node [dot={0}{}] at (0,0) {};
+							\node [gdot={0}{}] at (0,1) {};
+							\node [gdot={0}{}] at (2,0) {};
+							\node [gdot={0}{}] at (1,0) {};
+							\node [gdot={0}{}] at (1,1) {};
+							\node [dot={0}{}] at (2,1) {};
+						
+							\draw[color=green] (0,1) -- (1,1);
+							\draw[color=green] (1,0) -- (2,0);
+							\draw (0,1) -- (0,0) -- (1,0) -- (1,1) -- (2,1) -- (2,0);
+						\end{tikzpicture}
+					\end{center}
+				
+					The green vertices are saturated.
+				\end{ex}
+				
+				Note that choosing a different matching may give you a different set of saturated vertices.
+				
+				\begin{defn}
+					A matching is \textbf{perfect} is every vertex is saturated.
+				\end{defn}
+				
+				\begin{ex}
+					The following matching is perfect:
+					\begin{center}
+						\begin{tikzpicture}[scale=1.5]
+							\node [dot={0}{}] at (0,1) {};
+							\node [dot={0}{}] at (1,0) {};
+							\node [dot={0}{}] at (1,2) {};
+							\node [dot={0}{}] at (3,0) {};
+							\node [dot={0}{}] at (3,2) {};
+							\node [dot={0}{}] at (4,1) {};
+					
+
+							\draw[green, ultra thick] (0,1) -- (1,2);
+							\draw[green, ultra thick] (1,0) -- (3,0);
+							\draw[green, ultra thick] (3,2) -- (4,1);
+							\draw (0,1) -- (1,0) -- (1,2);
+							\draw (3,2) -- (3,0) -- (4,1);
+							\draw (1,2) -- (3,2);
+						\end{tikzpicture}
+					\end{center}
+				\end{ex}
+				
+				Suppose you're given $K_{n,m}$ (a complete bipartite graph). How many perfect matchings are there? Well, we have two cases:
+				\begin{enumerate}
+					\item $n \ne m$. Zero perfect matchings exist. One vertex will not have any corresponding vertex in the other partition.
+					\item $n = m$. $n!$ perfect matchings exist. For the first vertex, we have $n$ choices, $n-1$ choices for the second vertex, and so on.
+				\end{enumerate}
+				
+				Writing down every matching to determine a maximum matching is probably not a great idea. Factorials become large very quickly.
+				\\ \\
+				We want to know how to make a matching bigger. Consider this graph:
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={180}{s}] at (0,1) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (1,2) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (2,2) {};
+						\node [dot={0}{}] at (3,0) {};
+						\node [dot={0}{}] at (3,2) {};
+						\node [dot={0}{}] at (4,0) {};
+						\node [dot={0}{}] at (4,2) {};
+						\node [dot={0}{t}] at (5,1) {};
+				
+						\draw (0,1) -- (1,0) -- (1,2);
+						\draw (2,0) -- (3,0) -- (3,2);
+						\draw (4,2) -- (4,0) -- (5,1);
+						\draw (2,0) -- (2,2);
+						\draw[color=green,ultra thick] (0,1) -- (1,2);
+						\draw[color=green,ultra thick] (2,2) -- (3,2);
+						\draw[color=green,ultra thick] (3,0) -- (4,0);
+						\draw[color=green,ultra thick] (4,2) -- (5,1);
+						\draw[color=red,ultra thick] (1,0) -- (2,0);
+						\draw[color=red,ultra thick] (1,2) -- (2,2);
+						\draw[color=red, thick] (3,0) -- (4,0);
+						\draw[color=red,ultra thick] (3,2) -- (4,2);
+					\end{tikzpicture}
+				\end{center}
+				
+				In this graph, the red edges are a smaller, non-perfect matching, and the green edges represent a perfect matching.
+				\\ \\
+				To get a larger matching, we need to remove something and add something \textendash{} we can't just add an edge. In the red path, the first and last edges are not in the matching, and they're alternating. We can just shift our matching over to add that additional edge (which is what the green matching represents). This will result in matching that is larger by one edge.
+				
+				\begin{defn}
+					Let $G$ be a graph with matching $M$, and let $P = e_1, e_2, \ldots, e_k$ be a path between vertices $s$ and $t$. $P$ is \textbf{alternating} if for all $i = 1, \ldots, k - 1$, exactly one of $e_i, e_{i + 1}$ is in $M$.
+				\end{defn}
+				
+				\begin{defn}
+					$P$ is \textbf{augmenting} if it is alternating and $s$ and $t$ are unsaturated.
+				\end{defn}
+				
+				\textbf{Remark}: let $G$ be a graph, and let $M$ be a matching of $G$. Let $P$ be an augmenting path. Let $M' = M \Delta P$ (where $M \Delta P = (M \cup P) \backslash (M \cap P)$). Then $M'$ is a matching and $|M'| = |M| + 1$.
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
@@ -4463,10 +4632,14 @@
 				\end{center}
 
 				$W$ is a walk but not a cycle nor a path.
+				
 			\item \lecture{March 15, 2013}
 				Let $T$ be a tree with 123 vertices. How many bridges does it have? 122, since no edge is in a cycle in a tree, and the number of edges is equal to the number of vertices minus one (in a tree).
+			
 			\item Let $G$ be a graph with $p$ vertices and $q$ edges. Suppose $G$ has 17 components and no cycles. Then $q = p + 17$. Each of the 17 components is a tree, and every tree has one more vertex than edges.
+			
 			\item Let $G$ be a bipartite graph with partitions $X, Y$. Suppose $G$ is $k \ge 1$ regular. Is $|X| = |Y|$ true? Yes, always, since $|X|k$ is equal to the number of edges, which equals $|Y|k$.
+			
 			\item Is the following graph $G$ planar?
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
@@ -4496,6 +4669,7 @@
 						\draw (-0.5,-0.5) to[out=310,in=210] (1,0) to[out=30,in=-30] (1.25,1.25) to[out=120,in=60] (0,1);
 					\end{tikzpicture}
 				\end{center}
+			
 			\item Consider the following graph:
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
@@ -4513,6 +4687,127 @@
 				\end{center}
 
 				What is the boundary walk for $F$? 7, 8, 8, 2, 1, 6. (Note that 8 is included twice.)
+			
 			\item Can 2, 2, 3, 3, 4, 4, 5, 6 be the degree sequence for the faces of a planar embedding? No. There must be an even number of odd faces.
+			
+			\item \lecture{March 27, 2013}
+			Is the following graph planar?
+				\begin{center}
+					\begin{tikzpicture}
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (3,0) {};
+						\node [dot={0}{}] at (0,3) {};
+						\node [dot={0}{}] at (4,3) {};
+						\node [dot={0}{}] at (2,4) {};
+						\node [dot={0}{}] at (0,4) {};
+						
+						\draw (1,0) -- (3,0) -- (4,3) -- (2,4) -- (0,3) -- (1,0);
+						\draw (1,0) -- (2,4) -- (3,0) -- (0,3) -- (4,3) -- (1,0);
+						\draw (0,3) -- (0,4) -- (2,4);
+					\end{tikzpicture}
+				\end{center}
+
+				No. There is a subdivision of $K_5$ in this graph, which makes it non-planar.
+			
+			\item What is the minimum number of colors needed to color this graph (not shown here)? Four, because this was contained within the graph:		
+				\begin{center}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (1,2) {};
+
+						\draw (0,0) -- (1,2) {};
+						\draw (1,2) -- (2,0) {};
+						\draw (0,0) -- (2,0) {};
+						\draw (0,0) -- (1,1) {};
+						\draw (1,1) -- (1,2) {};
+						\draw (1,1) -- (2,0) {};
+					\end{tikzpicture}
+				\end{center}
+			
+			\item Do the following embeddings have the same duals?
+				\begin{center}
+					\begin{tikzpicture}[scale=2.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (1.75,1.5) {};
+						\node [dot={0}{}] at (0.75,0.75) {};
+						
+						\draw (0,0) -- node [midway,fill=white] {1} (0,1) -- node [midway,fill=white] {2} (1.75, 1.5) -- node [midway,fill=white] {4}  (0.75,0.75) -- node [midway,fill=white] {7} (1,0) -- node [midway,fill=white] {6} (0,0);
+						\draw (1,0) -- node [midway,fill=white] {3} (0,1);
+						\draw (1,0) -- node [midway,fill=white] {5} (1.75,1.5);
+					\end{tikzpicture}
+					\begin{tikzpicture}[scale=2.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (1.75,1.5) {};
+						\node [dot={0}{}] at (2,0.33) {};
+						
+						\draw (0,0) -- node [midway,fill=white] {1} (0,1) -- node [midway,fill=white] {2} (1.75, 1.5) -- node [midway,fill=white] {4}  (2,0.33) -- node [midway,fill=white] {7} (1,0) -- node [midway,fill=white] {6} (0,0);
+						\draw (1,0) -- node [midway,fill=white] {3} (0,1);
+						\draw (1,0) -- node [midway,fill=white] {5} (1.75,1.5);
+					\end{tikzpicture}
+				\end{center}
+				
+				No. There are no boundary walks of length five in the first graph, but there are in the second. The planar duals are not the same. Note that the dual is of the \emph{drawing}, not of the graph itself.
+		
+			\item How many faces does a connected planar graph with 30 vertices and 100 edges have? By Euler's formula, $p - q + f 2$, we get that $f = 2 - p + q = 2 - 30 + 100 = 72$.
+		
+			\item What is the minimum number of edges you need to remove from this graph to make it planar?
+			
+			\begin{center}
+				\begin{tikzpicture}[scale=3]
+					\node [dot={0}{}] at (0,1) {};
+					\node [dot={0}{}] at (1,0) {};
+					\node [dot={0}{}] at (2,1) {};
+					\node [dot={0}{}] at (0.75,0.5) {};
+					\node [dot={0}{}] at (1.25,0.5) {};
+					\node [dot={0}{}] at (1,0.90) {};
+					
+					\draw (0,1) -- (1,0) -- (2,1) -- (0.75,0.5) -- (1.25,0.5) -- (1,0.9) -- (0.75,0.5);
+					\draw (2,1) -- (0,1) -- (1.25,0.5);
+					\draw (1,0) -- (1,0.9);
+					\draw (1,0) -- (0.75,0.5);
+					\draw (1,0) -- (1.25,0.5);
+					\draw (0,1) -- (0.75,0.5);
+					\draw (0,1) -- (1,0.9);
+					\draw (2,1) -- (1.25,0.5);
+					\draw (2,1) -- (1,0.9);
+				\end{tikzpicture}
+			\end{center}
+			
+			3. Note that the number of edges is $\binom{6}{2} = 15$. A planar graph with six vertices can only have $3 \cdot 6 - 6 = 12$ edges.
+			
+			\item Do the red edges in the following form a matching?
+			
+			\begin{center}
+				\begin{tikzpicture}[scale=2]
+					\node [dot={0}{}] at (0,0) {};
+					\node [dot={0}{}] at (1,0) {};
+					\node [dot={0}{}] at (2,0) {};
+					\node [dot={0}{}] at (4,0) {};
+					\node [dot={0}{}] at (0,1) {};
+					\node [dot={0}{}] at (1,1) {};
+					\node [dot={0}{}] at (2,1.5) {};
+					\node [dot={0}{}] at (3,0.75) {};
+					\node [dot={0}{}] at (0,2) {};
+					\node [dot={0}{}] at (4,2) {};
+					\node [dot={0}{}] at (4,0) {};
+					
+					\draw[color=red, ultra thick] (0,0) -- (0,1);
+					\draw[color=red, ultra thick] (0,2) -- (1,1);
+					\draw[color=red, ultra thick] (2,1.5) -- (2,0);
+					\draw[color=red, ultra thick] (4,0) -- (3,0.75);
+					\draw (0,1) -- (0,2) -- (4,2) -- (4,0) -- (0,0);
+					\draw (0,0) -- (1,1) -- (0,1);
+					\draw (1,0) -- (1,1) -- (2,1.5) -- (4,2) -- (3,0.75) -- (2,0);
+					\draw (0,2) -- (2,1.5);
+				\end{tikzpicture}
+			\end{center}
+			
+			Yes.
 		\end{itemize}
 \end{document}
