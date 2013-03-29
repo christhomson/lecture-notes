@@ -1605,7 +1605,7 @@
 		Speaking of the birthday paradox, buying baseball cards is a sort of reverse birthday paradox. The card company wants you to get many duplicates, so you'll keep buying more cards until you're lucky enough to get one of every card. That'll take $n^2$ cards (in the expected case) to get a full deck of $n$ unique cards.
 
 		\subsection{Collision Resolution Strategies}
-			\subsubsection{Seperate Chaining}
+			\subsubsection{Separate Chaining}
 				The table contains $n$ pointers, each pointing to an unsorted linked list.
 				\\ \\
 				When you want to insert a student whose hashed student ID is 5, you'll go to the 5th pointer and set the linked list element. If another student with the same hashed ID is inserted, you append that student to the linked list pointed to by the 5th pointer. In practice, the new student is usually prepended for simplicity \textendash{} to avoid walking down the list unnecessarily.
@@ -2425,7 +2425,7 @@
 				\end{ex}
 
 				The last occurrence function can be computed in $O(m + |\Sigma|)$ time. In practice, we store the mapping $L$ in an array of size $|\Sigma|$.
-
+				\\ \\
 				Similarly, we have a \textbf{suffix skip array}, which also preprocesses $P$ to build a table. It's similar to the failure array of the KMP algorithm, but with an extra condition.
 				\begin{defn}
 					The \textbf{suffix size array} $S$ of size $m$ is the array of $S[i]$ (for $0 \le i < m$) such that $S[i]$ is the largest index $j$ such that $P[i + 1..m - 1] = P[j + 1..j+ m - 1 - i]$ and $P[j] \ne P[i]$.
@@ -2492,4 +2492,93 @@
 						Extra space: & & $O(m)$ & $O(m + |\Sigma|)$ & $O(n)$ \\ \hline
 					\end{tabular}
 				\end{center}
+
+			\subsubsection{Review of Tries and Suffix Trees/Tries} \lecture{March 26, 2013}
+				A \textbf{trie} is an implementation of the dictionary abstract data type over words (text). Branches in the tree are based on characters in the word. In a trie, these characters appear in alphabetical order.
+				\\ \\
+				Searching does not compare keys. We know which direction to follow based on the next character in the string we're looking for.
+				\\ \\
+				Peter Weiner came up with the idea of a suffix tree. He first came up with a suffix trie, though. He was trying to solve the problem of pattern matching. He took the lazy approach of searching a long string through a trie.
+				\\ \\
+				Let's say our text is ``this is the long piece of text we are going to search.'' Then, we get the following suffixes:
+				\begin{align*}
+					S_{1:n} &= \text{this is the long piece of text we are going to search} \\
+					S_{2:n} &= \text{his is the long piece of text we are going to search} \\
+					S_{3:n} &= \text{is is the long piece of text we are going to search} \\
+					\vdots& \\
+					S_{n:n} &= \epsilon
+				\end{align*}
+				
+				We insert all of the suffixes into a trie, then we can easily search for a prefix of one of those suffixes. There was a problem, however: it was consuming too much memory. A string of length $n$ requires $\Theta(n^2)$ space for the tree, which isn't good.
+				\\ \\
+				There's $n$ leaves at the bottom of the tree, so there must be many skinny paths in our tree. Let's try to compress it! Note that at this point in time, Patricia tries did not exist.
+				\\ \\
+				He created compressed tries, which had at most $2n$ nodes, and still $n$ leaves. The leaves each contained two pointers into the text: a beginning pointer and an end pointer. We label the edges with pointers to conserve space.
+				\\ \\
+				The first web search engine used suffix trees and Patricia tries, and they developed PAT tries as a result. A PAT trie is essentially a more condensed Patricia trie.
+				\\ \\
+				A \textbf{suffix tree} is compressed, and a \textbf{suffix trie} is uncompressed. Note that technically both of these are trees and they're both technically tries as well, but this is the naming convention we will use. Be careful.
+				\\ \\
+				For web searches, the searches takes as long as your pattern. If this wasn't the case, searching the web would've started to take longer as the web grew, which clearly wouldn't be acceptable.
+				\\ \\
+				If \emph{you} wanted to search the web using a suffix tree (or PAT trie), you could essentially just join all the webpages' texts into one string with URLs as markers to separate each webpage's text from one another.
+				\\ \\
+				If you're interested in seeing some examples of suffix trees, you should view this \href{http://www.cs.ucf.edu/~shzhang/Combio12/lec3.pdf}{presentation from the University of Central Florida}.
+				\\ \\
+				The KMP and Boyer-Moore algorithms are better for text that is constantly changing, whereas suffix trees are better for queries that are frequently distinct.
+	
+	\section{Compression}
+		We don't ever want to destroy data, but we often do because the cost of hard drives is greater than the perceived benefit of the information. If cost was not an issue, we would never delete any information.
+		\\ \\
+		We have \textbf{source text} $S$, which is the original data. We want to create \textbf{coded text} $C$, and we should be able to go between the two (by encoding or decoding). 
+		\\ \\
+		We measure the performance of compression by how much smaller the encoded version is. We measure this with the \textbf{compression ratio}:
+		\begin{align*}
+			\frac{|C| \cdot \lg |\Sigma_C|}{|S| \cdot \lg |\Sigma_S|}
+		\end{align*}
+		
+		There are two kinds of compression: lossy and lossless. Lossy compression gives us a better compression ratio at the expense of not being able to retrieve the exact source. Lossless compression is necessary when we want to be able to retrieve the exact original source text. Lossy compression is often used for images and audio files, where having a close-to-exact (but not precisely exact) version of the data is good enough.
+		
+		\subsection{Character Encodings}
+			Text can be mapped to binary through a character encoding, such as ASCII. ASCII assigns each letter/symbol a 7-bit value, although the actual encoding uses 8-bits (the 8th bit is ignored). ASCII is not good for non-English text, though.
+
+			\subsubsection{Morse Code}
+				The idea behind morse code is that letters could be represented as a dot and a dash, and that's it. It was developed out of the need to transmit words over a wire (telegraph).
+				\\ \\
+				On a telegraph, a dot would be a quick needle poke, and a dash would be a slightly longer poke. For example: ``SOS'' would be encoded as \textbullet \textbullet \textbullet{} -- -- -- \textbullet \textbullet \textbullet. This is fairly short because `S' and `O' are common letters. However, `Q' and `Z' are much less common so they would require longer strings of dots and dashes to represent them.
+				\\ \\
+				How can you differentiate between an `S' (three dots) and ``e e e'' (each one dot)? There's a pause between separate letters. This means that morse code is effectively a ternary code consisting of the alphabet containing a dot, a dash, and a pause.
+				\\ \\
+				ASCII does not need this separator because each 8-bits is another token. Morse code is a variable length code, but ASCII is not.
+				\\ \\
+				People have different ``accents'' in morse code. You can determine who's transmitting the code based on how they make pauses (length of pauses, etc.).
+				\\ \\
+				The initial solution was to use fixed length codes like ASCII or Unicode. However, we wanted to use variable length codes in order to allow for compression.
+				\begin{figure}
+					\Tree [.R [.e [.{\textbullet} [.{\textbullet} [.S ] ] ] ] ]
+				\end{figure}
+				
+				The ambiguity between three `e's and one `S' is caused because `e' is a prefix of `S', which means `e' is a subpath of the path of `S'. We don't know if we should stop at `e' or continue, when resolving the path. If we were to have a single code per path, there would be no confusion, which is why we use end-of-character markers (a pause) in morse code.
+				\\ \\
+				Similarly, we will put all of our letters into leaves, removing all choices, and eliminating the confusion. We can do this with morse code by adding those end-of-character markers.
+				\\ \\
+				We need \textbf{prefix-freeness}. ASCII gives us prefix-freeness because it is a fixed length code. Morse code has its end-of-character marker (a pause), which gives us prefix-freeness. Regardless, we need prefix-freeness to be a property of our code in some way or another.
+				\\ \\
+				UTF-8 is a variable length code as well, with the length being fixed based on the value of the first byte.
+
+				\begin{defn}
+					\textbf{Unambiguous codes} must be prefix-free, which means that there is a unique way to decode a string.
+				\end{defn}
+
+				\begin{theorem}
+					A code is unambiguous if and only if its code trie has the decode values as leaves.
+				\end{theorem}
+
+				Morse code assigned shorter codes for more common letters. ASCII uses 7-bits for both `e' and `z', but it'd be nice if `e' could have a shorter code because it is much more common. This is the concept of \textbf{character frequency}.
+				\\ \\
+				Could we use a computer to generate the optimal (most compressed, based on the frequency table) prefix-free tree? We'd determine the expected value for the number of coded characters needed, based on the frequencies being used as probabilities.
+				\\ \\
+				The na\"ive approach would be to try all possible codes. Huffman had a better idea, though. Look at the prefix tree you end up with!
+				\\ \\
+				Looking at the prefix tree, where do we expect to find `z'? Since we want `z' a longer encoding, we expect to find it at the very bottom of the tree. If we find it elsewhere, swap it into the bottom. `z' must have a sibling, and based on the frequencies, it must be `q'. Introduce the letter `qz' with the probability being the sum of the probabilities. Continue to do this swapping for all characters, based on their frequencies.
 \end{document}
