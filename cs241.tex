@@ -3785,12 +3785,134 @@
 		\\ \\
 		Alternatively, you could start the arena right after your program and start the stack at \$30, and use the first-come, first-serve approach.
 
-		\subsubsection{The Loaf of Bread Algorithm}
+		\subsection{The Loaf of Bread Algorithm}
 			The simplest algorithm for \verb+allocate(n)+ is what we will call the \textbf{loaf of bread algorithm}. It's simple: you just give out the memory in order. The chunks of memory you're allocating could potentially be chunks of different sizes.
 			\\ \\
 			With the loaf of bread algorithm, we can't implement \verb+free(p)+. All sales are final, so to speak.
 			\\ \\
-			If instead we wanted to implement the Walmart algorithm, we would need to find the most appropriate hole when we want to allocate some memory. What if there are many small holes but we need a large one? That is, the total amount of unused storage in your arena is large enough, but there's no continuous block of RAM available. This is known as \textbf{fragmentation}.
+			If instead we wanted to implement the Walmart algorithm, we would need to find the most appropriate hole when we want to allocate some memory. What if there are many small holes but we need a large one? That is, the total amount of unused storage in your arena is large enough, but there's no continuous block of RAM available. This is known as \textbf{fragmentation}. \lecture{March 27, 2013}
+		
+			In the simple case, \verb+alloc()+ will allocate $k$ words, where typically $k = 2$. In Lisp or Scheme, \verb+alloc()+ is written as \verb+(cons a b)+. A \verb+cons+ statement allocates two spaces in memory (\verb+first+/\verb+rest+, also known as \verb+car+/\verb+cdr+).
+			\\ \\
+			We could create an arena where we have two pointers: a \verb+bread+ pointer (the next slice of bread comes from where the \verb+bread+ pointer is pointing to), and an \verb+end+ pointer. The slice of bread algorithm for \verb+alloc()+ is as follows.
 
+			\begin{algorithm}[H]
+				\uIf{bread < end}{
+					tmp = bread\;
+					bread++\;
+					\Return{tmp}
+				}
+				\Else{fail}
+			\end{algorithm}
 
+			This algorithm is a bit hostile because it completely ignores \verb+free+s. Storage is never reclaimed.
+		
+		\subsection{Available Space List}
+			The available space list technique involves building up an array of elements that represent available blocks of memory, split into fixed-size pieces. Each block points to the next one, and we also have three pointers. The \verb+avail+ pointer points to the next available piece of memory. We also have \verb+tmp+ and \verb+i+ pointers, pointing to the end of our list.
+			\\ \\
+			\verb+init()+ runs in $O(N)$ time, where $N$ is the size of the arena (which is quite slow). It follows this algorithm:
+
+			\begin{algorithm}[H]
+				next(1st area) = NULL\;
+				\For{i = arena; i < end; i++}{
+					next(i-th area) = avail\;
+					avail = i-th area\;
+				}
+			\end{algorithm}
+
+			\verb+alloc()+ runs in constant $O(1)$ time by following this algorithm:
+
+			\begin{algorithm}[H]
+				\uIf{avail $\ne$ NULL}{
+					tmp = avail\;
+					avail = next(avail)\;
+					\Return{tmp}
+				}
+				\Else{fail}
+			\end{algorithm}
+
+			\verb+free(p)+ trivially runs in constant $O(1)$ time by following this algorithm:
+			
+			\begin{algorithm}[H]
+				next(p) = avail\;
+				avail = p\;
+			\end{algorithm}
+
+			This is all pretty nice, except for \verb+init+. We could take a hybrid approach to make \verb+init+ faster while maintaining the runtimes of the other operations.
+
+		\subsection{Hybrid Loaf of Bread and Available Space List}
+			We introduce a \verb+bread+ pointer into our available space list, with it initially being set to the beginning of the arena (the first element).
+			\\ \\
+			\verb+init()+ now follows this algorithm, which runs in constant $O(1)$ time:
+
+			\begin{algorithm}[H]
+				bread = arena\;
+				avail = NULL\;
+			\end{algorithm}
+
+			\verb+alloc()+ now follows this algorithm, which also runs in constant $O(1)$ time (as before):
+			
+			\begin{algorithm}[H]
+				\uIf{avail $\ne$ NULL}{
+					tmp = avail\;
+					avail = next(avail)\;
+					\Return{tmp}
+				}
+				\uElseIf{bread < end}{
+					tmp = bread\;
+					bread++\;
+					\Return{tmp}
+				}
+				\Else{fail}
+			\end{algorithm}
+
+			\verb+free(p)+ operates identically to before, in constant $O(1)$ time:
+
+			\begin{algorithm}[H]
+				next(p) = avail\;
+				avail = p\;
+			\end{algorithm}
+
+			This entire algorithm runs in constant time! However, it's important to remember that this algorithm only works for allocations of fixed size.
+		
+		\subsection{Implicit Freedom}
+			Modern languages that aren't archaic all have implicit \verb+free+. How does that work?
+			\\ \\
+			\underline{Key}: find unreferenced storage units (areas that are not pointed to by anyone). We could instead find all of the referenced units, which might be easier.
+			\\ \\
+			We can use the stack frame (known variables) as \textbf{root pointers}. We can then find all \emph{reachable} units in the arena, and mark them.
+			\\ \\
+			How do we mark them, exactly? Observe that the last two bits in a pointer must be zero, because every pointer is a multiple of four. We can use these two bits for a sticky note (a ``taken?'' sticky note).
+			\\ \\
+			This is known as the \textbf{mark and sweep algorithm}.
+			\\ \\
+			Mark($n$) takes $O(n)$ time, where $n$ is the number of reachable units. Sweep($N$) takes $O(N)$ time, where $N$ is the size of the arena.
+			\\ \\
+			It would be nice if the runtime of this algorithm was proportional only to the memory we're \emph{actually} using, and not the entire arena.
+			\\ \\
+			The \emph{average} runtime of this is still $O(1)$, however. This is because we have a lot of really quick operations followed by one occasional \emph{huge} operation.
+			\\ \\
+			The mark and sweep algorithm is akin to the procrastination algorithm of letting dirty dishes pile up until there are no clean ones left. Better algorithms, such as those used in incremental garbage collectors, do one piece of the garbage collection (marking or sweeping) in each \verb+alloc()+, to distribute the longer time into all of the smaller $O(1)$ \verb+alloc()+ calls.
+			\\ \\
+			Garbage collection could also be concurrent. ``It's hard to buy a computer that doesn't have 16 cores these days. Let one of your cores be a garbage collector and clean up after you, like a maid or a mother.''
+
+		\subsection{Use Counts}
+			Another approach to garbage collection is \textbf{use counts}. We'll start by appending a use count to each piece of allocated storage.
+			\\ \\
+			In \verb+alloc()+, we set this use count to 1. When we assign a variable away from a piece of memory, we decrement the use count. When we assign a variable to a piece of memory, we increment its use count. Calls to \verb+delete+ will decrement this count.
+			\\ \\
+			There are two gotchas with this approach:
+			\begin{itemize}
+				\item We have to store use counts.
+				\item It doesn't work for cyclic structures. If we have a data structure that points to another data structure that points back to the first one, the use counts are both at 2, and then when we call \verb+delete+ they both become $1 \ne 0$, so they are not freed.
+			\end{itemize}
+
+			Use counts are still a perfectly valid idea in cases where we know we won't have cyclic data structures.
+
+		\subsection{Copying Collector}
+			As you're using a piece of memory, you copy all of it to a space dedicated for memory that's currently in use. Note that this has the consequence of only letting you effectively use half of the RAM available, maximum.
+			\\ \\
+			This copying is also relocating code. That might be tough in languages like C++ where memory addresses are part of the language. You could always convert pointers to integers, strings, or do other crazy things (like reverse the bits in a pointer), and the compiler will not be aware of that use.
+			\\ \\
+			Andrew Appel argued that instead of using the stack (which would involve a push and pop), just use \verb+alloc()+ instead. It's equivalent to just pushing onto the stack, and removes the need for the popping code.
 \end{document}
