@@ -2579,6 +2579,87 @@
 				Could we use a computer to generate the optimal (most compressed, based on the frequency table) prefix-free tree? We'd determine the expected value for the number of coded characters needed, based on the frequencies being used as probabilities.
 				\\ \\
 				The na\"ive approach would be to try all possible codes. Huffman had a better idea, though. Look at the prefix tree you end up with!
+
+			\subsubsection{Huffman Encoding}
+				Looking at the prefix tree, where do we expect to find `z'? Since we want `z' a longer encoding, we expect to find it at the very bottom of the tree. If we find it elsewhere, swap it into the bottom. `z' must have a sibling, and based on the frequencies, it must be `q'. Introduce the letter `qz' with the probability being the sum of the probabilities. Continue to do this swapping for all characters, based on their frequencies. \lecture{March 28, 2013}
 				\\ \\
-				Looking at the prefix tree, where do we expect to find `z'? Since we want `z' a longer encoding, we expect to find it at the very bottom of the tree. If we find it elsewhere, swap it into the bottom. `z' must have a sibling, and based on the frequencies, it must be `q'. Introduce the letter `qz' with the probability being the sum of the probabilities. Continue to do this swapping for all characters, based on their frequencies.
+				We could use a heap or a priority queue to give us quick access to the two elements with the lowest frequency. That'd help with rearranging the tree as necessary.
+				\\ \\
+				A Huffman tree can be built using two passes. The first pass is needed to count the frequencies. Then, we form the heap between passes. Then, on the second pass, we compress the tree using the heap.
+				\\ \\
+				In your heap, you'll have a set of records containing the frequency and a pointer to the subtrees of each element. The heap contains a \textbf{forest} (a collection of trees). The key is the frequency and the payload is the pointer to the tree.
+				\\ \\
+				You can have more than one ``optimal'' Huffman tree. Ties can occur, or at any merge the order of the two lowest frequencies can be swapped.
+				\\ \\
+				Huffman's technique is only worth it if you have a larger text, such that transmitting the dictionary is not a big deal (that is, ensure the size of the dictionary is appropriate relative to the size of the text).
+				\\ \\
+				Decoding a Huffman-encoded text is faster than encoding. It's asymmetric.
+				\\ \\
+				Many people believe the theorem that ``Huffman codes are optimal.'' This is not the case. The correct theorem is as follows.
+
+				\begin{theorem}
+					Among all static prefix-free codes that map a single character in the alphabet to a single character in the code, Huffman is best.
+				\end{theorem}
+
+				If we don't encode one letter at a time, we can do better.
+			
+			\subsubsection{Lempel-Ziv}
+				The main idea behind Lempel-Ziv is that each character in the coded text either refers to a single character in the alphabet, or a substring that both the encoder and decoder have already seen.
+				\\ \\
+				Lempel-Ziv comes in two variants, each with many derivatives. We're interested in looking at LZW, which a derivative of the improved variant that is used in \verb+compress+ and in the GIF image format.
+				\\ \\
+				Lempel-Ziv has one other claim to fame: it was the first algorithm to be patented. GIF had to pay royalties to use the algorithm.
+				\\ \\
+				LZW is a fixed-width encoding with $k$ bits, storing the decoding dictionary with $2^k$ entries. The first $|\Sigma_S|$ entries are for single characters and the rest involve multiple characters (substrings).
+				\\ \\
+				After encoding or decoding a substring $y$ of $S$, we add $xc$ to our dictionary where $x$ is the previously encoded/decoded substring of $S$, and $c$ is the first character of $y$. We start adding to our dictionary after the second substring of $S$ is encoded or decoded.
+				\\ \\
+				LZW is advantageous because we didn't want to make two passes, because at the time, large bodies of text would have to be stored on tapes. Tapes required manually rewinding, in some cases, which was costly.
+				\\ \\
+				What happens when we run out of space in our dictionary for codes? We could either stop building the table, start again from scratch, or remove \emph{some} elements, according to their frequencies.
+				\\ \\
+				The frequency of letters can change over the text, especially if the text has multiple authors.
+				\\ \\
+				The algorithm for LZW encoding is as follows. \\
+				\begin{algorithm}[H]
+					$w$ = nil\;
+					\While{(loop)}{
+						read a character $k$\;
+						\uIf{$wk$ exists in the dictionary}{
+							$w$ = $wk$\;
+						}
+						\Else{
+								output the code for $w$\;
+								add $wk$ to the dictionary\;
+								$w = k$\;
+						}
+					}
+				\end{algorithm}
+				
+				To decompress the text, we \emph{could} be given a copy of the dictionary, like with the Huffman approach. However, we don't actually need to. The decompression algorithm starts off like the encoder and builds up the dictionary itself.
+				\\ \\
+				The decompressor adds the characters to its dictionary first, just like the encoder. The decompressor then performs the rest of the algorithm just like the encoder did to build up its dictionary.
+				\\ \\
+				The full decompression algorithm is as follows. \\
+				\begin{algorithm}[H]
+					read a character $k$\;
+					output $k$\;
+					$w = k$\;
+					\While{(loop)}{
+						read a character $k$\;
+						entry = dictionary entry for $k$\;
+						output entry\;
+						add $w$ + the first character of the entry, to the dictionary\;
+						$w$ = entry\;
+					}
+				\end{algorithm}
+				
+				If you'd like to see LZW in action, you should try out \href{http://www.cs.sfu.ca/CourseCentral/365/li/squeeze/LZW.html}{the applet on this page from Simon Fraser University}.
+				\\ \\
+				Mark Nelson discovered a rare case where this does not work. The case fails in that the decoder attempts to decode a code that is not yet in its dictionary. It occurs with a repeated string like ``thethe''. It only happens with repetition, so you just roll back and output the code for the repeated string. You can read more about this on \href{http://marknelson.us/1989/10/01/lzw-data-compression/}{Mark Nelson's site, under ``The Catch''}.
+				\\ \\
+				Straightforward LZW compresses down to 40\% of the original size. A highly optimized LZW algorithm can get it down to 30\%. Improvements to LZW are very small, incremental improvements.
+
+			\subsubsection{Burrows-Wheeler Transform}
+				Straightforward Burrows-Wheeler Transform got it down to 29\% of the original size, on their first try. ``It works like by magic.'' It works by shifting the string cyclically, sorting alphabetically, and then extracting the last characters from the sorted shifts. The resulting string has lots of compression, which makes it easy to compress. You can reconstruct the entire text from that smaller string.
 \end{document}
