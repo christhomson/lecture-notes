@@ -3202,7 +3202,7 @@
 			.word 4
 			lis $3  ;; expr -> term -> factor -> NUM (1) subtree
 			.word 1 
-			sub $3, -4($30)
+			sw $3, -4($30)
 			sub $30, $30, $4
 			lis $5 ;; term -> factor -> NUM (2) subtree
 			.word 2
