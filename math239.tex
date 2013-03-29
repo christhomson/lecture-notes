@@ -4265,6 +4265,117 @@
 				\\ \\
 				Thus, we have colored all vertices of $G$ except $v$, and the same color appears twice among the neighbors of $v$. We can pick color $c$, unused among the neighbors of $v$, to color $v$.
 			\end{proof}
+		
+			\subsection{Dual Graphs} \lecture{March 25, 2013}
+			Whenever you find a planar graph, you actually find two. You get two planar graphs for the price of one!
+			\begin{ex}
+				Here's a planar graph, and its dual.
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (3,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (3,1) {};
+						\node [dot={0}{}] at (0,2) {};
+						\node [dot={0}{}] at (3,2) {};
+						
+						% dual graph:
+						\node [gdot={0}{}] at (-1, 1) {};
+						\node [gdot={0}{}] at (1.5,0.5) {};
+						\node [gdot={0}{}] at (1.5,1.5) {};
+						\node [gdot={0}{}] at (1.5,2.5) {};
+						\node [gdot={0}{}] at (4, 1) {};
+						
+						\draw (0,0) -- (3,0) -- (3,2) -- (0,2) -- (0,0);
+						\draw (0,1) -- (3,1);
+						\draw (0,0) to[out=150,in=210] (0,2);
+						\draw (3,0) to[out=30,in=-30] (3,2);
+						\draw[color=green] (-1,1) to[out=-30,in=180] (1.5,0.5) to[out=0,in=210] (4,1) to[out=150,in=0] (1.5,1.5) to[out=180,in=30] (-1, 1);
+						\draw[color=green] (1.5,1.5) -- (1.5,2.5);
+						\draw[color=green] (-1,1) to[out=80,in=180] (1.5,2.5) to[out=0,in=100] (4,1);
+						\draw[color=green] (1.5,0.5) to[out=240,in=-90] (-2,1) to[out=90,in=180] (1.5,2.5);
+					\end{tikzpicture}
+				\end{center}
+				
+				Here, we started with five faces, and created one new vertex per face (including the infinite face). The faces in the original planar graph correspond to vertices in the dual (indicated as the green graph, above). For each edge in the boundary walk of each face, draw an edge between the two faces. We call this second graph the dual graph.
+			\end{ex}
+
+			If we had a bridge in our original graph, we could create an edge with both endpoints being the same, but the edge would have to cross the bridge visually. That is, we make an edge that is a loop.
+
+			\begin{defn}
+				Let $G = (V, E)$ be a graph with a planar embedding and faces $F_1, F_2, \ldots, F_f$. The \textbf{dual graph} $G^\star$ is the graph where:
+				\begin{itemize}
+					\item Vertices of $G^\star$ are $F_1, F_2, \ldots, F_f$.
+					\item If $e$ is in the boundary of $F_i, F_j$ in $G$, then $e$ is joining $F_i, F_j$ in $G^\star$.
+					\item If $e$ appears twice in the boundary walk $F_j$ in $G$, then $e$ is a loop of $G^\star$ with endpoints $F_j$.
+				\end{itemize}
+			\end{defn}
+
+			We're only going to define dual graphs for connected graphs, just so we don't have to worry about messy edge cases.
+
+			\textbf{Remark}: $G^\star$ is planar, but $G^\star$ need not be simple even if $G$ is simple. Consider the case when $G$ is a triangle. Then $G^\star$ is one edge connecting the face with the infinite face, as well as two additional parallel edges, which prevents $G^\star$ from being simple. Or, if $G$ is just two vertices joined by an edge, $G^\star$ is just a single loop, which is not allowed in simple graphs.
+			\\ \\
+			Recall that if $G$ has a planar embedding, then:
+			\begin{align*}
+				\sum_{f \in \text{faces}} \deg(f) = 2q
+			\end{align*}
+
+			where $q$ is the number of edges of $G$. We will now provide an alternate proof of this using dual graphs.
+
+			\begin{proof}
+				Consider the graph $G^\star$. We have:
+				\begin{align*}
+					2q &= \sum_{v \in V(G^\star)} \deg(v) \text{by the handshake lemma} \\
+					&= \sum_{f \in \text{faces}(G)} \deg(f)
+				\end{align*}
+			\end{proof}
+
+			Note that $G^{\star \star} = G$, as long as the graph $G$ is connected.
+			\\ \\
+			How do colorings work with dual graphs? Let's look at the four color theorem, stated in a different way.
+			\begin{theorem}[Four Color Theorem \textendash{} Face Version]
+				Let $G$ be a graph with a planar embedding. Assume $G$ is connected and has no bridge. Then we can color the faces of $G$ with four colors such that any two faces sharing an edge are assigned distinct colors.
+			\end{theorem}
+
+			\begin{proof}
+				Let $G^\star$ be the dual of $G$. Since $G$ has no bridge, $G^\star$ has no loop. By the vertex version of the four color theorem, there exists a 4-coloring of the vertices of $G^\star$, which gives a 4-coloring of the faces of $G$.
+			\end{proof}
+
+			That's all we're going to discuss about planar graphs.
+	
+	\section{Matching}
+		We will assume graphs are simple for the rest of the course.
+		\begin{defn}
+			Let $G = (V, E)$ be a graph. The \textbf{matching} $M$ of $G$ is a subset of the edges such that no two edges of $M$ share an endpoint.
+		\end{defn}
+
+		It's trivial to see that $\emptyset$ is a matching, as is any single edge in the graph.
+
+		\begin{ex}
+			The highlighted edges in the following graph form a matching because no two edges share a vertex.
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node [dot={0}{}] at (0,0) {};
+					\node [dot={0}{}] at (4,0) {};
+					\node [dot={0}{}] at (0,2) {};
+					\node [dot={0}{}] at (4,2) {};
+					\node [dot={0}{}] at (1,1) {};
+					\node [dot={0}{}] at (3,1) {};
+
+					\draw[color=blue, ultra thick] (0,0) -- (1,1);
+					\draw[color=blue, ultra thick] (0,2) -- (4,2);
+					\draw[color=blue, ultra thick] (3,1) -- (4,0);
+					\draw (0,0) -- (4,0) -- (4,2) -- (0,2) -- (0,0);
+					\draw (0,0) -- (1,1) -- (0,2);
+					\draw (4,0) -- (3,1) -- (4,2);
+					\draw (1,1) -- (3,1);
+				\end{tikzpicture}
+			\end{center}
+		\end{ex}
+		
+		Our goal for the remainder of the course: we want to find an algorithm to produce a matching with as many edges as possible. That's a tough goal, so well restrict ourselves to finding a maximum matching in bipartite graphs only.
+		\\ \\
+		Ideally, the algorithm will be fast and easily verifiable. We need to be able to quickly produce a result, and we need to be able to easily convince someone that it is indeed a \emph{maximum} matching.
 
 	\newpage
 	\section*{Clicker Questions}
