@@ -3742,4 +3742,55 @@
 						sub $3, $11, $3
 						\end{verbatim}
 				\end{itemize}
+
+			\subsubsection{Dynamic Memory Allocation} \lecture{March 25, 2013}
+				We only have two WLPP grammar rules left to discuss:
+				\begin{align*}
+					\text{factor} &\to \text{NEW INT LBRACK expr RBRACK} \\
+					\text{statement} &\to \text{DELETE LBRACK RBRACK expr}
+				\end{align*}
+
+				You can download \verb+alloc.asm+ for use on the assignments. It contains procedures for \verb+new+ and \verb+delete+. You may want to optimize (rewrite) them for the bonus question.
+				\\ \\
+				\verb+alloc.asm+ implements three procedures:
+				\begin{itemize}
+					\item \verb+init+ initializes the allocation code. This must be called prior to any allocations or deletions.
+					\item \verb+new+ attempts to allocate $n$ words of storage, where $n = \$1$. It returns a pointer in \$3 if memory was allocated, or NULL otherwise.
+					\item \verb+delete+ marks the memory at the address given in \$1 as not needed. The procedure already knows how large the block of memory is. This essentially deletes a pointer that you had allocated earlier in your program.
+				\end{itemize}
+
+				``This is the Walmart approach to storage. You want to use it for awhile, so you go, you buy it. Then when you're tired of it, you tape it up again and take it back, and they put it back on the shelf for another customer.'' \verb+new+ and \verb+delete+ do the same thing as Walmart.
+				\\ \\
+				You'll have to remove the \verb+.import+ and \verb+.export+ statements from \verb+alloc.asm+ prior to including it in your outputted code. Those pseudo-instructions are meant to be used by a linker, but we are not running a linker on our code. Additionally, \verb+alloc.asm+ \emph{must} be physically last in your outputted code.
+				\\ \\
+				The code for each of the rules above is simply \verb+code(expr)+, followed by a call to \verb+new+ or \verb+delete+ with $n$ or $p$ in \$1, respectively.
+	\section{Implementing Heaps}
+		\verb+alloc.asm+ implements a \textbf{heap}, which is an abstract data type (ADT) (not to be confused with the priority queue implementation), which supports the following operations:
+		\begin{itemize}
+			\item \verb+initialize+.
+			\item \verb+finalize+.
+			\item \verb+allocate(n)+: finds $n$ available units of RAM, or fails.
+			\item \verb+free(p)+: free the previously allocated RAM that is referred to by $p$.
+		\end{itemize}
+
+		The first step to implementing a heap is to identify some available RAM. This RAM is typically in one continuous block, which we will call the \textbf{arena}.
+		\\ \\
+		Where do we put the arena? It'll have to use some space normally available for the stack. We could create a fixed size arena by dedicating a certain number of words directly above your program's code, and leave the rest of the space for the stack. 
+		\\ \\
+		The given \verb+alloc.asm+ file implements a fixed-size arena. That's why it must be at the very end of our program. It has a label \verb+end:+ at the very bottom of it that indicates where your program ends, which is also where the arena begins.
+		\\ \\
+		\underline{Aside}: up until this point, we've made the na\"ive assumption that the stack is not bounded. In reality, of course the stack is bounded, but we're not sure how large the stack needs to be. Also, you should really check for possible stack overflows, otherwise your program could get overwritten by a user and arbitrary code could be executed.
+		\\ \\
+		You could dedicate half of your stack space (conventionally denoted as the memory below the address stored in \$30) to the arena. The other half will be used for the stack. We will call this the \textbf{split the baby approach}.
+		\\ \\
+		Alternatively, you could start the arena right after your program and start the stack at \$30, and use the first-come, first-serve approach.
+
+		\subsubsection{The Loaf of Bread Algorithm}
+			The simplest algorithm for \verb+allocate(n)+ is what we will call the \textbf{loaf of bread algorithm}. It's simple: you just give out the memory in order. The chunks of memory you're allocating could potentially be chunks of different sizes.
+			\\ \\
+			With the loaf of bread algorithm, we can't implement \verb+free(p)+. All sales are final, so to speak.
+			\\ \\
+			If instead we wanted to implement the Walmart algorithm, we would need to find the most appropriate hole when we want to allocate some memory. What if there are many small holes but we need a large one? That is, the total amount of unused storage in your arena is large enough, but there's no continuous block of RAM available. This is known as \textbf{fragmentation}.
+
+
 \end{document}
