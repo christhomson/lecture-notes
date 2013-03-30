@@ -3206,7 +3206,7 @@
 			sub $30, $30, $4
 			lis $5 ;; term -> factor -> NUM (2) subtree
 			.word 2
-			add $30, $30, $1
+			add $30, $30, $4
 			lw $5, -4($30)
 			add $3, $5, $3
 			jr $31
@@ -3616,7 +3616,7 @@
 				We first need to be able to generate code for a test. Let's look at this rule: test $\to \text{expr}_1$ LT $\text{expr}_2$. This allows us to write WLPP code like:
 				\begin{verbatim}
 				while(a < b) {
-					a = a + 1;
+				    a = a + 1;
 				}
 				\end{verbatim}
 
