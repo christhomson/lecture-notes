@@ -2662,4 +2662,50 @@
 
 			\subsubsection{Burrows-Wheeler Transform}
 				Straightforward Burrows-Wheeler Transform got it down to 29\% of the original size, on their first try. ``It works like by magic.'' It works by shifting the string cyclically, sorting alphabetically, and then extracting the last characters from the sorted shifts. The resulting string has lots of compression, which makes it easy to compress. You can reconstruct the entire text from that smaller string.
+				\\ \\
+				Encoding in BWT occurs in three steps: \lecture{April 2, 2013}
+					\begin{enumerate}
+						\item Place all cyclic shifts in a list $L$.
+						\item Sort the strings in $L$ lexicographically (alphabetically).
+						\item $C$ is the list of trailing characters of each string in $L$.
+					\end{enumerate}
+					
+				Decoding is slightly more complicated. The general idea is that given $C$, we can generate the first column of the array by sorting $C$. This tells us which character comes after each character in our source text $S$.
+				\\ \\
+				Decoding occurs in five steps:
+				\begin{enumerate}
+					\item Make an array $A$ of tuples $(C[i], i)$.
+					\item Sort $A$ by the characters, an record integers in an array $N$, where $C[N[i]]$ follows $C[i]$ in $S$ for $0 \le i < n$.
+					\item Set $j$ to the index of \$ in $C$ and set the source text $S$ to the empty string.
+					\item Set $j$ to $N[j]$ and append $C[j]$ to the source text $S$.
+					\item Repeat step 4 until we have $C[j] = \$$.
+				\end{enumerate}
+				
+				Encoding occurs in $O(n^2)$ time, using radix sort. It is also possible to achieve in $O(n)$ time. Decoding takes $O(n)$ time. Notice that decoding is faster than encoding. Encoding and decoding each use $O(n)$ space. BWT is generally slower than other methods but the compression it produces is superior.
+			
+			\subsubsection{Run Length Encoding}
+				Run length encoding is typically used in images, such as in the TIFF image format. It's a lossless form of compression.
+				\\ \\
+				The idea behind run length encoding is quite simple. If you have source text \verb+rrrrppppppggg+, then it can be compressed to $r \times 4, p \times 6, g \times 3$. Repetition becomes quite obvious, and it becomes easier to compress as a result of that repetition.
+				\\ \\
+				Huffman encoding would not take advantage of this repetition. LZW would do better with BWT though.
+				\\ \\
+				They noticed a run will often be interrupted by a single character and then the run would continue. We'll use the move-to-front (MTF) technique, discussed earlier in the course, to keep the letter of the run handy.
+				\\ \\
+				We'll maintain a linked list of the alphabet. Every time we decode a letter, we'll move it to the front of the list.
+				\\ \\
+				Move-to-front encoding improves overly highly optimized Lempel-Ziv. The 29\% compression ratio dips down to 21-22\% for MTF.
+				\\ \\
+				\underline{Aside}: LZW was used in the Unix \verb+compress+ tool, back in the day. As the compression tools have improved (\verb+compress+, then \verb+zip+, then \verb+gzip+, then \verb+bzip2+), the \verb+z+ has remained in the file extension. The \verb+z+ in the file extension now denotes that it's some sort of compressed file.
+			
+			\subsubsection{Data Structures in Action}
+				Here are some videos as shown in class that demonstrated various applications of quadtrees and kd-trees:
+				\begin{itemize}
+					\item \href{http://www.youtube.com/watch?v=kNVne97Ti7I}{Quadtrees used to model terrain adaptively}. Less precision is needed when you're far away (zoomed out), so you stop higher up in the quadtree.
+					\item \href{http://www.youtube.com/watch?v=fuexOsLOfl0}{Particle collision detection with quadtrees}. Perform divisions when two points move into the same quadrant. You can then only check local neighbors for collisions, instead of all particles. This is linear performance that wouldn't otherwise be possible.
+					\item \href{http://vimeo.com/39118386}{The Stanford Dragon, modeled with a kd-tree}.
+					\item \href{http://www.youtube.com/watch?v=NHoqyOJgzSg}{A ship modeled with a kd-tree}.
+					\item \href{http://onepartcode.com/images/projects/bunnykd.png}{A bunny modeled with a kd-tree} [image].
+					\item \href{http://www.youtube.com/watch?v=bHkaapcPyp0}{A dynamic environment modeled with a kd-tree, updating in real-time}.
+				\end{itemize}
 \end{document}
