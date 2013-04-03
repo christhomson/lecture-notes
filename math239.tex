@@ -13,6 +13,7 @@
 \usepackage[T1]{fontenc}
 \usepackage{ae,aecompl}
 \usepackage{tikz}
+\usepackage[lined]{algorithm2e}
 
 \newtheorem*{theorem}{Theorem}
 \newtheorem*{proposition}{Proposition}
@@ -4546,6 +4547,198 @@
 				\end{defn}
 				
 				\textbf{Remark}: let $G$ be a graph, and let $M$ be a matching of $G$. Let $P$ be an augmenting path. Let $M' = M \Delta P$ (where $M \Delta P = (M \cup P) \backslash (M \cap P)$). Then $M'$ is a matching and $|M'| = |M| + 1$.
+				
+				\subsubsection{Algorithm for Maximum Matching} \lecture{April 1, 2013}
+					A high-level algorithm for finding a maximum matching is as follows. \\
+					\begin{algorithm}[H]
+						M = $\emptyset$\;
+						\While{(loop)}{
+							\lIf{$M$ is maximum}{STOP}
+							\Else{
+								find an augmenting path $P$\;
+								$M := M \Delta P$\;
+							}
+						}
+					\end{algorithm}
+					
+					This algorithm is a nice idea, but it is not nearly precise enough \textendash{} you couldn't program currently. How do we know if $M$ is maximum? We can't simply enumerate all matchings, that'd get out of hand quickly. Also, how do we find an augmenting path $P$?
+					\\ \\
+					We will determine how to know if $M$ is maximum, and how to find an augmenting path $P$, on bipartite graphs.
+				
+		\subsection{Vertex Covers}
+			Informally, a vertex cover is a set of vertices where every edge in a graph has at least one endpoint that is a vertex in that set.
+			\begin{ex}
+				The vertices in green are a vertex cover of the graph:
+				\begin{center}
+					\begin{tikzpicture}[scale=2]
+						\node [dot={0}{}] at (0,0) {};
+						\node [gdot={0}{}] at (2,0) {};
+						\node [gdot={0}{}] at (0,2) {};
+						\node [dot={0}{}] at (2,2) {};
+						\node [gdot={0}{}] at (1,1) {};
+					
+						\draw (0,0) -- (2,0) -- (2,2) -- (0,2) -- (0,0);
+						\draw (0,0) -- (1,1) -- (2,2);
+						\draw (0,2) -- (1,1) -- (2,0);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+			
+			\begin{defn}
+				$C \supseteq V$ is a \textbf{vertex cover} if every edge has at least one endpoint in $C$.
+			\end{defn}
+			
+			Note that the easiest vertex cover is the cover where $C = V$. However, we're interested in picking a cover with as few vertices as possible. This is similar to how the empty set is a matching, but we aren't interested in that \textendash{} we're interested in matchings with as many edges as possible.
+			
+			\begin{ex}
+				A minimum vertex cover is indicated in green:
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [gdot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (1,0) {};
+						\node [gdot={0}{}] at (2,0) {};
+						\node [dot={0}{}] at (3,0) {};
+						\node [dot={0}{}] at (0,1) {};
+						\node [gdot={0}{}] at (1,1) {};
+						\node [dot={0}{}] at (2,1) {};
+						\node [gdot={0}{}] at (3,1) {};
+						\node [gdot={0}{}] at (0,2) {};
+						\node [dot={0}{}] at (1,2) {};
+						\node [gdot={0}{}] at (2,2) {};
+						\node [dot={0}{}] at (3,2) {};
+						\node [dot={0}{}] at (0,3) {};
+						\node [gdot={0}{}] at (1,3) {};
+						\node [dot={0}{}] at (2,3) {};
+						\node [gdot={0}{}] at (3,3) {};
+						
+						\draw (0,0) -- (3,0) -- (3,3) -- (0,3) -- (0,0);
+						\draw (0,1) -- (3,1);
+						\draw (0,2) -- (3,2);
+						\draw (1,0) -- (1,3);
+						\draw (2,0) -- (2,3);
+					\end{tikzpicture}
+				\end{center}
+			\end{ex}
+			
+			The \textbf{minimum vertex cover problem} is where you aim to find a vertex cover with as few vertices as possible.
+			\\ \\
+			Let's examine the size of a graph's maximum matching with the size of its minimum vertex cover.
+			
+			\begin{ex}
+				Consider the following graph.
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [gdot={0}{}] at (0,0) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [gdot={0}{}] at (1,2) {};
+					
+						\draw[red,ultra thick] (1,2) -- (2,0);
+						\draw (2,0) -- (0,0) -- (1,2);
+					\end{tikzpicture}
+				\end{center}
+				
+				In this graph, $|M| = 1$ and $|C| = 2$.
+			\end{ex}
+			
+			\begin{ex}
+				Consider the following graph.
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [dot={0}{}] at (0,0) {};
+						\node [gdot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [gdot={0}{}] at (3,0) {};
+						\node [gdot={0}{}] at (0,1) {};
+						\node [dot={0}{}] at (1,1) {};
+						\node [gdot={0}{}] at (2,1) {};
+						\node [dot={0}{}] at (3,1) {};
+
+						\draw[red, ultra thick] (0,0) -- (0,1);
+						\draw[red, ultra thick] (1,0) -- (1,1);
+						\draw[red, ultra thick] (2,0) -- (2,1);
+						\draw[red, ultra thick] (3,0) -- (3,1);
+						\draw (0,0) -- (3,0);
+						\draw (0,1) -- (3,1);
+					\end{tikzpicture}
+				\end{center}
+				
+				In this graph, $|M| = 4$ and $|C| = 4$.
+			\end{ex}
+			
+			
+			\begin{ex}
+				Consider the following graph.
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [gdot={0}{}] at (1,0) {};
+						\node [dot={0}{}] at (2,0) {};
+						\node [gdot={0}{}] at (0,1) {};
+						\node [gdot={0}{}] at (3,1) {};
+						\node [dot={0}{}] at (1.5,2) {};
+						
+						\draw (1,0) -- (2,0);
+						\draw (0,1) -- (1.5,2) -- (3,1);
+						\draw[color=red, ultra thick] (0,1) -- (1,0);
+						\draw[color=red, ultra thick] (2,0) -- (3,1);
+					\end{tikzpicture}
+				\end{center}
+				
+				In this graph, $|M| = 2$ and $|C| = 3$.
+			\end{ex}
+			
+			We'll use these results to introduce a lemma.
+			
+			\begin{theorem}[Lemma]
+				Let $M$ be a matching, and let $C$ be a cover. Then $|M| \le |C|$.
+			\end{theorem}
+			
+			To prove this lemma, just look at the edges in the matching. At least one vertex is needed for every edge in the matching, and those vertices are all distinct. Let's formalize this proof.
+			
+			\begin{proof}
+				Let $M = \set{e_1, \ldots, e_k}$ be a matching. Since $C$ is a cover, for every edge $e_i$, $C$ contains one endpoint, say $w_i$, of $e_i$.
+				\\ \\
+				Moreover, since $M$ is a matching, $w_1, \ldots, w_k$ are all distinct.
+				\\ \\
+				As $C \supseteq \set{w_1, \ldots, w_k}, |C| \ge k$.
+			\end{proof}
+			
+			Now, how can we convince someone that a particular matching is a maximum matching? We can note that there exists a cover of a certain size, which implies that no matching of a greater size exists, according to the lemma we just introduced.
+			
+			\begin{theorem}[Lemma]
+				Let $M$ be a matching, and let $C$ be a cover. Suppose $|M| = |C|$. Then:
+				\begin{enumerate}
+					\item $M$ is a maximum matching.
+					\item $C$ is a minimum cover.
+				\end{enumerate}
+			\end{theorem}
+			
+			\begin{proof}
+				For (1): let $M'$ be any matching. We know that $|M'| \le |C|$, by the previous lemma, and we know that $|C| = |M|$ (by definition in this lemma). Therefore, $|M'| \le |M|$.
+				\\ \\
+				For (2): let $C'$ be any cover. We know that $|C'| \ge |M|$, by the previous lemma, and we know that $|M| = |C|$ (by definition in this lemma). Therefore, $|C'| \ge |C|$.
+			\end{proof}
+			
+			Note that the second lemma we just introduced implies that $\max \set{|M| : M \text{ is a matching}} \le \min \set{|C| : C \text{ is a cover}}$. However, is this $\le$, or is it always =? It turns out, if the graph contains an odd cycle, then $|M| \ne |C|$.
+			
+			\begin{theorem}[K\"onig's Theorem]
+				In a bipartite graph, $\max \set{|M| : M \text{ is a matching}} \le \min \set{|C| : C \text{ is a cover}}$ holds with equality.
+			\end{theorem}
+			
+			That is, K\"onig's Theorem states that the size of the maximum matching of a bipartite graph is equal to the size of the smallest cover of that graph.
+			\\ \\
+			Before we can discuss the proof of K\"onig's Theorem, we'll need to introduce some additional terminology.
+			
+		\subsection{XY-Structures}
+			Let $G = (V, E)$ be a bipartite graph with partition $A, B$ of $V$. Let $M$ be a matching of $G$.
+			
+			\begin{defn}
+				A vertex $v$ is \textbf{special} if:
+				\begin{enumerate}
+					\item $v \in A$ and $v$ is not saturated, or
+					\item There exists an alternating path $P(v)$ where one endpoint is $v$ and the other is of type (1).
+				\end{enumerate}
+			\end{defn}
+			
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
