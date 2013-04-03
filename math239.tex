@@ -14,6 +14,7 @@
 \usepackage{ae,aecompl}
 \usepackage{tikz}
 \usepackage[lined]{algorithm2e}
+\usepackage{enumerate}
 
 \newtheorem*{theorem}{Theorem}
 \newtheorem*{proposition}{Proposition}
@@ -4738,6 +4739,66 @@
 					\item There exists an alternating path $P(v)$ where one endpoint is $v$ and the other is of type (1).
 				\end{enumerate}
 			\end{defn}
+			
+			\begin{defn} \lecture{April 3, 2013}
+				Let $X$ denote the special vertices in partition $A$, and let $Y$ denote the special vertices in partition $B$.
+			\end{defn}
+			
+			Let's now prove K\"onig's Theorem.
+			
+			\begin{proof}
+				Let $M$ be a maximum matching, and let $C = (A \backslash X) \cup Y$.
+				\\ \\
+				We aim to show:
+				\begin{enumerate}
+					\item $C$ is a cover.
+					\item $|C| = |M|$.
+				\end{enumerate}
+				
+				Let's start with (1). Suppose $C$ is not a cover. Then there exists an edge $uv$ with $u \in X$ and $v \in B \backslash Y$.
+				\\ \\
+				\underline{Case 1}: $u$ is unsaturated. The edge $uv$ implies that $v$ must be special, which implies that $v \in Y$, which is a contradiction.
+				\\ \\
+				\underline{Case 2}: $u$ is the endpoint of $P(u)$. Then $P(u)$ together with $uv$ is an alternating path. This implies that $v$ is special, which means $v \in Y$, which is a contradiction.
+				\\ \\
+				We've proven (1). Let's now prove (2).
+				\\ \\
+				For (2), we want to show that $|C| = |M|$. Intuitively, we want to show that $|M| = |Y| + |A \backslash X|$, since $|Y| + |A \backslash X| = |C|$. In order to prove this, we really need to prove these three things:
+				\begin{enumerate}[(i)]
+					\item Edges of $M$ are between $X$ and $Y$ and between $A \backslash X$ and $B \backslash Y$.
+					\item Vertices in $A \backslash X$ are saturated.
+					\item Vertices in $Y$ are saturated.
+				\end{enumerate}
+				
+				Let's start with (i). Suppose (i) does not hold. Then there exists an edge $uv \in M$ where $u \in Y$ and $v \in A \backslash X$. Since $v$ is special, there exists an alternating path $P(u)$. The alternating path obtained by adding $uv$ to $P(u)$ implies that $v$ is special, which implies that $v \in X$, which is a contradiction.
+				\\ \\
+				The proof for (ii) is very simple. (ii) holds because unsaturated vertices of $A$ are in $X$.
+				\\ \\
+				Finally, let's prove (iii). Suppose there exists $u \in Y$ where $u$ is not saturated. Then $P(u)$ is an alternating path. This is a contradiction since $M$ is a \emph{maximum} matching.
+			\end{proof}
+			
+			We'll use a similar approach to that of this proof for the algorithm we need.
+			
+			\subsubsection{Algorithm For Finding a Maximum Matching and Minimal Vertex Cover}
+				\underline{Input}: a bipartite graph $G = (V, E)$ with partition $A, B$.
+				\\ \\
+				\underline{Output}: a matching $M$ and a cover $C$ where $|M| = |C|$. \\
+				
+				\begin{algorithm}[H]
+					$M = \emptyset$ (or any other matching)\;
+					\While{(loop)}{
+						Construct $X, Y$ (and $P(v)$)\;
+						\uIf{there exists $u \in Y$ where $u$ is unsaturated}{
+							$M := M \Delta P(u)$\;
+						}
+						\Else{
+							$C = (A \backslash X) \cup Y$ is a cover\;
+							$|C| = |M|$, STOP\;
+						}
+					}
+				\end{algorithm}
+				
+				In this algorithm, $S_1 \Delta S_2$ (for any sets $S_1$ and $S_2$) is defined as the symmetric difference of $S_1$ and $S_2$ (the same way as earlier). That is, $S_1 \Delta S_2 := (S_1 \cup S_2) \backslash (S_1 \cap S_2)$. 
 			
 	\newpage
 	\section*{Clicker Questions}
