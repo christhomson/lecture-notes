@@ -3764,7 +3764,7 @@
 				You'll have to remove the \verb+.import+ and \verb+.export+ statements from \verb+alloc.asm+ prior to including it in your outputted code. Those pseudo-instructions are meant to be used by a linker, but we are not running a linker on our code. Additionally, \verb+alloc.asm+ \emph{must} be physically last in your outputted code.
 				\\ \\
 				The code for each of the rules above is simply \verb+code(expr)+, followed by a call to \verb+new+ or \verb+delete+ with $n$ or $p$ in \$1, respectively.
-	\section{Implementing Heaps}
+	\section{Dynamic Memory Allocation: Implementing Heaps}
 		\verb+alloc.asm+ implements a \textbf{heap}, which is an abstract data type (ADT) (not to be confused with the priority queue implementation), which supports the following operations:
 		\begin{itemize}
 			\item \verb+initialize+.
@@ -3915,4 +3915,79 @@
 			This copying is also relocating code. That might be tough in languages like C++ where memory addresses are part of the language. You could always convert pointers to integers, strings, or do other crazy things (like reverse the bits in a pointer), and the compiler will not be aware of that use.
 			\\ \\
 			Andrew Appel argued that instead of using the stack (which would involve a push and pop), just use \verb+alloc()+ instead. It's equivalent to just pushing onto the stack, and removes the need for the popping code.
+			
+		\subsection{Holes} \lecture{April 3, 2013}
+			We will refer to unallocated areas of memory as \textbf{holes}. That is, holes are areas of memory that are available to fill with some new data. In fixed-size memory allocation, all holes have the same size as each other.
+		
+		\subsection{Variable-Sized Dynamic Memory Allocation}
+			When we start to discuss variable-sized dynamic memory allocation, all of the properties we discussed for fixed-size allocation go out the window. But what would happen if we \emph{tried} to apply the same concepts to variable-sized allocation?
+			\\ \\
+			The approach of maintaining an available space list is not sufficient anymore. \verb+alloc(n)+ now takes a parameter, $n$, which represents the size of the chunk of memory we want to allocate. The available space list is a linked list connected in the order of deletions, but we don't know how big each hole in that list actually is.
+			\\ \\
+			We somehow need to find a hole that is at least $n$ bytes large, in order to satisfy the \verb+alloc(n)+ request. In order to do this, we'll have to store the size of each hole.
+			\\ \\
+			In order to find an appropriate hole, we'll have to search through the available space list (the list of holes). There are a few approaches to this search:
+			\begin{itemize}
+				\item \textbf{First fit}: choosing the first hole that is big enough. You don't need to pick sides. This approach is easy to implement. This approach also leaves a variety of hole sizes available for future use.
+				\item \textbf{Worst fit}: choosing the biggest hole we can find. This experiences hole erosion \textendash{} that is, all holes will tend to become very similar sizes over time.
+				\item \textbf{Best fit}: choosing the smallest hole that's big enough. Most of the time, you'll be able to use most of the hole you selected, but that'll leave a sliver of storage remaining. That sliver will be hard to fill later on. You waste less space now, but more space later (as the slivers accumulate).
+			\end{itemize}
+			
+			The choice between these three approaches is not clear cut because there is no analytical way to compare these.
+			\\ \\
+			With fixed-size allocation, you'll fail only if all memory is full, because all holes are the same size. With variable-size allocation, you'll fail if there is no hole that is big enough.
+			\\ \\
+			In archaic languages like C and C++ (that don't have implicit \verb+free+s), \verb+free(p)+ frees the storage area that pointer $p$ points to. How do we know how big that area is, though? We'll need to keep track of the length of those areas as well.
+			\\ \\
+			So, we'll need to keep track of the length of holes, and the length of allocated areas. We might as well standardize on a way to store these lengths. When you allocate $n$ bytes of storage, you'll actually allocate a few extra bytes that you won't expose to the user. These bytes will act as a header that can contain the length of the block as well as a pointer to the next block (and a footer, which will be discussed later).
+			\\ \\
+			\textbf{Fragmentation} occurs when small holes collectively have enough space to satisfy an \verb+alloc(n)+ request, but no single hole is big enough to satisfy that request. This occurs with the best fit approach because the holes that turn into sliver-holes become smaller and smaller over time.
+		
+			\subsubsection{Coalescing Adjacent Holes}
+				When you \verb+free+ an area, combine it with adjacent hole(s) if there are any. This has the consequence of no two holes ever being beside each other anymore.
+				\\ \\
+				The process of coalescing adjacent holes does not guarantee that you'll solve the problem of fragmentation, it only guarantees that you aren't destined to fail.
+				\\ \\
+				There are a few cases to consider when you're trying to \verb+free+ an area pointed to by $p$:
+				\begin{itemize}
+					\item $p$ is surrounded by two holes. This results in one single hole as $p$ is freed, which means we eliminated one other hole.
+					\item $p$ has other allocated memory on its left, and a hole on the right. We expand the hole as $p$ is freed. This causes no change in the number of holes.
+					\item $p$ has other allocated memory on its right, and a hole on the left. We expand the hole as $p$ is freed. This causes no change in the number of holes.
+					\item $p$ is surrounded by allocated memory on both sides. This results in a new hole as $p$ is freed.
+				\end{itemize}
+				
+				We need some way of indicating which blocks of memory are holes and which are allocated. We could add another bit to the header. This introduces a problem, though: how do we find the header of the previous area, if we don't know its size? We could add the length of the block to the end of each area (adding a footer), as well as keeping the length in the header.We also need a pointer backwards to the previous area. This makes our linked list a doubly linked list.
+				\\ \\
+				At the end of the day, each block of memory will have:
+				\begin{itemize}
+					\item \textbf{Header}: length of the block, pointer forward, pointer backward, and a \verb+hole?+ bit.
+					\item \textbf{Footer}: length of the block.
+				\end{itemize}
+				
+			\subsubsection{The Buddy System}
+				The \verb+alloc.asm+ file we were given for assignment 11 implements the buddy system approach. This approach works by allocating a number of words that is a power of two. This has the consequence of there only being $\lg n$ possible sizes, which means up to 50\% of memory could be wasted in the worst case.
+				\\ \\
+				If the size of a hole is double the size you need, simply split the hole in two and use half of it. Otherwise, use the entire hole.
+				\\ \\
+				The buddy system approach doesn't perform better, and it's not easier to implement than the other approaches. It's just an alternative.
+				\\ \\
+				The bottom-line of variable-sized allocations is there's no perfect solution. It sucks. It gets particularly messy if you can't do relocation, such as in C/C++.
+				
+		\subsection{The 50\% Rule}
+			Donald Knuth has stated many important results in computer science. One of them applies here, called The 50\% Rule.
+			
+			\begin{theorem}[The 50\% Rule]
+				At equilibrium, the number of holes tends to be approximately half the number of allocated areas.
+			\end{theorem}
+			
+			There's also an interesting corollary to this.
+			
+			\begin{theorem}[Corollary]
+				If there is as much free space as allocated space in the arena, the average hole size is double the average allocated area.
+			\end{theorem}
+			
+			In the first fit approach, the size will on average be twice the size you actually need. You'll find an appropriate hole pretty quickly as a result of this. We can even go so far as to say that finding an appropriate hole with the first fit approach operates in constant $O(1)$ time.
+		
+		\subsection{Beyond Memory}
+			These principles apply beyond memory. Allocations on permanent filesystems have the same key issues. Most filesystems do a pretty good job at reducing fragmentation, but Windows' filesystem does not and sometimes users have to manually de-fragment Windows machines.
 \end{document}
