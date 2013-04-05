@@ -3992,4 +3992,190 @@
 		
 		\subsection{Beyond Memory}
 			These principles apply beyond memory. Allocations on permanent filesystems have the same key issues. Most filesystems do a pretty good job at reducing fragmentation, but Windows' filesystem does not and sometimes users have to manually de-fragment Windows machines.
+	
+	\section{Compiler Optimization} \lecture{April 5, 2013}
+		Optimizing a compiler involves seeing into the future. Compiler optimization is not strictly a mathematical problem. The combinatorics and optimization people get pissed when we call it compiler ``optimization'', because that implies that there's an optimal solution, but there is not.
+		\\ \\
+		There's no efficient algorithm to optimize a compiler. In fact, there is no algorithm at all, not even an inefficient one. Measuring how well you optimized your compiler is also not well-defined, because ideally we'd have to measure how well our compiler does on all possible programs (which cannot be enumerated).
+		\\ \\
+		The halting problem also has an effect here. If we could determine if a piece of code would result in an infinite loop, we could make further improvements with that in mind.
+		\\ \\
+		We'll aim to \emph{improve} our compilers as much as possible, using a proxy measurement technique of some sort.
+		
+		\subsection{Folding}
+			Folding is the act of evaluating constant expressions at compile-time. For example, \verb|x = 1 + 2 + 3;| could be replaced by \verb|x = 7;|. Similarly, \verb|y = x + 2;| could be replaced by \verb|y = 9;|, but only if we know that $x$ is not changed between the two expressions involving it.
+			\\ \\
+			Code(expr) implicitly returns a tuple containing (encoding, value). Up until this point, we've always returned (register, 3), because we've always placed the result of the expression in \$3. 
+			\\ \\
+			If we implement folding, we would return something like (register, 3) or (constant, 7) in some cases (where 3 could be any arbitrary register, and 7 is the arbitrary value of the constant).
+			\\ \\
+			Code(expr + term) will return the result of this addition if the result of the expression and the result of the term are both constant.
+			
+		\subsection{Common Subexpression Elimination}
+			Let's say you had the following code:
+			\begin{verbatim}
+				x = y + z * 3;
+				a = b + z * 3;
+			\end{verbatim}
+		
+			Notice that \verb+z * 3+ occurs in both of these expressions. \verb+x * 3+ is called a \textbf{common subexpression}. We can eliminate common subexpressions like these by only performing that computation once, like this:
+			\begin{verbatim}
+				t = z * 3;
+				x = y + t;
+				a = b + t;
+			\end{verbatim}
+		
+			However, it's important to note that we can only do this if the value of $z$ does not change between the two uses.
+			\\ \\
+			Similarly, when we have \verb|x = x + 1|, we can avoid computing the address of $x$ twice. You can instead just compute the address for the lvalue $x$, and then use that to get the data value of $x$, without computing the address twice.
+		
+		\subsection{Dead Code Elimination}
+			Sometimes source code contains dead code. For instance:
+			\begin{verbatim}
+				if (0 == 1) {
+					code_A
+				} else {
+					code_B
+				}
+			\end{verbatim}
+			
+			Notice that in this code sample, $\text{code}_A$ will never be executed. After we perform folding, we can often determine if one path of a branch will never be taken, like in this case. So, we can remove all the code for $\text{code}_A$ and we can also remove all the code for the if statement itself, leaving only $\text{code}_B$.
+			\\ \\
+			We could keep track of the values of variables (as much as possible) in our compiler. Then, we'd be able to determine if a condition like \verb|x < 0| will ever be truthful or not.
+			
+		\subsection{Partial/Abstract Evaluation}
+			We could keep track of whether a given variable $x$ is $< 0, = 0,$ or $> 0$ at any given point. We can determine this for variables recursively in an expression like \verb|x = y * z| as well, by knowing the abstract evaluation of $y$ and $z$.
+			\\ \\
+			You may even be able to determine a bounded set of values that these variables could possibly have. Alternatively, you may be able to come up with a regular expression that represents all values that $x$ could take on.
+		
+		\subsection{Loop Optimization}
+			Loop optimization is done typically to improve the run-time speed of the programs you produce. It doesn't necessarily make your code smaller. In fact, in many cases optimized loops will actually produce more code than unoptimized loops.
+			
+			\subsubsection{Lifting}
+				Let's say you have code like this:
+				\begin{verbatim}
+					while(test) {
+					   .
+					   .
+					   .
+					  x = y + z * 3; // code to lift
+					   .
+					   .
+					   .
+					}
+				\end{verbatim}
+				
+				Let's assume $y$ and $z$ don't change inside the loop. We could lift this statement out of the loop so it'll only be executed once, as needed. Basic lifting would produce (incorrect) code like this:
+				\begin{verbatim}
+					x = y + z * 3; // lifted code
+					while(test) {
+					   .
+					   .
+					   .
+					}
+				\end{verbatim}
+
+				Lifting will actually make the loop perform worse if the loop executes zero times. It would also produce incorrect code, since for example, if the loop above wasn't supposed to be executed at all, $x$ should not take on the value \verb|y + z * 3|. Instead, we would produce code like this:
+				\begin{verbatim}
+					if (test) {
+					  x = y + z * 3; // lifted code
+					  do {
+						  .
+						  .
+						  .
+					  } while(test);
+					}
+				\end{verbatim}
+			\subsubsection{Induction Variables}
+				Suppose you had code like this:
+				\begin{verbatim}
+					for(i = 0; i < 10; i += 1) {
+					  x[i] = 25;
+					}
+				\end{verbatim}
+				
+				Note that \verb|x[i] = 25;| is equivalent to \verb|*(x + i) = 25;|, which implicitly multiplies $i$ by 4. We want to avoid performing that multiplication on every iteration of the loop. Instead, we'll produce code like this:
+			\begin{verbatim}
+				for(I = 0; I < 40; I += 4) {
+				  (addr(x) + I) = 25;
+				}
+			\end{verbatim}
+			
+		\subsection{Register Allocation}
+			Register allocation is the mother of all variable optimizations. We want to use registers for storing variables, and for storing temporary results of subexpressions.
+			\\ \\
+			There is a problem, however. Recall that we only have a finite number of registers.
+			
+			\subsubsection{Register Allocation for Variables}
+				Throughout our program, we'll keep track of \textbf{live ranges} of each variable. A live range is the point at which a variable is assigned to the last point where the variable is used with that assignment.
+			
+				For example:
+			
+				\begin{verbatim}
+					int x = 0;
+					int y = 0;
+					int z = 0;
+					x = 3;
+					y = 4;
+					x = x + 1;
+					println(x);
+					println(y);
+					z = 7;
+					println(z);
+				\end{verbatim}
+			
+				In this code, the live range for $x$ is from \verb|x = 3;| to \verb|println(x);|. The live range for $y$ is from \verb|y = 4;| to \verb|println(y);|. Finally, the live range for $z$ is from \verb|z = 7;| to \verb|println(z);|.
+				\\ \\
+				This follows the great philosophical discussion where if a tree falls in a forest and no one is there to hear it, does it make a sound? If we set a variable to a value that is never used, do we have to set that variable to that value? The answer is no.
+				\\ \\
+				Two variables are said to \textbf{interfere} is their live ranges intersect. An \textbf{interference graph} is a graph where every variable is a vertex and edges are defined by intersecting variables.
+				\\ \\
+				We can re-use registers for two different variables that don't interfere. This is called \textbf{register assignment}.
+				\\ \\
+				Register assignment is an example of graph coloring. Graph coloring is a well known NP-complete problem.
+				
+			\subsubsection{Register Allocation for Subexpressions}	
+				Let's now look at using registers to store the temporary results of subexpressions. Recall from earlier, we had Code(expr + term) being:
+				\begin{verbatim}
+					code(expr)
+					push $3
+					code(term)
+					pop $5
+					add $3, $5, $3
+				\end{verbatim}
+			
+				Alternatively, we could have also generated:
+				\begin{verbatim}
+					code(term)
+					push $3
+					code(expr)
+					pop $5
+					add $3, $3, $5
+				\end{verbatim}
+			
+				Both of these approaches do a lot of stupid work, all because of our convention that all results are to be placed in \$3. Since we're placing all of our results in \$3, we have to constantly store that result somewhere else (i.e. on the stack). This is called \textbf{register spilling}.
+				\\ \\
+				It'd be nice to avoid register spilling wherever possible. It'd be nice if we could specify where we want the result to be placed, or to have some way to indicate that the result was placed in an alternate location. We have to tell our code generator which registers it's allowed to use, in order to indicate to it where it can place its result, as well as which registers it is allowed to clobber.
+				\\ \\
+				For all code generators, we now have Code(tree, avail) (where avail is the set of available registers) which will return a tuple containing the code and the representation of the result. For example, we'll have Code(expr + term, avail):
+				\begin{verbatim}
+					code(expr, avail) ;; let's say this returned that it placed its result in $r.
+					code(term, avail\{$r$}) ;; set difference
+					add $t, $r, $s ;; where $t is a member of avail.
+				\end{verbatim}
+				
+				We could've produced similar code for the case where we executed code(term) first:
+				\begin{verbatim}
+					code(term, avail) ;; let's say this returned that it placed its result in $r.
+					code(expr, avail\{$r$}) ;; set difference
+					add $t, $s, $r ;; where $t is a member of avail.
+				\end{verbatim}
+			
+				Ultimately, we need to determine how many registers a given expression needs, and then we choose to evaluate the one that needs the minimum number of registers first.
+				\\ \\
+				This approach works remarkably well. The number of registers you need is equal to the depth of the expression tree, at worst.
+		\subsection{Static Single Assignment}
+			Most compilers in the real world use a flow representation of the program their given. A flow representation analyzes the control flow of the program, rather than the in-order flow of the given program.
+			\\ \\
+			If you're interested in learning more about this, check out the \href{http://en.wikipedia.org/wiki/Static_single_assignment_form}{page about it on Wikipedia}.
 \end{document}
