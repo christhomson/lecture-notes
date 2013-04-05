@@ -3321,6 +3321,8 @@
 
 			For example, for variable a, Code(a) = \verb+add $3, $0, $1+, and for variable b, Code(b) = \verb+add $3, $0, $2+.
 			\\ \\
+			This assumes our variables are stored in registers. This is only the case for now, and only for \verb+wain+'s parameters. Later, once we start storing all variables on the stack, we'll need to perform a \verb+lw+ to fetch the data from the stack, placing the result in \$3.
+			\\ \\
 			So, the object code equivalent to the WLPP program above is:
 			\begin{verbatim}
 			lis $4
