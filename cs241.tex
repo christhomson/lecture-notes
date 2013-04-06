@@ -4171,7 +4171,7 @@
 					add $t, $s, $r ;; where $t is a member of avail.
 				\end{verbatim}
 			
-				Ultimately, we need to determine how many registers a given expression needs, and then we choose to evaluate the one that needs the minimum number of registers first.
+				Ultimately, we need to determine how many registers a given expression needs, and then we choose to evaluate the one that needs the maximum number of registers first.
 				\\ \\
 				This approach works remarkably well. The number of registers you need is equal to the depth of the expression tree, at worst.
 		\subsection{Static Single Assignment}
