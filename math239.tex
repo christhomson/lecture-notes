@@ -49,7 +49,8 @@
 \tikzset{
 	dot/.style 2 args={circle,inner sep=2pt,fill,label=#1:{#2},name=#2},
 	rdot/.style 2 args={circle,inner sep=2pt,fill=red,label=#1:{#2},name=#2},
-	gdot/.style 2 args={circle,inner sep=2pt,fill=green,label=#1:{#2},name=#2}
+	gdot/.style 2 args={circle,inner sep=2pt,fill=green,label=#1:{#2},name=#2},
+	bdot/.style 2 args={circle,inner sep=2pt,fill=blue,label=#1:{#2},name=#2}
 }
 
 \begin{document}
@@ -4787,7 +4788,7 @@
 				\begin{algorithm}[H]
 					$M = \emptyset$ (or any other matching)\;
 					\While{(loop)}{
-						Construct $X, Y$ (and $P(v)$)\;
+						Construct $X, Y$\;
 						\uIf{there exists $u \in Y$ where $u$ is unsaturated}{
 							$M := M \Delta P(u)$\;
 						}
@@ -4800,6 +4801,286 @@
 				
 				In this algorithm, $S_1 \Delta S_2$ (for any sets $S_1$ and $S_2$) is defined as the symmetric difference of $S_1$ and $S_2$ (the same way as earlier). That is, $S_1 \Delta S_2 := (S_1 \cup S_2) \backslash (S_1 \cap S_2)$. 
 			
+			\begin{ex} \lecture{April 5, 2013}
+				Let's say you've already run the algorithm for a few iterations, and you have this bipartite graph:
+				
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						
+						\node at (0,3.5) {A};
+						\node at (1,3.5) {B};
+						
+						\node [dot={180}{4}] at (0,0) {};
+						\node [dot={0}{8}] at (1,0) {};
+						\node [dot={180}{3}] at (0,1) {};
+						\node [dot={0}{7}] at (1,1) {};
+						\node [dot={180}{2}] at (0,2) {};
+						\node [dot={0}{6}] at (1,2) {};
+						\node [dot={180}{1}] at (0,3) {};
+						\node [dot={0}{5}] at (1,3) {};
+						
+						\draw (0,0) -- (1,0);
+						\draw (0,1) -- (1,1);
+						\draw (0,1) -- (1,2);
+						\draw (0,1) -- (1,3);
+						\draw (0,2) -- (1,3);
+						\draw[color=green, ultra thick] (0,3) -- (1,3);
+						\draw[color=green, ultra thick] (0,1) -- (1,0);
+					\end{tikzpicture}
+				\end{center}
+				
+				$X$ is defined as all unsaturated vertices in $A$ and all vertices accessible to such vertices via an alternating path. The definition of $Y$ is similar, but on partition $B$.
+				\\ \\
+				So, we have:
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node at (0, 1.75) {X};
+						\node at (1, 1.75) {Y};
+						\node at (2, 1.75) {X};
+						\node at (3, 1.75) {Y};
+						
+						\node [dot={-90}{4}] at (0,0) {};
+						\node [dot={-90}{8}] at (1,0) {};
+						\node [dot={-90}{3}] at (2,0) {};
+						\node [dot={0}{7}] at (3, -0.5) {};
+						\node [dot={0}{6}] at (3,0.5) {};
+						
+						\node [dot={90}{2}] at (0,1) {};
+						\node [dot={90}{5}] at (1,1) {};
+						\node [dot={90}{1}] at (2,1) {};
+						
+						\draw (0,0) -- (1,0);
+						\draw (2,0) -- (3, -0.5);
+						\draw (2,0) -- (3, 0.5);
+						\draw[color=green, ultra thick] (1,0) -- (2,0);
+						
+						\draw (0,1) -- (1,1);
+						\draw[color=green, ultra thick] (1,1) -- (2,1);
+					\end{tikzpicture}
+				\end{center}
+				
+				We now have that $7 \in Y$ is unsaturated. $P(7) = 48, 83, 37$. We now have $M'$: $$M' = \set{15, 38} \Delta \set{48, 38, 37} = \set{15, 48, 37}$$
+				
+				We now have to repeat the process with our new matching $M'$.
+				
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						
+						\node at (0,3.5) {A};
+						\node at (1,3.5) {B};
+						
+						\node [dot={180}{4}] at (0,0) {};
+						\node [dot={0}{8}] at (1,0) {};
+						\node [dot={180}{3}] at (0,1) {};
+						\node [dot={0}{7}] at (1,1) {};
+						\node [dot={180}{2}] at (0,2) {};
+						\node [dot={0}{6}] at (1,2) {};
+						\node [dot={180}{1}] at (0,3) {};
+						\node [dot={0}{5}] at (1,3) {};
+						
+						\draw (0,0) -- (1,0);
+						\draw[color=green, ultra thick] (0,1) -- (1,1);
+						\draw (0,1) -- (1,2);
+						\draw (0,1) -- (1,3);
+						\draw (0,2) -- (1,3);
+						\draw[color=green, ultra thick] (0,3) -- (1,3);
+						\draw[color=green, ultra thick] (0,1) -- (1,0);
+					\end{tikzpicture}
+				\end{center}
+				
+				At this point we have:
+				
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node at (0, 1.75) {X};
+						\node at (1, 1.75) {Y};
+						\node at (2, 1.75) {X};
+						\node [dot={90}{2}] at (0,1) {};
+						\node [dot={90}{5}] at (1,1) {};
+						\node [dot={90}{1}] at (2,1) {};
+
+						\draw (0,1) -- (1,1);
+						\draw[color=green, ultra thick] (1,1) -- (2,1);
+					\end{tikzpicture}
+				\end{center}
+				
+				We have that $X = \set{1, 2}$ and $Y = {5}$. $Y$ contains only saturated vertices, so we stop. The cover we found is: $$C = (A \backslash X) \cup Y = \set{1, 2, 3, 4} \backslash \set{1, 2} \cup \set{5} = \set{3, 4, 5}$$
+				
+				Take the time to verify that the cover is valid.
+			\end{ex}
+			
+			\begin{ex}
+				Once again, suppose you have run the algorithm for a few iterations and you currently have this:
+				
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [gdot={-90}{5}] at (0,0) {};
+						\node [rdot={-90}{2}] at (1,0) {};
+						\node [gdot={-90}{7}] at (2,0) {};
+						\node [rdot={-90}{4}] at (3,0) {};
+						
+						\node [rdot={90}{1}] at (0,1) {};
+						\node [gdot={90}{6}] at (1,1) {};
+						\node [rdot={90}{3}] at (2,1) {};
+						\node [gdot={90}{8}] at (3,1) {};
+						
+						\draw (0,1) -- (0,0) -- (1,0) -- (1,1) -- (2,1) -- (2,0) -- (3,0) -- (3,1);
+						\draw[color=blue, ultra thick] (0,1) -- (1,1);
+						\draw[color=blue, ultra thick] (1,0) -- (2,0);
+						\draw[color=blue, ultra thick] (2,1) -- (3,1);
+					\end{tikzpicture}
+				\end{center}
+				
+				This is a bipartite graph with partitions $A = \set{1, 2, 3, 4}$ (red) and $B = {5, 6, 7, 8}$ (green).
+				\\ \\
+				We have $4 \in A$ as an unsaturated vertex, so we get:
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node at (0,2.75) {X};
+						\node at (1,2.75) {Y};
+						\node at (2,2.75) {X};
+						\node at (3,2.75) {Y};
+						\node at (4,2.75) {X};
+						
+						\node [dot={90}{4}] at (0,1) {};
+
+						\node [dot={90}{7}] at (1,0) {};
+						\node [dot={90}{2}] at (2,0) {};
+						\node [dot={90}{5}] at (3,0) {};
+						
+						\node [dot={90}{8}] at (1,2) {};
+						\node [dot={90}{3}] at (2,2) {};
+						\node [dot={90}{6}] at (3,2) {};
+						\node [dot={90}{1}] at (4,2) {};
+						
+						\draw (0,1) -- (1,0);
+						\draw[color=blue, ultra thick] (1,0) -- (2,0);
+						\draw (2,0) -- (3,0);
+						
+						\draw (0,1) -- (1,2);
+						\draw[color=blue, ultra thick] (1,2) -- (2,2);
+						\draw (2,2) -- (3,2);
+						\draw[color=blue, ultra thick] (3,2) -- (4,2);
+					\end{tikzpicture}
+				\end{center}
+				
+				We now have $5 \in Y$ which is an unsaturated vertex. $P(5) = 47, 72, 25$. We now have $M'$: $$M' = M \Delta P(5) = \set{16, 38, 27} \backslash \set{47, 72, 25} = \set{16, 38, 47, 25}$$
+				
+				We have to repeat the procedure on $M'$.
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node [gdot={-90}{5}] at (0,0) {};
+						\node [rdot={-90}{2}] at (1,0) {};
+						\node [gdot={-90}{7}] at (2,0) {};
+						\node [rdot={-90}{4}] at (3,0) {};
+						
+						\node [rdot={90}{1}] at (0,1) {};
+						\node [gdot={90}{6}] at (1,1) {};
+						\node [rdot={90}{3}] at (2,1) {};
+						\node [gdot={90}{8}] at (3,1) {};
+						
+						\draw (0,1) -- (0,0) -- (1,0) -- (1,1) -- (2,1) -- (2,0) -- (3,0) -- (3,1);
+						\draw[color=blue, ultra thick] (0,1) -- (1,1);
+						\draw[color=blue, ultra thick] (2,1) -- (3,1);
+						\draw[color=blue, ultra thick] (0,0) -- (1,0);
+						\draw[color=blue, ultra thick] (2,0) -- (3,0);
+						\draw (1,0) -- (2,0);
+					\end{tikzpicture}
+				\end{center}
+				
+				We now have that $X = Y = \emptyset$. There is no vertex in $A$ that is unsaturated, so we should be done. The cover we found is: $$C = (A \backslash X) \cup Y = A = \set{1, 2, 3, 4}$$
+			\end{ex}
+			
+		\subsection{Hall's Theorem}
+			Consider the following graph:
+			\begin{center}
+				\begin{tikzpicture}[scale=1.5]
+					\node at (0, 3.5) {A};
+					\node at (1, 3.5) {B};
+					
+					\node [bdot={0}{}] at (0,0) {};
+					\node [dot={0}{}] at (1,0) {};
+					\node [gdot={0}{}] at (0,1) {};
+					\node [dot={0}{}] at (1,1) {};
+					\node [gdot={0}{}] at (0,2) {};
+					\node [bdot={0}{}] at (1,2) {};
+					\node [gdot={0}{}] at (0,3) {};
+					\node [bdot={0}{}] at (1,3) {};
+					
+					\draw (0,0) -- (1,0);
+					\draw (0,0) -- (1,1);
+					\draw (0,0) -- (1,2);
+					\draw (0,1) -- (1,2);
+					\draw (0,1) -- (1,3);
+					\draw (0,2) -- (1,2);
+					\draw (0,2) -- (1,3);
+					\draw (0,3) -- (1,3);
+				\end{tikzpicture}
+			\end{center}
+			
+			Does this graph have a perfect matching? No, since there exists a cover of size 3 (indicated in blue).
+			\\ \\
+			Let's look at another reason we wouldn't have a perfect matching. Look at the vertices indicated in green. One of these vertices will not be covered by a matching.
+			\\ \\
+			We need at least the same number of vertices in $N(S)$ (the neighbors of $S$), otherwise a perfect matching is not possible.
+			
+			\begin{defn}
+				Let $G = (V, E)$ be a bipartite graph with partitions $A$ and $B$. Let $S \subseteq A$. Then $N(S) = \set{v \in V | \exists uv \in E, u \in S}$. That is, $N(S)$ denotes the neighbors of $S$.
+			\end{defn}
+			
+			\begin{ex}
+				Consider the following graph.
+				\begin{center}
+					\begin{tikzpicture}[scale=1.5]
+						\node at (0,2.75) {A};
+						\node at (1,2.75) {B};
+						
+						\node [rdot={180}{3}] at (0,0) {};
+						\node [gdot={0}{6}] at (1,0) {};
+						\node [rdot={180}{2}] at (0,1) {};
+						\node [gdot={0}{5}] at (1,1) {};
+						\node [rdot={180}{1}] at (0,2) {};
+						\node [gdot={0}{4}] at (1,2) {};
+						
+						\draw (0,0) -- (1,0) -- (0,1) -- (1,2) -- (0,2) -- (1,1);
+					\end{tikzpicture}
+				\end{center}
+				
+				In this graph, if $S = \set{1}, N(S) = \set{4, 5}$. Similarly, if $S = \set{2, 3}, N(S) = \set{4, 6}$.
+			\end{ex}
+			
+			\begin{proposition}[Remark]
+				Suppose the bipartite graph $G = (V, E)$ has a perfect matching. Then:
+				\begin{enumerate}
+					\item $|A| = |B|$.
+					\item $\forall S \subseteq A$, $|N(S) \ge |S|$.
+				\end{enumerate}
+			\end{proposition}
+			
+			((1) and (2) are necessary conditions.)
+			
+			\begin{proof}
+				Let $M$ be a perfect matching.
+				\begin{enumerate}
+					\item This is like a function, because each vertex in $A$ should map to exactly one vertex in $B$. More formally, $M$ defines a bijection between $A$ \& $B$. Therefore, $|A| = |B|$.
+					\item Let $S = \set{v_1, \ldots, v_k}$. Since $M$ is a perfect matching, there exist edges of $M$ $v_i w_i$ for $i = i, \ldots, k$. This implies that $w_1, \ldots, w_k \in N(S)$, since $w_i, \ldots, w_k$ are distinct. Therefore, $|N(S)| \ge k = |S|$.
+				\end{enumerate}
+			\end{proof}
+			
+			\begin{theorem}[Hall's Theorem]
+				A bipartite graph $G = (V, E)$ has a perfect matching if and only if $|A| = |B|$ and for all $S \subseteq A, |N(S)| \ge |S|$.
+			\end{theorem}
+			
+			\begin{proof}
+				We proved the forwards direction of this statement in the previous remark.
+				\\ \\
+				For the reverse direction, assume $|A| = |B|$ and there does not exist a perfect matching. We need to show that there exists $S \subseteq A$ such that $|N(S)| < S$ (that is, we're aiming to prove the contrapositive).
+				\\ \\
+				By K\"onig's Theorem, there exists a cover $C$ of size strictly less than $|A|$.
+				\\ \\
+				(We'll finish this proof next time.)
+			\end{proof}
+						
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
