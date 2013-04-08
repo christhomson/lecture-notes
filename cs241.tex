@@ -4178,4 +4178,65 @@
 			Most compilers in the real world use a flow representation of the program their given. A flow representation analyzes the control flow of the program, rather than the in-order flow of the given program.
 			\\ \\
 			If you're interested in learning more about this, check out the \href{http://en.wikipedia.org/wiki/Static_single_assignment_form}{page about it on Wikipedia}.
+	
+	\section{Course Overview and Other Courses} \lecture{April 8, 2013}
+		\subsection{Course Overview \& Final Coverage}
+			The course started off discussing using abstractions that were implemented by other people, including:
+			\begin{itemize}
+				\item Binary representation. The meaning is in the eye of the beholder.
+				\item Stored program computers. We programmed MIPS programs in machine code.
+				\item MIPS assembly language. We examined the meaning of assembly language and we programmed MIPS programs using assembly language.
+			\end{itemize}
+		
+			We then proceeded to implement some of our own abstractions:
+			\begin{itemize}
+				\item Assemblers.
+				\item Formal languages.
+					\begin{itemize}
+						\item Regular languages.
+						\item Finite automata (DFAs, NFAs, etc.). DFAs may show up in some other context on the final.
+						\item Regular expressions.
+						\item Scanning and searching.
+					\end{itemize}
+			\end{itemize}
+		
+			All of the topics discussed up to this point were covered by the midterm. They may also appear on the final, but with less weight than the remainder of the course. The final will mostly consider the following topics:
+			\begin{itemize}
+				\item Context-free languages and their grammars.
+				\item Derivations.
+				\item Top-down (LL(1)) and bottom-up parsing (LR(1)). 
+					\begin{itemize}
+						\item Note that it's not easy to construct the DFA needed by a LR(1) parser by hand (we used an automated tool for this).
+					\end{itemize}
+				\item Context-sensitive specification.
+				\item Syntax-directed translation.
+				\item Compilers.
+					\begin{itemize}
+						\item Code generation.
+						\item The need for conventions.
+						\item Code generation for each WLPP grammar rule.
+					\end{itemize}
+				\item Dynamic storage allocation.
+					\begin{itemize}
+						\item Differences and similarities between fixed- and variable-sized allocation.
+						\item Copying and relocation.
+						\item Garbage collection.
+						\item Note that we didn't have any assignments on dynamic memory allocation, so we won't be expected to write actual code for this. We might be asked for a diagram or pseudocode, though.
+					\end{itemize}
+				\item Compiler optimization.
+					\begin{itemize}
+						\item Be aware of the key issues.
+						\item We aren't expected to write code that optimizes a compiler.
+					\end{itemize}
+			\end{itemize}
+			
+		\subsection{Related Waterloo CS Courses}
+			There are several other computer science courses offered at Waterloo that are relevant to CS 241 and its content.
+			\begin{itemize}
+				\item \textbf{CS 251} (computer organization and design). The course starts with a stored program computer, but asks ``how do we build them?'' This is useful if you're stranded on a desert island with a bucket of parts from an electronics shop and you wish to build a stored program computer, without the help of an engineer.
+				\item \textbf{CS 240} (data structures and algorithms). This course involves the RAM method of computation. Most of the data structures and algorithms discussed in this course assume that your data lies in RAM.
+				\item \textbf{CS 360 / CS 365} (introduction to the the theory of computing). This is a hard-core theory course. This course analyzes Turing machines, which are an alternative model of computation. They were one of the first abstractions of computing, invented by Alan Turing. He used them to prove that some problems are unsolvable, such as the halting problem. The course also looks at context-free parsers.
+				\item \textbf{CS 444} (compiler construction). This is the hard-core compilers course. If you just can't get enough of assignments 8 through 11, you'll love this course. You'll write a compiler for a non-trivial language.
+				\item \textbf{CS 462} (formal languages and parsing). This course involves strings and string matching, which is a subtle problem with complex theory behind it.
+			\end{itemize}
 \end{document}
