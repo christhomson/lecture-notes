@@ -5074,16 +5074,50 @@
 				A bipartite graph $G = (V, E)$ has a perfect matching if and only if $|A| = |B|$ and for all $S \subseteq A, |N(S)| \ge |S|$.
 			\end{theorem}
 			
-			\begin{proof}
+			\begin{proof} \lecture{April 8, 2013}
 				We proved the forwards direction of this statement in the previous remark.
 				\\ \\
-				For the reverse direction, assume $|A| = |B|$ and there does not exist a perfect matching. We need to show that there exists $S \subseteq A$ such that $|N(S)| < S$ (that is, we're aiming to prove the contrapositive).
+				For the reverse direction, assume $|A| = |B|$ and suppose there does not exist a perfect matching. We need to show that there exists $S \subseteq A$ such that $|N(S)| < S$ (that is, we're aiming to prove the contrapositive).
 				\\ \\
-				By K\"onig's Theorem, there exists a cover $C$ of size strictly less than $|A|$.
+				Since there does not exist a perfect matching, we know that the size of the maximum matching is less than $|A|$. By K\"oenig's theorem, we know there exists a cover $C$ where $|C| < |M|$.
 				\\ \\
-				(We'll finish this proof next time.)
+				\underline{Claim}: $N(A \backslash C) \subseteq B \cap C$, since $C$ is a cover. We have:
+				\begin{align*}
+					|N(A \backslash C)| &\le |B \cap C| \\
+					&\le \underbrace{|B \cap C| + |A \cap C|}_{|C|} - |A \cap C| \\
+					|C| - |A \cap C| &< |A| - |A \cap C| \\
+					&< |A \backslash C| \text{ since } |C| < |A| \text{ by K\"oenig's Theorem}
+				\end{align*}
+				
+				Therefore, $|N(A \backslash C)| < |A \backslash C|$, as necessary.
 			\end{proof}
+			
+			We'll now look at one application of this.
+			\begin{theorem}[Corollary]
+				Let $G = (V, E)$ be a bipartite graph with partitions $A, B$. Suppose $G$ is $k$-regular ($k \ge 1$). Then $G$ has a perfect matching.
+			\end{theorem}
+			
+			\begin{proof}
+				We'll check the hypothesis of Hall's Theorem.
+				\begin{enumerate}
+					\item Check that $|A| = |B|$. We have:
+						\begin{align*}
+							k|A| = \sum_{v \in A} \deg(v) = |E| = \sum_{v \in B} \deg(v) = k|B|
+						\end{align*}
 						
+						This implies that $|A| = |B|$ by dividing by $k$ (since $k \ne 0$).
+					
+					\item Check that for every $S \subseteq A, |N(S) \ge |S|$. We have:
+						\begin{align*}
+							k|S| = \sum_{v \in S} \deg(v) \le \sum_{v \in N(S)} \deg(v) = k|N(S)|
+						\end{align*}
+						
+						This implies that $|S| \le |N(S)|$.
+				\end{enumerate}
+				
+				Therefore, by Hall's Theorem, $G$ is a perfect matching.
+			\end{proof}
+			
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
