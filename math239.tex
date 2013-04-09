@@ -17,6 +17,7 @@
 \usepackage{enumerate}
 
 \newtheorem*{theorem}{Theorem}
+\newtheorem*{corollary}{Corollary}
 \newtheorem*{proposition}{Proposition}
 
 \theoremstyle{definition}
@@ -1574,6 +1575,10 @@
 		\end{ex}
 		
 		\begin{defn}
+			The \textbf{complement} of the graph $G$, denoted $\overline G$, is the graph with $V(\overline G) = V(G)$ and edges $uv \in E(\overline G)$ if and only if $uv \not \in E(G)$.
+		\end{defn}
+		
+		\begin{defn}
 			Given the following graph:
 			\begin{center}
 				\begin{tikzpicture}[scale=1.5]
@@ -1586,7 +1591,7 @@
 			\end{center}
 			If $ij \in E$, we say $i$ and $j$ are \textbf{endpoints} of $ij$. We also say that $i, j$ are \textbf{adjacent}, and that edge $ij$ is \textbf{incident} to $i$ and $j$.
 			\\ \\
-			The neighbours of $v \in V$ are defined as $\set{v \in V | v u \in E}$.
+			The neighbours of $v \in V$ are defined as $\set{u \in V | v u \in E}$.
 		\end{defn}
 
 		\begin{ex}
@@ -1625,7 +1630,7 @@
 		\begin{ex}
 			Let $V$ be the set of binary strings of length $n$.
 			\\ \\
-			$uv \in E$ if $u$ and $v$ differ in exactly $k$ positions. We have $n = 3$ (since at most 3 differ) and $k = 1$. We get the following graph:
+			$uv \in E$ if $u$ and $v$ differ in exactly $k$ positions. This is the definition of an $n$-cube. We have $n = 3$ (since at most 3 differ) and $k = 1$. We get the following graph:
 
 			\begin{center}
 				\begin{tikzpicture}[scale=1.5]
@@ -1708,6 +1713,8 @@
 				$G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$ are \textbf{isomorphic} if there exists a bijection $\phi: V_1 \to V_2$ such that $uv \in E_1 \to \phi(u) \phi(v) \in E_2$ and $uv \not \in E_1 \to \phi(u) \phi(v) \not \in E_2$.
 			\end{defn}
 			
+			In other words, two graphs are isomorphic if adjacency is preserved.
+			\\ \\
 			Examining the two graphs above, we have:
 			\begin{align*}
 				\phi(1) &= a \\
@@ -1822,7 +1829,9 @@
 				For any graph $G = (V, E)$, $(\star) = \displaystyle \sum_{v \in V} \deg(v) = 2|E|$.
 			\end{theorem}
 
-			Also, note that there is an even number of vertices of an odd degree.
+			\begin{corollary}[Handshake Lemma]
+				There is an even number of vertices of odd degree.
+			\end{corollary}
 			
 			\begin{ex} Given the following table:
 				\begin{center}
@@ -1870,9 +1879,21 @@
 				For each edge $ab \in E$, $ab$ contributes 1 to $(\star)$ for $\deg(a)$ and $ab$ contributes 1 to $(\star)$ for $\deg(b)$.
 			\end{proof}
 
+			\begin{defn}
+				A graph in which every vertex has degree $k$ (for some fixed $k$) is called a \textbf{$\boldsymbol{k}$-regular} graph.
+			\end{defn}
+			
+			\begin{defn}
+				A \textbf{complete graph} is a graph in which all pairs of distinct vertices are adjacent to each other. That is, each vertex is joined to every other vertex. The complete graph with $p$ vertices is denoted $K_p$ (where $p \ge 1$).
+			\end{defn}
+
 		\subsection{Bipartite Graphs}
 			\begin{defn}
-				A graph $G = (V, E)$ is \textbf{bipartite} if there exists a partittion of $V$ into $V_1$ and $V_2$ such that every edge has one endpoint in $V_1$ and one endpoint in $V_2$.
+				A graph $G = (V, E)$ is \textbf{bipartite} if there exists a partition of $V$ into $V_1$ and $V_2$ such that every edge has one endpoint in $V_1$ and one endpoint in $V_2$.
+			\end{defn}
+
+			\begin{defn}
+				The \textbf{complete bipartite graph} $\boldsymbol{K_{m,n}}$ is a bipartite graph with partitions $A$ and $B$ such that all vertices in $A$ are adjacent to the all the vertices in $B$, where $|A| = m$ and $|B| = n$.
 			\end{defn}
 
 			\begin{ex}
@@ -1949,7 +1970,11 @@
 				Yes, this graph is bipartite, however its partitioning is not unique. We can flip the colors (of both the squares of the graph) and still show the graph to be bipartite. So, in general, the partitioning of $V$ into $V_1$ and $V_2$ is not unique.
 			\end{ex}
 
-			The $n$-cube is the graph $G = (V, E)$ where $V$ is the set of binary strings of length $n$ and $uv$ is an edge if $u$ and $v$ differ in exactly one position. For $n = 2$, we have the following graph:
+			\begin{defn}
+			The $\boldsymbol{n}$\textbf{-cube} is the graph $G = (V, E)$ where $V$ is the set of binary strings of length $n$ and $uv$ is an edge if $u$ and $v$ differ in exactly one position.
+			\end{defn}
+			
+			For $n = 2$, we have the following $n$-cube:
 			\begin{center}
 				\begin{tikzpicture}[scale=1.5]
 					\node [rdot={180}{00}] at (0, 0) {};
@@ -1972,20 +1997,20 @@
 			\end{proof}
 
 			\begin{proposition}
-				Let $G = (V, E)$ be a bipartite graph with partition $V = V_1 \cup V_2$. Then:
+				Let $G = (V, E)$ be a bipartite graph with partition $V = V_1, V_2$. Then:
 				\begin{align*}
 					\underbrace{\sum_{v \in V_1} \deg(v)}_{(1)} = \underbrace{\sum_{v \in V_2} \deg(v)}_{(2)} = |E|
 				\end{align*}
 			\end{proposition}
 
-			Each edge has one endpoint in $V_1$ and one endpoint in $V_2$, which is why this intuitively makes sense. More formally:
+			Each edge has one endpoint in $V_1$ and one endpoint in $V_2$, which is why this intuitively makes sense. Let's state this more formally.
 			\begin{proof}
 				Consider any edge $ab \in E$. Then $ab$ contributes 1 to (1) and $ab$ contributes 1 to (2).
 			\end{proof}
 
-			\begin{theorem}[Corollary]
+			\begin{corollary}
 				If $|V_1| = |V_2|$, then the average degree of vertices in $V_1$ is equal to the average degree of vertices in $V_2$.
-			\end{theorem}
+			\end{corollary}
 
 		\subsection{Walks, Cycles, and Paths}
 			A walk is like a comet flying off track \textendash{} they're continuous lines.
@@ -2080,9 +2105,9 @@
 				$W'$ is still a walk from $x$ to $y$. But $W'$ has fewer edges than $W$, which is a contradiction.
 			\end{proof}
 
-			\begin{theorem}[Corollary]
+			\begin{corollary}
 				If there exists a path from $x$ to $y$ and there exists a path from $y$ to $z$, then there exists a path from $x$ to $z$.
-			\end{theorem}
+			\end{corollary}
 
 			This corollary is not as trivial to show as you might initially think. You can't just join the two paths, because the two paths may share some vertices. 
 			\begin{proof}
@@ -2470,9 +2495,9 @@
 					\end{enumerate}
 				\end{proof}
 
-				\begin{theorem}[Corollary] \lecture{March 4, 2013}
+				\begin{corollary} \lecture{March 4, 2013}
 					There exists a path from $s$ to $t$ (1) if and only if for all $s \subseteq V, s \in S, \delta(S) \ne \emptyset$ (2).
-				\end{theorem}
+				\end{corollary}
 
 				\begin{proof}
 					Let us prove that (2) implies (1).
@@ -2526,9 +2551,9 @@
 				\end{ex}
 
 				This corollary follows immediately from our characterization of $st$-cuts:
-				\begin{theorem}[Corollary]
+				\begin{corollary}
 					$G$ is connected (1) if and only if for all $X \subseteq V, X \ne \emptyset, X \ne V, \delta(X) \ne \emptyset$ (2).
-				\end{theorem}
+				\end{corollary}
 
 				\begin{defn}
 					$H = (V_H, E_H)$ is a \textbf{subgraph} of $G = (V_G, E_G)$ if $V_H \subseteq V_G$ and $E_H \subseteq E_G$.
@@ -4269,7 +4294,7 @@
 				\\ \\
 				Extend the coloring of $H$ to $G$ such that vertices $a, b$ of $G$ are assigned the same color as the vertex $a = b = v$ in $H$.
 				\\ \\
-				Thus, we have colored all vertices of $G$ except $v$, and the same color appears twice among the neighbors of $v$. We can pick color $c$, unused among the neighbors of $v$, to color $v$.
+				Thus, we have colored all vertices of $G$ except $v$, and the same color appears twice among the neighbours of $v$. We can pick color $c$, unused among the neighbours of $v$, to color $v$.
 			\end{proof}
 		
 		\subsection{Dual Graphs} \lecture{March 25, 2013}
@@ -5025,10 +5050,10 @@
 			\\ \\
 			Let's look at another reason we wouldn't have a perfect matching. Look at the vertices indicated in green. One of these vertices will not be covered by a matching.
 			\\ \\
-			We need at least the same number of vertices in $N(S)$ (the neighbors of $S$), otherwise a perfect matching is not possible.
+			We need at least the same number of vertices in $N(S)$ (the neighbours of $S$), otherwise a perfect matching is not possible.
 			
 			\begin{defn}
-				Let $G = (V, E)$ be a bipartite graph with partitions $A$ and $B$. Let $S \subseteq A$. Then $N(S) = \set{v \in V | \exists uv \in E, u \in S}$. That is, $N(S)$ denotes the neighbors of $S$.
+				Let $G = (V, E)$ be a bipartite graph with partitions $A$ and $B$. Let $S \subseteq A$. Then $N(S) = \set{v \in V | \exists uv \in E, u \in S}$. That is, $N(S)$ denotes the neighbours of $S$.
 			\end{defn}
 			
 			\begin{ex}
@@ -5093,9 +5118,9 @@
 			\end{proof}
 			
 			We'll now look at one application of this.
-			\begin{theorem}[Corollary]
+			\begin{corollary}
 				Let $G = (V, E)$ be a bipartite graph with partitions $A, B$. Suppose $G$ is $k$-regular ($k \ge 1$). Then $G$ has a perfect matching.
-			\end{theorem}
+			\end{corollary}
 			
 			\begin{proof}
 				We'll check the hypothesis of Hall's Theorem.
