@@ -2196,6 +2196,10 @@
 				\end{tikzpicture}
 			\end{center}
 
+		\begin{defn}
+			The \textbf{girth} of a graph $G$, denoted $g(G)$, is the length of the shortest cycle in $G$. If $G$ has no cycles, then $g(G)$ is infinite.
+		\end{defn}
+
 		\subsubsection{Hamiltonian Cycles}
 			\begin{defn}
 				A cycle is \textbf{Hamiltonian} if every vertex is in the cycle.
@@ -2397,11 +2401,15 @@
 				This is an example of a graph with two disjoint paths but not three. There are just two edges connecting two otherwise disjoint sets of vertices.
 			\end{ex}
 			
-			Let $G = (V,E)$, and let $S \subseteq V, S \ne \emptyset, S \ne V$ (we pick a proper subset of vertices). We define:
-			\begin{align*}
-				\delta(S) := \set{uv \in E | u \in S, v \not \in S}
-			\end{align*}
+			\begin{defn}
+				Let $G = (V,E)$, and let $S \subseteq V, S \ne \emptyset, S \ne V$ (we pick a proper subset of vertices). The \textbf{cut induced} by $S$ is:
+				\begin{align*}
+					\delta(S) := \set{uv \in E | u \in S, v \not \in S}
+				\end{align*}
+			\end{defn}
 			
+			We say it's a cut because if we removed (cut) those edges, we would get two sets of edges with no edges connecting the two sets, so the graph would fall apart.
+			\\ \\
 			Informally, $\delta(S)$ is the set of edges between $V$ and $V \backslash S$.
 			
 			\begin{ex}
@@ -2445,13 +2453,7 @@
 				
 				If $S = \set{b, e}$, we get $\delta(S) = \set{ab, bc, bd, ec, ed, ef}$.
 			\end{ex}
-			
-			\begin{defn}
-				$\delta(S)$ (which is a set of edges) is the \textbf{cut induced} by $S$.
-			\end{defn}
-			
-			We say it's a cut because if we removed (cut) those edges, we would get two sets of edges with no edges connecting the two sets, so the graph would fall apart.
-			
+
 			\begin{defn}
 				Let $s, t \in V (s \ne t)$. If $s \in S$ and $t \not \in S$, then $\delta(S)$ is an \textbf{$\mathbf{st}$-cut}.
 			\end{defn}
@@ -2460,7 +2462,7 @@
 
 			\subsubsection{Menger's Theorem}
 				\begin{theorem}
-					Let $G = (V, E)$ be a graph, and $s, t \in V (s \ne t)$. If there exists edge disjoint paths $P_1, P_2, \ldots, P_k$ from $s$ to $t$, then for all $st$-cuts of $\delta(S)$, $|\delta(S)| \ge k$.
+					Let $G = (V, E)$ be a graph, and $s, t \in V (s \ne t)$. If there exists edge disjoint paths $P_1, P_2, \ldots, P_k$ from $s$ to $t$, then for all $st$-cuts $\delta(S)$, $|\delta(S)| \ge k$.
 					\\ \\
 					Equivalently, if you have an $st$-cut of size less than $k$, you cannot find $k$ disjoint paths from $s$ to $t$.
 				\end{theorem}
@@ -2468,7 +2470,7 @@
 				\begin{proof}
 					Let $\delta(S)$ be an $st$-cut ($s \in S, t \not \in S$). Let $i \in \set{1, \ldots, k}$. Follow $P_i$ from $s$ to $t$. Let $v_i$ be the last vertex in $S$ of $P_i$, and let $w_i$ be the first vertex \emph{not} in $S$ of $P_i$. Then $e_i = v_i w_i$ is an edge of $P_i$ and $e_i \in \delta(S)$. This implies $\set{e_1, e_2, \ldots, e_k} \subseteq \delta(S)$.
 					\\ \\
-					Since $P_1, P_2, \ldots, P_k$ are edge disjoint, $e_1, e_2, \ldots, e_k$ are all different. This implies that $\delta(S)| \ge k$. Since $\delta(S)$ was an arbitrary cut, we have shown that all $st$-cuts have at least $k$ edges.
+					Since $P_1, P_2, \ldots, P_k$ are edge disjoint, $e_1, e_2, \ldots, e_k$ are all different. This implies that $|\delta(S)| \ge k$. Since $\delta(S)$ was an arbitrary cut, we have shown that all $st$-cuts have at least $k$ edges.
 				\end{proof}
 			
 				The converse is also true, which is known as Menger's Theorem.
@@ -2496,7 +2498,7 @@
 				\end{proof}
 
 				\begin{corollary} \lecture{March 4, 2013}
-					There exists a path from $s$ to $t$ (1) if and only if for all $s \subseteq V, s \in S, \delta(S) \ne \emptyset$ (2).
+					There exists a path from $s$ to $t$ (1) if and only if for all $S \subseteq V, s \in S, \delta(S) \ne \emptyset$ (2).
 				\end{corollary}
 
 				\begin{proof}
@@ -2579,7 +2581,7 @@
 				Note that in order to keep an edge in a subgraph, we must keep both of its vertices. When we discard a vertex, we must discard all edges that have that vertex as an endpoint.
 
 				\begin{defn}
-					A \textbf{component} of a graph is a maximal connected subgraph of $G$. That is, a component is the connected subgraph of $G$ that has the same number of edges as vertices.
+					A \textbf{component} of a graph is a maximal connected subgraph $H$ of $G$. That is, $H$ is connected and no subgraph of $G$ that properly contains $H$ is connected.
 				\end{defn}
 
 				\begin{ex}
@@ -2611,9 +2613,9 @@
 					Each of these three obviously-disjoint subgraphs are components. The highlighted portion is not itself a component (as expected), because it is not a \underline{maximal} subgraph.
 				\end{ex}
 
-				\begin{theorem}[Remark]
+				\begin{corollary}
 					$G$ is connected if and only if $G$ has a single component.
-				\end{theorem}
+				\end{corollary}
 
 			\subsubsection{Equivalence Relations}
 				\begin{defn}
@@ -5077,7 +5079,7 @@
 				In this graph, if $S = \set{1}, N(S) = \set{4, 5}$. Similarly, if $S = \set{2, 3}, N(S) = \set{4, 6}$.
 			\end{ex}
 			
-			\begin{proposition}[Remark]
+			\begin{proposition}
 				Suppose the bipartite graph $G = (V, E)$ has a perfect matching. Then:
 				\begin{enumerate}
 					\item $|A| = |B|$.
@@ -5100,7 +5102,7 @@
 			\end{theorem}
 			
 			\begin{proof} \lecture{April 8, 2013}
-				We proved the forwards direction of this statement in the previous remark.
+				We proved the forwards direction of this statement in the previous proposition.
 				\\ \\
 				For the reverse direction, assume $|A| = |B|$ and suppose there does not exist a perfect matching. We need to show that there exists $S \subseteq A$ such that $|N(S)| < S$ (that is, we're aiming to prove the contrapositive).
 				\\ \\
