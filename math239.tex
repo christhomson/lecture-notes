@@ -2847,12 +2847,6 @@
 
 			Keep this graph (just one vertex with no edges) in mind when doing inductive proofs involving trees.
 		\end{ex}
-
-		\begin{proposition}
-			Let $G = (V, E)$ be a tree. For all $a, b \in V$, there exists a unique path between $a$ and $b$.
-		\end{proposition}
-
-		Why is this? Simple: trees have no cycles.
 		
 		\begin{proposition} \lecture{March 8, 2013}
 			If $G$ is a tree, then:
@@ -2866,7 +2860,7 @@
 			We will prove each part of this proposition in turn.
 			\begin{enumerate}
 				\item Since the tree is connected, there exists at least one path. If there exists two distinct paths between a pair of vertices, then there exists a cycle, which is a contradiction.
-				\item If an edge is not a bridge, then that edge is in a cycle, which is a contradiction.
+				\item If an edge is not a bridge, then that edge is in a cycle, which is a contradiction. \qedhere
 			\end{enumerate}
 		\end{proof}
 
@@ -3004,7 +2998,7 @@
 			In a tree, the number of edges is equal to the number of vertices minus one.
 		\end{proposition}
 
-		In order to prove this with induction, we want to start with the larger graph to see how we built it up. We can't do induction the normal way initially with graphs in general because of how graphs can be constructed (there are multiple graphs we can form a graph where $n = 5$ from a graph where $n = 4$).
+		In order to prove this with induction, we want to start with the larger graph to see how we built it up. We can't do induction the normal way initially with graphs in general because of how graphs can be constructed (there are multiple graphs we can form where $n = 5$ from a graph where $n = 4$).
 
 		\begin{proof}
 			Let $G = (V, E)$ be a tree. By induction on $|V|$:
@@ -3577,7 +3571,7 @@
 			\end{proof}
 			
 			\begin{defn} \lecture{March 15, 2013}
-				A graph is \textbf{simple} if it has no parallel edges and it has no loops.
+				A graph is \textbf{simple} if it has no parallel edges and it has no loops. A graph that is not simple is called a \textbf{multigraph}.
 			\end{defn}
 
 			\begin{proposition}
