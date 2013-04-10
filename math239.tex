@@ -2169,7 +2169,7 @@
 			\end{proposition}
 
 			\begin{proof}
-				Among all paths, pcik a path $P$ with as many edges as possible. We have:
+				Among all paths, pick a path $P$ with as many edges as possible. We have:
 				\begin{align*}
 					P = V_0e_1V_1e_2 \ldots e_nV_n
 				\end{align*}
@@ -2399,6 +2399,7 @@
 				\end{center}
 				
 				This is an example of a graph with two disjoint paths but not three. There are just two edges connecting two otherwise disjoint sets of vertices.
+				\label{ex:twodisjointpaths}
 			\end{ex}
 			
 			\begin{defn}
@@ -2458,7 +2459,7 @@
 				Let $s, t \in V (s \ne t)$. If $s \in S$ and $t \not \in S$, then $\delta(S)$ is an \textbf{$\mathbf{st}$-cut}.
 			\end{defn}
 			
-			In \ref{ex:threedisjointpaths}, we have a $st$-cut of size 2, which is why we cannot find three disjoint paths from $s$ to $t$.
+			In \ref{ex:twodisjointpaths}, we have a $st$-cut of size 2, which is why we cannot find three disjoint paths from $s$ to $t$.
 
 			\subsubsection{Menger's Theorem}
 				\begin{theorem}
@@ -2728,7 +2729,7 @@
 					\\ \\
 					Now, we'll prove (2) implies (1).
 					\\ \\
-					If $e$ is in a cycle $C$, then $G \backslash e$ is a path between $x$ and $y$. This implies that $e$ is not a bridge, otherwise $x$ and $y$ are in distinct components of $G \backslash e$, as proven earlier.
+					If $e$ is in a cycle $C$, then $C \backslash e$ is a path between $x$ and $y$. This implies that $e$ is not a bridge, otherwise $x$ and $y$ are in distinct components of $G \backslash e$, as proven earlier.
 				\end{proof}
 
 				\begin{proposition}
@@ -3097,7 +3098,7 @@
 			\begin{proof}
 				Let $T = (V, E)$. We're going to perform induction on $|V|$.
 				\\ \\
-				Base case: $|V| = 1$, i.e. $|V| = \set{v}$, set $X = \set{v}, Y = \emptyset$.
+				Base case: $|V| = 1$, i.e. $V = \set{v}$, set $X = \set{v}, Y = \emptyset$.
 				\\ \\
 				Otherwise, $|V| \ge 2$. Since $T$ is a tree, there exists vertex $u$ of degree 1. Then, $u$ is adjacent to a unique vertex $w$.
 				\\ \\
@@ -3729,9 +3730,9 @@
 		\subsection{Planar Solids}
 			There are solids that correspond to the five platonic graphs. What do they have in common? Every vertex has the same degree \emph{and} every face has the same degree. 
 			\\ \\
-			We'll now finally define planar graphs formally.
+			We'll now finally define platonic graphs formally.
 			\begin{defn}
-				A \textbf{planar graph} is a graph such that there are integers $k, l \ge 3$ such that every vertex has degree $k$ and every face has degree $l$.
+				A \textbf{platonic graph} is a graph such that there are integers $k, l \ge 3$ such that every vertex has degree $k$ and every face has degree $l$.
 			\end{defn}
 
 			Does the data of $(k, l)$ determine the graph? Yes! When drawing these graphs, they are unique because there are no ambiguous decisions to be made.
@@ -4400,7 +4401,7 @@
 			\end{center}
 		\end{ex}
 		
-		Our goal for the remainder of the course: we want to find an algorithm to produce a matching with as many edges as possible. That's a tough goal, so well restrict ourselves to finding a maximum matching in bipartite graphs only.
+		Our goal for the remainder of the course: we want to find an algorithm to produce a matching with as many edges as possible. That's a tough goal, so we will restrict ourselves to finding a maximum matching in bipartite graphs only.
 		\\ \\
 		Ideally, the algorithm will be fast and easily verifiable. We need to be able to quickly produce a result, and we need to be able to easily convince someone that it is indeed a \emph{maximum} matching.
 		
@@ -4553,7 +4554,8 @@
 						\draw[color=green,ultra thick] (2,2) -- (3,2);
 						\draw[color=green,ultra thick] (3,0) -- (4,0);
 						\draw[color=green,ultra thick] (4,2) -- (5,1);
-						\draw[color=red,ultra thick] (1,0) -- (2,0);
+						\draw[color=green,ultra thick] (1,0) -- (2,0);
+			            \draw[color=red, thick] (1,0) -- (2,0);
 						\draw[color=red,ultra thick] (1,2) -- (2,2);
 						\draw[color=red, thick] (3,0) -- (4,0);
 						\draw[color=red,ultra thick] (3,2) -- (4,2);
@@ -4902,13 +4904,13 @@
 						\node [dot={180}{1}] at (0,3) {};
 						\node [dot={0}{5}] at (1,3) {};
 						
-						\draw (0,0) -- (1,0);
+						\draw[color=green, ultra thick] (0,0) -- (1,0);
 						\draw[color=green, ultra thick] (0,1) -- (1,1);
 						\draw (0,1) -- (1,2);
 						\draw (0,1) -- (1,3);
 						\draw (0,2) -- (1,3);
 						\draw[color=green, ultra thick] (0,3) -- (1,3);
-						\draw[color=green, ultra thick] (0,1) -- (1,0);
+						\draw (0,1) -- (1,0);
 					\end{tikzpicture}
 				\end{center}
 				
@@ -4955,7 +4957,7 @@
 					\end{tikzpicture}
 				\end{center}
 				
-				This is a bipartite graph with partitions $A = \set{1, 2, 3, 4}$ (red) and $B = {5, 6, 7, 8}$ (green).
+				This is a bipartite graph with partitions $A = \set{1, 2, 3, 4}$ (red) and $B = \set{5, 6, 7, 8}$ (green).
 				\\ \\
 				We have $4 \in A$ as an unsaturated vertex, so we get:
 				\begin{center}
