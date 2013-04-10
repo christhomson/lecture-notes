@@ -5060,7 +5060,7 @@
 			We need at least the same number of vertices in $N(S)$ (the neighbours of $S$), otherwise a perfect matching is not possible.
 			
 			\begin{defn}
-				Let $G = (V, E)$ be a bipartite graph with partitions $A$ and $B$. Let $S \subseteq A$. Then $N(S) = \set{v \in V | \exists uv \in E, u \in S}$. That is, $N(S)$ denotes the neighbours of $S$.
+				Let $G = (V, E)$ be a bipartite graph with partitions $A$ and $B$. Let $S \subseteq A$. Then $N(S) = \set{v \in V | \exists uv \in E, u \in S}$. That is, $N(S)$ denotes the \textbf{neighbours} of $S$.
 			\end{defn}
 			
 			\begin{ex}
@@ -5098,12 +5098,12 @@
 				Let $M$ be a perfect matching.
 				\begin{enumerate}
 					\item This is like a function, because each vertex in $A$ should map to exactly one vertex in $B$. More formally, $M$ defines a bijection between $A$ \& $B$. Therefore, $|A| = |B|$.
-					\item Let $S = \set{v_1, \ldots, v_k}$. Since $M$ is a perfect matching, there exist edges of $M$ $v_i w_i$ for $i = i, \ldots, k$. This implies that $w_1, \ldots, w_k \in N(S)$, since $w_i, \ldots, w_k$ are distinct. Therefore, $|N(S)| \ge k = |S|$.
+					\item Let $S = \set{v_1, \ldots, v_k}$. Since $M$ is a perfect matching, there exist edges of $M$ $v_i w_i$ for $i = i, \ldots, k$. This implies that $w_1, \ldots, w_k \in N(S)$, since $w_i, \ldots, w_k$ are distinct. Therefore, $|N(S)| \ge k = |S|$. \qedhere
 				\end{enumerate}
 			\end{proof}
 			
 			\begin{theorem}[Hall's Theorem]
-				A bipartite graph $G = (V, E)$ has a perfect matching if and only if $|A| = |B|$ and for all $S \subseteq A, |N(S)| \ge |S|$.
+				A bipartite graph $G = (V, E)$ with partitions $A$ and $B$ has a perfect matching if and only if $|A| = |B|$ and for all $S \subseteq A, |N(S)| \ge |S|$.
 			\end{theorem}
 			
 			\begin{proof} \lecture{April 8, 2013}
@@ -5111,14 +5111,14 @@
 				\\ \\
 				For the reverse direction, assume $|A| = |B|$ and suppose there does not exist a perfect matching. We need to show that there exists $S \subseteq A$ such that $|N(S)| < S$ (that is, we're aiming to prove the contrapositive).
 				\\ \\
-				Since there does not exist a perfect matching, we know that the size of the maximum matching is less than $|A|$. By K\"oenig's theorem, we know there exists a cover $C$ where $|C| < |M|$.
+				Since there does not exist a perfect matching, we know that the size of the maximum matching is less than $|A|$. By K\"onig's theorem, we know there exists a cover $C$ where $|C| < |M|$.
 				\\ \\
 				\underline{Claim}: $N(A \backslash C) \subseteq B \cap C$, since $C$ is a cover. We have:
 				\begin{align*}
 					|N(A \backslash C)| &\le |B \cap C| \\
 					&\le \underbrace{|B \cap C| + |A \cap C|}_{|C|} - |A \cap C| \\
 					|C| - |A \cap C| &< |A| - |A \cap C| \\
-					&< |A \backslash C| \text{ since } |C| < |A| \text{ by K\"oenig's Theorem}
+					&< |A \backslash C| \text{ since } |C| < |A| \text{ by K\"onig's Theorem}
 				\end{align*}
 				
 				Therefore, $|N(A \backslash C)| < |A \backslash C|$, as necessary.
