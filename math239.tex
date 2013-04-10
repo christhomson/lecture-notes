@@ -3552,7 +3552,7 @@
 			\\ \\
 			$G_1$ is a spanning tree, so we have $p = q + 1$. This implies that $p - q + f = 2$.
 			
-			\begin{theorem}
+			\begin{theorem}[Euler's Formula]
 				For any connected planar embedding of a graph $G = (V, E)$, we have $p - q + f = 2$, where $p$ is the number of vertices, $q$ is the number of edges, and $f$ is the number of faces.
 			\end{theorem}
 
@@ -3785,7 +3785,7 @@
 					\item (3, 4): cube.
 					\item (3, 5): dodecahedron.
 					\item (4, 3): octahedron.
-					\item (5, 3): icosahedron.
+					\item (5, 3): icosahedron. \qedhere
 				\end{itemize}
 			\end{proof}
 
@@ -3842,7 +3842,7 @@
 			\end{center}
 			$K_5$ and $K_{3,3}$ are non-planar because they have edges that unavoidably must cross. Are there any other planar graphs? Yes! You can just add more edges to $K_5$ or $K_{3,3}$. We could also add some vertices in the middle or edges, if we'd like. 
 			\\ \\
-			The two following graphs are also non-planar, and are built by adding more edges and vertices to $K_5$, respectively.
+			The two following graphs are also non-planar, and are built by adding more edges and vertices to $K_5$.
 			\begin{center}
 				\begin{tikzpicture}[scale=1.5]
 					\node [dot={0}{}] at (0,0) {};
