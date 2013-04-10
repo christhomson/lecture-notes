@@ -140,10 +140,10 @@
 		
 		\subsection{Sample Graph Theory Problems}
 			\begin{problem}
-				For any arbitrary map of regions, color the regions such that no two touching boundaries do not have the same color, with the least number of colors possible.
+				For any arbitrary map of regions, colour the regions such that no two touching boundaries do not have the same colour, with the least number of colours possible.
 			\end{problem}
 		
-			The \textbf{four-color theorem} (proven later in the course) states that you can always do this with four colors. It's also always possible to color these regions with five colors. It's \emph{sometimes} possible to color the regions with three or fewer colors, depending on the layout of the regions and their boundaries.
+			The \textbf{four-colour theorem} (proven later in the course) states that you can always do this with four colours. It's also always possible to colour these regions with five colours. It's \emph{sometimes} possible to colour the regions with three or fewer colours, depending on the layout of the regions and their boundaries.
 		
 		\subsection{Permutations and Combinations}
 			\subsubsection{Set Notation}
@@ -1967,7 +1967,7 @@
 						\draw (0,2) -- (0,3) -- (1,3) -- (1,2) -- (0,2);
 					\end{tikzpicture}
 				\end{center}
-				Yes, this graph is bipartite, however its partitioning is not unique. We can flip the colors (of both the squares of the graph) and still show the graph to be bipartite. So, in general, the partitioning of $V$ into $V_1$ and $V_2$ is not unique.
+				Yes, this graph is bipartite, however its partitioning is not unique. We can flip the colours (of both the squares of the graph) and still show the graph to be bipartite. So, in general, the partitioning of $V$ into $V_1$ and $V_2$ is not unique.
 			\end{ex}
 
 			\begin{defn}
@@ -3128,14 +3128,14 @@
 				This implies that the cycle $P \cup \set{ab}$ is an odd cycle, which is a contradiction.
 			\end{proof}
 			
-		\subsection{Graph Coloring}
+		\subsection{Graph Colouring}
 			\begin{problem}
-				Assign colors to vertices such that every edge has endpoints of different colors. The goal is to use as few colors as possible.
+				Assign colours to vertices such that every edge has endpoints of different colours. The goal is to use as few colours as possible.
 			\end{problem}
 
-			What graphs can be colored with two colors? Easy: bipartite graphs.
+			What graphs can be coloured with two colours? Easy: bipartite graphs.
 			\\ \\
-			What graphs can be colored with three colors? No clue. There's no efficient or reliable way of coloring an arbitrary graph with any constant (even very large) number of colors.
+			What graphs can be coloured with three colours? No clue. There's no efficient or reliable way of colouring an arbitrary graph with any constant (even very large) number of colours.
 
 		\section{Planar Graphs}
 			We will allow:
@@ -3953,7 +3953,7 @@
 				\end{center}
 			\end{ex}
 			
-			\begin{theorem}[Lemma]
+			\begin{theorem}
 				If $G$ has a subgraph that is a subdivision of $K_5$ or $K_{3,3}$, then $G$ is not planar.
 			\end{theorem}
 			
@@ -4010,11 +4010,11 @@
 			\\ \\
 			\underline{Observation}: a graph is planar if and only if it has crossing number zero.
 			\\ \\
-			It's generally hard to compute crossing numbers. It's an open question to choose the crossing number of $K_{m, n}$, since we'd have to check all possible drawings.
+			It's generally hard to compute crossing numbers. It's an open question to d the crossing number of $K_{m, n}$, since we'd have to check all possible drawings.
 
-		\subsection{Graph Coloring}
+		\subsection{Graph Colouring}
 			\begin{defn}
-				Let $n$ be a positive integer. A \textbf{graph coloring} is an assignment of one of $\set{1, 2, \ldots, n}$ to each vertex such that no edge connects vertices with the same label. (In other words, no two adjacent vertices are assigned the same color.)
+				Let $n$ be a positive integer. A \textbf{graph colouring} is an assignment of one of $\set{1, 2, \ldots, n}$ to each vertex such that no edge connects vertices with the same label. (In other words, no two adjacent vertices are assigned the same colour.)
 			\end{defn}
 			
 			\begin{ex}
@@ -4035,33 +4035,33 @@
 					\end{tikzpicture}
 				\end{center}
 			
-				Since every vertex of $K_4$ has an edge to every other vertex, every edge needs its own color.
+				Since every vertex of $K_4$ has an edge to every other vertex, every edge needs its own colour.
 			\end{ex}
 
-			\underline{Note}: $K_n$ needs $n$ colors. You must color every vertex differently.
+			\underline{Note}: $K_n$ needs $n$ colours. You must colour every vertex differently.
 			\\ \\
-			\underline{Note}: $K_{m, n}$ needs two colors, because it's a bipartite graph.
+			\underline{Note}: $K_{m, n}$ needs two colours, because it's a bipartite graph.
 			
-			\begin{theorem}[Four Color Theorem]
-				Every planar graph is 4-colorable.
+			\begin{theorem}[Four Colour Theorem]
+				Every planar graph is 4-colourable.
 			\end{theorem}
 			
-			The four color theorem is known to be true, but it's not known to be true in a nice way. The proof is basically a bunch of counterexamples. The proof also involved a computer to generate various cases. \lecture{March 22, 2013}
+			The four colour theorem is known to be true, but it's not known to be true in a nice way. The proof is basically a bunch of counterexamples. The proof also involved a computer to generate various cases. \lecture{March 22, 2013}
 			\\ \\
-			We only consider simple graphs when discussing graph coloring. We can't color loops, for instance.
+			We only consider simple graphs when discussing graph colouring. We can't colour loops, for instance.
 			\\ \\
-			We can expand on the four color theorem and also introduce two very similar theorems.
+			We can expand on the four colour theorem and also introduce two very similar theorems.
 			
-			\begin{theorem}[Five Color Theorem]
-				Every simple planar graph can be 5-colored.
+			\begin{theorem}[Five Colour Theorem]
+				Every simple planar graph can be 5-coloured.
 			\end{theorem}
 
-			\begin{theorem}[Six Color Theorem]
-				Every simple planar graph can be 6-colored.
+			\begin{theorem}[Six Colour Theorem]
+				Every simple planar graph can be 6-coloured.
 			\end{theorem}
 
 			We know that simple planar graphs cannot have too many edges. This implies that there exists a vertex of low degree. We'll use this information to derive a lemma.
-			\begin{theorem}[Lemma]
+			\begin{theorem}
 				Let $G = (V, E)$ be a simple graph. There exists a vertex $v \in V$ of degree $< k$. ($k = 6$)
 			\end{theorem}
 
@@ -4076,22 +4076,22 @@
 
 			So, we can update our lemma's statement with $k = 6$.
 			\\ \\
-			Let's now prove the six color theorem.
+			Let's now prove the six colour theorem.
 			\begin{proof}
 				Let $G = (V, E)$ be a simple planar graph. By induction on $k = |V|$:
 				\\ \\
-				\underline{Base case}: $|V| = 1$. You can color this vertex any color.
+				\underline{Base case}: $|V| = 1$. You can colour this vertex any colour.
 				\\ \\
-				Assume for $k \ge 2$ that we can 6-color every simple planar graph with $\le k - 1$ vertices.
+				Assume for $k \ge 2$ that we can 6-colour every simple planar graph with $\le k - 1$ vertices.
 				\\ \\
 				By the lemma we just introduced, there exists some $v \in V$ such that $\deg(v) \le 5$.
 				\\ \\
-				Let $H = G \backslash v$ be the graph obtained by deleting $v$ from $G$. Note that $H$ is a simple planar graph. By induction, there exists a 6-coloring of $H$.
+				Let $H = G \backslash v$ be the graph obtained by deleting $v$ from $G$. Note that $H$ is a simple planar graph. By induction, there exists a 6-colouring of $H$.
 				\\ \\
-				Since $\deg(v) \le 5$, one color, say $c$, does not appear among the vertices adjacent to $v$. Pick color $c$ for $v$.
+				Since $\deg(v) \le 5$, one colour, say $c$, does not appear among the vertices adjacent to $v$. Pick colour $c$ for $v$.
 			\end{proof}
 
-			Before we can prove the five color theorem, we need one more ingredient: contraction.
+			Before we can prove the five colour theorem, we need one more ingredient: contraction.
 
 			\begin{defn}
 				Let $G = (V, E)$ be a graph, and $e = uv \in E$. Then $G/e$ is the graph obtained by identifying $u$ and $v$ in $G$ and deleting $e$. We call this \textbf{contracting} the edge.
@@ -4172,10 +4172,10 @@
 				If $G$ is planar, then $G/e$ is planar.
 			\end{proposition}
 			
-			Our goal is to 5-color a planar graph. We can do this by taking a graph with five vertices, removing a vertex, applying colors, then adding back the vertex that we removed.
+			Our goal is to 5-colour a planar graph. We can do this by taking a graph with five vertices, removing a vertex, applying colours, then adding back the vertex that we removed.
 			
 			\begin{ex}
-				We're going to 5-color the following graph.
+				We're going to 5-colour the following graph.
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
 						\node [dot={0}{}] at (0,0) {};
@@ -4189,7 +4189,7 @@
 					\end{tikzpicture}
 				\end{center}
 				
-				First, we'll remove the vertex in the middle and color the remaining vertices:
+				First, we'll remove the vertex in the middle and colour the remaining vertices:
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
 						\node [dot={0}{3}] at (0,0) {};
@@ -4199,7 +4199,7 @@
 					\end{tikzpicture}
 				\end{center}
 				
-				Then, we'll put the middle vertex back and give it the remaining color:
+				Then, we'll put the middle vertex back and give it the remaining colour:
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
 						\node [dot={0}{3}] at (0,0) {};
@@ -4232,7 +4232,7 @@
 					\end{tikzpicture}
 				\end{center}
 				
-				We're going to contract the edges indicated in red, and then assign colors to the remaining vertices.
+				We're going to contract the edges indicated in red, and then assign colours to the remaining vertices.
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
 						\node [dot={0}{3}] at (0,0) {};
@@ -4245,7 +4245,7 @@
 					\end{tikzpicture}
 				\end{center}
 				
-				Finally, let's uncontract and assign a color to the re-introduced vertices.
+				Finally, let's uncontract and assign a colour to the re-introduced vertices.
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
 						\node [dot={0}{3}] at (0,0) {};
@@ -4267,20 +4267,20 @@
 			
 			We know there must exist a pair of vertices that do not have an edge between them. Otherwise, we'd have $K_5$, but we were told the graph is planar.
 			\\ \\
-			Let's now prove the five color theorem.
+			Let's now prove the five colour theorem.
 			
 			\begin{proof}
 				Let $G = (V, E)$ be a simple planar graph. By induction on $k = |V|$:
 				\\ \\
-				\underline{Base case}: $|V| = k = 1$. You can color this vertex any color.
+				\underline{Base case}: $|V| = k = 1$. You can colour this vertex any colour.
 				\\ \\
-				Assume for $k \ge 2$ that every simple planar graph with $\le k - 1$ vertices is 5-colorable.
+				Assume for $k \ge 2$ that every simple planar graph with $\le k - 1$ vertices is 5-colourable.
 				\\ \\
 				\underline{Case 1} (there exists a vertex of degree $\le 4$):
 				\\ \\
-				Let $H = G \backslash v$ be the graph obtained by deleting $v$ from $G$. Note that $H$ is a simple planar graph. By induction, there exists a 5-coloring of $H$.
+				Let $H = G \backslash v$ be the graph obtained by deleting $v$ from $G$. Note that $H$ is a simple planar graph. By induction, there exists a 5-colouring of $H$.
 				\\ \\
-				Since $\deg(v) \le 5$, one color, say $c$, does not appear among the vertices adjacent to $v$. Pick color $c$ for $v$.
+				Since $\deg(v) \le 5$, one colour, say $c$, does not appear among the vertices adjacent to $v$. Pick colour $c$ for $v$.
 				\\ \\
 				Otherwise, for all $v \in V$, $\deg(v) \ge 5$. By lemma, we have Case 2.
 				\\ \\
@@ -4288,11 +4288,11 @@
 				\\ \\
 				We claim that there exists $a, b \in V$, adjacent to $v$, such that $a, b$ are not adjacent (otherwise, $G$ contains $K_5$, so $G$ would not be planar).
 				\\ \\
-				Let $H = (G/av)/vb$. Because of our claim, $H$ has no loop. By induction, there exists a 5-coloring of $H$.
+				Let $H = (G/av)/vb$. Because of our claim, $H$ has no loop. By induction, there exists a 5-colouring of $H$.
 				\\ \\
-				Extend the coloring of $H$ to $G$ such that vertices $a, b$ of $G$ are assigned the same color as the vertex $a = b = v$ in $H$.
+				Extend the colouring of $H$ to $G$ such that vertices $a, b$ of $G$ are assigned the same colour as the vertex $a = b = v$ in $H$.
 				\\ \\
-				Thus, we have colored all vertices of $G$ except $v$, and the same color appears twice among the neighbours of $v$. We can pick color $c$, unused among the neighbours of $v$, to color $v$.
+				Thus, we have coloured all vertices of $G$ except $v$, and the same colour appears twice among the neighbours of $v$. We can pick colour $c$, unused among the neighbours of $v$, to colour $v$.
 			\end{proof}
 		
 		\subsection{Dual Graphs} \lecture{March 25, 2013}
@@ -4361,13 +4361,13 @@
 
 			Note that $G^{\star \star} = G$, as long as the graph $G$ is connected.
 			\\ \\
-			How do colorings work with dual graphs? Let's look at the four color theorem, stated in a different way.
-			\begin{theorem}[Four Color Theorem \textendash{} Face Version]
-				Let $G$ be a graph with a planar embedding. Assume $G$ is connected and has no bridge. Then we can color the faces of $G$ with four colors such that any two faces sharing an edge are assigned distinct colors.
+			How do colourings work with dual graphs? Let's look at the four colour theorem, stated in a different way.
+			\begin{theorem}[Four Colour Theorem \textendash{} Face Version]
+				Let $G$ be a graph with a planar embedding. Assume $G$ is connected and has no bridge. Then we can colour the faces of $G$ with four colours such that any two faces sharing an edge are assigned distinct colours.
 			\end{theorem}
 
 			\begin{proof}
-				Let $G^\star$ be the dual of $G$. Since $G$ has no bridge, $G^\star$ has no loop. By the vertex version of the four color theorem, there exists a 4-coloring of the vertices of $G^\star$, which gives a 4-coloring of the faces of $G$.
+				Let $G^\star$ be the dual of $G$. Since $G$ has no bridge, $G^\star$ has no loop. By the vertex version of the four colour theorem, there exists a 4-colouring of the vertices of $G^\star$, which gives a 4-colouring of the faces of $G$.
 			\end{proof}
 
 			That's all we're going to discuss about planar graphs.
@@ -4717,7 +4717,7 @@
 			
 			We'll use these results to introduce a lemma.
 			
-			\begin{theorem}[Lemma]
+			\begin{theorem}
 				Let $M$ be a matching, and let $C$ be a cover. Then $|M| \le |C|$.
 			\end{theorem}
 			
@@ -4733,7 +4733,7 @@
 			
 			Now, how can we convince someone that a particular matching is a maximum matching? We can note that there exists a cover of a certain size, which implies that no matching of a greater size exists, according to the lemma we just introduced.
 			
-			\begin{theorem}[Lemma]
+			\begin{theorem}
 				Let $M$ be a matching, and let $C$ be a cover. Suppose $|M| = |C|$. Then:
 				\begin{enumerate}
 					\item $M$ is a maximum matching.
@@ -4742,12 +4742,12 @@
 			\end{theorem}
 			
 			\begin{proof}
-				For (1): let $M'$ be any matching. We know that $|M'| \le |C|$, by the previous lemma, and we know that $|C| = |M|$ (by definition in this lemma). Therefore, $|M'| \le |M|$.
+				For (1): let $M'$ be any matching. We know that $|M'| \le |C|$, by the previous theorem, and we know that $|C| = |M|$ (by definition in this lemma). Therefore, $|M'| \le |M|$.
 				\\ \\
-				For (2): let $C'$ be any cover. We know that $|C'| \ge |M|$, by the previous lemma, and we know that $|M| = |C|$ (by definition in this lemma). Therefore, $|C'| \ge |C|$.
+				For (2): let $C'$ be any cover. We know that $|C'| \ge |M|$, by the previous theorem, and we know that $|M| = |C|$ (by definition in this theorem). Therefore, $|C'| \ge |C|$.
 			\end{proof}
 			
-			Note that the second lemma we just introduced implies that $\max \set{|M| : M \text{ is a matching}} \le \min \set{|C| : C \text{ is a cover}}$. However, is this $\le$, or is it always =? It turns out, if the graph contains an odd cycle, then $|M| \ne |C|$.
+			Note that the second theorem we just introduced implies that $\max \set{|M| : M \text{ is a matching}} \le \min \set{|C| : C \text{ is a cover}}$. However, is this $\le$, or is it always =? It turns out, if the graph contains an odd cycle, then $|M| \ne |C|$.
 			
 			\begin{theorem}[K\"onig's Theorem]
 				In a bipartite graph, $\max \set{|M| : M \text{ is a matching}} \le \min \set{|C| : C \text{ is a cover}}$ holds with equality.
@@ -5305,7 +5305,7 @@
 
 				No. There is a subdivision of $K_5$ in this graph, which makes it non-planar.
 			
-			\item What is the minimum number of colors needed to color this graph (not shown here)? Four, because this was contained within the graph:		
+			\item What is the minimum number of colours needed to colour this graph (not shown here)? Four, because this was contained within the graph:		
 				\begin{center}
 					\begin{tikzpicture}[scale=2]
 						\node [dot={0}{}] at (0,0) {};
