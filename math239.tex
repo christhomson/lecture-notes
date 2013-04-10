@@ -4406,6 +4406,14 @@
 		\\ \\
 		Ideally, the algorithm will be fast and easily verifiable. We need to be able to quickly produce a result, and we need to be able to easily convince someone that it is indeed a \emph{maximum} matching.
 		
+		\begin{defn}
+			A \textbf{maximum matching} is a matching with as many edges as possible in $G$.
+		\end{defn}
+		
+		\begin{defn}
+			A matching is said to be \textbf{maximal} if adding any additional edge will result in a set that is no longer a matching.
+		\end{defn}
+		
 		\begin{ex} \lecture{March 27, 2013}
 			Find a maximum matching (a matching with as many edges as possible) for the following graph.
 			\begin{center}
@@ -4429,7 +4437,7 @@
 			\end{center}
 			
 			(The bottom-center edge is both green and red.)
-
+			\\ \\
 			The red edges represent a matching that is not maximum. The green edges represent a maximum matching, as required.
 		\end{ex}
 		
@@ -4474,7 +4482,7 @@
 			\subsection{Saturation}
 				In order for us to move on, we need a few definitions.
 				\begin{defn}
-					Let $G$ be a graph with matching $M$. Vertex $v$ is \textbf{saturated} if $v$ is the endpoint of an edge of $M$.
+					Let $G$ be a graph with matching $M$. Vertex $v$ is \textbf{saturated} if $v$ is the endpoint of an edge of $M$. Otherwise, $v$ is said to be \textbf{unsaturated}.
 				\end{defn}
 				
 				\begin{ex}
@@ -4590,7 +4598,7 @@
 						}
 					\end{algorithm}
 					
-					This algorithm is a nice idea, but it is not nearly precise enough \textendash{} you couldn't program currently. How do we know if $M$ is maximum? We can't simply enumerate all matchings, that'd get out of hand quickly. Also, how do we find an augmenting path $P$?
+					This algorithm is a nice idea, but it is not nearly precise enough \textendash{} you couldn't program it currently. How do we know if $M$ is maximum? We can't simply enumerate all matchings, that'd get out of hand quickly. Also, how do we find an augmenting path $P$?
 					\\ \\
 					We will determine how to know if $M$ is maximum, and how to find an augmenting path $P$, on bipartite graphs.
 				
