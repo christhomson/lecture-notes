@@ -143,7 +143,7 @@
 				For any arbitrary map of regions, colour the regions such that no two touching boundaries do not have the same colour, with the least number of colours possible.
 			\end{problem}
 		
-			The \textbf{four-colour theorem} (proven later in the course) states that you can always do this with four colours. It's also always possible to colour these regions with five colours. It's \emph{sometimes} possible to colour the regions with three or fewer colours, depending on the layout of the regions and their boundaries.
+			The \textbf{four-colour theorem} states that you can always do this with four colours. It's also always possible to colour these regions with five colours. It's \emph{sometimes} possible to colour the regions with three or fewer colours, depending on the layout of the regions and their boundaries.
 		
 		\subsection{Permutations and Combinations}
 			\subsubsection{Set Notation}
@@ -230,6 +230,7 @@
 						\begin{align*}
 							\underbrace{|S|}_{2^n} = \underbrace{|S_0|}_{\binom{n}{0}} + \underbrace{|S_1|}_{\binom{n}{1}} + \cdots + \underbrace{|S_n|}_{\binom{n}{n}}
 						\end{align*}
+						\qedhere
 					\end{enumerate}
 				\end{proof}
 				
@@ -340,9 +341,9 @@
 				\end{ex}
 				
 				\begin{ex}
-					Let $\sigma$ be the set of coins (1\cent, 5\cent, 10\cent, 25\cent, \$1, \$2), and let $w(\sigma)$ be the total value of the coins in $\sigma$.
+					Let $\sigma$ be a set of coins (1\cent, 5\cent, 10\cent, 25\cent, \$1, \$2), and let $w(\sigma)$ be the total value of the coins in $\sigma$.
 					\\ \\
-					The question becomes: how many sets of coins have total value $k$? In other words, how many ways are there to give change on $k$ amount?
+					The question becomes: how many sets of coins have total value $k$? In other words, how many ways are there to give $k$ amount of change?
 				\end{ex}
 		\subsection{Generating Functions}
 			\begin{defn}
@@ -371,7 +372,7 @@
 					\end{tabular}
 				\end{center}
 				
-				$\phi_S(x) = 1 + 3x + 3x^2 + x^3 = (1 + x)^3$ is the generating function. Notice the coefficients are the number of objects whose weight is equal to the exponent.
+				$\phi_S(x) = 1 + 3x + 3x^2 + x^3 = (1 + x)^3$ is the generating function. Notice that the coefficients of each term are the number of objects who have that the weight indicated by the exponent of the $x$ in that term.
 			\end{ex}
 			
 			\textbf{Remember}: the generating function for $S$ with weights $w$ is $\phi_S(x) = \sum_{k \ge 0} a_k x^k$, where $a_k$ is the number of objects of size $k$ in $S$.
@@ -406,7 +407,7 @@
 				\text{average weight } &= \frac{\phi_S'(1)}{\phi_S(1)} = \frac{n2^{n - 1}}{2^n} = \frac{n}{2}
 			\end{align*}
 
-			We'll now prove the proposition more generally.
+			We'll now prove this proposition more generally.
 			\begin{proof}
 				We will prove the two parts of the proposition separately. The average weight clearly follows from those two results.
 				\begin{enumerate}
@@ -466,9 +467,9 @@
 				The inverse of $(1 + x + x^2 + \cdots)$ is $(1 - x)$, as shown in the previous example.
 			\end{ex}
 
-			\textbf{Question}: does every power series have an inverse? No. For example, $(x + x^2)$ does not have an inverse. But suppose for a moment that it does.
+			\textbf{Question}: does every power series have an inverse? No. For example, $(x + x^2)$ does not have an inverse.
 			\begin{proof}
-				If $(x + x^2)$ has an inverse, there would exist constants $b_i$ such that
+				Suppose $(x + x^2)$ has an inverse. If $(x + x^2)$ has an inverse, there would exist constants $b_i$ such that
 				\begin{align*}
 					(x + x^2)(b_0 + b_1x + b_2x^2 + b_3x^3 + \cdots) = 1
 				\end{align*}
@@ -521,7 +522,7 @@
 				\end{proposition}
 				\textbf{Some useful formul\ae}:
 					\begin{align*}
-						\frac{1}{1 - x} = 1 + x + x^2 + x_3 + \cdots &\text{ since } 1 = (1 + x + x^2 + \cdots)(1 - x) \\
+						\frac{1}{1 - x} = 1 + x + x^2 + x^3 + \cdots &\text{ since } 1 = (1 + x + x^2 + \cdots)(1 - x) \\
 						\frac{1 - x^{k+1}}{1-x} = 1 + x + x^2 + \cdots + x^k &\text{ since } 1 - x^{k+1} = (1 + x + x^2 + \cdots + x^k)(1-x) 
 					\end{align*}
 			\subsubsection{Compositions}
@@ -559,7 +560,7 @@
 
 				\underline{Aside}:
 				\begin{align*}
-					a(b(x)) = 1 + (\underbrace{x + x^2}_{x(1+x)})^1 + (\underbrace{x + x^2}_{x(1+x)})^2 + (\underbrace{x + x^2}_{x(1+x)})^3 + \cdots
+					A(B(x)) = 1 + (\underbrace{x + x^2}_{x(1+x)})^1 + (\underbrace{x + x^2}_{x(1+x)})^2 + (\underbrace{x + x^2}_{x(1+x)})^3 + \cdots
 				\end{align*}
 
 				\begin{proof}
@@ -582,7 +583,7 @@
 					&= 1 + x^2 + x^4 + x^6 + \cdots
 					\end{align*}
 
-					We used composition with $A(x) = 1 + y + y^2 + \cdots$ and $B(x) = x^2$ (constant is zero). We were only allowed to do this because $[x^0]B(x) = 0$.
+					This is a composition with $A(x) = 1 + y + y^2 + \cdots$ and $B(x) = x^2$ (constant is zero). We were only allowed to do this because $[x^0]B(x) = 0$.
 				\end{ex}
 			\subsubsection{Cartesian Product}
 				\begin{defn}
@@ -653,7 +654,7 @@
 
 				\begin{proof}
 					\begin{align*}
-						\phi_S(x) &= \sum{(a, b) \in S} x^{w[(a, b)]} \\
+						\phi_S(x) &= \sum_{(a, b) \in S} x^{w[(a, b)]} \\
 						&= \sum_{(a, b) \in S} x^{\alpha(a) + \beta(b)} \\
 						&= \underbrace{\bigg[ \sum_{a \in A} x^{\alpha(a)} \bigg]}_{\phi_A(x)} \cdot \underbrace{\bigg[ \sum_{b \in B} x^{\beta(b)} \bigg]}_{\phi_B(x)}
 					\end{align*}
@@ -664,7 +665,7 @@
 					\\ \\
 					Suppose $n = 3$ and $k = 2$. You'll have $(0, 3), (1, 2), (2, 1)$, and $(3, 0)$ \textendash{} four possibilities (notice order matters).
 					\\ \\
-					We have $\mathbb{N}_0 = \set{0, 1, 2, 3, \ldots }, w(a) = a$. Then:
+					We have $\mathbb{N}_0 = \set{0, 1, 2, 3, \ldots }, w(a) = a$ (for $a \in \mathbb{N}_0$). Then:
 					\begin{align*}
 						\phi_{\mathbb{N}_0}(x) = \sum_{n \ge 0} a_n x^n = 1 + x + x^2 + x^3 + \ldots = \frac{1}{1-x}
 					\end{align*}
@@ -674,7 +675,7 @@
 						\phi_S(x) = [\phi_{\mathbb{N}_0}(x)]^k = \frac{1}{(1-x)^k} \text{ by the product lemma}
 					\end{align*}
 
-					Therefore, the number of $k$-tuples $(m_1, m_2, \ldots, m_k)$ (where $m_i \ge 0, m_i \in \mathbb{Z}$) where $m_1 + m_2 + \ldots + m_k = n$ is given by $[x^n]\frac{1}{(1 - x)^k}$. But we cannot figure out the coefficient. Let's leave generating functions for now, and find a combinatorial proof for this.
+					Therefore, the number of $k$-tuples $(m_1, m_2, \ldots, m_k)$ (where $m_i \ge 0, m_i \in \mathbb{Z}$) where $m_1 + m_2 + \ldots + m_k = n$ is given by $[x^n]\frac{1}{(1 - x)^k}$. We cannot figure out this coefficient. Let's leave generating functions for now, and find a combinatorial proof for this.
 				\end{ex}
 
 				When you use the product lemma, you need to ensure:
@@ -710,7 +711,7 @@
 				\end{defn}
 				
 				\begin{ex}
-					We have $\mathbb{N} = \set{1, 2, 3, \ldots }, w(a) = a$, which gives us:
+					We have $\mathbb{N} = \set{1, 2, 3, \ldots }, w(a) = a$ (for $a \in \mathbb{N}$), which gives us:
 					\begin{align*}
 						\phi_{\mathbb{N}}(x) = x + x^2 + x^3 + \ldots = x(1 + x + x^2 + \ldots) = \frac{x}{1 - x}
 					\end{align*}
@@ -722,7 +723,7 @@
 						\phi_S(x) = [\phi_{\mathbb{N}}(x)]^k = \frac{x^k}{(1 - x)^k}
 					\end{align*}
 					\lecture{January 21, 2013}
-					We're interested in finding $[x^k]x^k \frac{1}{(1 - x)^k}$.
+					We're interested in finding $[x^n]x^k \frac{1}{(1 - x)^k}$.
 					\begin{align*}
 						[x^n]x^k \frac{1}{(1 - x)^k} &= [x^{n-k}] \frac{1}{(1 - x)^k} \\
 						&= \binom{(n - k) + k - 1}{k - 1} \\
@@ -780,7 +781,7 @@
 						\\ \\
 						S &= (\mathbb{N}_{\le 5})^k \times (\mathbb{N}_{\ge 3})^k
 					\end{align*}
-					The weight is the sum of the six individual numbers, since $\mathbb{N}_{\le 5}$ and $\mathbb{N}_{\ge 3}$'s weights are both defined by $w(a) = a$, which gives us:
+					The weight is the sum of the six individual numbers in the tuple, since $\mathbb{N}_{\le 5}$ and $\mathbb{N}_{\ge 3}$'s weights are both defined by $w(a) = a$, which gives us:
 					\begin{align*}
 						\phi_{\mathbb{N}_{\le 5}}(x) &= x + x^2 + x^3 + x^4 + x^5 \\
 						\phi_{\mathbb{N}_{\ge 3}}(x) &= x^3 + x^4 + x^5 + \ldots
@@ -836,7 +837,7 @@
 
 					(3) is an acceptable composition because $x^2$ has a constant term of zero.
 					\\ \\
-					Now, we have that $S = () \cup_{k \ge 1} \mathbb{N}_{\text{odd}}^k$. By the sum and product lemmas, the generating function for $S$ is:
+					Now, we have that $\displaystyle S = () \bigcup_{k \ge 1} \mathbb{N}_{\text{odd}}^k$. By the sum and product lemmas, the generating function for $S$ is:
 					\setcounter{equation}{0}
 					\begin{align}
 						\phi_S(x) &= 1 + \sum_{k \ge 1} \phi_{\mathbb{N}_{\text{odd}}}^k(x) \\
@@ -850,7 +851,7 @@
 
 					(4) is a valid composition because $\frac{x}{1 - x^2}$ has a constant term of zero.
 					\\ \\
-					What is $[x^n] \frac{1 - x^2}{1 - x - x^2}$? (Don't think of assigning values to $x$. Just focus on cancelling them out.)
+					What is $[x^n] \frac{1 - x^2}{1 - x - x^2}$? (Don't think of assigning values to $x$. Just focus on canceling them out.)
 					\\ \\
 					\begin{align*}
 						\frac{1 - x^2}{1 - x - x^2} &= \sum_{n \ge 0} a_n x^n \\
@@ -1011,13 +1012,13 @@
 			\end{theorem}
 
 			\begin{proof}
-				In order to prove this theorem, we need to show that under the given assumptions, $|AB| = |A \times B|$, which we can show by showing there is a bijection.
+				In order to prove this theorem, we need to show that under the given assumptions, $|AB| = |A \times B|$, which we can show by showing there is a bijection between $AB$ and $A \times B$.
 				\\ \\
-				Let $S_n$ be the set of strings of length $n$ of $AB$, and let $T_n$ be the set of pairs $(a, b) \in A \times B$ such that $length(a) + length(b) = n$. Our claim is that $f[(a, b)] = ab, f : T_n \to S_n$ is a bijection. 
+				Let $S_n$ be the set of strings of length $n$ of $AB$, and let $T_n$ be the set of pairs $(a, b) \in A \times B$ such that $\text{length}(a) + \text{length}(b) = n$. Our claim is that $f[(a, b)] = ab, f : T_n \to S_n$ is a bijection. 
 				\\ \\
 				In order to prove that $T_n \to S_n$ is a bijection, two things must be proven. We have to show that it is both onto and injective.
 				\begin{enumerate}
-					\item Onto. Every set in $S_n$ is in the form $ab$ where $a \in A$ and $b \in B$ such that $ab = f[(a, b)]$.
+					\item Onto. Every set in $S_n$ is of the form $ab$ where $a \in A$ and $b \in B$ such that $ab = f[(a, b)]$.
 					\item Injective. Let $(a_1, b_1), (a_2, b_2) \in T_n$. Suppose:
 						\begin{align*}
 							\underbrace{f[(a_1, b_1)]}_{a_1b_1} = \underbrace{f[(a_2, b_2)]}_{a_2b_2}
@@ -1035,10 +1036,10 @@
 				Let $S$ be a set of binary strings. Let $A, B$ be partitions of $S$. Then $\phi_S(x) = \phi_A(x) + \phi_B(x)$.
 			\end{theorem}
 
-			The proof of the sum lemma for strings is the same as the proof of the sum lemma for sets in general.
+			The proof of the sum lemma for strings is the same as the proof of the sum lemma for generating functions in general.
 
 			\begin{defn}
-				An expression is \textbf{unambiguous} if there exists a unique way of writing the string according to the expression.
+				An expression is \textbf{unambiguous} if there exists a unique way of writing every string according to the expression.
 			\end{defn}
 
 			For example: $\set{0, 10, 110}^\star \set{\epsilon, 1, 11}$ is the set of strings with no more than two consecutive ones. Let's examine the arbitrary string $0001101011001$. If we split the string after every zero, we get $0,0,0,110,10,110,0,1$, which is a unique way of breaking down the string.
@@ -1063,7 +1064,7 @@
 			\end{proof}
 		\subsection{Counting Strings} \lecture{January 30, 2013}
 			\begin{ex}
-				Let $S$ be the set of binary strings with no three consecutive ones (111). We can express $S$ as $S = \set{0, 10, 110 }^\star \set{\epsilon, 1, 11}$. You can verify that this is unambiguous.
+				Let $S$ be the set of binary strings with no three consecutive ones (111). We can express $S$ as $S = \set{0, 10, 110 }^\star \set{\epsilon, 1, 11}$. You can verify that this is an unambiguous expression.
 				\\ \\
 				We have:
 				\begin{align*}
@@ -1104,7 +1105,7 @@
 					&= \frac{(1 + f)^2}{1 - f^2} \\
 					&= \frac{(1 + f)(1 + f)}{(1 + f)(1 - f)} \\
 					&= \frac{1 + f}{1 - f} \\
-					& \text{\vdots} \\ 
+					&\hspace{1cm} \text{\vdots} \\ 
 					&= \frac{1 - x^2 + x^3}{1 - 2x + x^2 - x^3}
 				\end{align*}
 			\end{ex}
@@ -1113,7 +1114,7 @@
 				\begin{ex} \lecture{February 1, 2013}
 					Let $S$ be the set of all binary strings. We can define $S$ recursively as $S = \set{\epsilon } \cup \set{0, 1}$. Whenever you write an expression like this, you should take great care to ensure that both sides are actually equal.
 					\\ \\
-					One might attempt to describe $S$ as $\set{\epsilon, 0, 1 }S$, however that is ambiguous. $S = \set{\epsilon } \cup \set{0, 1 } S$ is unambiguous. Since there are two terms of length 1, and applying the sum \& product lemmas, we get:
+					One might attempt to describe $S$ as $\set{\epsilon, 0, 1 }S$, however that is ambiguous. $S = \set{\epsilon } \cup \set{0, 1 } S$ is unambiguous. Since there are two terms of length 1, applying the sum \& product lemmas, we get:
 					\begin{align*}
 						\phi_S(x) &= \phi_{\set{\epsilon}}(x) + \phi_{\set{0, 1}}(x) \cdot \phi_S(x) \text{ by the sum lemma} \\
 						&= 1 + 2x \cdot \phi_S(x) \\
@@ -1471,11 +1472,7 @@
 
 			Suppose $p(x)$ has root $\beta_i$ with multiplicity $m_i$, for $i = 1, \ldots, k$. That is, $\sum_{i = 1}^{k} m_i = m$.
 			\\ \\
-			The general form for $a_n$ is:
-			\begin{align*}
-				\sum_{i = 1}^{k} Q(m_i) \beta_i^n
-			\end{align*}
-			where $Q$ is a polynomial of degree $m_i - 1$.
+			The general form for $a_n$ is $\displaystyle \sum_{i = 1}^{k} Q(m_i) \beta_i^n$ where $Q$ is a polynomial of degree $m_i - 1$.
 		\end{theorem}
 
 		This result generalizes the result from last time, except now the roots don't need to be distinct.
