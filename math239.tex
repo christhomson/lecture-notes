@@ -3386,6 +3386,7 @@
 					\node[draw=none] at (2,1) {$F_2$};
 					\node[draw=none] at (3.4,1) {$F_3$};
 					\node[draw=none] at (1.95,2.25) {$F_4$};
+					\node[draw=none] at (1.95,2.75) {$F_5$};
 				\end{tikzpicture}
 			\end{center}
 
@@ -4314,8 +4315,8 @@
 					
 						\draw (0,0) -- (3,0) -- (3,2) -- (0,2) -- (0,0);
 						\draw (0,1) -- (3,1);
-						\draw (0,0) to[out=150,in=210] (0,2);
-						\draw (3,0) to[out=30,in=-30] (3,2);
+						\draw (0,0) .. controls (-2, 1) .. (0,2);
+						\draw (3,0) .. controls (5, 1) .. (3,2);
 						\draw[color=green] (-1,1) to[out=-30,in=180] (1.5,0.5) to[out=0,in=210] (4,1) to[out=150,in=0] (1.5,1.5) to[out=180,in=30] (-1, 1);
 						\draw[color=green] (1.5,1.5) -- (1.5,2.5);
 						\draw[color=green] (-1,1) to[out=80,in=180] (1.5,2.5) to[out=0,in=100] (4,1);
