@@ -76,10 +76,10 @@
 			\end{tabular}	
 		\end{center}
 	
-		Note that there are sixteen combinations because $k = 4$, and there are always $2^k$ combinations since there are two possible values for each of $k$ screens.
+		Note that there are sixteen combinations because $k = 4$, and there are $2^k$ combinations since there are two possible values for each of $k$ screens.
 	
 		\subsection{Endianness}
-			Let's consider the sequence $1010$. This sequence of bits has a different interpretation when following different conventions.
+			Let's consider the sequence $1010$. This sequence of bits has different interpretations when following different conventions.
 			\begin{itemize}
 				\item \textbf{Unsigned, little-endian}: $(1 \times 2^0) + (0 \times 2^1) + (1 \times 2^2) + (0 \times 2^3) = 1 + 4 = 5$.
 				\item \textbf{Unsigned, big-endian}: $(0 \times 2^0) + (1 \times 2^1) + (0 \times 2^2) + (1 \times 2^3) = 2 + 8 = 10$.
@@ -104,19 +104,19 @@
 				\end{tabular}
 			\end{center}
 			
-			In the latter case, $0111000$ represents the character `$8$', not the unsigned big- or little-endian number $8$. \\ \\
+			In the last case, $0111000$ represents the character `$8$', not the unsigned big- or little-endian number $8$. \\ \\
 			ASCII was invented to communicate text. ASCII can represent characters such as A-Z, a-z, 0-9, and control characters like ();!. Since ASCII uses 7 bits, $2^7 = 128$ characters can be represented with ASCII. As a consequence of that, ASCII is basically only for Roman, unaccented characters, although many people have created their own variations of ASCII with different characters.
 	
 		\subsection{Unicode}
-			\textbf{Unicode} was created to represent more characters. Unicode is represented as a 32-bit binary number, although representing it using 20 bits would also be sufficient. The ASCII characters are the first 128, followed by additional symbols.
+			\textbf{Unicode} was created to represent more characters. Unicode is represented as a 32-bit binary number, although representing it using 20 bits would also be sufficient. The ASCII characters are the first 128 symbols in Unicode, followed by additional symbols.
 			\\ \\
-			A 16-bit representation of Unicode is called \textbf{UTF-16}. However, there's a problem: we have \emph{many} symbols ($> 1M$) but only $2^{16} = 65,536$ possibilities to represent them. Common characters are represented directly, and there is also a `see attachment' bit for handling the many other symbols that didn't make the cut to be part of the $65,536$. Similarly, there is an 8-bit representation of Unicode called \textbf{UTF-8}, with the ASCII characters followed by additional characters and a `see attachment' bit.
+			A 16-bit representation of Unicode is called \textbf{UTF-16}. However, there's a problem: we have \emph{many} symbols ($> 1M$) but only $2^{16} = 65,536$ possible ways to represent them. Common characters are represented directly, and there is also a `see attachment' bit for handling the many other symbols that didn't make the cut to be part of the $65,536$. Similarly, there is an 8-bit representation of Unicode called \textbf{UTF-8}, with the ASCII characters followed by additional characters and a `see attachment' bit.
 			\\ \\
 			The bits themselves do not have meaning. Their meaning is in your head -- everything is up for interpretation.
 		\subsection{A Message for Aliens} \lecture{January 9, 2013}
 			In a computer, meaning is in the eye of the beholder. We must agree on a common interpretation -- a convention. However, the English language and numbers also have their meaning determined by a set of conventions.
 			\\ \\
-			NASA wanted to be able to leave a message for aliens on a plaque on their spacecraft, however it was clear that aliens would not understand our language or even 0s and 1s. NASA wanted their message to be a list of prime numbers. They decided they would use binary to represent the numbers, but since 0s and 1s would be ambiguous to aliens, they used a dash (-) instead of 0, and 1 for 1. It's only a convention, but it's one that NASA determined aliens would have a higher chance of understanding.
+			NASA wanted to be able to leave a message for aliens on a plaque on their spacecraft, however it was clear that aliens would not understand our language or even 0s and 1s. NASA wanted their message to be a list of prime numbers. They decided they would use binary to represent the numbers, but since 0s and 1s would be ambiguous to aliens, they used a dash (\textemdash) instead of 0, and 1 for 1. It's only a convention, but it's one that NASA determined aliens would have a higher chance of understanding.
 		\subsection{Hexadecimal}
 			Hexadecimal (hex) is base 16. It has sixteen case-insensitive digits: 0, 1, 2, 3, 4, 5, 6, 7, 8, 9, a, b, c, d, e, and f.
 			\\ \\
