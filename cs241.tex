@@ -597,7 +597,7 @@
 					\item identifier \verb+foo+
 				\end{itemize}
 
-				You should have code to check the validity of \verb+add+'s parameters \textendash{} you shouldn't have code to check for indentifiers in place of registers, etc. You must also ensure that there aren't too many or too few arguments, but to do so you should check that you have exactly the correct number of arguments.
+				You should have code to check the validity of \verb+add+'s parameters \textendash{} you shouldn't have code to check for identifiers in place of registers, etc. You must also ensure that there aren't too many or too few arguments, but to do so you should check that you have exactly the correct number of arguments.
 				\\ \\
 				You can use \verb+cs241.binasm+ combined with \verb+xxd+ as a reference implementation, because it's a valid MIPS assembler.
 				\\ \\
@@ -675,7 +675,7 @@
 					Why do we use \verb+map+s? It's more efficient because it converts strings into numbers in order to make lookups more performant.
 
 			\subsubsection{The Supplied Scanners}
-			The supplied scanners will find a sequence of tokens on the given line for you. For each token, you'll get a tuple (kind, lexeme, value), where the lexene is the literal text of the token. For example, take the line \verb+foo: beq $3, $6, -2+. The provided scanners will return a list with this data:
+			The supplied scanners will find a sequence of tokens on the given line for you. For each token, you'll get a tuple (kind, lexeme, value), where the lexeme is the literal text of the token. For example, take the line \verb+foo: beq $3, $6, -2+. The provided scanners will return a list with this data:
 			\begin{itemize}
 				\item (LABEL, ``foo:'', ?)
 				\item (OPCODE, ``beq'', ?)
@@ -1972,7 +1972,7 @@
 			\end{ex}
 
 			\begin{ex}
-				Given the alphabet $\Sigma = \set{a, b}$, we're interseted in the language $L(R)$ of all strings with an even number of $a$'s. Note that $L = \set{\epsilon, babbab, \ldots}$. We could define the regular expression for this language in several different ways:
+				Given the alphabet $\Sigma = \set{a, b}$, we're interested in the language $L(R)$ of all strings with an even number of $a$'s. Note that $L = \set{\epsilon, babbab, \ldots}$. We could define the regular expression for this language in several different ways:
 				\begin{align*}
 					R &= (b^\star{} ab^\star{} ab^\star{})^\star \\
 					&= b^\star{}(b^\star{}ab^\star{}ab^\star{})^\star \\
@@ -2113,7 +2113,7 @@
 			\begin{defn}
 				$\alpha \stackrel{\star}{\implies} \beta$. $\stackrel{\star}{\implies}$ here roughly means ``derives in zero or more steps.'' More precisely, it means either $\alpha = \beta$ \emph{or} $\exists \gamma . \alpha \implies \gamma$ and $\gamma \stackrel{\star}{\implies} \beta$.
 				\\ \\
-				$\stackrel{\star}{\implies}$ is the reflecive, transitive closure of $\implies$.
+				$\stackrel{\star}{\implies}$ is the reflexive, transitive closure of $\implies$.
 			\end{defn}
 
 			\begin{defn}
@@ -3793,7 +3793,7 @@
 			With the loaf of bread algorithm, we can't implement \verb+free(p)+. All sales are final, so to speak.
 			\\ \\
 			If instead we wanted to implement the Walmart algorithm, we would need to find the most appropriate hole when we want to allocate some memory. What if there are many small holes but we need a large one? That is, the total amount of unused storage in your arena is large enough, but there's no continuous block of RAM available. This is known as \textbf{fragmentation}. \lecture{March 27, 2013}
-		
+			\\ \\
 			In the simple case, \verb+alloc()+ will allocate $k$ words, where typically $k = 2$. In Lisp or Scheme, \verb+alloc()+ is written as \verb+(cons a b)+. A \verb+cons+ statement allocates two spaces in memory (\verb+first+/\verb+rest+, also known as \verb+car+/\verb+cdr+).
 			\\ \\
 			We could create an arena where we have two pointers: a \verb+bread+ pointer (the next slice of bread comes from where the \verb+bread+ pointer is pointing to), and an \verb+end+ pointer. The slice of bread algorithm for \verb+alloc()+ is as follows.

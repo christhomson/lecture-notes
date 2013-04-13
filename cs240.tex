@@ -1788,7 +1788,7 @@
 		We'll now discuss some tricks of the trade \textendash{} useful tricks that aren't discussed in all textbooks.
 
 		\subsection{Interpolation Search}
-			Interpolation search is an improvement over binary search. When you're looking for a name in the yellow pages, if you're looking for a name that starts with `Z', you'll start looking near the end of the phonebook \textendash{} not in the middle. Interpolation applies this idea. It guesses the location of the key given the numberical range of the array.
+			Interpolation search is an improvement over binary search. When you're looking for a name in the yellow pages, if you're looking for a name that starts with `Z', you'll start looking near the end of the phonebook \textendash{} not in the middle. Interpolation applies this idea. It guesses the location of the key given the numerical range of the array.
 			\\ \\
 			Given a sorted array of items (not necessarily numbers, as long as the items are sortable) in positions $A[l \ldots r]$, we try the position in the middle, $\frac{l + r}{2}$. Then: \\
 			\begin{algorithm}[H]
@@ -1997,7 +1997,7 @@
 			\\ \\
 			You may be interested in \href{http://www.cs.utah.edu/~croberts/courses/cs7962/project/}{this quadtree Java applet from the University of Utah}, which is useful for visualizing how quadtree splits work. \lecture{March 14, 2013}
 			\\ \\
-			Quadrants are typically labelled NW, NE, SW, and SE. When written as a tree, they're usually written in the following order.
+			Quadrants are typically labeled NW, NE, SW, and SE. When written as a tree, they're usually written in the following order.
 			\begin{figure}[H]
 				\Tree [.R [.NW ] [.NE ] [.SW ] [.SE ] ]
 			\end{figure}
