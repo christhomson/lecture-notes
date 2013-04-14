@@ -986,7 +986,7 @@
 					\\ \\
 					On Windows, a dynamic (link) library is called a \textbf{DLL}. If you're on Windows and have two programs that need the same DLL, but different versions of that DLL, you're in for a bad time. Windows also requires restarting in order to update DLLs, which is a fundamental design flaw. Linux, on the other hand, preserves old versions of dynamic link libraries even after newer versions are installed.
 	\section{Introduction to Formal Languages}
-		A mathematical definition of what is and is not in a language. Formal language is useful for:
+		A formal language is a mathematical definition of what is and is not in a language. Formal languages are useful for:
 		\begin{itemize}
 			\item Automation (if possible).
 			\item Recognizers (human recognizers, too).
@@ -1011,7 +1011,13 @@
 		\end{defn}
 		In this course, we'll denote the empty string as $\epsilon$.
 		\\ \\
-		Language $L$ is a set of strings. $L_1 = \set{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, \ldots}$, $L_2 = \set{0, 1, 00, 11, 000, 111, 0000, 1111, \ldots}$, and $L_3 = \set{\text{dogcat}, \text{catdog}, \text{dogdogmonkey}}$ are three examples of languages. It's important to note that unlike an alphabet, a language can be infinite in size.
+		Here are three examples of languages:
+		\begin{align*}
+			L_1 &= \set{0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, \ldots} \\
+			L_2 &= \set{0, 1, 00, 11, 000, 111, 0000, 1111, \ldots} \\
+			L_3 &= \set{\text{dogcat}, \text{catdog}, \text{dogdogmonkey}}
+		\end{align*}
+		It's important to note that unlike an alphabet, a language can be infinite in size.
 		\\ \\
 		There is a certain imprecision in the definitions of $L_1$ and $L_2$. ``$\ldots$'' is not mathematically precise. For example, does $L_1$ contain counting numbers with no extra (padding) zeroes \ldots{} except zero? It gets complicated. There are also some even more complicated languages:
 		\begin{itemize}
