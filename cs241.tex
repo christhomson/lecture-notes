@@ -3102,9 +3102,9 @@
 				It \emph{might} be time to perform a reduction when you're on the very right side of the rule. Don't go down a blind alley, though \textendash{} consult your follow function to ensure a reduction is desired.
 
 	\section{The Big Picture: Building a Compiler} \lecture{March 13, 2013}
-		At the end of the day, we want to be able to take a WLPP source file, send it into a compiler, and get MIPS assembly object code, which has equivalent meaning. We could then feed the produced object code and send it into an assembler to get MIPS binary machine code, if we wanted.
+		At the end of the day, we want to be able to take a WLPP source file, send it into a compiler, and get MIPS assembly object code, which has equivalent meaning. We could then take the produced object code and send it into an assembler to get MIPS binary machine code, if we wanted.
 		\\ \\
-		The compiler portion consists of a scanner (from A7), which produces some output that will be fed into a parser (from A8), which will produce a WLPPI file. The WLPPI file will be the input for context sensitive analysis (from A9), which will produce a symbol table and a decorated parse tree, both of which will be fed into synthesis (from A10), where code generation occurs.
+		The compiler portion consists of a scanner (from A7), which produces some output that will be fed into a parser (from A8), which will produce a WLPPI file. The WLPPI file will be the input for context sensitive analysis (from A9), which will produce a symbol table and a decorated parse tree, both of which will be fed into synthesis (from A10 and A11), where code generation occurs.
 		
 		\subsection{Context-Sensitive Analysis}
 			Context-sensitive analysis involves all syntax rules that are not conveniently expressed (or are not possible to express) in the scanner and parser. In WLPP, these are rules pertaining to symbols and their types.
@@ -3117,8 +3117,10 @@
 
 			Types have the following rule:
 			\begin{itemize}
-				\item Every expression must have a valid type. In WLPP, types are \verb+int+ and \verb+int *+.
+				\item Every expression must have a valid type. In WLPP, types are \verb+int+ and \verb+int*+.
 			\end{itemize}
+			
+			There are many other context-sensitive rules for WLPP \textendash{} refer to the \href{https://www.student.cs.uwaterloo.ca/~cs241/wlpp/WLPP.html}{WLPP specification}.
 
 			\subsubsection{Building a Symbol Table}
 				We'll use syntax-directed translation to gather all symbols. During this process, we'll ensure each symbol is declared only once. We'll then create a multiset of symbols.
@@ -3128,7 +3130,7 @@
 					\Tree [.dcl [.type [.INT ] ] [.ID ] ]
 				\end{figure}
 
-				Each terminal symbol (ID) will be annotated with its lexeme, such as \verb+fred+. We'll then get that symbols = $\set{\text{fred}}$.
+				Each terminal symbol (ID) will be annotated with its lexeme, such as \verb+fred+. As we come across each symbol, our multiset begins to get constructed: symbols= = $\set{\text{fred}}$.
 				\\ \\
 				Now, suppose we have the following production rule:
 				\begin{align*}
@@ -3142,7 +3144,7 @@
 					\Tree [.dcls [.dcls \qroof{(\{wilma, pebbles\})}. ] [.dcl \qroof{(\{fred\})}. ] [.BECOMES ] [.INT ] [.SEMI ] ]
 				\end{figure}
 
-				We recursively determine the symbols for the subtrees, and then decorate the root element with the complete symbol list (the union). Since this is a multiset, you can check to ensure there were no duplicate declarations. This ensures the second rule for symbols was not violated.
+				We recursively determine the symbols for the subtrees, and then decorate the root element with the complete symbol list (the union of the symbol lists of the subtrees). Since this is a multiset, you can check to ensure there were no duplicate declarations. This ensures the second rule for symbols was not violated.
 				\\ \\
 				Each expression gets a type evaluated for it:
 				\begin{align*}
@@ -3154,7 +3156,7 @@
 					\underbrace{1}_{\text{type = int}} + \underbrace{\text{fred}}_{\text{type TBD}}
 				\end{align*}
 
-				Note that in this case, we need to check our symbol table for \verb+fred+'s type, to determine if it's \verb+int+ or \verb+int *+. So, the symbol table will need to keep track of each symbol's identifier and type (and value as well).
+				Note that in this case, we need to check our symbol table for \verb+fred+'s type, to determine if it's \verb+int+ or \verb+int*+. So, the symbol table will need to keep track of each symbol's identifier and type (and value as well).
 				\\ \\
 				Suppose we have this expression:
 				\begin{align*}
@@ -3167,9 +3169,9 @@
 						\hline
 						\textbf{wilma} & \textbf{fred} & \textbf{result} \\ \hline
 						int & int & int \\
-						int & int * & int * \\
-						int * & int & int * \\
-					int * & int * & error \\ \hline
+						int & int* & int* \\
+						int* & int & int* \\
+					int* & int* & error \\ \hline
 					\end{tabular}
 				\end{center}
 
@@ -3210,7 +3212,7 @@
 
 			Throughout the code generation process, we're going to obey our usual MIPS conventions. That is, \$1 and \$2 are input parameter registers, \$3 is the register containing the returned value (or value to return), \$30 is a stack, and \$31 is a return address.
 			\\ \\
-			Generating the object code described above is difficult. Instead, our compilers will likely produce much more verbose (but equivalent) code like this:
+			Generating the object code described above is quite difficult. Instead, our compilers will likely produce much more verbose (but functionally equivalent) code like this:
 			\begin{verbatim}
 			lis $4
 			.word 4
@@ -3231,7 +3233,7 @@
 				\Tree [.expr [.expr [.term [.factor [.{NUM (1)} ] ] ] ] [.+ ] [.term [.factor [.{NUM (2)} ] ] ] ]
 			\end{figure}
 			
-			\textbf{Conventions Used in this Object Code}:
+			\textbf{Conventions used in this object code}:
 			\begin{itemize}
 				\item \$4 always contains 4.
 				\item Every expr, term, and factor puts its \underline{result} into \$3.
@@ -3245,7 +3247,7 @@
 				\Tree [.expr [.{expr (C1)} \qroof{?}. ] [.+ ] [.{term (C2)} \qroof{?}. ] ] \\
 			\end{figure}
 			
-			In the above tree, C1 decorating that instance of expr with:
+			In the above tree, C1 is decorating that instance of expr with:
 			\begin{verbatim}
 			lis $3
 			.word 1
@@ -3317,7 +3319,7 @@
 			}
 			\end{verbatim}
 
-			Let's look at more conventions, specifically how to represent parameters. For now, (and we'll probably change this later when we represent variables), \$1 is the first parameter and \$2 is the second parameter. We're going to need to expand our symbol table to include how each symbol is represented:
+			Let's look at more conventions, specifically how to represent parameters. For now (and we'll change this later when we represent variables), \$1 is the first parameter and \$2 is the second parameter. We're going to need to expand our symbol table to include how each symbol is represented:
 			
 			\begin{center}
 				\begin{tabular}{|c|c|c|}
@@ -3395,12 +3397,12 @@
 				There are two choices for selecting locations in RAM to store variables:
 				\begin{itemize}
 					\item Declare a garbage \verb+.word+. However, these variables will act as static variables, which is not always desired (especially when handling recursive programs).
-					\item Use the stack. We're going to use the \textbf{stackframe storage allocation} algorithm.
+					\item Use the stack. We're going to use the \textbf{stack frame storage allocation} algorithm.
 				\end{itemize}
 
-				At entry to the prologue of our code, we have a stack pointer, \$30. We'll reserve a large block of storage \textendash{} enough for every variable \textendash{} on the stack.
+				At entry to the prologue of our code, we have a stack pointer, \$30. We'll reserve a large block of storage \textendash{} enough for every variable \textendash{} on the stack, called a stack frame.
 				\\ \\
-				To do this, we decrement the stack pointer (\$30) to below the stackframe and we store a \textbf{frame pointer} in a different register (say, \$29).
+				To do this, we decrement the stack pointer (\$30) to below the stack frame and we store a \textbf{frame pointer} in a different register (say, \$29).
 				\\ \\
 				Suppose there are $n$ declared variables in our program. We must arbitrarily assign each variable a distinct number $0 \le i < n$. The address in RAM of variable $i$ is $4i + \$29$. Let's say our symbol table now contains:
 				\begin{center}
@@ -3431,9 +3433,9 @@
 				sw $3, 4($29)
 				\end{verbatim}
 				
-				Note that the representation for NULL is conventionally zero.
+				Note that the representation for NULL is conventionally zero. This is \emph{okay}, but ideally we'd choose a NULL representation that is not a power of four, so as not to confuse it with an actual memory address.
 				\\ \\
-				When representing variables of type int*, there are a few possibilities. You could store a word number, or an offset in an array, but what's highly recommended is that you store the RAM address itself.
+				When representing variables of type int*, there are a few possibilities. You could store a word number, or an offset in an array, but it's highly recommended that you store the RAM address itself.
 				\\ \\
 				What about \verb+wain+'s parameters? We have the following WLPP code:
 				\begin{verbatim}
@@ -3609,7 +3611,7 @@
 
 				In this case, it doesn't matter whether we evaluate (or generate code) for the lvalue or the expr first, so both of these approaches are equally acceptable.
 				\\ \\
-				Let's look at Code(lvalue $\to$ ID). We know that variables are just offsets in the stackframe. We can get the offset of the ID from the symbol table. We need the \emph{address} of that location, though. So, we get Code(lvalue $\to$ ID) =
+				Let's look at Code(lvalue $\to$ ID). We know that variables are just offsets in the stack frame. We can get the offset of the ID from the symbol table. We need the \emph{address} of that location, though. So, we get Code(lvalue $\to$ ID) =
 				\begin{verbatim}
 				lis $3
 				.word offset(ID)
@@ -3682,7 +3684,7 @@
 
 				You could make your code dynamically choose between these two methods, depending of the length of code(statements). All control structures are subject to this caveat.
 				\\ \\
-				Let's now look at Code(statement $\to$ IF LPAREN test RPAREN LBRACE $\text{statements}_1$ BRACE ELSE LBRACE $\text{statements}_2$ RBRACE):
+				Let's now look at Code(statement $\to$ IF LPAREN test RPAREN LBRACE $\text{statements}_1$ RBRACE ELSE LBRACE $\text{statements}_2$ RBRACE):
 				\begin{verbatim}
 				    code(test)
 				    beq $3, $0, else123
