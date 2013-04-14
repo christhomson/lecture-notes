@@ -153,9 +153,9 @@
 				If you want to place a happy face character at address 100, you set the address lines to 100, the data lines to 10001110 (which is the Unicode representation of a happy face), and give the control lines a kick.
 				\\ \\
 				RAM could be implemented in several different ways. It could even be created with a \textbf{cathode ray tube}. The \textbf{core} method is synonymous with RAM, however. It involves a magnetic core, and the data remains magnetized after the magnet is removed. Bits are read by toggling the state (toggling the magnetic poles) and seeing if it was easier to toggle than expected (similar to unlocking an already-unlocked door), and then toggling back after. No one really uses magnetic cores anymore.
-				\\ \\ % Diagram: capacitive memory. Diagram: DRAM.
+				\\ \\
 				\textbf{Capacitive memory} (also known as dynamic RAM or \textbf{DRAM}) is still used today. It involves an insulator and two conductive plates, one of which is more negatively-charged than the other. The electrons will remain in their state even when the poles are removed. There is a problem, however. Insulators are not perfect -- electrons will eventually make their way through the insulator. In order to alleviate this, we have to refresh the charge fairly often (every second, for instance).
-				\\ \\ % Diagram: CPU <-> RAM
+				\\ \\
 				\textbf{Switches} are typically used only for registers and cache. They produce more heat, but are much faster.
 			\subsection{Control Unit Algorithm}
 				The CPU contains a \textbf{control unit}, several \textbf{registers}, PC (\textbf{program counter}), and IR (\textbf{instruction register}), and is connected to RAM with electrical lines.
@@ -186,22 +186,22 @@
 				If you use Linux or Mac OS X, you're in good shape. However, Windows is not Unix-based, so you'll have to pursue one of these alternative options:
 				\begin{itemize}
 				  	\item Install Linux. You can dual-boot it alongside Windows if you'd like, or you could install it inside a virtual machine.
-				  	\item Install Cygwin. When installing it, choose to install everything.
-					\item Login to the \verb+student.cs+ servers remotely. You can use PuTTY for that.
+				  	\item Install \href{http://www.cygwin.com/}{Cygwin}. When installing it, choose to install everything.
+					\item Login to the \verb+student.cs+ servers remotely. You can use \href{http://www.putty.org/}{PuTTY} for that.
 				\end{itemize}
 
 			\subsubsection{Commands You Should Know}
 				\begin{itemize}
-					\item \verb+ssh username@linux.student.cs.uwaterloo.ca+ -- logs you into the student.cs systems remotely through SSH.
+					\item \verb+ssh username@linux.student.cs.uwaterloo.ca+ -- logs you into the \verb+student.cs+ systems remotely through SSH.
 					\item \verb+cat unix_text_file.txt+ -- copies the contents of the file to the current terminal. If a non-text file is given to \verb+cat+, incorrect output will result.
-					\item \verb+xxd -b unix_file.txt+ -- prints the binary representation of the file to the terminal. The numbers in the left column are the location in the file. If it's a Unix text file, the ASCII representation is presented on the right, with all non-printable characters printed as dots. \verb+xxd+ is not aware of newline characters -- it arbitrarily splits the file into 16 bytes per line.
-					\item \verb+xxd unix_file.txt+ -- prints the hex representation of the file to the terminal. Identical to the previous command (\verb+-b+) in every other way.
+					\item \verb+xxd -b unix_file.txt+ -- prints the binary representation of the file to the terminal. The numbers in the left column are the locations in the file. If it's a Unix text file, the ASCII representation is presented on the right, with all non-printable characters printed as dots. \verb+xxd+ is not aware of newline characters -- it arbitrarily splits the file into 16 bytes per line.
+					\item \verb+xxd unix_file.txt+ -- prints the hex representation of the file to the terminal. Identical to the previous command (\verb+xxd -b+) in every other way.
 					\item \verb+ls -l+ -- lists all files in the current directory in the long-listing form, which shows the number of bytes in the file, permissions, and more.
 				\end{itemize}
 		\subsection{Getting Started with MIPS}
 			The MIPS CPU uses 32-bit words since it's a 32-bit machine, and it's big-endian. You can use \verb+xxd+ to inspect MIPS files. MIPS has 32 registers (numbered 0 to 31).
 			\\ \\
-			At the end of our MIPS programs, we will copy the contents of register \$31 to the program counter (PC) to ``return''.
+			At the end of our MIPS programs, we will copy the contents of register \$31 to the program counter (PC) to ``return.''
 
 			\subsubsection{Running MIPS Programs}
 				Upon logging in to the \verb+student.cs+ servers, run \verb+source ~cs241/setup+ in order to add the required executables to your \verb+PATH+. Then, when given a MIPS executable called \verb+eg0.mips+, you can run \verb+java mips.twoints eg0.mips+ in order to run the program.
@@ -216,27 +216,27 @@
 			\begin{itemize}
 				\item \$0 is a register that will always contain 0. It's special like that.
 				\item \$30 points to memory that could be used as a stack.
-				\item \$31 will be copied to the program counter at the end of execution in order to ``return''.
+				\item \$31 will be copied to the program counter at the end of execution in order to ``return.''
 				\item You can specify register values using base 10 values or as hex values (if prefixed by \verb+0x+). 
-				\item It takes 5-bits to specify a register, since $2^5 = 32$. 
-				\item It's convention to call S and T (as indicated in various documentation) \textbf{source registers}, and D is the \textbf{destination register}. 
+				\item It takes 5-bits to specify a register in binary MIPS instructions, since $2^5 = 32$. 
+				\item In documentation, it's conventional to call S and T \textbf{source registers}, and D the \textbf{destination register}. 
 				\item MIPS uses two's complement numbers by default, unless specified otherwise.
 				\item Loops and conditionals are accomplished by adding or subtracting from the program counter.
 			\end{itemize}
 			
-			There is a \href{https://www.student.cs.uwaterloo.ca/~cs241/mips/mipsref.pdf}{MIPS reference sheet} available on the course website that you'll find to be quite useful. It contains the binary representations for all MIPS instructions. Convert the binary into hex and put them into an assembly language file.
+			There is a \href{https://www.student.cs.uwaterloo.ca/~cs241/mips/mipsref.pdf}{MIPS reference sheet} available on the course website that you'll find to be quite useful. It contains the binary representations for all MIPS instructions. You can convert the binary instructions into hex and place the instructions into an assembly language file as \verb+.word+ instructions.
 		
 		\subsubsection{A Few Important MIPS Instructions}
 			\begin{enumerate}
-				\item \textbf{Load Immediate \& Skip} (\verb+lis+): loads word from the program counter. Loads the next word of memory into the D register. You specify a \verb+lis+ instruction followed by an arbitrary word next. You need to also skip the appropriate number of bytes by incrementing the program counter.
+				\item \textbf{Load Immediate \& Skip} (\verb+lis+): loads the next word of memory into the D register. You specify a \verb+lis+ instruction followed by an arbitrary word next. The program counter will then skip past the arbitrary word that follows, to avoid executing it.
 				\item \textbf{Set Less Than [Unsigned]} (\verb+slt+): compares S to T. If S < T, 1 is put into the D register, otherwise 0 is put into the D register.
-				\item \textbf{Jump Register} (\verb+jr+): copies S to the program counter.
+				\item \textbf{Jump Register} (\verb+jr+): copies the value in the source register S to the program counter.
 				\item \textbf{Jump and Link Register} (\verb+jalr+): assigns the program counter to register 31, then jumps to it.
 				\item \textbf{Branch on Equal} (\verb+beq+): if S is equal to T, it adds the specified number to the program counter (times 4). There is also \textbf{Branch on Unequal} (\verb+bne+) which does the opposite.
 			\end{enumerate}
 		\subsubsection{MIPS Program Workflow}
 			\lecture{January 14, 2013}
-			The MIPS CPU understands \textbf{binary machine language programs}, however we cannot write them directly. Instead, we write \textbf{assembly language programs} in text files. By convention, we name these text files with the extension \verb+.asm+. Assembly language contains instructions like \verb+.word 0x00221820+. We feed the assembly language program into \verb+cs241.wordasm+, which is an \textbf{assembler}. An assembler translates assembly language into binary machine code.
+			The MIPS CPU understands \textbf{binary machine language programs}, however we cannot write them directly. Instead, we write \textbf{assembly language programs} in text files. By convention, we name these text files with the extension \verb+.asm+. Assembly language contains instructions like \verb+.word 0x00221820+. We feed the assembly language program into \verb+cs241.wordasm+, which is an \textbf{assembler}. An assembler translates assembly language into binary machine code that can be executed.
 			\\ \\
 			Assembly language can also look like this: \verb+add $3, $1, $2+. Assembly language in this form has to be fed into a different assembler (\verb+cs241.binasm+) that understands that flavor of assembly syntax.
 			\\ \\
@@ -262,7 +262,7 @@
 		\subsubsection{More MIPS Instructions}
 			Here's a more comprehensive overview of the instructions available to you in the CS 241 dialect of MIPS. Note that for all of these instructions, $0 \le d, s, t \le 31$, since there are 32 registers in MIPS numbered from 0 to 31.
 			\begin{itemize}
-				\item \verb+.word+. This isn't really a MIPS instruction in and of itself. Words can be in several different forms. For example:
+				\item \verb+.word+. This isn't really a MIPS instruction in and of itself. It provides you with a way to include arbitrary bits in the assembler's output. Words can be in several different forms. For example:
 					\begin{itemize}
 						\item \verb+.word 0x12345678+ (hex)
 						\item \verb+.word 123+ (decimal)
@@ -276,7 +276,7 @@
 				\item \verb+divu $s, $t+. Provides the same functionality as \verb+div+, but uses unsigned numbers.
 				\item \verb+mflo $d+. Copies the contents of the \verb+LO+ register to \$d.
 				\item \verb+mfhi $d+. Copies the contents of the \verb+HI+ register to \$d.
-				\item \verb+lis $d+ (load immediate and skip). Copies the word from the program counter (PC), adds 4 to PC in order to skip the word you just loaded.
+				\item \verb+lis $d+ (load immediate and skip). Copies the word from the program counter (the next word) into \$d, adds 4 to PC in order to skip the word you just loaded.
 				\item \verb+lw $t, i($s)+ (load word, $-32,768 \le i \le 32,767$). For example: \verb+lw $3, 100($5)+ will get the contents of \$5, add 100, treat the result as an address, fetch a word from RAM at that address, and put the result into \$3.
 				\item \verb+sw $t, i($s)+ (store word, $-32,768 \le i \le 32,767$). This works in a similar way to \verb+lw+, except it stores the contents of \$t at RAM at this address.
 				\item \verb+slt $d, $s, $t+ (set less than). Sets \$d to 1 if \$s < \$t, or to 0 otherwise.
@@ -287,7 +287,7 @@
 				\item \verb+jalr $s+ (jump and link register). Copies \$s to the program counter and copies the previous value of the program counter to \$31.
 			\end{itemize}
 		\subsubsection{Example Program: Sum from 1 to N}
-			We want a program that sums the numbers from 1 to $n$, where $n$ is the contents of \$1, and we want the result to be placed in \$3. \underline{Aside}: it's only a convention that we reserve \$1 and \$2 as registers for input parameters and \$3 as the register for the result -- the MIPS system itself does not treat these registers in a special way.
+			We want a program that sums the numbers from 1 to $n$, where $n$ is the contents of \$1, and we want the result to be placed in \$3. 
 			\begin{verbatim}
 				; $1 is N.
 				; $3 is the sum.
@@ -311,11 +311,11 @@
 				\item You don't need to memorize the binary representation of MIPS commands for exams, or the ASCII representation of characters. You'll be provided with the MIPS reference sheet and an ASCII conversion chart for the exams.
 			\end{itemize}
 			\subsubsection{Labels} \lecture{January 16, 2013}
-				Part of the assembler's job is to count instructions and keep track of their locations (\verb+0x00000004+, \verb+0x00000008+, \verb+0x0000000c+, etc.). The assembler can also simplify the programmer's job with \textbf{labels}.
+				Part of the assembler's job is to count instructions and keep track of their locations (\verb+0x00000004+, \verb+0x00000008+, \verb+0x0000000c+, etc.). The assembler can use this information to simplify the programmer's job with \textbf{labels}.
 				\\ \\
 				Labels are identifiers in the form \verb+foo:+ (a string followed by a colon). A label \verb+foo:+ is equated to the \textbf{location} of the line on which it is defined.
 				\\ \\
-				Some instructions like \verb+beq+ and \verb+bne+ rely on relative locations of lines. Counting these yourself is tedious, and can be troublesome in some situations. The locations you specify, both in places where they're specified relatively and in places where they're specified absolutely (\verb+jr+), may become invalid if you add or remove any lines in your codebase.
+				Some instructions like \verb+beq+ and \verb+bne+ rely on relative locations of lines. Counting these yourself is tedious, and can be troublesome in some situations. The locations you specify, both in places where they're specified relatively (\verb+beq+ or \verb+bne+) and in places where they're specified absolutely (\verb+jr+), may become invalid if you add or remove any lines in your codebase.
 				\\ \\
 				Labels can be used in place of integer constants. If you have an instruction like \verb+bne $1, $2, -5+, you can replace it with \verb+bne $1, $2, foo+. The assembler will compute:
 				\begin{align*}
