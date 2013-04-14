@@ -548,22 +548,22 @@
 		\\ \\
 		You need to be more familiar with the MIPS assembly language in order to write an assembler, compared to just writing MIPS assembly code. You need to know \emph{exactly} what is a valid MIPS assembly program and what isn't in order to write a proper assembler.
 		\\ \\
-		Ensure you implement and test everything on the MIPS reference sheet. You need to test the range for all numbers and reject all programs that contain numbers that are not within the valid ranges, for instance.
+		You must ensure you implement and test every little detail on the MIPS reference sheet. You need to test the range for all numbers and reject all programs that contain numbers that are not within the valid ranges, for instance.
 		\\ \\
-		Sometimes when we look at a MIPS program there is no meaning because the MIPS assembly code is not well-formed (it's invalid). In that case, we need to have the assembler output an error report. For us, our assembler will identify well-formed MIPS programs in the `all or nothing' sense \textendash{} that is, if the program is valid we will produce valid binary machine code, otherwise we'll indicate that there's a problem.
+		Sometimes when we look at a MIPS program there is no meaning because the MIPS assembly code is not well-formed (it's invalid). In that case, we need to have the assembler output an error report. For us, our assembler will identify well-formed MIPS programs in the `all or nothing' sense \textendash{} that is, if the program is valid we will produce valid binary machine code, otherwise we'll indicate that there's \emph{some} problem.
 		\\ \\
 		Don't imagine all the ways a program can be wrong. Write your assembler to identify correct MIPS assembly code as per the specification, and if the program does not follow those finite number of rules, then it is invalid and should be rejected.
 		
 		\subsection{Assemblers In This Course}
 			It'd be nice if our assembler's error reports could produce helpful error messages. However, that involves mind reading (pretty much) and is beyond the scope of this course.
 			\\ \\
-			For assignments in this course, you can use Scheme, C++, or Java to write your assembler. Scheme is recommended, especially since you'll be dealing with data structures of lengths that aren't pre-determined, which is easier to handle in Scheme than in C++ or Java. The tools provided for Java are supported for tests, so you can use them, but we won't actively be covering them.
+			For assignments in this course, you can use Scheme, C++, or Java.. Scheme is recommended, especially since you'll be dealing with data structures of lengths that aren't pre-determined, which is easier to handle in Scheme than in C++ or Java. The tools provided for Java are supported for tests, so you can use them, but we won't actively be covering them.
 			\\ \\
 			For assignments 3 and 4, you will be provided a scanner for use in your assembler.
 
 		\subsection{The Assembly Process}
 			\begin{enumerate}
-				\item Read in your text file containing MIPS assembly code. [Input]
+				\item Read in a text file containing MIPS assembly code. [Input]
 				\item Scan each line, breaking it into components. [Analysis]
 				\item Parse components, checking well-formedness. [Analysis]
 				\item Other error checking. [Analysis]
@@ -593,21 +593,21 @@
 					\item label \verb+bar+
 					\item instruction \verb+add+
 					\item register \verb+$1+
-					\item comma
+					\item comma ,
 					\item register \verb+$2+
-					\item comma
+					\item comma ,
 					\item identifier \verb+foo+
 				\end{itemize}
 
-				You should have code to check the validity of \verb+add+'s parameters \textendash{} you shouldn't have code to check for identifiers in place of registers, etc. You must also ensure that there aren't too many or too few arguments, but to do so you should check that you have exactly the correct number of arguments.
+				You should have code to check the validity of \verb+add+'s parameters \textendash{} you shouldn't have code to check for identifiers in place of registers, etc. You must also ensure that there aren't too many or too few arguments, but to perform this check you should simply check that you have exactly the correct number of arguments.
 				\\ \\
-				You can use \verb+cs241.binasm+ combined with \verb+xxd+ as a reference implementation, because it's a valid MIPS assembler.
+				You can use \verb+cs241.binasm+ combined with \verb+xxd+ as a reference implementation because it's a valid MIPS assembler.
 				\\ \\
 				The assembler builds a \textbf{symbol table} that keeps track of mappings between identifiers and their locations. The symbol table is later used during the synthesis process to check the validity of label usage, since labels can be used before they're defined. Not all error checking occurs in the analysis steps, since this check during the synthesis process is considered error checking.
 				\\ \\
 				If \verb+foo+ did not exist in the symbol table, then you should error out. Whether \verb+foo+ was defined before it was used is irrelevant because it's perfectly valid to use labels before they're defined.
 				\\ \\
-				When an error is encountered, we must write to an error file. It our case, we'll write our output (the binary file) to standard output (STDOUT) and any error messages to standard error (STDERR). Ensure the assembler does not crash when it runs into an invalid program.
+				When an error is encountered, we must write to an error file. In our case, we'll write our output (the binary file) to standard output (STDOUT) and any error messages to standard error (STDERR). Ensure the assembler does not crash when it runs into an invalid program.
 				\\ \\
 				If there's an error, it doesn't matter what you've already written to standard output \textendash{} it'll be ignored. You could have written half a program or nothing, but it doesn't matter if an error message has been written to standard error.
 				\\ \\
