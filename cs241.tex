@@ -834,16 +834,16 @@
 
 			After assembling \verb+ft.asm+, you'll have a MIPS binary machine program (say, \verb+ft.mips+). But how does the program get into the CPU? The program is sent to the IO registers of RAM, which sends it to a loader, which stores it in RAM and executes it for you.
 			\\ \\
-			The \textbf{loader} is itself a MIPS program. It has exist in the MIPS CPU (or in RAM accessible from the MIPS CPU). A loader is a program in RAM that:
+			The \textbf{loader} is itself a MIPS program. It must exist in the MIPS CPU, or in RAM accessible from the MIPS CPU. A loader is a program in RAM that:
 			\begin{itemize}
 				\item Figures out the length ($n$ words) of a binary MIPS program.
 				\item Finds $n$ words of available RAM at some address $\alpha$.
 				\item Reads the file into RAM starting at $\alpha$.
 				\item Puts $\alpha$ (the address) into some register (let's say \verb+$5+).
 				\item Executes the program (\verb+jalr $5+).
-				\item Does something else afterwards (\verb+mips.twoints+ prints the values of all the registers and ends, for instance).
+				\item Does something else afterwards (\verb+mips.twoints+ prints the values of all the registers and then terminates, for instance).
 			\end{itemize}
-			This raises another question: how does the loader itself get into RAM? In the old days, there were hardware switches on RAM that allowed you to physically punch words into RAM. Today, we have manufacturing processes that do this for us. Regardless, we still want our loader to be \emph{really} small (in terms of the number of words).
+			This raises another question: how does the loader itself get into RAM? In the old days, there were hardware switches on RAM that allowed you to physically punch words into RAM. Today, we have manufacturing processes that do that for us. Regardless, we still want our loader to be \emph{really} small (in terms of the number of words).
 			\\ \\
 			Instead of hard-coding the loader into RAM, a mini-loader is written (with less code than a full loader would require) to load the loader. This process is known by various names, including:
 			\begin{itemize}
@@ -864,7 +864,7 @@
 			\begin{enumerate}
 				\item \textbf{Header}. A MERL header is three words. The first word is a cookie, which is an arbitrary identifier that indicates that this is a MERL file. The cookie for MERL files is \verb+0x10000002+. Note that \verb+0x10000002+ is the hex representation of \verb+beq $0, $0, 2+, which means our program will execute normally if the MERL file is itself run directly where $\alpha = 0$. The second word is the size of the header, MIPS code, and sticky notes (indicates end/length of file). The third word is the size of the header and MIPS code (indicates the location of the first sticky note).
 				\item \textbf{MIPS code}. This is regular binary MIPS code, starting at location \verb+0c+.
-				\item \textbf{Sticky notes}. A sticky note is two words: a sticky-note-type indicator (in this case it's 1 to indicate the sticky note means to add $\alpha$), and the location in MERL to add $\alpha$ to.
+				\item \textbf{Sticky notes}. Every relocation (REL) sticky note is composed of two words: a sticky-note-type indicator (in this case it's 1 to indicate the sticky note means to add $\alpha$), and the location in MERL to add $\alpha$ to. Other types of sticky notes have different formats.
 			\end{enumerate}
 
 			Here's an example MERL file:
@@ -886,7 +886,7 @@
 			\\ \\
 			The easy way to encode a MERL file is to put a label at the end of the code, and another label at the end of the whole file (after your sticky notes).
 			\\ \\
-			The general process for creating a MERL file was to take your MIPS assembly, add the MERL header and sticky notes into an augmented asm program, then run it through \verb+cs241.binasm+ to get a \verb+.merl+ file. However, you can use \verb+java cs241.linkasm+ instead to do all of this for you.
+			The general process for creating a MERL file was to take your MIPS assembly, add the MERL header and sticky notes into an augmented \verb+.asm+ program, then run it through \verb+cs241.binasm+ to get a \verb+.merl+ file. However, you can use \verb+java cs241.linkasm+ instead to do all of this for you.
 
 		\subsection{Linkers}
 			If you want to use \verb+proc.asm+ in multiple programs, you don't want to have to re-assemble it over and over again. With the procedure process that involved \verb+cat+ (as previously discussed), we had to worry about identifier conflicts when defining labels. Linkers solve both of these problems.
@@ -901,7 +901,7 @@
 			  .word proc
 			  jr $31
 			\end{verbatim}
-			This is an example of the \verb+.import+ and \verb+.export+ features of \verb+cs241.linkasm+. \verb+.import proc+ indicates to the assembler to that the \verb+proc+ identifier must be defined later. It creates a sticky note that says to place the value of \verb+proc+ into certain places of your program where the identifier is used. In \verb+proc.asm+, we specify \verb+.export proc+, which creates a note that \verb+proc+ is available to other programs at location \verb+0xc+ (for instance).
+			This is an example of the \verb+.import+ and \verb+.export+ directives that \verb+cs241.linkasm+ understands. \verb+.import proc+ indicates to the assembler to that the \verb+proc+ identifier must be defined later. It creates a sticky note that says to place the value of \verb+proc+ into certain places of your program where the identifier is used. In \verb+proc.asm+, we specify \verb+.export proc+, which creates a note that \verb+proc+ is available to other programs at location \verb+0xc+ (for instance).
 			\\ \\
 			\verb+.import+ and \verb+.export+ instructions create sticky notes with a specific format code (\verb+0x11+ for \verb+.import+ and \verb+0x05+ for \verb+.export+), a location to be encoded (\verb+.import+) or value (\verb+.export+), and name (a 32-bit word containing the number of words that encode the name of the identifier, followed by those $n$ words).
 			\\ \\
@@ -937,7 +937,7 @@
 					\item Creates a combined header.
 					\item Concatenates all code segments.
 						\begin{itemize}
-							\item Relocates $\text{code}_i$ by $\sum_{j < i} length(\text{code}_j)$.
+							\item Relocates $\text{code}_i$ by $\displaystyle \sum_{j < i} \text{length}(\text{code}_j)$.
 							\item Relocates the locations in the sticky notes by the same amount.
 						\end{itemize}
 					\item REL (relocation entry) entries are copied directly to the new MERL, once they're relocated.
@@ -962,28 +962,29 @@
 				\\ \\
 				The \textbf{ELF format} is the Linux equivalent to MERL for MIPS. ELF means executable linkable format. ELF is a \emph{really} complicated format. You can learn more about the ELF format by running \verb+man elf+ on a Linux machine.
 				\\ \\
-				The assembler on Linux is called \verb+as+. Linux uses a different assembly language than MIPS because your CPU is probably an Intel or AMD CPU, not a MIPS CPU, so the assembly language differs.
+				The assembler on Linux is called \verb+as+. Linux uses a different assembly language than MIPS because your CPU is probably an Intel or AMD CPU, not a MIPS CPU.
 				\\ \\
 				The linker is called \verb+ld+.
 				\\ \\
-				The loader is implicit. Fun fact: \verb+a.out+ was a format like ELF (but simpler), and it literally meant ``the \textbf{out}put from the \textbf{a}ssembler.''
+				The loader is implicit. Fun fact: \verb+a.out+ was a format like ELF (but simpler), and it literally meant ``the \textbf{out}put from the \textbf{a}ssembler.'' The name \verb+a.out+ is still used today as the default name for code compiled with \verb|gcc| and \verb|g++|.
 			\subsection{Libraries}
 				You may have a bunch of procedures that you want to use in many \verb+asm+ files. You can package these in a \textbf{library} so the linker can search the sticky notes for the ESD (external symbol definition) for the procedures it needs. Think of it as a match.com for MERLs.
 				\\ \\
 				How do you create an archive? It could be just a folder. But on Linux, you use \verb+ar+ (which is an abbreviation for ``archive'') which produces an archive similar to a zip file.
 				\\ \\
 				The standard libraries on Linux systems are stored at \verb+/usr/lib+.
-				\\ \\
-				So far, we've been discussing \textbf{static linking}, where all external symbol references are resolved by combining with external symbol definitions to create REL entries. There are several shortcomings to static linking, however.
-				\begin{itemize}
-					\item If many programs use the same procedures/libraries, you get many copies of the procedures which wastes file space and RAM.
-					\item If you change a library procedure, you have to find and relink every program that uses it.
-				\end{itemize}
-				An alternative to static linking is \textbf{dynamic linking}. Dynamic linking defers the resolution of ESRs until execution time. The library is searched when the ESR-referenced routine is called. Dynamic linking is implemented by statically linking a \textbf{stub} for each external symbol reference. The stub is effectively a pointer to the (external) dynamic library, which can be updated without changing references to the stub (i.e. without relinking). 
-				\\ \\
-				Importantly, if multiple programs are running at once that use the same dynamically-linked library, the procedure will still only exist once in RAM. There won't be a separate instance of the library in RAM for each running program that needs it.
-				\\ \\
-				On Windows, a dynamic (link) library is called a \textbf{DLL}. If you're on Windows and have two programs that need the same DLL, but different versions of that DLL, you're in for a bad time. Windows also requires restarting in order to update DLLs, which is a fundamental design flaw. Linux, on the other hand, preserves old versions of dynamic link libraries even after newer versions are installed.
+				
+				\subsubsection{Dynamic Linking}
+					So far, we've been discussing \textbf{static linking}, where all external symbol references are resolved by combining with external symbol definitions to create REL entries. There are several shortcomings to static linking, however.
+					\begin{itemize}
+						\item If many programs use the same procedures/libraries, you get many copies of the procedures which wastes file space and RAM.
+						\item If you change a library procedure, you have to find and relink every program that uses it.
+					\end{itemize}
+					An alternative to static linking is \textbf{dynamic linking}. Dynamic linking defers the resolution of ESRs until execution time. The library is searched when the ESR-referenced routine is called. Dynamic linking is implemented by statically linking a \textbf{stub} for each external symbol reference. The stub is effectively a pointer to the (external) dynamic library, which can be updated without changing references to the stub (i.e. without relinking). 
+					\\ \\
+					Importantly, if multiple programs are running at once that use the same dynamically-linked library, the procedure will still only exist once in RAM. There won't be a separate instance of the library in RAM for each running program that needs it.
+					\\ \\
+					On Windows, a dynamic (link) library is called a \textbf{DLL}. If you're on Windows and have two programs that need the same DLL, but different versions of that DLL, you're in for a bad time. Windows also requires restarting in order to update DLLs, which is a fundamental design flaw. Linux, on the other hand, preserves old versions of dynamic link libraries even after newer versions are installed.
 	\section{Introduction to Formal Languages}
 		A mathematical definition of what is and is not in a language. Formal language is useful for:
 		\begin{itemize}
