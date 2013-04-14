@@ -346,17 +346,17 @@
 			\\ \\
 			We really shouldn't just use an arbitrary memory address without any type of safety checking. So, we'll reserve some memory ourselves. We can add a word after the last \verb+jr+ instruction, which means memory will be allocated for the word instruction, however it'll never be executed.
 			\\ \\
-			MIPS requires that we actually specify a word. The contents of it don't matter, so we'll just use \verb+.word 28234+, which is entirely arbitrary. We can then replace 100000 in the above example with 20. For now, we can assume that our MIPS program will always run in memory starting at memory address 0, so memory addresses and locations in our code can be treated as being the same.
+			MIPS requires that we actually specify a word for that space in memory. The contents of it don't matter, so we'll just use \verb+.word 28234+, which is entirely arbitrary. We can then replace 100000 in the above example with 20. For now, we can assume that our MIPS program will always run in memory starting at memory address 0, so memory addresses and locations in our code can be treated as being the same.
 			\\ \\
 			But wait! Hard-coding 20 is a bad idea, in case the program changes, and it's tedious to calculate the proper location (20). We should use a label instead.
 			\subsubsection{Stack}
-				\$30 is the conventional register to place the \textbf{stack pointer} in (sometimes abbreviated as \$sp). The stack pointer points to the first address of RAM that's reserved for use by other people. Here's an example of storing and fetching something in the stack:
+				\$30 is the conventional register to place the \textbf{stack pointer} in (sometimes abbreviated as \$sp). The stack pointer points to the first address of RAM that's reserved for use by other people. Here's an example of storing and fetching something using the stack:
 				\begin{verbatim}
 					sw $1, -4($30)
 					lw $3, -4($30)
 					jr $31
 				\end{verbatim}
-				All memory with an address less than the value of \$30 could be used by your program. You can use this method to create 100,000+ storage locations, and that wouldn't have been possible with registers without having 100,000 registers, and without hard-coding \$1, \$2, \ldots \$100000.
+				All memory with an address less than the value of \$30 could be used by your program. You can use this method to create 100,000+ storage locations, and that wouldn't have been possible with registers without having 100,000 registers, and without hard-coding \$1, \$2, \ldots, \$100000.
 				\\ \\
 				The stack pointer isn't magical. It doesn't change on its own, but you can change it yourself if you'd like. Just make sure to change the stack pointer back to its original state before you return (before \verb+jr $31+).
 				\\ \\
