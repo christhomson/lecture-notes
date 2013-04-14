@@ -3958,7 +3958,7 @@
 			\\ \\
 			In archaic languages like C and C++ (that don't have implicit \verb+free+s), \verb+free(p)+ frees the storage area that pointer $p$ points to. How do we know how big that area is, though? We'll need to keep track of the length of those areas as well.
 			\\ \\
-			So, we'll need to keep track of the length of holes, and the length of allocated areas. We might as well standardize on a way to store these lengths. When you allocate $n$ bytes of storage, you'll actually allocate a few extra bytes that you won't expose to the user. These bytes will act as a header that can contain the length of the block as well as a pointer to the next block (and a footer, which will be discussed later).
+			So, we'll need to keep track of the length of holes, and the length of allocated areas. We might as well standardize on a way to store these lengths. When you allocate $n$ bytes of storage, you'll actually allocate a few extra bytes that you won't expose to the user. These bytes will act as a header that can contain the length of the block as well as a pointer to the next block in the available space list (and a footer, which will be discussed later).
 			\\ \\
 			\textbf{Fragmentation} occurs when small holes collectively have enough space to satisfy an \verb+alloc(n)+ request, but no single hole is big enough to satisfy that request. This occurs with the best fit approach because the holes that turn into sliver-holes become smaller and smaller over time.
 		
@@ -3975,11 +3975,11 @@
 					\item $p$ is surrounded by allocated memory on both sides. This results in a new hole as $p$ is freed.
 				\end{itemize}
 				
-				We need some way of indicating which blocks of memory are holes and which are allocated. We could add another bit to the header. This introduces a problem, though: how do we find the header of the previous area, if we don't know its size? We could add the length of the block to the end of each area (adding a footer), as well as keeping the length in the header. We also need a pointer backwards to the previous area. This makes our linked list a doubly linked list.
+				We need some way of indicating which blocks of memory are holes and which are allocated. We could add another bit to the header. This introduces a problem, though: how do we find the header of the previous area, if we don't know its size? We could add the length of the block to the end of each area (adding a footer), as well as keeping the length in the header. We also need a pointer backwards to the previous area in the available space list. This makes our linked list a doubly linked list.
 				\\ \\
 				At the end of the day, each block of memory will have:
 				\begin{itemize}
-					\item \textbf{Header}: length of the block, pointer forward, pointer backward, and a \verb+hole?+ bit.
+					\item \textbf{Header}: length of the block, pointer forward in the available space list, pointer backward in the available space list, and a \verb+hole?+ bit.
 					\item \textbf{Footer}: length of the block.
 				\end{itemize}
 				
