@@ -4011,7 +4011,7 @@
 			These principles apply beyond memory. Allocations on permanent filesystems have the same key issues. Most filesystems do a pretty good job at reducing fragmentation, but Windows' filesystem does not and sometimes users have to manually de-fragment Windows machines.
 	
 	\section{Compiler Optimization} \lecture{April 5, 2013}
-		Optimizing a compiler involves seeing into the future. Compiler optimization is not strictly a mathematical problem. The combinatorics and optimization people get pissed when we call it compiler ``optimization'', because that implies that there's an optimal solution, but there is not.
+		Optimizing a compiler involves seeing into the future. Compiler optimization is not strictly a mathematical problem. The combinatorics and optimization people get pissed when we call it compiler ``optimization,'' because that implies that there's an optimal solution, but there is not.
 		\\ \\
 		There's no efficient algorithm to optimize a compiler. In fact, there is no algorithm at all, not even an inefficient one. Measuring how well you optimized your compiler is also not well-defined, because ideally we'd have to measure how well our compiler does on all possible programs (which cannot be enumerated).
 		\\ \\
@@ -4050,9 +4050,9 @@
 			Sometimes source code contains dead code. For instance:
 			\begin{verbatim}
 				if (0 == 1) {
-					code_A
+				  code_A
 				} else {
-					code_B
+				  code_B
 				}
 			\end{verbatim}
 			
@@ -4097,9 +4097,9 @@
 					if (test) {
 					  x = y + z * 3; // lifted code
 					  do {
-						  .
-						  .
-						  .
+					    .
+					    .
+					    .
 					  } while(test);
 					}
 				\end{verbatim}
@@ -4119,13 +4119,13 @@
 			\end{verbatim}
 			
 		\subsection{Register Allocation}
-			Register allocation is the mother of all variable optimizations. We want to use registers for storing variables, and for storing temporary results of subexpressions.
+			Register allocation is the mother of all variable optimizations. We want to use registers for storing variables and for storing temporary results of subexpressions.
 			\\ \\
 			There is a problem, however. Recall that we only have a finite number of registers.
 			
 			\subsubsection{Register Allocation for Variables}
 				Throughout our program, we'll keep track of \textbf{live ranges} of each variable. A live range is the point at which a variable is assigned to the last point where the variable is used with that assignment.
-			
+				\\ \\
 				For example:
 			
 				\begin{verbatim}
@@ -4143,7 +4143,7 @@
 			
 				In this code, the live range for $x$ is from \verb|x = 3;| to \verb|println(x);|. The live range for $y$ is from \verb|y = 4;| to \verb|println(y);|. Finally, the live range for $z$ is from \verb|z = 7;| to \verb|println(z);|.
 				\\ \\
-				This follows the great philosophical discussion where if a tree falls in a forest and no one is there to hear it, does it make a sound? If we set a variable to a value that is never used, do we have to set that variable to that value? The answer is no.
+				This follows the great philosophical discussion where if a tree falls in a forest and no one is there to hear it, does it really make a sound? If we set a variable to a value that is never used, do we have to set that variable to that value? The answer is no.
 				\\ \\
 				Two variables are said to \textbf{interfere} is their live ranges intersect. An \textbf{interference graph} is a graph where every variable is a vertex and edges are defined by intersecting variables.
 				\\ \\
@@ -4172,7 +4172,7 @@
 			
 				Both of these approaches do a lot of stupid work, all because of our convention that all results are to be placed in \$3. Since we're placing all of our results in \$3, we have to constantly store that result somewhere else (i.e. on the stack). This is called \textbf{register spilling}.
 				\\ \\
-				It'd be nice to avoid register spilling wherever possible. It'd be nice if we could specify where we want the result to be placed, or to have some way to indicate that the result was placed in an alternate location. We have to tell our code generator which registers it's allowed to use, in order to indicate to it where it can place its result, as well as which registers it is allowed to clobber.
+				It'd be nice to avoid register spilling whenever possible. It'd be nice if we could specify where we want the result to be placed, or to have some way to indicate that the result was placed in an alternate location. We have to tell our code generator which registers it's allowed to use, in order to indicate to it where it can place its result, as well as which registers it is allowed to clobber.
 				\\ \\
 				For all code generators, we now have Code(tree, avail) (where avail is the set of available registers) which will return a tuple containing the code and the representation of the result. For example, we'll have Code(expr + term, avail):
 				\begin{verbatim}
@@ -4184,7 +4184,7 @@
 				We could've produced similar code for the case where we executed code(term) first:
 				\begin{verbatim}
 					code(term, avail) ;; let's say this returned that it placed its result in $r.
-					code(expr, avail\{$r$}) ;; set difference
+					code(expr, avail\{$r}) ;; set difference
 					add $t, $s, $r ;; where $t is a member of avail.
 				\end{verbatim}
 			
