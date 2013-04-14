@@ -437,19 +437,19 @@
 		
 		\begin{verbatim}
 			sum:             ; only needed for next example, sum10.asm
-			  add $3, $0, $0 ; $3 is the accumulator A.
+			  add $3, $0, $0 ; $3 is the accumulator C
 
 			loop:
-			  add $3, $3, $1 ; A = A + N
+			  add $3, $3, $1 ; C = C + N
 			  lis $2
 			  .word -1
-			  add $1, $1, $2 ; A = A + (-1)
+			  add $1, $1, $2 ; C = C + (-1)
 			  bne $1, $0, loop
 
 			jr $31
 		\end{verbatim}
 
-		Now, let's create a program \verb+sum10.asm+ which sums the numbers from 1 to 10, and puts the result in \$3. We'll add the \verb+sum:+ label to the top of our \verb+sum.asm+ file, as indicated, so we have a way to jump to the \verb+sum.asm+ line (which is part of how procedures are called in MIPS).
+		Now, let's create a program \verb+sum10.asm+ which sums the numbers from 1 to 10, and puts the result in \$3. We'll add the \verb+sum:+ label to the top of our \verb+sum.asm+ file, as indicated in the code above, so we have a way to jump to the \verb+sum.asm+ line (which is part of how procedures are called in MIPS). This is \verb+sum10.asm+:
 		
 		\begin{verbatim}
 			; PROLOGUE
@@ -473,11 +473,11 @@
 			jr $31
 		\end{verbatim}
 
-		Note that if you ever get into an infinite loop while executing a MIPS program, you can push CTRL-C to forcefully end the process immediately.
+		\underline{Aside}: Note that if you ever get into an infinite loop while executing a MIPS program, you can push CTRL-C to forcefully end the process immediately.
 		\\ \\
 		We use \verb+jalr+ instead of \verb+jr+ so the \verb+sum+ routine knows how to get back. \verb+jalr+ is the only instruction that can access the contents of the \verb+PC+.
 		\\ \\
-		How do we actually run this program? We \verb+cat+ together the two programs! It really is that simple. You execute \verb+cat sum10.asm sum.asm | java cs241.binasm > foo.mips+ to get a MIPS program in binary. Note that the order of the \verb+cat+ arguments matters \textendash{} you must list your runner program before the procedures so a procedure isn't executed prior to your runner program.
+		How do we actually run this program? We \verb+cat+ together the two programs! It really is that simple. You execute \verb+cat sum10.asm sum.asm | java cs241.binasm > foo.mips+ to get a MIPS program in binary. Note that the order of the \verb+cat+ arguments matters \textendash{} you must place your runner program before the procedures (by listing it first in the \verb+cat+ command) so a procedure isn't executed prior to your runner program.
 
 		\subsection{Recursion}
 			Recursion is nothing special. You need to save any local variables (which are stored in registers), including given parameters and the return address, onto the stack so we can change them back when we're done. We don't want subroutines (recursive calls) to mess with those values, so subroutines must preserve their own values. ``It's always good hygiene to save your registers.''
