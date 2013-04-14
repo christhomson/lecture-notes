@@ -305,11 +305,13 @@
 				jr $31          ; return
 			\end{verbatim}
 			If we enter 10 for \$1 (to get the sum of the numbers from 1 to 10), we should get 55. But the actual result is \verb+0x00000037+. Note that $37_{16} = 55_{10}$, so the program works as expected. The end result is \$1 being \verb+0x00000000+ ($0_{10}$), \$2 being \verb+0xffffffff+ ($-1_{10}$), and \$3 being \verb+0x00000037+ ($55_{10}$).
-		\subsubsection{Housekeeping Notes}
-			\begin{itemize}
-				\item \verb+cs241.binasm+ will be available on Thursday after the assignment 1 deadline has passed. You can use this for future assignments as necessary.
-				\item You don't need to memorize the binary representation of MIPS commands for exams, or the ASCII representation of characters. You'll be provided with the MIPS reference sheet and an ASCII conversion chart for the exams.
-			\end{itemize}
+			\\ \\
+			\underline{Aside}: it's only a convention that we reserve \$1 and \$2 as registers for input parameters and \$3 as the register for the result -- the MIPS system itself does not treat these registers in a special way.
+	%	\subsubsection{Housekeeping Notes}
+	%		\begin{itemize}
+	%			\item \verb+cs241.binasm+ will be available on Thursday after the assignment 1 deadline has passed. You can use this for future assignments as necessary.
+	%			\item You don't need to memorize the binary representation of MIPS commands for exams, or the ASCII representation of characters. You'll be provided with the MIPS reference sheet and an ASCII conversion chart for the exams.
+	%		\end{itemize}
 			\subsubsection{Labels} \lecture{January 16, 2013}
 				Part of the assembler's job is to count instructions and keep track of their locations (\verb+0x00000004+, \verb+0x00000008+, \verb+0x0000000c+, etc.). The assembler can use this information to simplify the programmer's job with \textbf{labels}.
 				\\ \\
