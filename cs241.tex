@@ -2051,7 +2051,7 @@
 	\section{Context-Free Languages} \lecture{February 25, 2013}
 		Context-free languages (CFLs) are a larger class of languages than regular languages. They capture recursion through matching brackets (\verb+([()])+) and nesting structures (\verb+if then if then else else+).
 		\\ \\
-		Every regular language is also a context-free language, however there are context-free languages that are not regular languages. Context-free languages that are not regular would be languages that require an infinite number of states in order to be expressed as a state machine. However, all regular languages can be expressed in a \underline{finite} state machine, so those languages cannot be regular.
+		Every regular language is also a context-free language, however there are context-free languages that are not regular languages. Context-free languages that are not regular would be languages that require an infinite number of states in order to be expressed as a state machine. However, all regular languages can be expressed in a \underline{finite} state machine, so those languages with an infinite number of states cannot be regular.
 		\begin{ex}
 			An example of a context-free language that is not regular is the language defined by:
 			\begin{align*}
@@ -2151,7 +2151,7 @@
 		\subsection{Parsing}
 			Given some $x \in L(G)$, find a derivation for $x$. Parsing and recognition is when if $x \in L(G)$, you find a derivation, otherwise you reject. It's your duty to reject $x \not \in L(G)$, but it'd be nice if you could also be somewhat informative as to why $x \not \in L(G)$.
 			\\ \\
-			There are two general approaches for parsing: top-down and bottom up.
+			There are two general approaches for parsing: top-down and bottom-up.
 			\subsubsection{Top-Down Parsing}
 				Top-down parsing is where you start with $\gamma_0 = S$ and continue until you find $\gamma_n = x$. Our example from earlier was an example of this:
 				\begin{align*}
@@ -2173,7 +2173,7 @@
 
 				This is a \textbf{rightmost derivation}.
 				\\ \\
-				By contention, we will rewrite this derivation in reverse order:
+				By convention, we will rewrite this derivation in reverse order:
 				\begin{align*}
 					\gamma_0&: &\implies& S \\
 					\gamma_1&: S \mapsto AhB &\implies& AhB \\
@@ -2187,7 +2187,7 @@
 				\end{defn}
 
 				Note that in the bottom-up example, we still appear to have replaced the leftmost nonterminal first, but since the order of our steps gets reversed, it seems like we performed a rightmost derivation instead.
-			\subsubsection{Parse Tree}
+			\subsubsection{Parse Trees}
 				A parse tree is another canonical parsing form. You can draw a tree to represent the string:
 				\begin{figure}[h]
 					\Tree [.S [.A [.c ] [.d ] ] [.h ] [.B [.g ] ] ]
@@ -2197,7 +2197,7 @@
 				\\ \\
 				Parse trees remove irrelevant differences, however we could still have some ambiguity as with the other parsing methods. Ambiguity is acceptable for context-free grammars, but it's sometimes easier to make compilers that deal with unambiguous grammars.
 		\subsection{Parsing WLPP} \lecture{February 27, 2013}
-			WLPP is described in lexical syntax (splitting it up into tokens), context-free syntax (how to arrange the tokens to create a valid WLPP program), and context-sensitive syntax (other rules that cannot be expressed by a context-free grammar).
+			WLPP is described in lexical syntax (splitting WLPP source into tokens), context-free syntax (how to arrange the tokens to create a valid WLPP program), and context-sensitive syntax (other rules that cannot be expressed by a context-free grammar).
 			\\ \\
 			The start symbol is always \verb+procedure+. We parse the tokens in order. When we encounter a nonterminal symbol, we look for a rule that defines it (on the following lines). We perform a substitution based on the rule we found, and then check the continual validity of token kinds in that order.
 			\\ \\
@@ -2381,7 +2381,7 @@
 					\Tree [.I [.B [.B [.B [.1 ] ] [.1 ] ] [.0 ] ] ]
 				\end{figure}
 
-				From the bottom of the tree, the meaning of $B$ is 1. The meaning of the next $B$ is 3, since $Meaning(B) = 2 \times 1 + 1$. The meaning of the uppermost $B$, and $I$, are 6. The meaning of a particular element is determined by its subtrees.
+				From the bottom of the tree, the meaning of $B$ is 1. The meaning of the next $B$ is 3, since $\text{Meaning}(B) = 2 \times 1 + 1$. The meaning of the uppermost $B$, and $I$, are 6. The meaning of a particular element is determined by its subtrees.
 				\\ \\
 				Suppose instead we wanted the little-endian binary unsigned value. That's reasonably difficult with this grammar. Instead, we'll use a right-associative grammar for the same language. Let's define the rules for this new grammar to be:
 				\begin{align*}
@@ -2508,7 +2508,7 @@
 					Let's parse $x = abhg$. We get:
 					\begin{align*}
 						\gamma &= S, A = S, \alpha = \beta = \epsilon, \delta = AhB \\
-						\gamma &= AhB, A = A (\text{or} A = B), \alpha = \epsilon, \beta = hB, \delta = ab \text{ by oracle} \\
+						\gamma &= AhB, A = A \text{ (or } A = B), \alpha = \epsilon, \beta = hB, \delta = ab \text{ by oracle} \\
 						\gamma &= abhB \\
 						\gamma &= abhg
 					\end{align*}
@@ -2583,14 +2583,15 @@
 				The oracle is represented as a Predict function, Predict: $N \times T \to 2^R$ (that is, it yields a subset of the set of rules $R$).
 				\\ \\
 				As a convenience, we'll introduce the notion of an augmented grammar.
-				\\ \\
-				\textbf{Augmented Grammar}: given $G$, the augmented grammar $G'$ is:
-				\begin{align*}
-					N' &= N \cup \set{S'} \text{ where } S' \text{ is the new start symbol} \\
-					S' &= S' \\
-					T' &= T \cup \set{\vdash, \dashv} \text{ where } \vdash \text{ and } \dashv \text{ are the beginning and end string markers} \\
-					R' &= R \cup \set{S' \to{} \vdash S \dashv}
-				\end{align*}
+				\begin{defn}
+					Given $G$, the \textbf{augmented grammar} $G'$ is:
+					\begin{align*}
+						N' &= N \cup \set{S'} \text{ where } S' \text{ is the new start symbol} \\
+						S' &= S' \\
+						T' &= T \cup \set{\vdash, \dashv} \text{ where } \vdash \text{ and } \dashv \text{ are the beginning and end string markers} \\
+						R' &= R \cup \set{S' \to{} \vdash S \dashv}
+					\end{align*}
+				\end{defn}
 
 				Let's introduce a specific augmented grammar with the following set of rules $R'$:
 				\setcounter{equation}{0}
@@ -2622,7 +2623,7 @@
 					\end{tabular}
 				\end{center}
 				
-				The $(B, e)$ position means if $e$ is the next symbol, rule 5 must be used. We could have drawn this table without empty sets all over the place \textendash{} blank spaces indicate empty sets of applicable rules.
+				The $(B, e)$ position in this table means if $e$ is the next symbol, rule 5 must be used. We could have drawn this table without empty sets all over the place \textendash{} blank spaces indicate empty sets of applicable rules.
 				\\ \\
 				Here's the pseudocode for an LL(1) parser for input $x$: \\
 				\begin{algorithm}[H]
@@ -2667,7 +2668,7 @@
 
 				\textbf{Constructing the Predict Function}: we'll need some helper functions.
 				\begin{itemize}
-					\item first[$\alpha$] = $\set{a | \alpha \stackrel{\star}{\implies} a \beta}$. For example, first($A$) = $\set{a, c}$, and first($AbB$) = $\set{a}$.
+					\item first[$\alpha$] := $\set{a | \alpha \stackrel{\star}{\implies} a \beta}$. For example, first($A$) = $\set{a, c}$, and first($AbB$) = $\set{a}$.
 					\item nullable[$\alpha$] := $\alpha \stackrel{\star}{\implies} \epsilon$.
 					\item follow[$A$] := $\set{b | S' \stackrel{\star}{\implies} \alpha A b \beta}$. That is, in \emph{some} sentential form, $A$ is followed by these elements $b$.
 				\end{itemize}
@@ -2725,7 +2726,7 @@
 					So, we have that $B \to $ is nullable and follow($B$) = $\set{b}$.
 				\end{ex}
 
-				If you use LL(1), you'll have to forget about left recursion, and therefore forget about syntax-directed translation as well.
+				If you use LL(1), you'll have to forget about left recursion, and therefore forget about syntax-directed translation as well. It doesn't work.
 				\\ \\
 				There are some languages for which no LL(1) grammar is possible.
 				\begin{ex}
@@ -3032,7 +3033,7 @@
 						push Goto[top of stack, c]\;
 						
 						// Tree build: \\
-						pop $|\alpha$ subtrees from the tree\_stack\;
+						pop $|\alpha|$ subtrees from the tree\_stack\;
 						push makenode(root = A, subtrees = nodes that were just popped)\;
 					}
 					push Goto[top of stack, c]\;
@@ -3067,9 +3068,9 @@
 				Here are the states for the augmented grammar presented earlier.
 				\begin{align*}
 					S' &\to . \vdash S \dashv \\
-					S' &\to \vdash . S \dashv \\
-					S' &\to \vdash S . \dashv \\
-					S' &\to \vdash S \dashv .
+					S' &\to{} \vdash . S \dashv \\
+					S' &\to{} \vdash S . \dashv \\
+					S' &\to{} \vdash S \dashv .
 					\\ \\
 					S &\to .AhB \\
 					S &\to A.hB \\
@@ -3094,9 +3095,9 @@
 
 				Whenever you have a dot preceding a symbol, you move the dot to the other side of that symbol and make \emph{that} rule a final state.
 				\\ \\
-				Whenever you have a dot before a nonterminal, you also add an epsilon transition to rules that have the corresponding nonterminal as their left-hand side.
+				Whenever you have a dot before a nonterminal, you also add an $\epsilon$-transition to rules that have the corresponding nonterminal as their left-hand side.
 				\\ \\
-				To convert the NFA to a DFA, use subset construction. Since we have $\epsilon$ transitions, you'll also need to take $\epsilon$-closure into account. Once all the states are built up with subset construction, you'll also want transitions to reduction rules for $A$ (for example) on a symbol $h$ (for example) if $h \in \text{follow}(A)$. % TODO - draw DFA with tikz (issue #15).
+				To convert the NFA to a DFA, use subset construction. Since we have $\epsilon$ transitions, you'll also need to take $\epsilon$-closure into account. Once all the states are built up with subset construction, you'll also want transitions to reduction rules for $A$ (for example) on a symbol $h$ (for example) if $h \in \text{follow}(A)$.
 				\\ \\
 				It \emph{might} be time to perform a reduction when you're on the very right side of the rule. Don't go down a blind alley, though \textendash{} consult your follow function to ensure a reduction is desired.
 
