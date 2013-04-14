@@ -31,6 +31,7 @@
 \theoremstyle{definition}
 \newtheorem*{defn}{Definition}
 \newtheorem*{theorem}{Theorem}
+\newtheorem*{corollary}{Corollary}
 \newtheorem{ex}{Example}[section]
 
 \crefname{ex}{Example}{Example}
@@ -3788,7 +3789,7 @@
 			\item \verb+initialize+.
 			\item \verb+finalize+.
 			\item \verb+allocate(n)+: finds $n$ available units of RAM, or fails.
-			\item \verb+free(p)+: free the previously allocated RAM that is referred to by $p$.
+			\item \verb+free(p)+: frees the previously allocated RAM that is referred to by $p$.
 		\end{itemize}
 
 		The first step to implementing a heap is to identify some available RAM. This RAM is typically in one continuous block, which we will call the \textbf{arena}.
@@ -3797,7 +3798,7 @@
 		\\ \\
 		The given \verb+alloc.asm+ file implements a fixed-size arena. That's why it must be at the very end of our program. It has a label \verb+end:+ at the very bottom of it that indicates where your program ends, which is also where the arena begins.
 		\\ \\
-		\underline{Aside}: up until this point, we've made the na\"ive assumption that the stack is not bounded. In reality, of course the stack is bounded, but we're not sure how large the stack needs to be. Also, you should really check for possible stack overflows, otherwise your program could get overwritten by a user and arbitrary code could be executed.
+		\underline{Aside}: up until this point, we've made the na\"ive assumption that the stack is not bounded. In reality, of course the stack is bounded, but we're not sure how large the stack needs to be, so we've been treating it as unbounded. Also, you should really check for possible stack overflows, otherwise your program could get overwritten by a user and arbitrary code could be executed.
 		\\ \\
 		You could dedicate half of your stack space (conventionally denoted as the memory below the address stored in \$30) to the arena. The other half will be used for the stack. We will call this the \textbf{split the baby approach}.
 		\\ \\
@@ -3810,7 +3811,7 @@
 			\\ \\
 			If instead we wanted to implement the Walmart algorithm, we would need to find the most appropriate hole when we want to allocate some memory. What if there are many small holes but we need a large one? That is, the total amount of unused storage in your arena is large enough, but there's no continuous block of RAM available. This is known as \textbf{fragmentation}. \lecture{March 27, 2013}
 			\\ \\
-			In the simple case, \verb+alloc()+ will allocate $k$ words, where typically $k = 2$. In Lisp or Scheme, \verb+alloc()+ is written as \verb+(cons a b)+. A \verb+cons+ statement allocates two spaces in memory (\verb+first+/\verb+rest+, also known as \verb+car+/\verb+cdr+).
+			In the simple case, \verb+alloc()+ will allocate $k$ words, where typically $k = 2$. In Lisp or Scheme, \verb+alloc()+ is written as \verb+(cons a b)+. A \verb+cons+ statement allocates two spaces in memory (\verb+first+ \& \verb+rest+, also known as \verb+car+ \& \verb+cdr+).
 			\\ \\
 			We could create an arena where we have two pointers: a \verb+bread+ pointer (the next slice of bread comes from where the \verb+bread+ pointer is pointing to), and an \verb+end+ pointer. The slice of bread algorithm for \verb+alloc()+ is as follows.
 
@@ -3922,7 +3923,7 @@
 			There are two gotchas with this approach:
 			\begin{itemize}
 				\item We have to store use counts.
-				\item It doesn't work for cyclic structures. If we have a data structure that points to another data structure that points back to the first one, the use counts are both at 2, and then when we call \verb+delete+ they both become $1 \ne 0$, so they are not freed.
+				\item It doesn't work for cyclic structures. If we have a data structure that points to another data structure that points back to the first one, the use counts are both at 2, and then when we call \verb+delete+ their use counts both become 1 ($\ne 0$), so they are not freed.
 			\end{itemize}
 
 			Use counts are still a perfectly valid idea in cases where we know we won't have cyclic data structures.
@@ -3930,7 +3931,7 @@
 		\subsection{Copying Collector}
 			As you're using a piece of memory, you copy all of it to a space dedicated for memory that's currently in use. Note that this has the consequence of only letting you effectively use half of the RAM available, maximum.
 			\\ \\
-			This copying is also relocating code. That might be tough in languages like C++ where memory addresses are part of the language. You could always convert pointers to integers, strings, or do other crazy things (like reverse the bits in a pointer), and the compiler will not be aware of that use.
+			This copying has the effect of relocating code, since code is stored in memory. That might be tough in languages like C++ where memory addresses are part of the language. You could always convert pointers to integers, strings, or do other crazy things (like reverse the bits in a pointer), and the compiler will not be aware of that use.
 			\\ \\
 			Andrew Appel argued that instead of using the stack (which would involve a push and pop), just use \verb+alloc()+ instead. It's equivalent to just pushing onto the stack, and removes the need for the popping code.
 			
@@ -3946,14 +3947,14 @@
 			\\ \\
 			In order to find an appropriate hole, we'll have to search through the available space list (the list of holes). There are a few approaches to this search:
 			\begin{itemize}
-				\item \textbf{First fit}: choosing the first hole that is big enough. You don't need to pick sides. This approach is easy to implement. This approach also leaves a variety of hole sizes available for future use.
-				\item \textbf{Worst fit}: choosing the biggest hole we can find. This experiences hole erosion \textendash{} that is, all holes will tend to become very similar sizes over time.
-				\item \textbf{Best fit}: choosing the smallest hole that's big enough. Most of the time, you'll be able to use most of the hole you selected, but that'll leave a sliver of storage remaining. That sliver will be hard to fill later on. You waste less space now, but more space later (as the slivers accumulate).
+				\item \textbf{First fit}: choosing the first hole that is big enough. You don't need to pick sides. This approach is easy to implement. This approach also leaves a variety of hole sizes available for future use, which is good.
+				\item \textbf{Worst fit}: choosing the biggest hole we can find. This experiences \textbf{hole erosion} \textendash{} that is, all holes will tend to become very similar sizes over time.
+				\item \textbf{Best fit}: choosing the smallest hole that's big enough. Most of the time, you'll be able to use most of the hole you selected, but that'll leave a sliver of storage remaining. That sliver will be hard to fill later on. You waste less space now, but more space later (as the slivers accumulate in different areas of your arena).
 			\end{itemize}
 			
 			The choice between these three approaches is not clear cut because there is no analytical way to compare these.
 			\\ \\
-			With fixed-size allocation, you'll fail only if all memory is full, because all holes are the same size. With variable-size allocation, you'll fail if there is no hole that is big enough.
+			With fixed-size allocation, you'll fail only if all memory is full, since all holes are the same size. With variable-size allocation, you'll fail if there is no hole that is big enough.
 			\\ \\
 			In archaic languages like C and C++ (that don't have implicit \verb+free+s), \verb+free(p)+ frees the storage area that pointer $p$ points to. How do we know how big that area is, though? We'll need to keep track of the length of those areas as well.
 			\\ \\
@@ -3974,7 +3975,7 @@
 					\item $p$ is surrounded by allocated memory on both sides. This results in a new hole as $p$ is freed.
 				\end{itemize}
 				
-				We need some way of indicating which blocks of memory are holes and which are allocated. We could add another bit to the header. This introduces a problem, though: how do we find the header of the previous area, if we don't know its size? We could add the length of the block to the end of each area (adding a footer), as well as keeping the length in the header.We also need a pointer backwards to the previous area. This makes our linked list a doubly linked list.
+				We need some way of indicating which blocks of memory are holes and which are allocated. We could add another bit to the header. This introduces a problem, though: how do we find the header of the previous area, if we don't know its size? We could add the length of the block to the end of each area (adding a footer), as well as keeping the length in the header. We also need a pointer backwards to the previous area. This makes our linked list a doubly linked list.
 				\\ \\
 				At the end of the day, each block of memory will have:
 				\begin{itemize}
@@ -4000,9 +4001,9 @@
 			
 			There's also an interesting corollary to this.
 			
-			\begin{theorem}[Corollary]
+			\begin{corollary}
 				If there is as much free space as allocated space in the arena, the average hole size is double the average allocated area.
-			\end{theorem}
+			\end{corollary}
 			
 			In the first fit approach, the size will on average be twice the size you actually need. You'll find an appropriate hole pretty quickly as a result of this. We can even go so far as to say that finding an appropriate hole with the first fit approach operates in constant $O(1)$ time.
 		
