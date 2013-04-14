@@ -1105,11 +1105,11 @@
 				\end{tikzpicture}
 			\end{center}
 
-			You follow the arrows through the states, as necessary, and if you end up on a final state then the element is in the language.
+			You follow the arrows through the states, as necessary, and if you end up on a final state then the string is in the language.
 			\\ \\
-			We prefer total functions to partial functions. We add a new state, which we'll call ``barney'', that acts as a black hole. A finite automaton only needs one black hole, where all states loop back to itself. We can always make $T$ total by directing transitions that are not otherwise specified to the black hole. The black hole state is \emph{not} a final state.
+			We prefer total functions to partial functions. We add a new state, which we'll call ``barney,'' that acts as a black hole. A finite automaton only needs one black hole, where all transitions loop back to the black hole itself. We can always make $T$ total by directing transitions that are not otherwise specified to the black hole. The black hole state is \emph{not} a final state.
 			\\ \\
-			We can name our states whatever we'd like on our bubble diagram. Intelligent names should be chosen, like ``start'', ``zero'', ``nonzero'', and ``fail'', for instance.
+			We can name our states whatever we'd like on our bubble diagram. Intelligent names should be chosen, like ``start,'' ``zero,'' ``nonzero,'' and ``fail,'' for instance.
 			\\ \\
 			Fun fact: regular languages have been proven to be closed under intersection and set difference. \lecture{February 6, 2013}
 			\\ \\
@@ -1217,7 +1217,7 @@
 				\\ \\
 				It's useful to name your DFA states with what you've learned so far based on the conditions that led to that state, because that's the only way we know what we've determined in the past. These names don't matter, but it'll make the finite automaton much easier for you to understand.
 				\\ \\
-				We're going to assume there is an error state that all undefined transitions lead to. We'll make this assumption in general in this course. You need to draw the error state only when you need a \emph{total} function $T$ (such as when you intend to run the DFA algorithm), or when you're explicitly asked to draw it.
+				We're going to assume there is an error (black hole) state that all undefined transitions lead to. We'll make this assumption in general in this course. You need to draw the error state only when you need a \emph{total} function $T$ (such as when you intend to run the DFA algorithm), or when you're explicitly asked to draw it.
 				\\ \\
 				Let's look at the bubble diagram for this finite automaton that represents the notation of MIPS registers.
 				\begin{center}
@@ -1456,14 +1456,14 @@
 					\end{tikzpicture}
 				\end{center}
 
-				\underline{Searching} for $L_{\text{id}}$ in $x$, where $x = !abc!cba!$ yields the vacuous result of ``yes!''. There is an identifier in $x$, somewhere.
+				\underline{Searching} for $L_{\text{id}}$ in $x$, where $x = !abc!cba!$ yields the vacuous result of ``yes!'' There is an identifier in $x$, somewhere.
 				\\ \\
 				Some possible answers for \underline{find} include:
 				\begin{itemize}
 					\item $i = 1$ is the start of $y \in L$.
 					\item $i = 5$ is the start of $y \in L$.
-					\item $i = 3$ is the end of $y \in L$.
-					\item $i = 7$ is the end of $y \in L$.
+					\item $j = 3$ is the end of $y \in L$.
+					\item $j = 7$ is the end of $y \in L$.
 					\item $(i, j) = (1, 3)$ is $y \in L$.
 					\item $(i, j) = (5, 7)$ is $y \in L$.
 				\end{itemize}
@@ -1472,8 +1472,8 @@
 				\begin{itemize}
 					\item $i = 2$ is the start of $y \in L$.
 					\item $i = 3$ is the start of $y \in L$.
-					\item $i = 1$ is the end of $y \in L$.
-					\item $i = 2$ is the end of $y \in L$.
+					\item $j = 1$ is the end of $y \in L$.
+					\item $j = 2$ is the end of $y \in L$.
 					\item etc.
 				\end{itemize}
 
@@ -1511,51 +1511,54 @@
 			\begin{ex}
 				Suppose $L = \set{a} \cup \set{\text{any string beginning with } a \text{ and ending in } b}$. We can determine a recognizer for this:
 				\begin{center}
-					\begin{tikzpicture}[scale=0.2]
-						\tikzstyle{every node}+=[inner sep=0pt]
-						\draw [black] (18.5,-22.9) circle (3);
-						\draw (18.5,-22.9) node {start};
-						\draw [black] (35.9,-22.9) circle (3);
-						\draw (35.9,-22.9) node {a};
-						\draw [black] (35.9,-22.9) circle (2.4);
-						\draw [black] (57.4,-22.9) circle (3);
-						\draw (57.4,-22.9) node {b};
-						\draw [black] (57.4,-22.9) circle (2.4);
-						\draw [black] (46.8,-33.7) circle (3);
-						\draw (46.8,-33.7) node {error};
-						\draw [black] (12,-16.6) -- (16.35,-20.81);
-						\draw (11.47,-15.13) node [left] {$i$};
-						\fill [black] (16.35,-20.81) -- (16.12,-19.9) -- (15.42,-20.61);
-						\draw [black] (49.489,-35.003) arc (91.87498:-196.12502:2.25);
-						\draw (53.05,-39.52) node [below] {else};
-						\fill [black] (47.4,-36.63) -- (46.93,-37.44) -- (47.93,-37.41);
-						\draw [black] (38.03,-25.01) -- (44.67,-31.59);
-						\fill [black] (44.67,-31.59) -- (44.45,-30.67) -- (43.75,-31.38);
-						\draw (39.23,-28.78) node [below] {else};
-						\draw [black] (48.9,-31.56) -- (55.3,-25.04);
-						\fill [black] (55.3,-25.04) -- (54.38,-25.26) -- (55.1,-25.96);
-						\draw (52.63,-29.77) node [right] {else};
-						\draw [black] (21.5,-22.9) -- (32.9,-22.9);
-						\fill [black] (32.9,-22.9) -- (32.1,-22.4) -- (32.1,-23.4);
-						\draw (27.2,-23.4) node [below] {$a$};
-						\draw [black] (38.9,-22.9) -- (54.4,-22.9);
-						\fill [black] (54.4,-22.9) -- (53.6,-22.4) -- (53.6,-23.4);
-						\draw (46.65,-23.4) node [below] {$b$};
-					\end{tikzpicture}
+				\begin{tikzpicture}[scale=0.2]
+				\tikzstyle{every node}+=[inner sep=0pt]
+				\draw [black] (10.3,-20.6) circle (3);
+				\draw (10.3,-20.6) node {start};
+				\draw [black] (28,-20.4) circle (3);
+				\draw (28,-20.4) node {$a$};
+				\draw [black] (28,-20.4) circle (2.4);
+				\draw [black] (50.8,-20.4) circle (3);
+				\draw (50.8,-20.4) node {$b$};
+				\draw [black] (50.8,-20.4) circle (2.4);
+				\draw [black] (37.7,-36.1) circle (3);
+				\draw (37.7,-36.1) node {error};
+				\draw [black] (5.2,-14.1) -- (8.45,-18.24);
+				\draw (4.39,-13.6) node [above] {$i$};
+				\fill [black] (8.45,-18.24) -- (8.35,-17.3) -- (7.56,-17.92);
+				\draw [black] (13.3,-20.57) -- (25,-20.43);
+				\fill [black] (25,-20.43) -- (24.19,-19.94) -- (24.21,-20.94);
+				\draw (19.15,-21.01) node [below] {$a$};
+				\draw [black] (31,-20.4) -- (47.8,-20.4);
+				\fill [black] (47.8,-20.4) -- (47,-19.9) -- (47,-20.9);
+				\draw (39.4,-20.9) node [below] {$b$};
+				\draw [black] (29.58,-22.95) -- (36.12,-33.55);
+				\fill [black] (36.12,-33.55) -- (36.13,-32.6) -- (35.28,-33.13);
+				\draw (32.22,-29.53) node [left] {else};
+				\draw [black] (39.62,-33.8) -- (48.88,-22.7);
+				\fill [black] (48.88,-22.7) -- (47.98,-23) -- (48.75,-23.64);
+				\draw (44.8,-29.69) node [right] {$b$};
+				\draw [black] (40.643,-35.58) arc (127.75839:-160.24161:2.25);
+				\draw (44.95,-38.57) node [right] {$a$};
+				\fill [black] (39.9,-38.12) -- (40,-39.06) -- (40.79,-38.45);
+				\draw [black] (48.64,-22.48) -- (37.66,-33.02);
+				\fill [black] (37.66,-33.02) -- (38.59,-32.83) -- (37.89,-32.11);
+				\draw (42.18,-27.27) node [above] {$a$};
+				\end{tikzpicture}
 				\end{center}
 
 				If we have $x = acc012cca12\ldots$ and we're examining $a$ at the beginning, we're unsure if that's the longest prefix $y \in L$ yet. We have to continue looking to be sure.
 			\end{ex}
 
 			Here's the pseudocode for determining the longest prefix using a DFA, given an input $x = x_0 x_1 \ldots x_{|x|-1}$. \\
-			\begin{algorithm}
+			\begin{algorithm}[H]
 				state = start\;
 				j = -1\;
 				\For{i = 0 to |x| - 1}{
 					\lIf{state $\in$ final}{j = i}
 					state = T[state, $x_i$]\;
 					// You could always hope\dots this is optional though: \\
-					\lIf{state is blackhole}{reject}
+					\lIf{state is black hole}{reject}
 				}
 				\lIf{$j \ge 0$}{accept, $y = x_0 \ldots x_{j - 1} \in L$}
 				\lElse{reject}
@@ -1681,12 +1684,13 @@
 				\label{ex:nfa}
 			\end{ex}
 				
-			The transition function $T$ no longer has to be a function \textendash{} it can have multiple values for the same inputs.
-			The rule is the same as before: if there is \underline{any} path that is followed to a finish state, then the string is considered to be in the language. With DFAs, we used the ``one-finger algorithm'', but now we can't do that because there could be multiple paths we need to follow.
+			The transition function $T$ no longer has to be a function \textendash{} it can have multiple transition values for the same input symbols.
 			\\ \\
-			An \textbf{oracle} is a magic function that sees the future. In CS theory, if we have an oracle then you can resolve the proper path and use the same process as a DFA. However, we don't have an oracle. When we see multiple paths, we clone our finger and follow each path as far as we can. This is more operationally satisfactory than looking into the future.
+			The rule is the same as before: if there is \underline{any} path that is followed to a finish state, then the string is considered to be in the language. With DFAs, we used the ``one-finger algorithm,'' but now we can't do that because there could be multiple paths we need to follow.
 			\\ \\
-			More formally, an $NFA = (\Sigma, S, i, f, T)$, where $\Sigma, S, i$, and $f$ follow the same definitions as with DFAs. However, $T: S \times \Sigma \to 2^S$ (where $2^S$ is the number of subsets of $S$). In \ref{ex:nfa}, we have that $T$ is defined by the table:
+			An \textbf{oracle} is a magic function in CS theory that sees the future. If you have an oracle then you could resolve the proper path and use the same process as a DFA. However, we don't have an oracle. When we see multiple paths, we clone our finger and follow each path as far as we can. This is more operationally satisfactory than looking into the future.
+			\\ \\
+			More formally, an $\text{NFA} = (\Sigma, S, i, f, T)$, where $\Sigma, S, i$, and $f$ follow the same definitions as with DFAs. However, $T: S \times \Sigma \to 2^S$ (where $2^S$ is the number of subsets of $S$). In \ref{ex:nfa}, we have that $T$ is defined by the table:
 			\begin{center}
 				\begin{tabular}{|c|c|}
 					\hline
@@ -1726,11 +1730,11 @@
 				Any language recognized by an NFA can be recognized by a DFA.
 			\end{theorem}
 
-			\underline{Proof outline}: subset construction. For an $NFA = \set{\Sigma, S_{NFA}, i_{NFA}, f_{NFA}, T_{NFA}}$, we can construct a $DFA = \set{\Sigma, S_{DFA}, i_{DFA}, f_{DFA}, T_{DFA}}$. Why does this work?
+			\underline{Proof outline}: subset construction. For an $\text{NFA} = \set{\Sigma, S_{\text{NFA}}, i_{\text{NFA}}, f_{\text{NFA}}, T_{\text{NFA}}}$, we can construct a $\text{DFA} = \set{\Sigma, S_{\text{DFA}}, i_{\text{DFA}}, f_{\text{DFA}}, T_{\text{DFA}}}$. Why does this work?
 			\begin{enumerate}
-				\item $S_{NFA}$ is finite.
+				\item $S_{\text{NFA}}$ is finite.
 				\item The number of subsets of a finite set is finite. There are $2^{|S|}$ subsets of a finite set $S$.
-				\item Each state in $S_{DFA}$ represents a subset of the states in $S_{NFA}$.
+				\item Each state in $S_{\text{DFA}}$ represents a subset of the states in $S_{\text{NFA}}$.
 			\end{enumerate}
 
 			From the NFA in \ref{ex:nfa}, we can create this corresponding DFA:
@@ -1834,7 +1838,7 @@
 					\end{tikzpicture}
 				\end{center}
 
-				The difference between $\epsilon$-NFAs and standard NFAs is that the transitions from the start state to states 1 and 2 have no symbol. That means you can spontaneously move your finger along those paths. We generally label those transitions as $\epsilon$ to prevent confusion between mistakes (omissions in labeling the transitions) and $\epsilon$ transitions. This recognizer is for the same language as the NFAs and DFAs in \ref{ex:nfa}.
+				The difference between $\epsilon$-NFAs and standard NFAs is that you can have transitions with no symbol, called $\boldsymbol{\epsilon}$\textbf{-transitions}. That means you can spontaneously move your finger along those paths. We generally label those transitions as $\epsilon$ to prevent confusion between mistakes (omissions in labeling the transitions) and $\epsilon$ transitions. For example, the transitions from the start state to states 1 and 2 have no symbol. This recognizer is for the same language as the NFAs and DFAs in \ref{ex:nfa}.
 			\end{ex}
 
 			More formally, an $\epsilon$-NFA = $(\Sigma, S, i, f, T)$ where $\Sigma, S, i$, and $f$ are defined the same way they were for DFAs and NFAs. The transition function is now defined as $T: S \times (\Sigma \cup \set{\epsilon} )$.
@@ -1991,7 +1995,7 @@
 					&\vdots
 				\end{align*}
 
-				This illustrates an important point: there are many ways to express every regular language with regular expressions. There is not necessarily a unique minimal regular expression for a language. Also, we don't care if the regular expression is ambiguous or not.
+				This illustrates an important point: there are many ways to express any particular regular language with regular expressions. There is not necessarily a unique minimal regular expression for a language. Also, we don't care if the regular expression is ambiguous or not.
 			\end{ex}
 			
 			\begin{ex}
@@ -2029,10 +2033,10 @@
 				\\ \\
 				We could have expressed the earlier expression as $\set{0|1(0|1)^\star{} \text{\textbf{|}} +}$.
 				\\ \\
-				In practice, many people call regexps ``regular expressions'', but they aren't true regular expressions because they can express more than just the regular languages. When \emph{we} say ``regular expressions'', we really mean true regular expressions (expressions that can only represent regular languages).
+				In practice, many people call regexps ``regular expressions,'' but they aren't true regular expressions because they can express more than just the regular languages. When \emph{we} say ``regular expressions,'' we really mean true regular expressions (expressions that can only represent regular languages).
 			
 			\subsubsection{Regular Expressions to Finite Automata}
-				Any regular expression can be converted to an $\epsilon$-NFA that recognizes the language. In fact, that $\epsilon$-NFA will always have exactly one final state. In addition, recall that any $\epsilon$-NFA can be converted to a DFA using subset construction.
+				Any regular expression can be converted to an $\epsilon$-NFA that recognizes the language. In fact, an $\epsilon$-NFA for a regular expression will always have exactly one final state. In addition, recall that any $\epsilon$-NFA can be converted to a DFA using subset construction.
 				\\ \\
 				If you have the regular expression $a$, or a regular expression $\epsilon$, we can express that as an $\epsilon$-NFA by creating a start state that is joined to the final state by either $a$ or $\epsilon$, respectively.
 				\\ \\
