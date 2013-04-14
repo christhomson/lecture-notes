@@ -674,7 +674,7 @@
 						if (st.find(``biff'') != st.end()) { ... not found ... }
 					\end{verbatim}
 
-					Why do we use \verb+map+s? It's more efficient because it converts strings into numbers in order to make lookups more performant.
+					Why do we use \verb+map+s? It's more efficient because it converts strings into numbers in order to make lookups more efficient.
 
 			\subsubsection{The Supplied Scanners}
 			The supplied scanners will find a sequence of tokens on the given line for you. For each token, you'll get a tuple (kind, lexeme, value), where the lexeme is the literal text of the token. For example, take the line \verb+foo: beq $3, $6, -2+. The provided scanners will return a list with this data:
@@ -699,13 +699,13 @@
 			\end{algorithm}
 
 			\subsubsection{Creating MIPS Binary Instructions}
-				We can form a MIPS binary instruction using a template and appropriate values for any variables in the command (usually denoted $s$, $t$, and $d$). The template is the integer that represents the binary associated with a particular instruction, with all of the variables ($s$, $t$, and $d$) being zeroes. 
+				We can form a MIPS binary instruction using a \textbf{template} and appropriate values for any variables in the command (usually denoted $s$, $t$, and $d$). The template is the integer that represents the binary associated with a particular instruction, with all of the variables ($s$, $t$, and $d$) being zeroes. 
 				\\ \\
-				Bitwise operations compare integers bit by bit and perform the requested operation at that level. For example, given the numbers $a$ and $b$ that can represented in binary as 000111000 and 11011000, respectively, $a | b$ (a bit-wise OR) will result in 11011100 and \verb+a & b+ (a bit-wise AND) will result in 00011000. 
+				Bitwise operations compare integers bit by bit and perform the requested operation at that level. For example, given the numbers $a$ and $b$ that can represented in binary as 000111000 and 11011000, respectively, $a | b$ (a bitwise OR) will result in 11011100 and \verb+a & b+ (a bitwise AND) will result in 00011000. 
 				\\ \\
 				Suppose we want to zero out all but the last byte of $b$. We'd do \verb+b & 255+, which is the same as \verb+b & 0xff+.
 				\\ \\
-				In Scheme, \verb+(bitwise-and a b)+ and \verb+(bitwise-ior a b)+ are the provided utilities for performing bit-wise operations. In C++, you use \verb+a & b+ and \verb+a | b+.
+				In Scheme, \verb+(bitwise-and a b)+ and \verb+(bitwise-ior a b)+ are the available utilities for performing bitwise operations. In C++, you can use \verb+a & b+ and \verb+a | b+.
 				\\ \\
 				Shifting bits can also be useful. You can use \verb+a << n+ in C++ to perform a left-shift by $n$ bits (adding $n$ zeroes to the right, discarding from the left). C++ also supports \verb+a >> 5+, which adds $n$ zeroes to the left and discards from the right. Scheme supports left and right shifts using \verb+(arithmetic-shift a n)+, where positive $n$ shifts right and negative $n$ shifts left.
 				\\ \\
@@ -734,7 +734,7 @@
 					   (write-byte (bitwise-and b 255)))
 				\end{verbatim}
 		\subsection{Assembler Requirements} \lecture{January 25, 2013}
-			Your assembler is a Scheme/C/C++/Java program. You could also submit it in Scala, if you like.
+			Your assembler is a Scheme/C/C++/Java program. You could also submit it in Scala, if you'd like.
 			\\ \\
 			In the end, your assembler should be able to be run such that it takes a \verb+.asm+ file as standard input, and produces MIPS binary code as standard output. That is, you should be able to run it like so:
 			\begin{itemize}
@@ -747,7 +747,7 @@
 					\end{verbatim}
 			\end{itemize}
 				
-			For C++, leak checking is turned off. You still shouldn't leak memory all over the place, though.
+			For C++, leak checking is turned off for the Marmoset tests. You still shouldn't leak memory all over the place, though.
 			\\ \\
 			\verb+grep ``ERROR'' myprog.err+ should not match anything if your program is valid, or should match otherwise (if there's an error).
 			\\ \\
@@ -769,7 +769,7 @@
 				\\ \\
 				Lines without an instruction are known as \textbf{NULL lines}. Each non-NULL line has output into machine code.
 				\\ \\
-				Labels must occur at the beginning of the line. You may have zero of more labels on a line. Multiple labels are permitted on a single line. A label looks like this: \verb+foo: ...+
+				Label definitions must be at the beginning of the line. You may have zero of more labels on a line. Multiple labels are permitted on a single line. A label looks like this: \verb+foo: ...+
 				\\ \\
 				Any given label can only be given a single definition in a MIPS program. You cannot have a label defining multiple lines or locations.
 				\\ \\
@@ -815,8 +815,8 @@
 					\item \verb+add, sub, slt, slt+ \textendash{} \verb+add+, register, comma, register, comma, register, nothing else.
 					\item \verb+mult, div, multu, divu+ \textendash{} \verb+mult+, register, comma, register, nothing else.
 					\item \verb+mfhi, mflo, lis+ \textendash{} \verb+mfhi+, register, nothing else.
-					\item \verb+lw, sw+ \textendash{} lw, register, comma, $i$, bracket(, register, bracket), nothing else, where $i$ can be an unsigned, negative, or hex number within the 16-bit range. Test cases needed: (in)valid with unsigned, (in))valid with hex, etc. Note: there is no rule stating that you must load a multiple of four.
-					\item  \verb+beq, bne+ \textendash{} \verb+beq+, register, comma, register, $i$, nothing else. $i$ in this case can be an unsigned, negative, or hex number in the 16-bit range, or it could be the use of a label. In the case of a label, you calculate the numerical value by calculating: $\frac{\text{location(label)} - \text{location counter} - 4}{4}$.
+					\item \verb+lw, sw+ \textendash{} lw, register, comma, $i$, bracket(, register, bracket), nothing else, where $i$ can be an unsigned, negative, or hex number within the 16-bit range. Test cases needed: (in)valid with unsigned, (in)valid with hex, etc. Note: there is no rule stating that you must load a multiple of four.
+					\item  \verb+beq, bne+ \textendash{} \verb+beq+, register, comma, register, $i$, nothing else. $i$ in this case can be an unsigned, negative, or hex number in the 16-bit range, or it could be the use of a label. In the case of a label, you calculate the numerical value by calculating: $$\frac{\text{location(label)} - \text{location counter} - 4}{4}$$
 					\item \verb+jr, jalr+ \textendash{} \verb+jr+, register, nothing else.
 					\item \verb+.word+ \textendash{} \verb+.word+, $i$, nothing else, where $i$ can be an unsigned, negative, or hex number in the 16-bit range, or it could be the use of a label. 
 				\end{itemize}
