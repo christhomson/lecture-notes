@@ -2597,12 +2597,12 @@
 				Let's introduce a specific augmented grammar with the following set of rules $R'$:
 				\setcounter{equation}{0}
 				\begin{align}
-					S' &={} \vdash S \dashv \\
-					S &= AhB \\
-					A &= ab \\
-					A &= cd \\
-					B &= ef \\
-					B &= g
+					S' &\to{} \vdash S \dashv \\
+					S &\to AhB \\
+					A &\to ab \\
+					A &\to cd \\
+					B &\to ef \\
+					B &\to g
 				\end{align}
 
 				A derivation for some input $x$ would look like:
@@ -2971,11 +2971,11 @@
 				\begin{algorithm}[H]
 					push $\vdash$\;
 					\For{$c$ in $x \dashv$}{
-						\While{Reduce[top of stack, c] = $\set{A \to \alpha}$}{
-							pop $|\alpha|$ times\;
-							push Goto[(new) top of stack, c]\;
+						\While{Reduce[top of state stack, c] = $\set{A \to \alpha}$}{
+							pop both stacks $|\alpha|$ times\;
+							push Goto[top of state stack, c]\;
 						}
-						assert Goto[top of stack, c] $\in$ f; // if not, then $x \not \in L(G)$ \\
+						assert Goto[top of state stack, c] $\in$ f; // if not, then $x \not \in L(G)$ \\
 					}
 					accept if all assertions succeeded\;
 				\end{algorithm}
