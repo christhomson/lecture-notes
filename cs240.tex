@@ -54,7 +54,7 @@
 
 	\section{Introduction \& Code Optimization} \lecture{January 8, 2013}
 		\subsection{Course Structure}
-			The grading scheme is 50\% final, 25\% midterm, and 25\% assignments. There are five assignments, usually due on Wednesday mornings at 9:30 am. There are several textbooks for the course, all of which are optional but recommended. The textbooks cover roughly 80\% of the course content. There are also some course notes published online from previous terms, however the lectures will not necessarily follow those notes strictly.
+			The grading scheme is 50\% final, 25\% midterm, and 25\% assignments. There are five assignments, usually due on Wednesday mornings at 9:30 am. There are several textbooks for the course, all of which are optional but recommended. The textbooks cover roughly 80\% of the course content. There are also \href{https://www.student.cs.uwaterloo.ca/~cs240/w13/lectures.phtml}{some course notes available online} from previous terms, however the lectures will not necessarily follow those notes strictly.
 			\\ \\
 			See the \href{https://www.student.cs.uwaterloo.ca/~cs240/w13/info.phtml}{course syllabus} for more information.
 			
@@ -80,7 +80,7 @@
 					Typical operations:
 					\begin{itemize}
 						\item Insert new item.
-						\item ``Deleting" data (flagging data as ``deleted", not actually deleting the data).
+						\item ``Deleting" data (flagging data as ``deleted," not actually deleting the data).
 						\item Searching for data.
 						\item Sorting the data. \\
 					\end{itemize}
@@ -1600,7 +1600,7 @@
 
 		It's possible to choose better hash functions, but these two methods are good enough for our purposes.
 		\\ \\
-		Collisions are unavoidable (in the expected case). The first collision will occur after $\sqrt{\frac{\pi m}{2}} \approx 1.25 \sqrt m$ items have been inserted, in the expected case. With the birthday paradox, that means you're likely to expect a collision after 24.
+		Collisions are unavoidable (in the expected case). The first collision will occur after $\sqrt{\frac{\pi m}{2}} \approx 1.25 \sqrt m$ items have been inserted, in the expected case. With the birthday paradox, that means you're likely to expect a collision after 24 people.
 		\\ \\
 		Speaking of the birthday paradox, buying baseball cards is a sort of reverse birthday paradox. The card company wants you to get many duplicates, so you'll keep buying more cards until you're lucky enough to get one of every card. That'll take $n^2$ cards (in the expected case) to get a full deck of $n$ unique cards.
 
@@ -1614,7 +1614,7 @@
 				\\ \\
 				The worst case linked list chains are $O(\lg n)$ in length, and many pointers would remain NULL. However, having a lot of pointers to NULL wastes memory, which isn't good.
 				\\ \\
-				The load factor of the hash table is $\alpha = \frac{n}{m}$, where $n$ is the number of elements and $m$ is the size of the hash table.
+				The \textbf{load factor} of the hash table is $\alpha = \frac{n}{m}$, where $n$ is the number of elements and $m$ is the size of the hash table.
 				\\ \\
 				Searches are performed in $\Theta(1 + \alpha)$ complexity in the average case and in $\Theta(n)$ in the worst case.
 				\\ \\
@@ -1687,7 +1687,7 @@
 			A hash table may also be good for implementing a tree structure if the worst case complexity doesn't concern you.
 		
 		\subsection{Cuckoo Hashing}
-			Cuckoo hashing is a different way of handling the insertion of a second element with the same hash key. The first element (that's already in the hash table) is the one that gets moved by calculating its $h_2$ displacement value. The latest element to be inserted will always be in the $h_1$-th position for that hash key.
+			Cuckoo hashing is a different way of handling the insertion of a second element with the same hash key. The first element (that's already in the hash table) is the one that gets moved by calculating its $h_2$ displacement value. The latest element to be inserted with a particular hash key (in terms of the hash function $h_1$) will always be in the $h_1$-th position for that hash key.
 			\\ \\
 			\lecture{March 5, 2013}
 			With cuckoo hashing, we have two hash functions $h_1$ and $h_2$, but this time $h_2$ is a target location (not a displacement as was the case in double hashing).
@@ -1761,7 +1761,7 @@
 					\uIf{$h(k) \mod 2^{L-k_B} < 2^{L-k_B-1}$}{
 						$k$ goes in $B_0$\;
 					}
-					\Else{$k$ goes in $B_1$}
+					\Else{$k$ goes in $B_1$;}
 					set local depth in $B_0$ and $B_1$ to $k_B + 1$\;
 					update references in the directory\;
 				}
