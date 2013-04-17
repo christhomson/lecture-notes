@@ -2564,7 +2564,7 @@
 				People have different ``accents'' in morse code. You can determine who's transmitting the code based on how they make pauses (length of pauses, etc.).
 				\\ \\
 				The initial solution was to use fixed length codes like ASCII or Unicode. However, we wanted to use variable length codes in order to allow for compression.
-				\begin{figure}
+				\begin{figure}[H]
 					\Tree [.R [.e [.{\textbullet} [.{\textbullet} [.S ] ] ] ] ]
 				\end{figure}
 				
@@ -2591,7 +2591,7 @@
 				The na\"ive approach would be to try all possible codes. Huffman had a better idea, though. Look at the prefix tree you end up with!
 
 			\subsubsection{Huffman Encoding}
-				Looking at the prefix tree, where do we expect to find `z'? Since we want `z' a longer encoding, we expect to find it at the very bottom of the tree. If we find it elsewhere, swap it into the bottom. `z' must have a sibling, and based on the frequencies, it must be `q'. Introduce the letter `qz' with the probability being the sum of the probabilities. Continue to do this swapping for all characters, based on their frequencies. \lecture{March 28, 2013}
+				Looking at the prefix tree, where do we expect to find `z'? Since we want `z' to have a longer encoding, we expect to find it at the very bottom of the tree. If we find it elsewhere, swap it into the bottom. `z' must have a sibling, and based on the frequencies, it must be `q'. Introduce the letter `qz' with the probability being the sum of the probabilities. Continue to do this swapping for all characters, based on their frequencies. \lecture{March 28, 2013}
 				\\ \\
 				We could use a heap or a priority queue to give us quick access to the two elements with the lowest frequency. That'd help with rearranging the tree as necessary.
 				\\ \\
