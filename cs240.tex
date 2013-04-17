@@ -1979,7 +1979,7 @@
 			Statistical analysis is about looking for trends. Machine learning also stems out of statistical analysis. For example: ads on Facebook are targeted to you specifically based on your profile and its history, based on statistical analysis.
 	
 	\section{Multi-Dimensional Data}
-		In today's world, we want to perform searching across multiple dimensions. For example, we may want to find all employees who make between \$75,000 and \$200,000 and have been at the company for less than 10 years. Or, we may want to search for a computer based on a particular set of specs. If we were Yahoo! executive Marissa Mayer, we may want to determine which employees are unproductive and highly paid, in order to come to the conclusion that most of those people work from home.
+		In today's world, we want to perform searching across multiple dimensions. For example, we may want to find all employees who make between \$75,000 and \$200,000 and have been at the company for less than 10 years. Or, we may want to search for a computer based on a particular set of specs. If we were Yahoo! executive Marissa Mayer, we may want to determine which employees are unproductive and highly paid, in order to \href{http://allthingsd.com/20130222/physically-together-heres-the-internal-yahoo-no-work-from-home-memo-which-extends-beyond-remote-workers/}{come to the conclusion that most of those people work from home}.
 		\\ \\
 		Each attribute of each of these searches is a dimension. We can use the power of mathematics to our advantage here, to find neighbouring elements in $d$-dimensional space, for instance.
 		
@@ -2072,11 +2072,11 @@
 				}
 			\end{algorithm}
 
-			When analyzing the quadtree's worst case in the context of KD trees, we can create a division wherever we'd like, so we can eliminate many of those points near the boundaries all at once. This is much better than quadtrees.
+			When analyzing the KD trees' worst case in the context of quadtrees, we can create a division wherever we'd like, so we can eliminate many of those points near the boundaries all at once. This is much better than quadtrees.
 			\\ \\
 			The complexity of searching a KD tree is $O(k + U)$, where $k$ is the number of reported keys, and $U$ is the number of regions we check unsuccessfully (that is, regions that intersect but are not fully in $R$). In this case, we're concerned with points that are not in the output but are \emph{close} to the query rectangle.
 			\\ \\
-			Let $Q(n)$ be the time taken by the upper horizontal line to process points near the boundary, out of $n$ initial points. We have:
+			Let $Q(n)$ be the time taken by the upper horizontal line of the query rectangle to process points near the boundary, out of $n$ initial points. We have:
 			\begin{align*}
 				Q(n) &= Q\left( \frac{n}{4} \right) + Q\left( \frac{n}{4} \right) \\
 				&= 2Q\left( \frac{n}{4} \right) + \Theta(1) \\
