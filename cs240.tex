@@ -2446,7 +2446,7 @@
 				\\ \\
 				Similarly, we have a \textbf{suffix skip array}, which also preprocesses $P$ to build a table. It's similar to the failure array of the KMP algorithm, but with an extra condition.
 				\begin{defn}
-					The \textbf{suffix size array} $S$ of size $m$ is the array of $S[i]$ (for $0 \le i < m$) such that $S[i]$ is the largest index $j$ such that $P[i + 1..m - 1] = P[j + 1..j+ m - 1 - i]$ and $P[j] \ne P[i]$.
+					The \textbf{suffix skip array} $S$ of size $m$ is the array of $S[i]$ (for $0 \le i < m$) such that $S[i]$ is the largest index $j$ such that $P[i + 1..m - 1] = P[j + 1..j+ m - 1 - i]$ and $P[j] \ne P[i]$.
 				\end{defn}
 
 				We consider negative indices to make the given condition true. These indices correspond to letters that we may not have checked so far. Essentially, we're saying that a suffix starting at index $i + 1$ is equal to some substring earlier in the pattern.
