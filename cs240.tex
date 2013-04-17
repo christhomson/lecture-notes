@@ -1821,7 +1821,7 @@
 					1 & 2 & 3 & 4 & 5 & 6 & 7 & 8 & 9 & 100,000,000 \\ \hline
 				\end{tabular}
 			\end{center}
-			This is a worst case search because it would check 1, 2, 3, \ldots, in order, because it expects there to be a jump of 10,000,000 between elements ($\frac{100,000,000}{10} = 10,000,000$). It would take $\Theta(n)$ time. This is similar to having a phone book full of `A' names and a single 'Z' name, and you're searching for a name that starts with an `A'.
+			This is a worst case search because it would check 1, 2, 3, \ldots, in order, because it expects there to be a jump of 10,000,000 between elements ($\frac{100,000,000}{10} = 10,000,000$). It would take $\Theta(n)$ time. This is similar to having a phone book full of `A' names and a single `Z' name, and you're searching for a name that starts with an `A'.
 			\\ \\
 			If instead, the last key in that data was 10, we would've guessed 9 as being to the left of 10 immediately, since $\frac{10}{10} = 1$ and $10 - 1 = 9$.
 			\\ \\
@@ -1833,7 +1833,7 @@
 			For quick sort, you should quit recursing when $n = 17$, and instead use insertion sort. Researchers have discovered that when $n \le 17$, it is more beneficial to stop recursing and use a different method. The alternate method may not be as efficient when $n$ is large, but avoiding needless recursion is worth it.
 
 		\subsection{Gallop Search}
-			If you wanted to determine how high you could jump off a building before dying, you could get a grad student to jump off the first floor, then the second floor, and so on, until he or she dies. You'd have just one casualty, but it's slow. It's take $\Theta(n)$ time.
+			If you wanted to determine how high you could jump off a building before dying, you could get a grad student to jump off the first floor, then the second floor, and so on, until he or she dies. You'd have just one casualty, but it's slow. It takes $\Theta(n)$ time.
 			\\ \\
 			Instead, let's use a method like binary search but starting at the left. For example, you'd get your grad student to jump off $F_1$, then $F_2$, then $F_4$, then $F_8$, and so on, until you find your range of [fatal, not fatal]. After that, you can perform binary search on that range. You'll have more casualties, but it'll be more efficient in terms of complexity.
 			\\ \\
@@ -1855,7 +1855,7 @@
 			\\ \\
 			Gallop search is also useful when you don't know the endpoint of your data source, such as in the case of data streams, a huge file, etc.
 			\\ \\
-			Gallop search takes $\lg n$ time for the double steps, and $\lg \left( \frac{n}{2} \right)$ time for the binary search step in the worst case. So, gallop search runs in time:
+			Gallop search takes $\lg n$ time for the doubling steps, and $\lg \left( \frac{n}{2} \right)$ time for the binary search step in the worst case. So, gallop search runs in time:
 			\begin{align*}
 				\lg n + \lg \frac{n}{2} = \lg n + \lg n - \lg 2 = 2 \lg n - 1 \le 2 \lg n
 			\end{align*}
@@ -1869,7 +1869,7 @@
 				&= \lg^2 n
 			\end{align*}
 
-			Clearly, you don't want to replace the binary search call in gallop search with another call to gallop search. If you recursive with gallop search, you'll get $\lg^2 n$ complexity, which is worse than with the binary search call.
+			Clearly, you don't want to replace the binary search call in gallop search with another call to gallop search. If you recurse with gallop search, you'll get $\lg^2 n$ complexity, which is worse than with the binary search call.
 			\\ \\
 			This is called an \textbf{adaptive algorithm}. If the element we're looking for is nearby, it'll take $\Theta(\lg n)$ time, otherwise it'll take longer. Adaptive algorithms are sometimes referred to as polynomial parameterized algorithms or breaking distance.
 		\subsection{Self-Organizing Lists}
@@ -1891,7 +1891,7 @@
 			\\ \\
 			However, with move-to-front, if we use a rare item, it still gets put at the very front of the list, even if we won't need it again any time soon. It interferes with the other frequencies for a little while until it eventually makes its way further down the list.
 			\\ \\
-			Move-to-front is no worse than twice as expensive as the best possible order. That's pretty great when you take into account how simplistic the MTF algorithm is. This method is used a lot for caching. It could also be implemented as a hash table with chaining, where each chain uses the MTF technique.
+			Move-to-front is no worse than twice as expensive as the best possible order adjustment strategy. That's pretty great when you take into account how simplistic the MTF algorithm is. This method is used a lot for caching. It could also be implemented as a hash table with chaining, where each chain uses the MTF technique.
 
 		\subsection{Skip Lists}
 			Skip lists are a type of generalized binary tree, that provide a much better (and easy) implementation of a binary tree. 
@@ -1900,7 +1900,7 @@
 			\\ \\
 			Linked lists make insertions easy, but we cannot binary search them. So, we make another linked list in a level above, and this linked list contains just some of the elements, which will act as shortcuts. We make more and more layers of these shortcuts, each level up containing larger and larger jumps, to further optimize searching.
 			\\ \\
-			If you insert in the bottom layer, the shortcuts still work and don't need to be changed \textendash{} the shortcut just becomes a bit longer. If the shortcut becomes too large, simply break the shortcut into two. \lecture{March 12, 2013}
+			If you insert in the bottom layer, the shortcuts still work and don't need to be changed \textendash{} the shortcut just becomes a bit longer. If the shortcut becomes too large, simply break the shortcut into two by promoting an element in the middle from the level above. \lecture{March 12, 2013}
 			\\ \\
 			To search in a skip list, you start at the top level and traverse from left to right until you overshoot, then you go back one shortcut and go down into a deeper level. Continue to do this recursively until you reach the bottom level / find the element you're looking for. We say an element has a \textbf{tower} on top of it if it has shortcuts sitting on levels above.
 			\\ \\
@@ -1921,7 +1921,7 @@
 
 			We ideally want the shortcuts to be jumps that increase by a power of 2 for each higher level.
 			\\ \\
-			How do we know when to create new shortcuts as new elements are being inserted? You could do some ``fancy bookkeeping'', or you could take a much simpler approach: toss a coin. On average, every two elements will have a tower. No bookkeeping is necessary \textendash{} just believe in the probabilities!
+			How do we know when to create new shortcuts as new elements are being inserted? You could do some ``fancy bookkeeping'', or you could take a much simpler approach: toss a coin. On average, every two elements will have a tower. No fancy bookkeeping is necessary \textendash{} just believe in the probabilities!
 			\\ \\
 			On the expectation, you'll be able to search in $O(\lg n)$ steps.
 			\\ \\
@@ -1937,7 +1937,7 @@
 			\\ \\
 			In the expected case, we'll use $\Theta(n)$ space, because we'll use $n + 2$ elements at the lowest level (level 0), $\frac{n}{2} + 2$ elements at level 1, $\frac{n}{4} + 2$ at level 2, and so on. According to Zeno's identity, this means we'll use $2n + \lg n = \Theta(n)$ space.
 			\\ \\
-			The expected height is $\Theta(\lg n)$, but at most it'll be $3 \lg n$ with probability over $1 - \frac{1}{n^2}$. If your height ever exceeds $3 \lg n$, it's likely that your coin is broken!
+			The expected height is $\Theta(\lg n)$, but at most it'll be $3 \lg n$ with probability $> 1 - \frac{1}{n^2}$. If your height ever exceeds $3 \lg n$, it's likely that your coin is broken!
 			\\ \\
 			The expected time for the insert, search, and delete operations is $\Theta(\lg n)$.
 			\\ \\
