@@ -2112,7 +2112,7 @@
 	\section{Tries \& String Matching} \lecture{March 19, 2013} % Alejandro Salinger gave this lecture.
 		A \textbf{trie}, also known as a radix tree, is a dictionary for binary strings. It's based on bit-wise (or, more specifically, character-by-character) comparisons. A particular string is represented by the path required to reach its node.
 		\\ \\
-		A trie has the following structure:
+		A trie for the binary alphabet ($\Sigma = \set{0, 1}$) has the following structure:
 		\begin{itemize}
 			\item Items (keys) are stored only in the leaf nodes.
 			\item A left child corresponds to a 0-bit.
@@ -2147,7 +2147,7 @@
 		\subsection{Patricia Tries (Compressed Tries)}
 			Patricia tries are an improvement over standard tries because they reduce the amount of storage needed by eliminating nodes with only one child. Patricia (apparently) stands for ``Practical Algorithm To Retrieve Information Coded In Alphanumeric.''
 			\\ \\
-			In a Patricia tree, every path of one-child nodes is compressed into a single edge. Each node storages an index indicating the next bit to be tested during a search. A compressed trie storing $n$ keys always has $n - 1$ internal nodes, which is just like a binary search tree. This is much nicer than storing all of those extraneous nodes.
+			In a Patricia tree, every path of single-child nodes is compressed into a single edge. Each node stores an index indicating the next bit to be tested during a search. A compressed trie storing $n$ keys always has $n - 1$ internal nodes, which is just like a binary search tree. This is much nicer than storing all of those extraneous nodes.
 			\\ \\
 			Note that all internal nodes must have exactly two children. No node that isn't a leaf has less than two children.
 			\\ \\
@@ -2192,12 +2192,12 @@
 		\subsection{Pattern Matching}
 			Pattern matching is the act of searching for a string (a pattern / needle) in a large body of text (a haystack).
 			\\ \\
-			We're given T[0 .. n - 1], which is the haystack of text, and P[0 .. m - 1], which is the pattern (needle) we're searching for. We want to return $i$ such that:
+			We're given T[0..n-1], which is the haystack of text, and P[0..m-1], which is the pattern (needle) we're searching for. We want to return $i$ such that:
 			\begin{align*}
 				P[j] = T[i + j] \text{ for } 0 \le j \le m - 1
 			\end{align*}
 
-			We might be interested in the first occurrence or maybe all occurrences. Searching for patterns has many applications, for example, CTRL-F in many pieces of software.
+			We might be interested in the first occurrence or maybe all occurrences of the needle in the haystack. Searching for patterns has many applications, for example, CTRL-F in many pieces of software.
 			\\ \\
 			Let's make a few formal definitions before jumping into the algorithms.
 
@@ -2210,7 +2210,7 @@
 			\end{defn}
 
 			\begin{defn}
-				A \textbf{suffix} of $T$ is a substring $T[i..n - 1]$ of $T$ for some $0 \le i \le n - 1$.
+				A \textbf{suffix} of $T$ is a substring $T[i..n-1]$ of $T$ for some $0 \le i \le n - 1$.
 			\end{defn}
 
 			Pattern matching algorithms consist of guesses and checks.
@@ -2227,7 +2227,7 @@
 			We must perform $m$ checks of a single correct guess, but may make much fewer checks for incorrect guesses.
 			
 			\subsubsection{Brute-Force Pattern Matching}
-				The easiest algorithm to think about is the brute force algorithm, which is as follows. BruteForcePM(T[0..n - 1], P[0..m - 1]) (where $T$ is a string of length $n$ representing the full text and $P$ is a string of length $m$ representing the pattern): \\
+				The easiest algorithm to think about is the brute force algorithm, which is as follows. BruteForcePM(T[0..n-1], P[0..m-1]) (where $T$ is a string of length $n$ representing the full text and $P$ is a string of length $m$ representing the pattern): \\
 				\begin{algorithm}[H]
 					\For{i = 0 to n - m}{
 						match = true\;
@@ -2273,7 +2273,7 @@
 				\\ \\
 				When we have a mismatch, we ask what the largest safe shift is, based on what we already know from previous matches. We can shift by finding the largest prefix of $P[0..j]$ that is a suffix of $P[1..j]$.
 				\\ \\
-				KMP stores a \textbf{failure array}, which contains the length of the largest prefix of $P[0..j]$ that is also a suffix of $P[1..j]$. This is the preprocessing that the algorithm performs on the algorithm. If a mistmatch occurs at $P[j] \ne T[i]$, we set $j$ to the value of $F[j - 1]$, where $F$ is the failure array.
+				KMP stores a \textbf{failure array}, which contains the length of the largest prefix of $P[0..j]$ that is also a suffix of $P[1..j]$. This is the preprocessing that the algorithm performs on the needle. If a mismatch occurs at $P[j] \ne T[i]$, we set $j$ to the value of $F[j - 1]$, where $F$ is the failure array.
 				\\ \\
 				This is the failure array $F$ for $P = abacaba$:
 				\begin{center}
@@ -2355,7 +2355,7 @@
 					}
 				\end{algorithm}
 
-				Computing the failure array in $\Theta(m)$ time. At each iteration of the while loop, either $i$ increases by one or the guess index ($i - j$) increases by at least one ($F[j - 1] < j$). There are no more than $2m$ iterations of the while loop.
+				Computing the failure array occurs in $\Theta(m)$ time. At each iteration of the while loop, either $i$ increases by one or the guess index ($i - j$) increases by at least one ($F[j - 1] < j$). There are no more than $2m$ iterations of the while loop.
 				\\ \\
 				The KMP algorithm as a whole takes running time $\Theta(n)$. The algorithm relies on computing the failure array, which takes $\Theta(m)$ time. As before, each iteration of the while loop either increases $i$ by one or the guess index ($i - j$) will increase by at least one ($F[j - 1] < j$). There are no more than $2n$ iterations of this while loop, either.
 
@@ -2403,7 +2403,7 @@
 					Seven checks (comparisons) were performed.
 				\end{ex}
 
-				The bad character rule allows us to skip many characters if we check a character that is not contained in the pattern at all.
+				The bad character rule allows us to skip many characters if we perform a check on a character that is not contained in the pattern at all.
 				\\ \\
 				When aiming for a good suffix jump, be weary about a suffix of the suffix that may appear elsewhere in the pattern.
 				\\ \\
@@ -2471,10 +2471,20 @@
 				\\ \\
 				In the worst case, the Boyer-Moore algorithm runs in $O(n + |\Sigma|)$ time. The worst case is when $T = aaa \ldots aa$ and $P = aaa$. On typical English text (based on frequencies), the algorithm probes just (approximately) 25\% of the characters in $T$. This means it's faster than the KMP algorithm, on English text.
 
-			\subsubsection{Suffix Trees (Suffix Tries)}
+			\subsubsection{Suffix Tries and Suffix Trees}
 				We sometimes want to search for many patterns $P$ within the same fixed text $T$. We could preprocess the text $T$ instead of preprocessing the pattern $P$.
 				\\ \\
 				\underline{Observation}: $P$ is a substring of $T$ if and only if $P$ is a prefix of some suffix of $T$.
+				
+				\begin{defn}
+					A \textbf{suffix trie} is an uncompressed trie containing the suffixes of the given string.
+				\end{defn}
+				
+				\begin{defn}
+					A \textbf{suffix tree} is a compressed Patricia trie containing the suffixes of the given string.
+				\end{defn}
+				
+				The distinction between a suffix trie and a suffix tree is somewhat arbitrary, because technically they are both tries and they're both trees.
 				\\ \\
 				We could build a compressed trie that stores all suffixes of $T$. We insert suffixes in decreasing order of length. If a suffix is a prefix of another suffix, we don't bother inserting it. On each node, we store two indexes $l, r$ where the node corresponds to substring $T[l..r]$ (do this for internal nodes \emph{and} leaf nodes).
 				\\ \\
