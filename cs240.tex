@@ -1680,7 +1680,7 @@
 				You can visualize double hashing with \href{http://research.cs.vt.edu/AVresearch/hashing/double.php}{this double hashing applet from Virginia Tech}.
 				
 				\subsubsection{Cuckoo Hashing}
-					Cuckoo hashing is a different way of handling the insertion of a second element with the same hash key. The first element (that's already in the hash table) is the one that gets moved by calculating its $h_2$ displacement value. The latest element to be inserted with a particular hash key (in terms of the hash function $h_1$) will always be in the $h_1$-th position for that hash key.
+					Cuckoo hashing is a different way of handling the insertion of a second element with the same hash key. The first element (that's already in the hash table) is the one that gets moved by calculating its $h_2$ value. The latest element to be inserted with a particular hash key (in terms of the hash function $h_1$) will always be in the $h_1$-th position for that hash key.
 					\\ \\
 					\lecture{March 5, 2013}
 					With cuckoo hashing, we have two hash functions $h_1$ and $h_2$, but this time $h_2$ is a target location (not a displacement as was the case in double hashing).
@@ -1803,7 +1803,7 @@
 
 			We will check the index:
 			\begin{align*}
-				\left \lfloor \frac{k - A[l]}{\frac{A[r] - A[l]}{r - l}} \right \rfloor
+				i = \left \lfloor \frac{k - A[l]}{\frac{A[r] - A[l]}{r - l}} \right \rfloor = l + \left \lfloor \frac{k - A[l]}{A[r] - A[l]} (r - l) \right \rfloor
 			\end{align*}
 
 			The numerator of this index is the gap between the key $k$ and the first key $A[l]$. The denominator contains the average jump from key to key (the expected $\Delta$ between two consecutive keys in the array).
