@@ -871,7 +871,7 @@
 					\hline 2 & 1 & 7 & 8 & 9 & 15 & 12 & 20 \\ \hline
 				\end{tabular}
 				\\ \\
-				If we were to continue further, we would proceed on the left side of 8 because there are fewer (or equal) to 3 elements on that side.
+				If we were to continue further, we would proceed on the left side of 8 because there are fewer than (or equal to) 3 elements on that side.
 				\\ \\
 				We use a random element from the array called the \textbf{pivot} to partition the elements into those smaller than the pivot and those larger than the pivot. In general: 
 				\begin{tabular}{|c|c|c|}
@@ -900,7 +900,7 @@
 				\end{tabular}
 				\\ \\
 				Partitioning with two arrays is easy (i.e. creating a new array and inserting). Partitioning within the existing array is a bit more complicated, however that is a key advantage to quick select. Here's the pseudocode for partitioning within the same array: \\
-				\begin{algorithm}
+				\begin{algorithm}[H]
 					swap(A[0], A[p])\;
 					i = 1\;
 					j = n - 1\;
@@ -1083,7 +1083,7 @@
 					\end{ex}
 
 				\subsection{LSD Radix Sort}
-					Least significant digit radix sort, also known as LSD radix sort, is a sorting algorithm where the elements are sorted into buckets based on their least significant digit first. That is, elements are sorted into buckets (using bucket sort) containing elements ending with 1, elements ending with 2, and so on, up until the bucket with elements ending with 9. LSD radix sort is so common that it's often referred to simply as ``radix sort''.
+					Least significant digit radix sort, also known as LSD radix sort, is a sorting algorithm where the elements are sorted into buckets based on their least significant digit first. That is, elements are sorted into buckets (using bucket sort) containing elements ending with 1, elements ending with 2, and so on, up until the bucket with elements ending with 9. LSD radix sort is so common that it's often referred to simply as ``radix sort.''
 					\\ \\
 					You can recursively apply bucket sort to complete the sort.
 					\\ \\
@@ -1218,7 +1218,7 @@
 				In an AVL tree, at each non-empty node we store the result of the expression $\text{height}(R) - \text{height}(L)$, so that:
 				\begin{itemize}
 					\item -1 means the tree is left-heavy.
-					\item 0 means the tree is ``balanced''.
+					\item 0 means the tree is ``balanced.''
 					\item +1 means the tree is right-heavy. 
 				\end{itemize}
 
@@ -1411,7 +1411,7 @@
 
 			In \ref{figure:typicalmultiwaytree}, there are 3 keys and 4 children. However, to generalize, a multi-way tree with $k$ keys needs $k + 1$ or $k + 2$ children.
 			\\ \\
-			In a binary search tree, we have $O(\log_2 n)$ complexity. In a multi-way tree (with $k$ keys), we have $O(\log_{k + 1})$ complexity. For a 20-way tree ($\log_{20} n$), the constant will be much smaller. This smaller constant means we will hit the hard drive fewer times, which is a net win.
+			In a binary search tree, we have $O(\log_2 n)$ complexity. In a multi-way tree (with $k$ keys), we have $O(\log_{k + 1} n)$ complexity. For a 20-way tree ($\log_{20} n$), the constant will be much smaller. This smaller constant means we will hit the hard drive fewer times, which is a net win.
 			\\ \\
 			CD-ROMs used to take as long to read as music CDs did. They implemented an indexing system using a binary search tree, which was too slow. It was relatively easy to make CD-ROMs quicker (2x, 4x, \ldots) by overclocking the spinning mechanism. However, the queries were not being processed any faster because the head was slow. For music CD players, heads didn't need to be very fast. In fact, heads really haven't improved much since then.
 			\\ \\
@@ -1626,7 +1626,7 @@
 			\subsubsection{Open Addressing}
 				This is a more space efficient method because the table now contains the records themselves.
 				\\ \\
-				When we try to insert a second element with the same hashed key, we check the next element in the table to see if it's free. We continue to do this until we find a free element, and then we insert the new element there. This is called \textbf{linear probing}. That is, key $k$ lives in position $h(k)$ if it's available, otherwise it might live in the $h(k + 1)$-th position if that's available, or $h(k + 2)$ if that's available, and so on, until we find the first index greater or equal to $k$ that is free.
+				When we try to insert a second element with the same hashed key, we check the next element in the table to see if it's free. We continue to do this until we find a free element, and then we insert the new element there. This is called \textbf{linear probing}. That is, key $k$ lives in position $h(k)$ if it's available, otherwise it might live in the $(h(k) + 1)$-th position if that's available, or $(h(k) + 2)$ if that's available, and so on, until we find the first index greater or equal to $k$ that is free.
 				\\ \\
 				When performing a search, we check the hashed index, and continue checking until we find an empty (free) element.
 				\\ \\
@@ -1921,7 +1921,7 @@
 
 			We ideally want the shortcuts to be jumps that increase by a power of 2 for each higher level.
 			\\ \\
-			How do we know when to create new shortcuts as new elements are being inserted? You could do some ``fancy bookkeeping'', or you could take a much simpler approach: toss a coin. On average, every two elements will have a tower. No fancy bookkeeping is necessary \textendash{} just believe in the probabilities!
+			How do we know when to create new shortcuts as new elements are being inserted? You could do some ``fancy bookkeeping,'' or you could take a much simpler approach: toss a coin. On average, every two elements will have a tower. No fancy bookkeeping is necessary \textendash{} just believe in the probabilities!
 			\\ \\
 			On the expectation, you'll be able to search in $O(\lg n)$ steps.
 			\\ \\
@@ -2684,7 +2684,7 @@
 				
 				If you'd like to see LZW in action, you should try out \href{http://www.cs.sfu.ca/CourseCentral/365/li/squeeze/LZW.html}{the applet on this page from Simon Fraser University}.
 				\\ \\
-				Mark Nelson discovered a rare case where this does not work. The case fails in that the decoder attempts to decode a code that is not yet in its dictionary. It occurs with a repeated string like ``thethe''. It only happens with repetition, so you just roll back and output the code for the repeated string. You can read more about this on \href{http://marknelson.us/1989/10/01/lzw-data-compression/}{Mark Nelson's site, under ``The Catch''}.
+				Mark Nelson discovered a rare case where this does not work. The case fails in that the decoder attempts to decode a code that is not yet in its dictionary. It occurs with a repeated string like ``thethe.'' It only happens with repetition, so you just roll back and output the code for the repeated string. You can read more about this on \href{http://marknelson.us/1989/10/01/lzw-data-compression/}{Mark Nelson's site, under ``The Catch''}.
 				\\ \\
 				Straightforward LZW compresses down to 40\% of the original size. A highly optimized LZW algorithm can get it down to 30\%. Improvements to LZW are very small, incremental improvements.
 
