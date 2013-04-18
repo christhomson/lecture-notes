@@ -1678,7 +1678,46 @@
 				Notice that a miss on a load factor of $\frac{9}{10}$ was improved from 55.5 to 5.5 by using double hashing (a 10x increase in performance!).
 				\\ \\
 				You can visualize double hashing with \href{http://research.cs.vt.edu/AVresearch/hashing/double.php}{this double hashing applet from Virginia Tech}.
+				
+				\subsubsection{Cuckoo Hashing}
+					Cuckoo hashing is a different way of handling the insertion of a second element with the same hash key. The first element (that's already in the hash table) is the one that gets moved by calculating its $h_2$ displacement value. The latest element to be inserted with a particular hash key (in terms of the hash function $h_1$) will always be in the $h_1$-th position for that hash key.
+					\\ \\
+					\lecture{March 5, 2013}
+					With cuckoo hashing, we have two hash functions $h_1$ and $h_2$, but this time $h_2$ is a target location (not a displacement as was the case in double hashing).
+					\\ \\
+					The newly-inserted element will always end up in $h_1(k)$, kicking out any element if necessary. The element that was kicked out will need to be relocated to $h_1(k)$ or $h_2(k)$, whichever is not the current position. Note that when this element gets relocated it may kick another element out of its new position, so a chain of relocations may be necessary.
+					\\ \\
+					The pseudocode for inserting into a cuckoo hash is as follows, cuckoo-insert($T$, $x$) (where $T$ is a hash table and $x$ is the item to insert): \\
+					\begin{algorithm}[H]
+						y = x\;
+						i = $h_1$(x.key)\;
+						\For{at most $n$ times}{
+							swap(y, T[i])\;
+							\lIf{$y$ is empty}{\Return ``success''}
+							\lIf{$i$ = $h_1$(y.key)}{i = $h_2$(y.key)}
+							\lElse{i = $h_1$(y.key)}
+						}
+						\Return{``failure''}
+					\end{algorithm}
 
+					$h_2(k)$ can now take the value zero because it is an alternate location to try \textendash{} not a displacement.
+					\\ \\
+					Searching requires that you check both $h_1(k)$ and $h_2(k)$, which is better than linear probing and double hashing. Insertions will take longer than other methods, however, due to the possibility of multiple relocations being necessary.
+
+					\begin{center}
+						\begin{tabular}{|c|c|c|c|}
+							\hline
+							& search & insert & delete \\ \hline
+							Linear Probing & $\Theta \left( \frac{1}{(1 - \alpha)^2} \right)$ & $\Theta \left( \frac{1}{(1 - \alpha)^2} \right)$ & $\Theta \left( \frac{1}{1 - \alpha} \right)$ \\ \hline
+							Double Hashing & $\Theta \left( \frac{1}{1 - \alpha} \right)$ & $\Theta \left( \frac{1}{1 - \alpha} \right)$ & $\Theta \left( \frac{1}{\alpha} \lg \left( \frac{1}{1 - \alpha} \right) \right)$ \\ \hline
+							Cuckoo Hashing & $\Theta \left( 1 \right)$ & $\Theta \left( \frac{\alpha}{(1 - 2 \alpha)^2} \right)$ & $\Theta \left( 1 \right)$ \\ \hline
+						\end{tabular}
+					\end{center}
+
+					So, which hashing method should you use? It depends. If you do lots of searches, use cuckoo hashing. Otherwise, if you care more about insertions, use one of the other methods.
+					\\ \\
+					One of the disadvantages of cuckoo hashing is it requires that $\alpha < \frac{1}{2}$.
+				
 		\subsection{Hashing Applications}
         Back in the day, Apple had a Pascal compiler that took an hour to compile programs. Another company (Borland) made a compiler that could do the same job in just one and a half minutes. They achieved that by using hashing for all identifiers/tokens, while Apple used a straight-line table.
 			\\ \\
@@ -1686,45 +1725,6 @@
 			\\ \\
 			A hash table may also be good for implementing a tree structure if the worst case complexity doesn't concern you.
 		
-		\subsection{Cuckoo Hashing}
-			Cuckoo hashing is a different way of handling the insertion of a second element with the same hash key. The first element (that's already in the hash table) is the one that gets moved by calculating its $h_2$ displacement value. The latest element to be inserted with a particular hash key (in terms of the hash function $h_1$) will always be in the $h_1$-th position for that hash key.
-			\\ \\
-			\lecture{March 5, 2013}
-			With cuckoo hashing, we have two hash functions $h_1$ and $h_2$, but this time $h_2$ is a target location (not a displacement as was the case in double hashing).
-			\\ \\
-			The newly-inserted element will always end up in $h_1(k)$, kicking out any element if necessary. The element that was kicked out will need to be relocated to $h_1(k)$ or $h_2(k)$, whichever is not the current position. Note that when this element gets relocated it may kick another element out of its new position, so a chain of relocations may be necessary.
-			\\ \\
-			The pseudocode for inserting into a cuckoo hash is as follows, cuckoo-insert($T$, $x$) (where $T$ is a hash table and $x$ is the item to insert): \\
-			\begin{algorithm}[H]
-				y = x\;
-				i = $h_1$(x.key)\;
-				\For{at most $n$ times}{
-					swap(y, T[i])\;
-					\lIf{$y$ is empty}{\Return ``success''}
-					\lIf{$i$ = $h_1$(y.key)}{i = $h_2$(y.key)}
-					\lElse{i = $h_1$(y.key)}
-				}
-				\Return{``failure''}
-			\end{algorithm}
-
-			$h_2(k)$ can now take the value zero because it is an alternate location to try \textendash{} not a displacement.
-			\\ \\
-			Searching requires that you check both $h_1(k)$ and $h_2(k)$, which is better than linear probing and double hashing. Insertions will take longer than other methods, however, due to the possibility of multiple relocations being necessary.
-
-			\begin{center}
-				\begin{tabular}{|c|c|c|c|}
-					\hline
-					& search & insert & delete \\ \hline
-					Linear Probing & $\Theta \left( \frac{1}{(1 - \alpha)^2} \right)$ & $\Theta \left( \frac{1}{(1 - \alpha)^2} \right)$ & $\Theta \left( \frac{1}{1 - \alpha} \right)$ \\ \hline
-					Double Hashing & $\Theta \left( \frac{1}{1 - \alpha} \right)$ & $\Theta \left( \frac{1}{1 - \alpha} \right)$ & $\Theta \left( \frac{1}{\alpha} \lg \left( \frac{1}{1 - \alpha} \right) \right)$ \\ \hline
-					Cuckoo Hashing & $\Theta \left( 1 \right)$ & $\Theta \left( \frac{\alpha}{(1 - 2 \alpha)^2} \right)$ & $\Theta \left( 1 \right)$ \\ \hline
-				\end{tabular}
-			\end{center}
-
-			So, which hashing method should you use? It depends. If you do lots of searches, use cuckoo hashing. Otherwise, if you care more about insertions, use one of the other methods.
-			\\ \\
-			One of the disadvantages of cuckoo hashing is it requires that $\alpha < \frac{1}{2}$.
-
 		\subsection{Hashing in External Memory}
 			Cuckoo hashing would be bad in terms of external memory usage because we would be accessing many different sectors for all operations. Like before, we want to use the entire sector. Researchers suggested \textbf{extendible hashing}, which is similar to a B-tree. It's a similar idea to radix sort, where we use bits to split the data into tables.
 			\\ \\
