@@ -2703,7 +2703,7 @@
 				Decoding occurs in five steps:
 				\begin{enumerate}
 					\item Make an array $A$ of tuples $(C[i], i)$.
-					\item Sort $A$ by the characters, an record integers in an array $N$, where $C[N[i]]$ follows $C[i]$ in $S$ for $0 \le i < n$.
+					\item Sort $A$ by the characters, and record integers in an array $N$, where $C[N[i]]$ follows $C[i]$ in $S$ for $0 \le i < n$.
 					\item Set $j$ to the index of \$ in $C$ and set the source text $S$ to the empty string.
 					\item Set $j$ to $N[j]$ and append $C[j]$ to the source text $S$.
 					\item Repeat step 4 until we have $C[j] = \$$.
