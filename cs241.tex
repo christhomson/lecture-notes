@@ -39,12 +39,15 @@
 \setlength{\marginparwidth}{1.5in}
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
 
+\stepcounter{footnote} % because daggers are cool
+
 \begin{document}
 	\let\ref\Cref
 
 	\title{\bf{CS 241: Foundations of Sequential Programs}}
 	\date{Winter 2013, University of Waterloo \\ \center Notes written from Gordon Cormack's lectures.}
-	\author{Chris Thomson}
+	\author{Chris Thomson\thanks{See \href{https://github.com/christhomson/lecture-notes}{github.com/christhomson/lecture-notes}.}}
+	
 	\maketitle
 	\newpage
 	\tableofcontents

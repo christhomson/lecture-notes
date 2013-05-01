@@ -54,11 +54,13 @@
 	bdot/.style 2 args={circle,inner sep=2pt,fill=blue,label=#1:{#2},name=#2}
 }
 
+\stepcounter{footnote} % because daggers are cool
+
 \begin{document}
 	\let\ref\Cref
 	\title{\bf{MATH 239: Introduction to Combinatorics}}
 	\date{Winter 2013, University of Waterloo \\ \center Notes written from Bertrand Guenin's lectures.}
-	\author{Chris Thomson}
+	\author{Chris Thomson\thanks{See \href{https://github.com/christhomson/lecture-notes}{github.com/christhomson/lecture-notes}.}}
 	\maketitle
 	\newpage
 	\tableofcontents
