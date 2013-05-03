@@ -784,8 +784,8 @@
 					  add $1, $8, $3              0
 					bar: bif:  ; hello again      4
 					  lw $7, 0($2)                4
-					jr $31                        8
-					.word 32                      12
+					  jr $31                      8
+					  .word 32                    12
 				\end{verbatim}
 				Note that all lines have a location (including NULL lines), however some lines may have the same location due to non-NULL lines. You are guaranteed that every line that contains an instruction (that is, every line that will be converted to machine code) will have a distinct location associated with it.
 				\\ \\
