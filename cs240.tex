@@ -39,8 +39,6 @@
 }
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
 
-\pgfplotsset{compat=newest}
-
 \stepcounter{footnote} % because daggers are cool
 
 \begin{document}
@@ -59,7 +57,7 @@
 			The grading scheme is 50\% final, 25\% midterm, and 25\% assignments. There are five assignments, usually due on Wednesday mornings at 9:30 am. There are several textbooks for the course, all of which are optional but recommended. The textbooks cover roughly 80\% of the course content. There are also \href{https://www.student.cs.uwaterloo.ca/~cs240/w13/lectures.phtml}{some course notes available online} from previous terms, however the lectures will not necessarily follow those notes strictly.
 			\\ \\
 			See the \href{https://www.student.cs.uwaterloo.ca/~cs240/w13/info.phtml}{course syllabus} for more information.
-			
+
 		\subsection{CS as the Science of Information}
 			So far in our undergraduate careers, computer science has meant programming. However, programming is only a subset of computer science. Computer science is the \textbf{science of information}.
 			\\ \\
@@ -73,7 +71,7 @@
 				\item \textbf{Display it}. Information needs to be displayed using computer graphics (CG) and user interfaces (UI, partially related to psychology).
 				\item \textbf{Secure it}. Encryption and cryptography are important. Information should also be stored redundantly to prevent harm from catastrophic events.
 			\end{itemize}
-	
+
 		\subsection{Objectives of the Course}
 			\begin{itemize}
 				\begin{item}
@@ -86,7 +84,7 @@
 						\item Searching for data.
 						\item Sorting the data. \\
 					\end{itemize}
-				
+
 					Examples of ``large data":
 					\begin{itemize}
 						\item The web.
@@ -96,12 +94,12 @@
 						\item All the music from iTunes, for finding duplicate songs, etc.
 					\end{itemize}
 				\end{item}
-				
+
 				\begin{item}
 					\textbf{There is a strong emphasis on mathematical analysis.} \\ \\
 					The performance of algorithms will be analyzed using order notation.
 				\end{item}
-				
+
 				\begin{item}
 					\textbf{The course will involve abstract data types (objects) and data structures.} \\ \\
 					We will see examples that have to do with:
@@ -114,7 +112,7 @@
 					\end{itemize}
 				\end{item}
 			\end{itemize}
-			
+
 		\subsection{Code Optimization \& Measuring Performance}
 			Richard Feynman was in charge of the computer group on the Manhattan Project. He made his code run 10x faster.
 			\\ \\
@@ -130,17 +128,17 @@
 					20 & 16 & 11 \\ \hline
 				\end{tabular}
 			\end{center}
-			
+
 			However, computers were getting better, so we couldn't use wall clocks anymore. Results were not robust enough due to the quick progression of performance increases in terms of computing power. Moreover, because of the differences in architecture, the same program may have a different execution time on two different computer models.
-			\\ \\ 
+			\\ \\
 			\underline{Idea}: rather than comparing algorithms using seconds, we should compare algorithms using the number of operations required for the algorithm to run.
-			
+
 			\begin{itemize}
 				\item Express algorithm using pseudocode.
 				\item Count the number of primitive operations.
 				\item Plot the number of operations vs. the input size. \\
 			\end{itemize}
-			
+
 			\begin{figure}
 				\centering
 				\begin{tikzpicture}[domain=0:10]
@@ -155,22 +153,22 @@
 				\end{tikzpicture}
 				\caption{A comparison of two algorithms $A$ and $B$.}
 			\end{figure}
-			
+
 			Note that $A$ and $B$ are plotted as continuous functions, however they are not actually continuous -- we join all of the points for readability purposes only.
 			\\ \\
 			In the long run, you may want to use algorithm $B$ even if algorithm $A$ is better in some cases, because the benefits of $A$ will be short lived as $n$ grows.
 			\\ \\
 			Hence, comparing the programs has been transformed into comparing functions. We use order notation to measure the long-term growth of functions, allowing us to choose the smaller function, which corresponds to the faster algorithm.
-	
+
 	\section{Order Notation} \lecture{January 10, 2013}
 		The time for algorithm $A$ on input of size $n$ is:
-		
+
 		\begin{align*}
 			\underbrace{2n \log n}_\text{sort} + \underbrace{1.5n^3}_\text{mult} + \underbrace{22n^2 - 3n}_\text{additions} + \underbrace{7}_\text{setup}
 		\end{align*}
-		
+
 		On a different machine, the same algorithm $A$ may be $2n \log n + 9n^3 + 10n^2 - 3n + 7$. These give a \textbf{false sense of precision}. These specifics can also be quite costly to determine. In the 1960s, Don Knuth proposed \textbf{order notation} as a way to analyze the general quality of algorithms in an accurate, cost- and time-efficient way by ignoring precise runtimes.
-		
+
 		\subsection{Formal Definitions}
 			Order notation represents algorithms as functions. We say a function $f(n)$ relates to a certain order $g(n)$ using different notation depending on which relation we're interested in.
 			\begin{center}
@@ -184,33 +182,33 @@
 					 $7 > 3$ & $f(n) = \omega(g(n))$ \\ \hline
 				\end{tabular}
 			\end{center}
-			
+
 			Here's an easy way to remember the correspondence between a relation and its order notation symbol: the greedy operators, $\le$ and $\ge$, are uppercase letters $O$ and $\Omega$. The less greedy operators, $<$ and $>$, are the same letters but in lowercase ($o$ and $\omega$). \\
-			
+
 			Order notation only cares about the long run. An algorithm can violate the relation early -- we're interested in its asymptotic behavior.
-			
+
 			\begin{defn}[$\le$]
 				$f(n) = O(g(n))$ if there exist constants $c > 0, n_0 > 0$ such that $f(n) \le c \cdot g(n)$ for all $n \ge n_0$.
 			\end{defn}
-		
+
 			\begin{defn}[$\ge$]
 				$f(n) = \Omega(g(n))$ if there exist constants $c > 0, n_0 > 0$ such that $f(n) \ge c \cdot g(n)$ for all $n \ge n_0$.
 			\end{defn}
-			
+
 			\begin{defn}[$=$]
 				$f(n) = \Theta(g(n))$ if there exists constants $c_1, c_2 > 0$ such that $c_1 \cdot g(n) \le f(n) \le c_2 \cdot g(n)$.
 			\end{defn}
-			
+
 			The equality relation is effectively sandwiching the algorithm $f(n)$ between two other functions (the squeeze theorem). If it's possible to sandwich the algorithm between two multiples of the same $g(n)$, then $f(x)$ is said to be equal to the order $g(n)$.
-			
+
 			\begin{defn}[$<$]
 				$f(n) = o(g(n))$ if for all $c > 0$ there exists constant $n_0 > 0$ such that $f(n) < c \cdot g(n)$ for all $n \ge n_0$.
 			\end{defn}
-		
+
 			\begin{defn}[$>$]
 				$f(n) = \omega(g(n))$ if for all $c > 0$ there exists constant $n_0 > 0$ such that $f(n) > c \cdot g(n)$ for all $n \ge n_0$.
 			\end{defn}
-			
+
 		\subsection{Order Notation Examples}
 			\begin{ex}
 				$2n^2 + 3n + 11 = O(n^2)$
@@ -219,7 +217,7 @@
 				\\ \\
 				Let $c = 3$. Simplifying gets us $3n + 11 \le n^2$. This holds for $n_0 = 1000$, for instance.
 			\end{ex}
-			
+
 			\begin{ex}
 				$2n^2 + 3n + 11 1 = \Theta(n^2)$
 				\\ \\
@@ -227,26 +225,26 @@
 				\\ \\
 				Let $c = 1$. Simplifying gets us $n^2 \le 2n^2 + 3n + 11$, which gives us $0 \le n^2 + 3n + 11$. This holds for $n_0 = 0$.
 			\end{ex}
-			
+
 			\begin{ex}
 				$2010n^2 + 1388 = o(n^3)$
 				\\ \\
 				We must show that for all $c > 0$, there exists $n_0 > 0$ such that $2010n^2 + 1388 \le c \cdot n^3$ for all $n \ge n_0$.
-				
+
 				\begin{align*}
 					\frac{2010n^2+1388}{n^3} \stackrel{?}{\le} \frac{c \cdot n^3}{n^3} \implies \frac{2010}{n} + \frac{1388}{n^3} \stackrel{?}{\le} c
 				\end{align*}
-				
+
 				There is a \textbf{trick to prove f(n) = o(g(n))}: show that $\lim_{n \to \infty}{}\frac{f(n)}{g(n)} = 0$.
 			\end{ex}
-		
+
 		\subsection{A note about the use of =}
 			\begin{align*}
 				\underbrace{2n^2}_\text{specific function} \in \underbrace{O(n^2))}_\text{set of functions}
 			\end{align*}
-			
+
 			The use of the equality operator ($=$) in order notation is not the same as in most other areas of mathematics, since a single element of a set cannot strictly be equal to the set itself (even $a \ne \set{a}$). The $=$ in order notation is not a true equality -- it's just notation. The $\in$ operator is semantically more correct.
-		
+
 		\subsection{Performance of Algorithms}
 			We have made some progression in how we determine the performance of algorithms.
 			\begin{itemize}
@@ -255,7 +253,7 @@
 				\item Produce analytical expressions for the curves.
 				\item Simplify using order notation.
 			\end{itemize}
-			
+
 			Let's say we have the problem of integrating a mathematical function. Our program numerically integrates the function, and we're trying to analyze the algorithm behind that process. The timing would vary depending on the mathematical function and preciseness required.
 			\\ \\
 			If we conduct multiple runs of our algorithm, we'll get different times. Plotting all of the results (time vs. input size) will result in data that is not a function, because the data fails the vertical line test, since for a given input size we have multiple times.
@@ -287,7 +285,7 @@
 		\begin{defn}
 			An \textbf{algorithm} is a mechanical method to produce the answer to a given question of a problem.
 		\end{defn}
-		
+
 		\begin{defn}
 			The \textbf{size of the input} is the number of bits, characters, or elements in the question. This definition will vary depending on what's most appropriate for the given question.
 		\end{defn}
@@ -330,10 +328,10 @@
 			\\ \\
 			$T_{\mathcal{A}}(Q)$ is the time taken by algorithm $\mathcal{A}$ to compute the answer to $Q$.
 			\\ \\
-			We also want to define a general timing function for a particular problem, regardless of algorithm: 
+			We also want to define a general timing function for a particular problem, regardless of algorithm:
 			\begin{align*}
-				T(n) &= max \set{T_{ \mathcal{A}}(Q) } \\ 
-				T_{avg}(n) &= avg \set{T_{\mathcal{A}}(Q) } \\ 
+				T(n) &= max \set{T_{ \mathcal{A}}(Q) } \\
+				T_{avg}(n) &= avg \set{T_{\mathcal{A}}(Q) } \\
 				T_{min}(n) &= min \set{T_{\mathcal{A}}(Q) } \\
 				\vdots&
 			\end{align*}
@@ -364,7 +362,7 @@
 			\item Multiply numbers of reasonable size (numbers that can multiplied primitively).
 			\item Access an index in an array.
 			\item Store a value in memory (variable assignments).
-			\item Read a value from memory.	
+			\item Read a value from memory.
 		\end{itemize}
 		Be careful. Some languages disguise complexity well. Just because the syntax is simple doesn't necessarily mean it's a basic operation, and doesn't guarantee that the operation runs in constant time.
 
@@ -402,7 +400,7 @@
 			Operations like addition and multiplication are primitive for numbers of a reasonable size. Once numbers get large enough to exceed certain limits, we have to resort to some trickery to perform those operations, which adds additional complexity, making them no longer ``basic'' operations.
 			\\ \\
 			We can be a bit sloppy and use the worst case, then say the actual algorithm is $\le$ to what we calculated.
-			\begin{ex} 
+			\begin{ex}
 				Analyze the following algorithm. Test 1 ($n$). \\
 				\begin{algorithm}[H]
 					sum = 0\;
@@ -468,7 +466,7 @@
 					}
 					\Return max
 				\end{algorithm}
-				
+
 				This is the \textbf{maximum subsequence problem}. The input is an array of integers $A[1\dots n]$, and the output is the consecutive run with the largest sum.
 				\\ \\
 				Sample sequence:
@@ -521,7 +519,7 @@
 
 			\subsubsection{Logarithms}
 				\begin{defn}
-					$\log_b a = c$ if and only if $a = b^c$. If $b = 2$, we write $\lg a$. 
+					$\log_b a = c$ if and only if $a = b^c$. If $b = 2$, we write $\lg a$.
 				\end{defn}
 
 				There are a number of log identities you should be aware of:
@@ -530,7 +528,7 @@
 					\log \left( \frac{a}{c} \right) &= \log_b a - \log_b c \\
 					\log(a^c) &= c \cdot \log_b a \\
 					b^{\log_c a} &= a^{\log_c b} \\
-					\log_b a &= \frac{\log_c a}{\log_c b} 
+					\log_b a &= \frac{\log_c a}{\log_c b}
 				\end{align}
 
 				Identity (1) is useful because it allows you to go from multiplication to addition. You can avoid nasty multiplication operations by using this identity.
@@ -614,12 +612,12 @@
 				}
 				\Return max
 			\end{algorithm}
-			
+
 			Also, recall our sample sequence $A$:
 			\begin{tabular}{|c|c|c|c|c|c|c|}
 				\hline 2 & -4 & 1 & 3 & -2 & 8 & -1 \\ \hline
 			\end{tabular}
-			\\ \\	
+			\\ \\
 			Note that the longest run (the subsequence with the largest sum) in this sample sequence is from 1 to 8, which is a subsequence that sums to 10.
 			\\ \\
 			The maximum subsequence problem has many applications. It is used for DNA matching, for instance. There is a score for accuracy / closeness of the match. You get a score for various runs within a DNA sequence. If there is a long enough run(s) then you have probably identified the correct person. Google may also use the maximum subsequence problem as part of its algorithm for determining typos or other terms to match a particular search query (such as the word's plural form).
@@ -650,7 +648,7 @@
 			\\ \\
 			T_{ms}(1) &= 1 \text{ (base case)}
 		\end{align*}
-		
+
 		The method you use here is \textbf{guess and check}. For example, for $n = 4$, we have:
 		\begin{align*}
 			T_{ms} (4) &= 2T_{ms}(2) + 4 \\
@@ -685,7 +683,7 @@
 					\item \textbf{Array}. You keep track of where the last item is in the array. You may need to re-size your array, but at least you don't have to worry about pointers.
 				\end{itemize}
 		\subsection{Queue}
-			A \textbf{queue} is a data structure where you \verb+insert+ at the end and remove (\verb+dequeue+) from the front, just like the way a queue (a lineup) works in real life. 
+			A \textbf{queue} is a data structure where you \verb+insert+ at the end and remove (\verb+dequeue+) from the front, just like the way a queue (a lineup) works in real life.
 			\\ \\
 			Implementations are similar to implementing a stack. You maintain pointers to the start and end of the array or linked list.
 		\subsection{Priority Queue} \lecture{January 22, 2013}
@@ -705,7 +703,7 @@
 					\item To-do lists in the operating system (used for multitasking; the processor can only really do one thing at a time, so it does a bit of each task as determined by priority).
 					\item Sorting. Insert the elements from an array $A$ and then when you delete them you'll get them back in sorted order.
 				\end{itemize}
-				
+
 				Priority queues can be used for sorting purposes. It allows us to sort without worrying about the underlying sorting implementation. However, if we want to know how good of a sorting algorithm it is, we would need to examine the implementation of \verb+insert+ and \verb+deleteMin+. Here's some pseudocode for sorting with a priority queue: \\
 				\begin{algorithm}[H]
 					\For{i = 0 to n - 1}{
@@ -735,8 +733,8 @@
 
 						You can think of a complete binary tree as trying to fill the tree from left-to-right, going deeper and deeper as necessary.
 						\begin{figure}[H]
-							\Tree [.0 
-								[.1 [.3 [.7 ] [.8 ]].3 [.4 [.9 ] [.10 ] ].4 ].1 
+							\Tree [.0
+								[.1 [.3 [.7 ] [.8 ]].3 [.4 [.9 ] [.10 ] ].4 ].1
 								[.2 [.5 [.11 ] ].5 [.6 ] ].2 ].0
 							\caption{\label{fig:completeBinaryTree} A complete binary tree.}
 						\end{figure}
@@ -760,7 +758,7 @@
 						Insertion uses the process of \textbf{bubbling up}. We place the new element in the first available spot, which will be in the bottom level. The new element exchanges with their parent if the new element has higher priority than the parent, and that continues as far as needed, until it doesn't swap or until it reaches the top.
 						\\ \\
 						\textbf{Implementing a heap as an array} (also known as a \textbf{l33t hacking trick}):
-						\\ \\ 
+						\\ \\
 						You can actually implement a heap without pointers, using an array instead. The array indices follow the pattern as indicated in \ref{fig:completeBinaryTree} by inserting at the end of the array.
 						\\ \\
 						The parent of a node at index $m$ is $\lfloor \frac{m - 1}{2} \rfloor$. The children for a node at index $m$ are located at index $2 \cdot m + 1$ and $2 \cdot m + 2$.
@@ -769,7 +767,7 @@
 						\\ \\
 						Here's the pseudocode for the bubble up process: \\
 						\begin{algorithm}[H]
-							\While( [parent exists and has higher priority] ){$\lfloor \frac{v - 1}{2} \rfloor \ge 0$ and $A[\lfloor \frac{v - 1}{2} \rfloor].p > A[v].p$}{ 
+							\While( [parent exists and has higher priority] ){$\lfloor \frac{v - 1}{2} \rfloor \ge 0$ and $A[\lfloor \frac{v - 1}{2} \rfloor].p > A[v].p$}{
 								swap(v, $\lfloor \frac{v - 1}{2} \rfloor$)\;
 								v = $\lfloor \frac{v - 1}{2} \rfloor$\;
 							}
@@ -787,7 +785,7 @@
 								}
 							}
 						\end{algorithm}
-						
+
 						When implementing boogieing down, you'll have to handle boundary cases where there is only one child, etc., which were not handled in this pseudocode.
 				\end{enumerate}
 	\section{Sorting}
@@ -796,7 +794,7 @@
 			Both \verb+insert+ and \verb+deleteMin+ take O(lg n) time where $n$ is the number of elements in the tree. Bubble up and boogie down each take O(h) = O(lg n) time, where $h$ is the height of the tree.
 			\\ \\
 			Note that the number of elements in a tree is between $2^{h - 1}$ and $2^h$. PQ sort takes O(n lg n) time, which is the same as mergesort.
-		
+
 		\subsection{Heap Sort} \lecture{January 24, 2013}
 			Heap sort is a specialization of PQ sort. We can actually insert things even faster into the heap, though.
 			\\ \\
@@ -875,7 +873,7 @@
 				\\ \\
 				If we were to continue further, we would proceed on the left side of 8 because there are fewer than (or equal to) 3 elements on that side.
 				\\ \\
-				We use a random element from the array called the \textbf{pivot} to partition the elements into those smaller than the pivot and those larger than the pivot. In general: 
+				We use a random element from the array called the \textbf{pivot} to partition the elements into those smaller than the pivot and those larger than the pivot. In general:
 				\begin{tabular}{|c|c|c|}
 					\hline < p & p & > p \\ \hline
 				\end{tabular}
@@ -1019,7 +1017,7 @@
 			\\ \\
 			Fundamentally, shuffling and sorting are the same operation, just backwards. Every sorting sequence corresponds to a unique shuffle sequence. How many different shuffles do we have for a set that contains $n$ elements? $n!$.
 			\\ \\
-			Let's consider a comparison-based sorting algorithm on a set where all the keys are distinct. We get a tree where the root is $a_i : a_j$ and the two child nodes are $a_i < a_j$ and $a_i > a_j$. As we get further down the tree, these comparisons all compound to narrow down the set. The algorithm determines the next question to ask. 
+			Let's consider a comparison-based sorting algorithm on a set where all the keys are distinct. We get a tree where the root is $a_i : a_j$ and the two child nodes are $a_i < a_j$ and $a_i > a_j$. As we get further down the tree, these comparisons all compound to narrow down the set. The algorithm determines the next question to ask.
 			\\ \\
 			$a_i : a_j$ is just one way of representing that we're doing a general comparison. Sometimes we also use the notation $a_i ? a_j$ or $a_i \gtreqless a_j$.
 			\\ \\
@@ -1129,7 +1127,7 @@
 							\end{tabular}
 						\end{center}
 					\end{ex}
-					MSD radix sort operates at approximately the same complexity as LSD radix sort, but LSD is easier to implement, so it's more widely used. 
+					MSD radix sort operates at approximately the same complexity as LSD radix sort, but LSD is easier to implement, so it's more widely used.
 					\\ \\
 					LSD radix sort requires fixed key lengths. It's not always safe to assume that key lengths will be fixed. For example, phone numbers were created under the assumption that there would be one per household. But now, everyone has at least one cell phone (maybe multiple cell phones for different countries), and multiple mobile data devices like tablets or mobile data USB sticks. Similarly, it's not safe to assume that surnames can only be $n$ characters long.
 					\\ \\
@@ -1160,7 +1158,7 @@
 						\item \verb+insert+ takes $\Theta(1)$ time, by inserting at the end of the array.
 						\item \verb+delete+ takes $\Theta(n)$ time, by searching, removing, then compacting the array.
 					\end{itemize}
-					
+
 				\item \textbf{Ordered array}.
 					\begin{itemize}
 						\item \verb+search+ takes $\Theta(\lg n)$ time by using binary search.
@@ -1196,7 +1194,7 @@
 					\Tree [.o [.o [.o ] [.o ]] [.o [.o ] [.o ]]]
 					\caption{A balanced binary tree. \label{figure:balancedtree}}
 				\end{figure}
-					
+
 				An example of an unbalanced tree was if we inserted 7, then 6, then 5, then 4, then 3, then 2, then 1, which would produce a single path of length 7.
 				\\ \\
 				In 1962, a group of Russian mathematicians came up with \textbf{AVL trees}. AVL stood for Adelson-Velski and Landis, the two Russian guys who came up with AVL trees. They were trying to build a chess program and had a need for balanced binary search trees.
@@ -1221,7 +1219,7 @@
 				\begin{itemize}
 					\item -1 means the tree is left-heavy.
 					\item 0 means the tree is ``balanced.''
-					\item +1 means the tree is right-heavy. 
+					\item +1 means the tree is right-heavy.
 				\end{itemize}
 
 				If the difference is some other value ($\pm 2$, etc.), then the tree is skewed enough that the tree is no longer an AVL tree. It needs to be re-balanced slightly in order to become an AVL tree again.
@@ -1340,7 +1338,7 @@
 						\caption{A left rotation was applied on the entire tree in \ref{figure:dlrotationexrrapplied}. The double-left rotation is now complete. \label{figure:dlrotationexapplied}}
 					\end{figure}
 				\end{ex}
-				
+
 			\subsubsection{Other Tidbits about AVL Trees}
 				What is the relationship between the longest path in an AVL tree and the number of elements in it, in the worst case? We would like the path length to be $\lg n$ for a tree of $n$ elements. We want to avoid long paths with few elements (where height = number of elements, for instance).
 				\\ \\
@@ -1359,7 +1357,7 @@
 				The number of nodes $n = c^h$ (where $c$ is some constant) in the skinniest AVL tree is:
 				\begin{align*}
 					\lg n &= \lg c^h = h \lg c \\
-					h &= \frac{\lg n}{\lg c} = \Theta(\lg n)	
+					h &= \frac{\lg n}{\lg c} = \Theta(\lg n)
 				\end{align*}
 
 				In practice, you probably won't implement an AVL tree. There are easier implementations, such as left red black trees and AA trees, however we look at AVL trees because they are more interesting theoretically. People also don't use any sort of binary tree in practice. It's more common to use a tree with more than two children. \lecture{February 12, 2013}
@@ -1367,14 +1365,14 @@
 				You may be interested in looking at \href{http://cs-study.blogspot.ca/2012/11/cases-of-rotation-of-avl-tree.html}{this webpage on the cases of rotation for AVL trees}. Note that after performing a BST insertion on the leftmost subtree then rotating right, the height will not change. Its ancestors will not see any change.
 				\\ \\
 				Upon insertion, after the first rebalancing operation the entire AVL tree is once again balanced. In contrast, after a deletion you might have to rotate every node in the path up to the root node in the worst case. In the best case, just a few rotations may suffice. This can be proven by the diagrams on \href{http://cs-study.blogspot.ca/2012/11/cases-of-rotation-of-avl-tree.html}{the webpage about the cases of rotation for AVL trees}.
-				
+
 		\subsection{Handling RAM Constraints}
 			To many, a computer is a screen and a big box. To us, a computer is really an array $M$, which is RAM, plus a CPU and a hard drive.
 			\\ \\
 			When we write programs in a language like C++, our code is converted to machine instructions that operate on that array $M$.
 			\begin{verbatim}
 				C++:       Machine instructions:
-				int x;     
+				int x;
 				x = 8;     MOVE 8, 435
 				x++;       INC 1, 435
 			\end{verbatim}
@@ -1385,13 +1383,13 @@
 			\\ \\
 			As a rule of thumb, hard drives are 10,000x slower than RAM. This ratio has remained fairly constant because as hard drives have been improving at a similar progression as RAM. So, you want to avoid interacting with the hard drive as much as possible. There is some good news: solid state drives (SSDs). SSDs are ``only'' 100s of times slower than RAM, so dropping down to a SSD isn't as tragic as a traditional hard drive, but it still isn't as efficient as RAM.
 			\\ \\
-			If you're building a binary search tree over a \underline{large} amount of data, a hard drive must come into play. We define ``large'' here as being an amount of data that is large enough that it cannot fit into RAM in its entirety. 
+			If you're building a binary search tree over a \underline{large} amount of data, a hard drive must come into play. We define ``large'' here as being an amount of data that is large enough that it cannot fit into RAM in its entirety.
 			\\ \\
-			Mergesort has efficiency $O(n \lg n)$. In reality, the performance is $n \lg n$ until the input size $n$ hits the RAM limit, then the performance spikes. After this performance spike, mergesort continues to operate in $O(n \lg n)$ time, but with a much larger constant like $10000n \lg n$. This performance hit is a result of having to drop down to the performance of a hard drive. Some machines will have multiple spikes, between L1 and L2 cache, L2 cache and RAM, and RAM and a hard drive (from the fastest storage to the slowest storage). 
+			Mergesort has efficiency $O(n \lg n)$. In reality, the performance is $n \lg n$ until the input size $n$ hits the RAM limit, then the performance spikes. After this performance spike, mergesort continues to operate in $O(n \lg n)$ time, but with a much larger constant like $10000n \lg n$. This performance hit is a result of having to drop down to the performance of a hard drive. Some machines will have multiple spikes, between L1 and L2 cache, L2 cache and RAM, and RAM and a hard drive (from the fastest storage to the slowest storage).
 			\\ \\
 			When defining data structures, it's important to think about what will happen in terms of RAM and hard drive usage.
 			\\ \\
-			Let's say you have a binary search tree, stored in memory. When you insert a new element, let's say no more RAM is available, so the element needs to be placed on disk instead. This new element may contain pointers to other elements which are stored on other sectors of the hard drive. In order to follow this path, we would have to read several entire sectors, despite only being interested in a very small portion of each of those sectors. 
+			Let's say you have a binary search tree, stored in memory. When you insert a new element, let's say no more RAM is available, so the element needs to be placed on disk instead. This new element may contain pointers to other elements which are stored on other sectors of the hard drive. In order to follow this path, we would have to read several entire sectors, despite only being interested in a very small portion of each of those sectors.
 			\\ \\
 			For reference: the size of a sector is typically between 512 bytes and 4,000 bytes, and this size has remained fairly constant as time has progressed.
 			\\ \\
@@ -1446,7 +1444,7 @@
 					\item Insert there.
 					\item Fix your tree, if needed.
 				\end{enumerate}
-						
+
 				Let's try inserting two elements. After step 1, we end up with the tree as seen in \ref{figure:23needsfix2insertions}.
 
 				\begin{figure}[H]
@@ -1541,7 +1539,7 @@
 				\item Key-value pairs are present in the leaf nodes only.
 				\item The root node of a subtree is a marker for which subtree to navigate to.
 				\item Pointers to siblings are just for convenience.
-				\item This is an example of an ``algorithm for external memory'' (hard drives and other secondary storage). 
+				\item This is an example of an ``algorithm for external memory'' (hard drives and other secondary storage).
 			\end{itemize}
 
 			In a B-tree of height $h$, what is the minimum number of nodes in the tree? $2 + 2 \cdot 2 + 2 \cdot 2 \cdot 2 + \cdots$, since the root has two children, and each of those has two children, and so on. This leaves us with the minimum number of nodes in the tree being:
@@ -1560,7 +1558,7 @@
 				(h + 1) \lg m &= \lg n \\
 				h &\approx \frac{\lg n}{\lg m} - 1 \approx \log_m n
 			\end{align*}
-			
+
 	\section{Hashing}
 		Hashing is another dictionary implementation. It also has the same operations as a typical dictionary, including \verb+search(k)+, \verb+insert(k, data)+, and \verb+delete(k)+.
 
@@ -1667,7 +1665,7 @@
 				\begin{theorem}
 					The average number of probes required to search successfully using double hashing is approximately $\frac{1}{2} \ln \left( \frac{1}{1 - \alpha} \right)$. The average number of probes required to search unsuccessfully using double hashing is $\frac{1}{1 - \alpha}$.
 				\end{theorem}
-				
+
 				Let's examine the number of elements that need to be checked for a hit or miss using double hashing:
 				\begin{center}
 					\begin{tabular}{c|c|c|c|c}
@@ -1680,7 +1678,7 @@
 				Notice that a miss on a load factor of $\frac{9}{10}$ was improved from 50.5 to 5.5 by using double hashing (a 10x increase in performance!).
 				\\ \\
 				You can visualize double hashing with \href{http://research.cs.vt.edu/AVresearch/hashing/double.php}{this double hashing applet from Virginia Tech}.
-				
+
 				\subsubsection{Cuckoo Hashing}
 					Cuckoo hashing is a different way of handling the insertion of a second element with the same hash key. The first element (that's already in the hash table) is the one that gets moved by calculating its $h_2$ value. The latest element to be inserted with a particular hash key (in terms of the hash function $h_1$) will always be in the $h_1$-th position for that hash key.
 					\\ \\
@@ -1719,14 +1717,14 @@
 					So, which hashing method should you use? It depends. If you do lots of searches, use cuckoo hashing. Otherwise, if you care more about insertions, use one of the other methods.
 					\\ \\
 					One of the disadvantages of cuckoo hashing is it requires that $\alpha < \frac{1}{2}$.
-				
+
 		\subsection{Hashing Applications}
         Back in the day, Apple had a Pascal compiler that took an hour to compile programs. Another company (Borland) made a compiler that could do the same job in just one and a half minutes. They achieved that by using hashing for all identifiers/tokens, while Apple used a straight-line table.
 			\\ \\
 			Network routers need performance greater than $O(\lg n)$ for passing packets to their appropriate destinations. A solution was found that ran in $O(\lg \lg n)$ time, which was nice. But even that wasn't fast enough. Now, hashing is used to achieve constant $O(1)$ time. Cisco continues to fund research to make hashing as efficient as possible.
 			\\ \\
 			A hash table may also be good for implementing a tree structure if the worst case complexity doesn't concern you.
-		
+
 		\subsection{Hashing in External Memory}
 			Cuckoo hashing would be bad in terms of external memory usage because we would be accessing many different sectors for all operations. Like before, we want to use the entire sector. Researchers suggested \textbf{extendible hashing}, which is similar to a B-tree. It's a similar idea to radix sort, where we use bits to split the data into tables.
 			\\ \\
@@ -1785,7 +1783,7 @@
 			The cost of insertion and deletion is $\Theta(S)$ without a directory grow or shrink (which is rare). With a directory grow/shrink, it costs $\Theta(2^d)$. 1 or 2 disk accesses occur, depending on whether there is a block split/merge or not.
 			\\ \\
 			Each block is expected to be < 69\% full. This constraint is better for cuckoo hashing.
-	
+
 	\section{Tricks of the Trade}
 		We'll now discuss some tricks of the trade \textendash{} useful tricks that aren't discussed in all textbooks.
 
@@ -1814,9 +1812,9 @@
 			\\ \\
 			In practice, this works really well. If keys are uniformly distributed, interpolation search finds the key in $O(\lg \lg n)$ expected time. In the worst case, it's worse than binary search.
 			\\ \\
-			Greek researcher Tsakalidis studied how much worse interpolation search would perform if the keys were not uniformly distributed. Much to his surprise, he discovered that if the keys are not uniformly distributed, but instead they were \emph{realistically} distributed, he got $O(1)$ complexity consistently. 
+			Greek researcher Tsakalidis studied how much worse interpolation search would perform if the keys were not uniformly distributed. Much to his surprise, he discovered that if the keys are not uniformly distributed, but instead they were \emph{realistically} distributed, he got $O(1)$ complexity consistently.
 			\\ \\
-			\lecture{March 7, 2013} An example of a worst case search is if you perform search(9) on this data: 
+			\lecture{March 7, 2013} An example of a worst case search is if you perform search(9) on this data:
 			\begin{center}
 				\begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|}
 					\hline
@@ -1896,7 +1894,7 @@
 			Move-to-front is no worse than twice as expensive as the best possible order adjustment strategy. That's pretty great when you take into account how simplistic the MTF algorithm is. This method is used a lot for caching. It could also be implemented as a hash table with chaining, where each chain uses the MTF technique.
 
 		\subsection{Skip Lists}
-			Skip lists are a type of generalized binary tree, that provide a much better (and easy) implementation of a binary tree. 
+			Skip lists are a type of generalized binary tree, that provide a much better (and easy) implementation of a binary tree.
 			\\ \\
 			You start with a sorted linked list. Sorted arrays are good because you can binary search them (you know their length and have arbitrary access to elements), but they're bad because inserting requires shifting of elements, which is expensive.
 			\\ \\
@@ -1967,24 +1965,24 @@
 			Even smaller companies suddenly wanted computers because of word processors. Word processors greatly increased productivity over the old typewriting method, especially when it came to editing. If you made a mistake with a typewriter, you'd have to re-type the entire page.
 			\\ \\
 			At this point in time, computing was all about \underline{text}.
-		
+
 		\subsection{Internet (1990-2005)}
 			The Internet was the next big thing. The web was popularized, and it provided communication methods like never before.
 			\\ \\
 			Companies adopted the Internet because it had email. If the Internet didn't have email, and instead just had distractions, companies would not have adopted it and it would be only at homes (similar to how cable TV is only typically available at homes).
 			\\ \\
 			At this point in time, computing was about \underline{larger amounts of text}.
-		
+
 		\subsection{Consumers of Data \& Statistical Analysis (Current)}
 			Consumer devices have been popularized, such as mobile phones (iPhone) and tablets (iPad). Consumers are consuming digital data as part of their daily lives.
 			\\ \\
 			Statistical analysis is about looking for trends. Machine learning also stems out of statistical analysis. For example: ads on Facebook are targeted to you specifically based on your profile and its history, based on statistical analysis.
-	
+
 	\section{Multi-Dimensional Data}
 		In today's world, we want to perform searching across multiple dimensions. For example, we may want to find all employees who make between \$75,000 and \$200,000 and have been at the company for less than 10 years. Or, we may want to search for a computer based on a particular set of specs. If we were Yahoo! executive Marissa Mayer, we may want to determine which employees are unproductive and highly paid, in order to \href{http://allthingsd.com/20130222/physically-together-heres-the-internal-yahoo-no-work-from-home-memo-which-extends-beyond-remote-workers/}{come to the conclusion that most of those people work from home}.
 		\\ \\
 		Each attribute of each of these searches is a dimension. We can use the power of mathematics to our advantage here, to find neighbouring elements in $d$-dimensional space, for instance.
-		
+
 		\subsection{Range Searches}
 			We can use a simple binary search tree to search for a range. We search for the lower bound element or its predecessor and the upper bound element or its successor. We then return everything between the two, and maybe part of the path that was followed (depending on which direction you followed at each step in the path). In some cases, we may need to ``barf out the entire tree.'' AVL trees and B-trees could be modified in a similar way to achieve the same result.
 			\\ \\
@@ -2110,7 +2108,7 @@
 			Emil Stefanov has a \href{http://www.emilstefanov.net/Projects/RangeSearchTree.aspx}{webpage that discusses multi-dimensional range search trees} further.
 			\\ \\
 			It'd be nice if at construction time we could determine if the given data is ``good'' data for a KD tree. If not, we could then switch to range tree mode. However, no one has fully solved this problem yet \textendash{} it's difficult to determine if certain data is ``good'' KD data or not.
-	
+
 	\section{Tries \& String Matching} \lecture{March 19, 2013} % Alejandro Salinger gave this lecture.
 		A \textbf{trie}, also known as a radix tree, is a dictionary for binary strings. It's based on bit-wise (or, more specifically, character-by-character) comparisons. A particular string is represented by the path required to reach its node.
 		\\ \\
@@ -2227,7 +2225,7 @@
 			\end{defn}
 
 			We must perform $m$ checks of a single correct guess, but may make much fewer checks for incorrect guesses.
-			
+
 			\subsubsection{Brute-Force Pattern Matching}
 				The easiest algorithm to think about is the brute force algorithm, which is as follows. BruteForcePM(T[0..n-1], P[0..m-1]) (where $T$ is a string of length $n$ representing the full text and $P$ is a string of length $m$ representing the pattern): \\
 				\begin{algorithm}[H]
@@ -2291,11 +2289,11 @@
 						6 & bacaba & abacaba & 3 \\ \hline
 					\end{tabular}
 				\end{center}
-				
+
 				Personally, I found this construction of the failure array to be a bit unclear. I use a different approach.
 				\\ \\
 				First, list all the prefixes of the pattern, labeling them from $i = 0$ onwards. Then, for each prefix string in the list, look for a prefix (that is, a prefix of the prefix string) that matches a suffix of the prefix string. There's one important condition here: it must be a \emph{proper} suffix, so the suffix cannot be the entire prefix string. $F[i]$ is the length of the prefix/suffix that match each other, within that prefix string.
-				
+
 				\begin{center}
 					\begin{tabular}{|c|c|c|}
 						\hline
@@ -2457,7 +2455,7 @@
 					Consider the pattern $P$ = bonobobo. The suffix skip array would be computed to be:
 					\begin{center}
 						\begin{tabular}{|c||c|c|c|c|c|c|c|c|c|}
-							\hline 
+							\hline
 							$i$ & 0 & 1 & 2 & 3 & 4 & 5 & 6 & 7 \\ \hline
 							$P[i]$ & b & o & n & o & b & o & b & o \\
 							$S[i]$ & -6 & -5 & -4 & -3 & 2 & -1 & 2 & 7 \\ \hline
@@ -2495,15 +2493,15 @@
 				We sometimes want to search for many patterns $P$ within the same fixed text $T$. We could preprocess the text $T$ instead of preprocessing the pattern $P$.
 				\\ \\
 				\underline{Observation}: $P$ is a substring of $T$ if and only if $P$ is a prefix of some suffix of $T$.
-				
+
 				\begin{defn}
 					A \textbf{suffix trie} is an uncompressed trie containing the suffixes of the given string.
 				\end{defn}
-				
+
 				\begin{defn}
 					A \textbf{suffix tree} is a compressed Patricia trie containing the suffixes of the given string.
 				\end{defn}
-				
+
 				The distinction between a suffix trie and a suffix tree is somewhat arbitrary, because technically they are both tries and they're both trees.
 				\\ \\
 				We could build a compressed trie that stores all suffixes of $T$. We insert suffixes in decreasing order of length. If a suffix is a prefix of another suffix, we don't bother inserting it. On each node, we store two indexes $l, r$ where the node corresponds to substring $T[l..r]$ (do this for internal nodes \emph{and} leaf nodes).
@@ -2538,7 +2536,7 @@
 					\vdots& \\
 					S_{n:n} &= \epsilon
 				\end{align*}
-				
+
 				We insert all of the suffixes into a trie, then we can easily search for a prefix of one of those suffixes. There was a problem, however: it was consuming too much memory. A string of length $n$ requires $\Theta(n^2)$ space for the tree, which isn't good.
 				\\ \\
 				There's $n$ leaves at the bottom of the tree, so there must be many skinny paths in our tree. Let's try to compress it! Note that at this point in time, Patricia tries did not exist.
@@ -2556,19 +2554,19 @@
 				If you're interested in seeing some examples of suffix trees, you should view this \href{http://www.cs.ucf.edu/~shzhang/Combio12/lec3.pdf}{presentation from the University of Central Florida}.
 				\\ \\
 				The KMP and Boyer-Moore algorithms are better for text that is constantly changing, whereas suffix trees are better for queries that are frequently distinct.
-	
+
 	\section{Compression}
 		We don't ever want to destroy data, but we often do because the cost of hard drives is greater than the perceived benefit of the information. If cost was not an issue, we would never delete any information.
 		\\ \\
-		We have \textbf{source text} $S$, which is the original data. We want to create \textbf{coded text} $C$, and we should be able to go between the two (by encoding or decoding). 
+		We have \textbf{source text} $S$, which is the original data. We want to create \textbf{coded text} $C$, and we should be able to go between the two (by encoding or decoding).
 		\\ \\
 		We measure the performance of compression by how much smaller the encoded version is. We measure this with the \textbf{compression ratio}:
 		\begin{align*}
 			\frac{|C| \cdot \lg |\Sigma_C|}{|S| \cdot \lg |\Sigma_S|}
 		\end{align*}
-		
+
 		There are two kinds of compression: lossy and lossless. Lossy compression gives us a better compression ratio at the expense of not being able to retrieve the exact source. Lossless compression is necessary when we want to be able to retrieve the exact original source text. Lossy compression is often used for images and audio files, where having a close-to-exact (but not precisely exact) version of the data is good enough.
-		
+
 		\subsection{Character Encodings}
 			Text can be mapped to binary through a character encoding, such as ASCII. ASCII assigns each letter/symbol a 7-bit value, although the actual encoding uses 8-bits (the 8th bit is ignored). ASCII is not good for non-English text, though.
 
@@ -2587,7 +2585,7 @@
 				\begin{figure}[H]
 					\Tree [.R [.e [.{\textbullet} [.{\textbullet} [.S ] ] ] ] ]
 				\end{figure}
-				
+
 				The ambiguity between three `e's and one `S' is caused because `e' is a prefix of `S', which means `e' is a subpath of the path of `S'. We don't know if we should stop at `e' or continue, when resolving the path. If we were to have a single code per path, there would be no confusion, which is why we use end-of-character markers (a pause) in morse code.
 				\\ \\
 				Similarly, we will put all of our letters into leaves, removing all choices, and eliminating the confusion. We can do this with morse code by adding those end-of-character markers.
@@ -2632,7 +2630,7 @@
 				\end{theorem}
 
 				If we don't encode one letter at a time, we can do better.
-			
+
 			\subsubsection{Lempel-Ziv}
 				The main idea behind Lempel-Ziv is that each character in the coded text either refers to a single character in the alphabet, or a substring that both the encoder and decoder have already seen.
 				\\ \\
@@ -2665,7 +2663,7 @@
 						}
 					}
 				\end{algorithm}
-				
+
 				To decompress the text, we \emph{could} be given a copy of the dictionary, like with the Huffman approach. However, we don't actually need to. The decompression algorithm starts off like the encoder and builds up the dictionary itself.
 				\\ \\
 				The decompressor adds the characters to its dictionary first, just like the encoder. The decompressor then performs the rest of the algorithm just like the encoder did to build up its dictionary.
@@ -2683,7 +2681,7 @@
 						$w$ = entry\;
 					}
 				\end{algorithm}
-				
+
 				If you'd like to see LZW in action, you should try out \href{http://www.cs.sfu.ca/CourseCentral/365/li/squeeze/LZW.html}{the applet on this page from Simon Fraser University}.
 				\\ \\
 				Mark Nelson discovered a rare case where this does not work. The case fails in that the decoder attempts to decode a code that is not yet in its dictionary. It occurs with a repeated string like ``thethe.'' It only happens with repetition, so you just roll back and output the code for the repeated string. You can read more about this on \href{http://marknelson.us/1989/10/01/lzw-data-compression/}{Mark Nelson's site, under ``The Catch''}.
@@ -2699,7 +2697,7 @@
 						\item Sort the strings in $L$ lexicographically (alphabetically).
 						\item $C$ is the list of trailing characters of each string in $L$.
 					\end{enumerate}
-					
+
 				Decoding is slightly more complicated. The general idea is that given $C$, we can generate the first column of the array by sorting $C$. This tells us which character comes after each character in our source text $S$.
 				\\ \\
 				Decoding occurs in five steps:
@@ -2710,9 +2708,9 @@
 					\item Set $j$ to $N[j]$ and append $C[j]$ to the source text $S$.
 					\item Repeat step 4 until we have $C[j] = \$$.
 				\end{enumerate}
-				
+
 				Encoding occurs in $O(n^2)$ time, using radix sort. It is also possible to achieve in $O(n)$ time. Decoding takes $O(n)$ time. Notice that decoding is faster than encoding. Encoding and decoding each use $O(n)$ space. BWT is generally slower than other methods but the compression it produces is superior.
-			
+
 			\subsubsection{Run Length Encoding}
 				Run length encoding is typically used in images, such as in the TIFF image format. It's a lossless form of compression.
 				\\ \\
@@ -2727,7 +2725,7 @@
 				Move-to-front encoding improves overly highly optimized Lempel-Ziv. The 29\% compression ratio dips down to 21-22\% for MTF.
 				\\ \\
 				\underline{Aside}: LZW was used in the Unix \verb+compress+ tool, back in the day. As the compression tools have improved (\verb+compress+, then \verb+zip+, then \verb+gzip+, then \verb+bzip2+), the \verb+z+ has remained in the file extension. The \verb+z+ in the file extension now denotes that it's some sort of compressed file.
-			
+
 			\subsubsection{Data Structures in Action}
 				Here are some videos as shown in class that demonstrated various applications of quadtrees and kd-trees:
 				\begin{itemize}
