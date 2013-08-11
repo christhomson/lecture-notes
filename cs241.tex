@@ -46,21 +46,24 @@
 
 	\title{\bf{CS 241: Foundations of Sequential Programs}}
 	\date{Winter 2013, University of Waterloo \\ \center Notes written from Gordon Cormack's lectures.}
-	\author{Chris Thomson\thanks{See \href{https://github.com/christhomson/lecture-notes}{github.com/christhomson/lecture-notes}.}}
-	
+	\author{Chris Thomson\thanks{See \href{https://github.com/christhomson/lecture-notes}{github.com/christhomson/lecture-notes}.
+	\ifdefined\sha % Also, \commitDate and \commitTime should be defined.
+		Last modified: \commitDateTime{} ({\href{https://github.com/christhomson/lecture-notes/commit/\sha}{\sha}}).
+	\fi}}
+
 	\maketitle
 	\newpage
 	\tableofcontents
 	\newpage
 
-	\section{Introduction \& Character Encodings} 
+	\section{Introduction \& Character Encodings}
 		\lecture{January 7, 2013}
-	
+
 		\subsection{Course Structure}
 		The grading scheme is 50\% final, 25\% midterm, and 25\% assignments. There are eleven assignments. Don't worry about any textbook. See the \href{https://www.student.cs.uwaterloo.ca/~cs241/W2013.pdf}{course syllabus} for more information.
-		
+
 		\subsection{Abstraction}
-	
+
 		\textbf{Abstraction} is the process of removing or hiding irrelevant details. Everything is just a sequence of bits (binary digits). There are two possible values for a bit, and those values can have arbitrary labels such as:
 		\begin{itemize}
 			\item Up / down.
@@ -69,7 +72,7 @@
 			\item On / off.
 			\item Pass / fail.
 		\end{itemize}
-		
+
 		Let's say we have four projector screens, each representing a bit of up/down, depending on if the screen has been pulled down or left up (ignoring states between up and down). These screens are up or down independently. There are sixteen possible combinations:
 		\begin{center}
 			\begin{tabular}{cccc}
@@ -77,11 +80,11 @@
 				Up (1) & Down (0) & Up (1) & Down (0) \\
 				Down (0) & Down (0) & Down (0) & Up (1) \\
 				\vdots & \vdots & \vdots & \vdots \\
-			\end{tabular}	
+			\end{tabular}
 		\end{center}
-	
+
 		Note that there are sixteen combinations because $k = 4$, and there are $2^k$ combinations since there are two possible values for each of $k$ screens.
-	
+
 		\subsection{Endianness}
 			Let's consider the sequence $1010$. This sequence of bits has different interpretations when following different conventions.
 			\begin{itemize}
@@ -91,13 +94,13 @@
 				\item \textbf{Two's complement, big-endian}: $10 - 16 = -6$.
 				\item \textbf{Computer terminal}: LF (line feed).
 			\end{itemize}
-	
+
 			Note that a two's complement number $n$ will satisfy $-2^{k-1} \le n < 2^{k-1}$.
-	
+
 		\subsection{ASCII}
-	
+
 			\textbf{ASCII} is a set of meanings for 7-bit sequences.
-		
+
 			\begin{center}
 				\begin{tabular}{cc}
 					\underline{Bits} & \underline{ASCII Interpretation} \\
@@ -107,10 +110,10 @@
 					$0111000$ & 8
 				\end{tabular}
 			\end{center}
-			
+
 			In the last case, $0111000$ represents the character `$8$', not the unsigned big- or little-endian number $8$. \\ \\
 			ASCII was invented to communicate text. ASCII can represent characters such as A-Z, a-z, 0-9, and control characters like ();!. Since ASCII uses 7 bits, $2^7 = 128$ characters can be represented with ASCII. As a consequence of that, ASCII is basically only for Roman, unaccented characters, although many people have created their own variations of ASCII with different characters.
-	
+
 		\subsection{Unicode}
 			\textbf{Unicode} was created to represent more characters. Unicode is represented as a 32-bit binary number, although representing it using 20 bits would also be sufficient. The ASCII characters are the first 128 symbols in Unicode, followed by additional symbols.
 			\\ \\
@@ -134,16 +137,16 @@
 			  \underbrace{\underbrace{10}_{2} \underbrace{1110}_{\text E} \underbrace{0111}_{7} \underbrace{0011}_{3} \underbrace{1011}_{\text B} \underbrace{1001}_{9} \underbrace{1000}_{8} \underbrace{0011}_{3}}_{\text{2E73B983}}
 			\end{align*}
 	\section{Stored Program Computers}
-		Stored program computers are also known as the \textbf{Von Neumann architecture}. They group bits into standard-sized sequences. 
+		Stored program computers are also known as the \textbf{Von Neumann architecture}. They group bits into standard-sized sequences.
 		\\ \\
 		In modern times, standard-sized sequences of bits are:
 		\begin{itemize}
 			\item \textbf{Bytes}. A byte is 8-bits (256 possible values). Example: 00111010.
 			\item \textbf{Words}. A word is only guaranteed to be ``more than a byte.'' Words are often 16-bits ($2^{16} = 65,536$ possible values), 32-bits ($2^{32} \approx 4 \times 10^9$), or 64-bits ($2^{64} \approx 10^{19}$).
 		\end{itemize}
-		
-		A ``64-bit CPU'' just means it's a CPU that uses 64-bit words. 
-		
+
+		A ``64-bit CPU'' just means it's a CPU that uses 64-bit words.
+
 		\subsection{Storage Devices}
 			\subsubsection{Registers}
 				There are typically a finite number of fixed-sized sequence of bits, called \textbf{registers}. You can put bits in, peek at them, and modify them.
@@ -177,7 +180,7 @@
 		\lecture{January 11, 2013}
 
 		\subsection{Unix}
-			You'll need Unix to use MIPS in this course. Unix was originally created in the 1970s at AT\&T Bell Labs. Unix is still popular today, especially for servers. Linux is a Unix dialect, and Mac OS X is also based on Unix. 
+			You'll need Unix to use MIPS in this course. Unix was originally created in the 1970s at AT\&T Bell Labs. Unix is still popular today, especially for servers. Linux is a Unix dialect, and Mac OS X is also based on Unix.
 			\\ \\
 			Unix has three types of files:
 			\begin{itemize}
@@ -221,15 +224,15 @@
 				\item \$0 is a register that will always contain 0. It's special like that.
 				\item \$30 points to memory that could be used as a stack.
 				\item \$31 will be copied to the program counter at the end of execution in order to ``return.''
-				\item You can specify register values using base 10 values or as hex values (if prefixed by \verb+0x+). 
-				\item It takes 5-bits to specify a register in binary MIPS instructions, since $2^5 = 32$. 
-				\item In documentation, it's conventional to call S and T \textbf{source registers}, and D the \textbf{destination register}. 
+				\item You can specify register values using base 10 values or as hex values (if prefixed by \verb+0x+).
+				\item It takes 5-bits to specify a register in binary MIPS instructions, since $2^5 = 32$.
+				\item In documentation, it's conventional to call S and T \textbf{source registers}, and D the \textbf{destination register}.
 				\item MIPS uses two's complement numbers by default, unless specified otherwise.
 				\item Loops and conditionals are accomplished by adding or subtracting from the program counter.
 			\end{itemize}
-			
+
 			There is a \href{https://www.student.cs.uwaterloo.ca/~cs241/mips/mipsref.pdf}{MIPS reference sheet} available on the course website that you'll find to be quite useful. It contains the binary representations for all MIPS instructions. You can convert the binary instructions into hex and place the instructions into an assembly language file as \verb+.word+ instructions.
-		
+
 		\subsubsection{A Few Important MIPS Instructions}
 			\begin{enumerate}
 				\item \textbf{Load Immediate \& Skip} (\verb+lis+): loads the next word of memory into the D register. You specify a \verb+lis+ instruction followed by an arbitrary word next. The program counter will then skip past the arbitrary word that follows, to avoid executing it.
@@ -255,7 +258,7 @@
 			\begin{verbatim}
 			      labels instruction comment
 			\end{verbatim}
-			
+
 			\textbf{Labels} are any identifier followed by a colon. For example, \verb+fred:+, \verb+wilma:+, and \verb+x123:+ are some examples of valid labels.
 			\\ \\
 			\textbf{Instructions} are in the form \verb+add $3, $1, $2+. Consult the MIPS reference sheet for the syntax of each MIPS instruction.
@@ -285,13 +288,13 @@
 				\item \verb+sw $t, i($s)+ (store word, $-32,768 \le i \le 32,767$). This works in a similar way to \verb+lw+, except it stores the contents of \$t at RAM at this address.
 				\item \verb+slt $d, $s, $t+ (set less than). Sets \$d to 1 if \$s < \$t, or to 0 otherwise.
 				\item \verb+sltu $d, $s, $t+ (set less than unsigned). Sets \$d to 1 if \$s < \$t, or to 0 otherwise. Interprets the numbers as unsigned numbers.
-				\item \verb+beq $s, $t, i+ (branch if equal, $-32,768 \le i \le 32,767$). Adds $4i$ to the program counter if \$s is equal to \$t. Note that 4 is still added (in addition to adding the $4i$ for this specific command) as you move to the next instruction, as with all instructions. 
+				\item \verb+beq $s, $t, i+ (branch if equal, $-32,768 \le i \le 32,767$). Adds $4i$ to the program counter if \$s is equal to \$t. Note that 4 is still added (in addition to adding the $4i$ for this specific command) as you move to the next instruction, as with all instructions.
 				\item \verb+bne $s, $t, i+ (branch if not equal, $-32,768 \le i \le 32,767$). Works the same way as \verb+beq+, except it branches if \$s is not equal to \$t.
 				\item \verb+jr $s+ (jump register). Copies \$s to the program counter.
 				\item \verb+jalr $s+ (jump and link register). Copies \$s to the program counter and copies the previous value of the program counter to \$31.
 			\end{itemize}
 		\subsubsection{Example Program: Sum from 1 to N}
-			We want a program that sums the numbers from 1 to $n$, where $n$ is the contents of \$1, and we want the result to be placed in \$3. 
+			We want a program that sums the numbers from 1 to $n$, where $n$ is the contents of \$1, and we want the result to be placed in \$3.
 			\begin{verbatim}
 				; $1 is N.
 				; $3 is the sum.
@@ -345,7 +348,7 @@
 				lw $3, 0($5)
 				jr $31
 			\end{verbatim}
-			
+
 			The example above uses memory address 100000. But how do we know that we have that much RAM? How do we know it's not already being used by someone else? This is clearly a bad practice.
 			\\ \\
 			We really shouldn't just use an arbitrary memory address without any type of safety checking. So, we'll reserve some memory ourselves. We can add a word after the last \verb+jr+ instruction, which means memory will be allocated for the word instruction, however it'll never be executed.
@@ -368,7 +371,7 @@
 				\begin{verbatim}
 					sw $1, -4($30)   ; save on stack
 					sw $2, -8($30)   ; save on stack
-					
+
 					lis $2
 					.word 8
 					sub $30, $30, $2 ; push two words
@@ -433,12 +436,12 @@
 				  add $1, $1, $4
 				  bne $2, $0, loop ; loop if not done.
 
-				jr $31 
+				jr $31
 				\end{verbatim}
 
 	\section{Procedures in MIPS} \lecture{January 18, 2013}
 		Recall the \verb+sum.asm+ program from earlier, which sums the numbers from 1 to $N$ (\$1), and puts the result in \$3:
-		
+
 		\begin{verbatim}
 			sum:             ; only needed for next example, sum10.asm
 			  add $3, $0, $0 ; $3 is the accumulator C
@@ -454,14 +457,14 @@
 		\end{verbatim}
 
 		Now, let's create a program \verb+sum10.asm+ which sums the numbers from 1 to 10, and puts the result in \$3. We'll add the \verb+sum:+ label to the top of our \verb+sum.asm+ file, as indicated in the code above, so we have a way to jump to the \verb+sum.asm+ line (which is part of how procedures are called in MIPS). This is \verb+sum10.asm+:
-		
+
 		\begin{verbatim}
 			; PROLOGUE
 			sw $31, -4($30)  ; push word onto stack
 			lis $2
 			.word 4
 			sub $30, $30, $2
-			
+
 			; PROCEDURE CALL
 			lis $1
 			.word 10
@@ -472,7 +475,7 @@
 			; EPILOGUE
 			lis $2
 			.word 4
-			add $30, $30, $2 ; restore stack pointer 
+			add $30, $30, $2 ; restore stack pointer
 			lw $31, -4($30)  ; restore $31
 			jr $31
 		\end{verbatim}
@@ -494,7 +497,7 @@
 					gcd(b \% a, a) & a \ne 0
 				\end{cases}
 			\end{align*}
-			
+
 			Here's \verb+gcd.asm+:
 
 			\begin{verbatim}
@@ -529,7 +532,7 @@
 			\\ \\
 			Notice in the \verb+gcd.asm+ example, you aren't actually erasing the stack contents. If you're storing secret data, you should overwrite it with zeroes, or (ideally) garbage data. For assignment 2, at least, we can just leave our garbage lying around.
 		\subsection{Input and Output}
-			\verb+getchar+ and \verb+putchar+ simulate RAM, however they actually send the data from/to the user's keyboard/monitor. \verb+getchar+ is located at memory address \verb+0xffff0004+ and \verb+putchar+ is at address \verb+0xffff000c+. If you load or store a byte at either of these addresses, you will retrieve or send the byte from/to standard input (STDIN) or standard output (STDOUT). 
+			\verb+getchar+ and \verb+putchar+ simulate RAM, however they actually send the data from/to the user's keyboard/monitor. \verb+getchar+ is located at memory address \verb+0xffff0004+ and \verb+putchar+ is at address \verb+0xffff000c+. If you load or store a byte at either of these addresses, you will retrieve or send the byte from/to standard input (STDIN) or standard output (STDOUT).
 			\\ \\
 			We will create an example program, \verb+cat.asm+, to copy input to output:
 
@@ -557,7 +560,7 @@
 		Sometimes when we look at a MIPS program there is no meaning because the MIPS assembly code is not well-formed (it's invalid). In that case, we need to have the assembler output an error report. For us, our assembler will identify well-formed MIPS programs in the `all or nothing' sense \textendash{} that is, if the program is valid we will produce valid binary machine code, otherwise we'll indicate that there's \emph{some} problem.
 		\\ \\
 		Don't imagine all the ways a program can be wrong. Write your assembler to identify correct MIPS assembly code as per the specification, and if the program does not follow those finite number of rules, then it is invalid and should be rejected.
-		
+
 		\subsection{Assemblers In This Course}
 			It'd be nice if our assembler's error reports could produce helpful error messages. However, that involves mind reading (pretty much) and is beyond the scope of this course.
 			\\ \\
@@ -587,7 +590,7 @@
 				You can't use a built-in C function that outputs a whole word at once, because your computer architecture (Intel machines) will probably force that word to be written in little-endian, which won't work with MIPS.
 				\\ \\
 				In Scheme, you can use \verb+(write-byte ...)+ which works in a similar way.
-			
+
 			\subsubsection{Scanners}
 				Scanners are way more annoying than they seem at first glance. We'll be given a scanner for assignments 3 and 4, called \verb+asm.cc+, \verb+asm.ss+, or \verb+asm.java+.
 				\\ \\
@@ -650,7 +653,7 @@
 					}
 				}
 			\end{algorithm}
-			
+
 			\subsubsection{Efficient Symbol Tables}
 					\textbf{Scheme}:
 					\begin{verbatim}
@@ -703,9 +706,9 @@
 			\end{algorithm}
 
 			\subsubsection{Creating MIPS Binary Instructions}
-				We can form a MIPS binary instruction using a \textbf{template} and appropriate values for any variables in the command (usually denoted $s$, $t$, and $d$). The template is the integer that represents the binary associated with a particular instruction, with all of the variables ($s$, $t$, and $d$) being zeroes. 
+				We can form a MIPS binary instruction using a \textbf{template} and appropriate values for any variables in the command (usually denoted $s$, $t$, and $d$). The template is the integer that represents the binary associated with a particular instruction, with all of the variables ($s$, $t$, and $d$) being zeroes.
 				\\ \\
-				Bitwise operations compare integers bit by bit and perform the requested operation at that level. For example, given the numbers $a$ and $b$ that can represented in binary as 000111000 and 11011000, respectively, $a | b$ (a bitwise OR) will result in 11011100 and \verb+a & b+ (a bitwise AND) will result in 00011000. 
+				Bitwise operations compare integers bit by bit and perform the requested operation at that level. For example, given the numbers $a$ and $b$ that can represented in binary as 000111000 and 11011000, respectively, $a | b$ (a bitwise OR) will result in 11011100 and \verb+a & b+ (a bitwise AND) will result in 00011000.
 				\\ \\
 				Suppose we want to zero out all but the last byte of $b$. We'd do \verb+b & 255+, which is the same as \verb+b & 0xff+.
 				\\ \\
@@ -750,7 +753,7 @@
 						grep ``ERROR SUMMARY'' foo
 					\end{verbatim}
 			\end{itemize}
-				
+
 			For C++, leak checking is turned off for the Marmoset tests. You still shouldn't leak memory all over the place, though.
 			\\ \\
 			\verb+grep ``ERROR'' myprog.err+ should not match anything if your program is valid, or should match otherwise (if there's an error).
@@ -765,7 +768,7 @@
 			You're going to have to make a large test suite to test your assembler. For valid code, you only need a handful of test cases. However, for error cases, you'll need a separate test case for each error since our assembler will quit as soon as it encounters the first error. Write a test script to run all of these cases, because it'll become tedious otherwise. You can share test cases you make with others, however you are not allowed to share information about the test cases Marmoset uses to test your code.
 			\\ \\
 			We're going to take a look at the \href{https://www.student.cs.uwaterloo.ca/~cs241/mips/mipsasm.html}{specification of the CS 241 dialect of MIPS}. You'll likely want to print this out and mark every statement/condition twice: once after you implement it and once after you test it. [Note: you should look at \href{https://www.student.cs.uwaterloo.ca/~cs241/mips/mipsasm.html}{the specification itself} rather than relying on the notes here.]
-			
+
 			\subsubsection{Locations and Labels}
 				Locations start at $0, 4, 8, \ldots$. The size of a program is the number of instructions multiplied by four. Locations are typically written in hex.
 				\\ \\
@@ -822,7 +825,7 @@
 					\item \verb+lw, sw+ \textendash{} lw, register, comma, $i$, bracket(, register, bracket), nothing else, where $i$ can be an unsigned, negative, or hex number within the 16-bit range. Test cases needed: (in)valid with unsigned, (in)valid with hex, etc. Note: there is no rule stating that you must load a multiple of four.
 					\item  \verb+beq, bne+ \textendash{} \verb+beq+, register, comma, register, $i$, nothing else. $i$ in this case can be an unsigned, negative, or hex number in the 16-bit range, or it could be the use of a label. In the case of a label, you calculate the numerical value by calculating: $$\frac{\text{location(label)} - \text{location counter} - 4}{4}$$
 					\item \verb+jr, jalr+ \textendash{} \verb+jr+, register, nothing else.
-					\item \verb+.word+ \textendash{} \verb+.word+, $i$, nothing else, where $i$ can be an unsigned, negative, or hex number in the 16-bit range, or it could be the use of a label. 
+					\item \verb+.word+ \textendash{} \verb+.word+, $i$, nothing else, where $i$ can be an unsigned, negative, or hex number in the 16-bit range, or it could be the use of a label.
 				\end{itemize}
 	\section{Loaders, Relocation, and Linkers} \lecture{January 28, 2013}
 		\subsection{Loaders}
@@ -897,7 +900,7 @@
 			\\ \\
 			A \textbf{linker} allows for the separate assembly of procedures. You can assemble \verb+main.asm+ and \verb+proc.asm+ separately with \verb+cs241.linkasm+ to generate two MERL files (\verb+main.merl+ and \verb+proc.merl+), then you can run both files through a linker and get \verb+both.merl+. You needn't worry about identifier conflicts for re-assembling.
 			\\ \\
-			If you feed \verb+main.asm+ into \verb+cs241.binasm+ (or \verb+cs241.linkasm+, or any other assembler), you'll get an error stating that you're using an undefined identifier (label). \verb+cs241.linkasm+ provides a mechanism for specifying that certain identifiers will be defined later. 
+			If you feed \verb+main.asm+ into \verb+cs241.binasm+ (or \verb+cs241.linkasm+, or any other assembler), you'll get an error stating that you're using an undefined identifier (label). \verb+cs241.linkasm+ provides a mechanism for specifying that certain identifiers will be defined later.
 			\begin{verbatim}
 			main.asm:            proc.asm:
 			  .import proc          .export proc
@@ -918,14 +921,14 @@
 				   .word 0xabc                   ; 0x00000010  0x00000abc
 				   lis $1                        ; 0x00000014  0x00000814
 
-				reloc1: 
+				reloc1:
 				   .word A                       ; 0x00000018  0x00000024
 				   jr $1                         ; 0x0000001c  0x00200008
-				   B:                                               
+				   B:
 				   jr $31                        ; 0x00000020  0x03e00008
-				   A:                                               
+				   A:
 				   beq $0, $0, B                 ; 0x00000024  0x1000fffe
-				reloc2: 
+				reloc2:
 				   .word B                       ; 0x00000028  0x00000020
 
 				endcode:
@@ -977,14 +980,14 @@
 				How do you create an archive? It could be just a folder. But on Linux, you use \verb+ar+ (which is an abbreviation for ``archive'') which produces an archive similar to a zip file.
 				\\ \\
 				The standard libraries on Linux systems are stored at \verb+/usr/lib+.
-				
+
 				\subsubsection{Dynamic Linking}
 					So far, we've been discussing \textbf{static linking}, where all external symbol references are resolved by combining with external symbol definitions to create REL entries. There are several shortcomings to static linking, however.
 					\begin{itemize}
 						\item If many programs use the same procedures/libraries, you get many copies of the procedures which wastes file space and RAM.
 						\item If you change a library procedure, you have to find and relink every program that uses it.
 					\end{itemize}
-					An alternative to static linking is \textbf{dynamic linking}. Dynamic linking defers the resolution of ESRs until execution time. The library is searched when the ESR-referenced routine is called. Dynamic linking is implemented by statically linking a \textbf{stub} for each external symbol reference. The stub is effectively a pointer to the (external) dynamic library, which can be updated without changing references to the stub (i.e. without relinking). 
+					An alternative to static linking is \textbf{dynamic linking}. Dynamic linking defers the resolution of ESRs until execution time. The library is searched when the ESR-referenced routine is called. Dynamic linking is implemented by statically linking a \textbf{stub} for each external symbol reference. The stub is effectively a pointer to the (external) dynamic library, which can be updated without changing references to the stub (i.e. without relinking).
 					\\ \\
 					Importantly, if multiple programs are running at once that use the same dynamically-linked library, the procedure will still only exist once in RAM. There won't be a separate instance of the library in RAM for each running program that needs it.
 					\\ \\
@@ -1030,7 +1033,7 @@
 			\item $L_3 = \set{\text{set of all MIPS binary programs that halt for all inputs}}$. You can't write a program to determine membership in this language.
 		\end{itemize}
 		Some languages are clearly easier to specify (precisely) than others.
-		\\ \\	
+		\\ \\
 		Noam Chomsky came up with a hierarchy that expressed four different types of formal languages.
 		\begin{itemize}
 			\item Regular languages (easiest, nice mathematical properties, but limited).
@@ -1160,7 +1163,7 @@
 					\end{tabular}
 				\end{center}
 				This table for $T$ isn't very intuitive. Let's look at the bubble diagram representing this DFA for a clearer picture.
-				
+
 				\begin{center}
 					\begin{tikzpicture}[scale=0.2]
 						\tikzstyle{every node}+=[inner sep=0pt]
@@ -1263,7 +1266,7 @@
 						\draw (37.86,-28.66) node [below] {$0,\mbox{ }4,\mbox{ }5,\mbox{ }6,\mbox{ }7,\mbox{ }8,\mbox{ }9$};
 					\end{tikzpicture}
 				\end{center}
-				
+
 				Every MIPS register must start with the dollar sign (\$). Keep in mind that only $\$0, \ldots, \$31$ are valid MIPS registers. So, if the next number is a 1 or a 2, we can have any second digit (from 0-9) to form a valid MIPS register. If the number is 3, we can only follow that up by a 0 or 1 (\$30 and \$31). We also need to handle all other single digit registers (\$0, \$4, \$5, \$6, \$7, \$8, \$9).
 				\\ \\
 				We could've made this differently by having multiple ``ok'' states, but those aren't necessary so all valid registers point to the same ``ok'' state in this diagram. We can point all complete paths to a single complete state because what happens from the complete state onwards does not differ. In this case, all complete states have no further path (except to an implied black hole), and all complete states are final states, so having one complete state (denoted ``ok'' on the bubble diagram) is acceptable.
@@ -1418,9 +1421,9 @@
 					\end{tikzpicture}
 				\end{center}
 
-				$T$ in this case is a total function. It has eight states because we need to keep track of three binary facts, which requires three bits of information ($2^3 = 8$). 
+				$T$ in this case is a total function. It has eight states because we need to keep track of three binary facts, which requires three bits of information ($2^3 = 8$).
 			\end{ex}
-			Similarly, if we had a DFA to determine if every letter in the English alphabet is included in a particular string, we would need $2^{26}$ states because we would need to store 26 bits of information. At some point, we say a number is large enough that \emph{in practice} we can treat it as an infinite number, despite it being finite. We wouldn't solve this problem with a DFA because $2^{26}$ is a number large enough that we wouldn't want to create a state for each of them. 
+			Similarly, if we had a DFA to determine if every letter in the English alphabet is included in a particular string, we would need $2^{26}$ states because we would need to store 26 bits of information. At some point, we say a number is large enough that \emph{in practice} we can treat it as an infinite number, despite it being finite. We wouldn't solve this problem with a DFA because $2^{26}$ is a number large enough that we wouldn't want to create a state for each of them.
 		\subsubsection{Searching and Scanning with DFAs} \lecture{February 11, 2013}
 			\begin{itemize}
 				\item \textbf{Recognition} answers the question ``is $x \in L$?'' This is what we've used DFAs for so far.
@@ -1576,7 +1579,7 @@
 					report result $y$, remove $y$ from $x$\;
 				}
 			\end{algorithm}
-			
+
 			In this algorithm, $L$ is the language of all tokens and separators. That is, $L = L_{\text{id}} \cup L_{\text{int}} \cup L_{\text{!}}$, where $L_{\text{int}}$ has this recognizer:
 			\begin{center}
 				\begin{tikzpicture}[scale=0.2]
@@ -1684,10 +1687,10 @@
 					\end{tikzpicture}
 				\end{center}
 
-				This is \underline{not} a DFA because T[start, a] = 1 and T[start, a] = 2, which is not allowed in a DFA. It is acceptable for an NFA, though. 
+				This is \underline{not} a DFA because T[start, a] = 1 and T[start, a] = 2, which is not allowed in a DFA. It is acceptable for an NFA, though.
 				\label{ex:nfa}
 			\end{ex}
-				
+
 			The transition function $T$ no longer has to be a function \textendash{} it can have multiple transition values for the same input symbols.
 			\\ \\
 			The rule is the same as before: if there is \underline{any} path that is followed to a finish state, then the string is considered to be in the language. With DFAs, we used the ``one-finger algorithm,'' but now we can't do that because there could be multiple paths we need to follow.
@@ -1710,8 +1713,8 @@
 			\end{center}
 			Additionally, we have $\Sigma = \set{a, b, c}, i = start, S = \set{start, 1, 2, 3, 4, 5, 6, 7}$, and $f = \set{5}$.
 			\\ \\
-			Note that we no longer need an error state because we are no longer required to make $T$ a total function, since it is doesn't need to be a function at all. 
-			\\ \\	
+			Note that we no longer need an error state because we are no longer required to make $T$ a total function, since it is doesn't need to be a function at all.
+			\\ \\
 			\textbf{NFA recognizer}: given an input string $x$, we expect output to be:
 			\begin{align*}
 				\text{output} &= \begin{cases}
@@ -2001,7 +2004,7 @@
 
 				This illustrates an important point: there are many ways to express any particular regular language with regular expressions. There is not necessarily a unique minimal regular expression for a language. Also, we don't care if the regular expression is ambiguous or not.
 			\end{ex}
-			
+
 			\begin{ex}
 				Let $\Sigma = \set{0, 1, +}$, and $L(R)$ be the sum of one or more integers. We can express this as the regular expression $R$:
 				\begin{align*}
@@ -2022,7 +2025,7 @@
 
 			\subsubsection{Extensions}
 				Extensions give a more terse (sometimes exponentially) notation but they still only specify the regular languages.
-				
+
 				\begin{center}
 					\begin{tabular}{c|c}
 						Extended RE & Meaning \\ \hline
@@ -2038,7 +2041,7 @@
 				We could have expressed the earlier expression as $\set{0|1(0|1)^\star{} \text{\textbf{|}} +}$.
 				\\ \\
 				In practice, many people call regexps ``regular expressions,'' but they aren't true regular expressions because they can express more than just the regular languages. When \emph{we} say ``regular expressions,'' we really mean true regular expressions (expressions that can only represent regular languages).
-			
+
 			\subsubsection{Regular Expressions to Finite Automata}
 				Any regular expression can be converted to an $\epsilon$-NFA that recognizes the language. In fact, an $\epsilon$-NFA for a regular expression will always have exactly one final state. In addition, recall that any $\epsilon$-NFA can be converted to a DFA using subset construction.
 				\\ \\
@@ -2065,7 +2068,7 @@
 
 			That is, $L$ is the language of all strings containing $n$ opening parentheses and $n$ (matching) closing parentheses.
 		\end{ex}
-		
+
 		\begin{defn}
 			There are two definitions of \textbf{context-free languages}. A context-free language is:
 			\begin{itemize}
@@ -2151,7 +2154,7 @@
 			\begin{defn}
 				$\gamma_i$ where $S \stackrel{\star}{\implies} \gamma_i$ is called a \textbf{derivation step} or a \textbf{sentential form}.
 			\end{defn}
-			
+
 		\subsection{Parsing}
 			Given some $x \in L(G)$, find a derivation for $x$. Parsing and recognition is when if $x \in L(G)$, you find a derivation, otherwise you reject. It's your duty to reject $x \not \in L(G)$, but it'd be nice if you could also be somewhat informative as to why $x \not \in L(G)$.
 			\\ \\
@@ -2172,7 +2175,7 @@
 					\gamma_n&: &\implies& cdhg \\
 					\gamma_{n - 1}&: cd \mapsto A &\implies& Ahg \\
 					\gamma_{n - 2}&: g \mapsto B &\implies& AhB \\
-					\gamma_{n - 3}&: AhB \mapsto S &\implies& S 
+					\gamma_{n - 3}&: AhB \mapsto S &\implies& S
 				\end{align*}
 
 				This is a \textbf{rightmost derivation}.
@@ -2325,7 +2328,7 @@
 					\Tree [.dcls [.dcls [.$\epsilon$ ] ] [.dcl [.INT ] [.STAR ] [.ID ] ] [.BECOMES ] [.NUM ] [.SEMI ] ]
 				\end{figure}
 
-				Technically, this shouldn't be valid, because type \verb+int*+ cannot be assigned the value 25. However, this context-free grammar does not enforce that \textendash{} the context-sensitive syntax will. It was decided that this grammar was sufficient to construct a parse tree, although if we wanted we could enforce that constrain in a context-free grammar. 
+				Technically, this shouldn't be valid, because type \verb+int*+ cannot be assigned the value 25. However, this context-free grammar does not enforce that \textendash{} the context-sensitive syntax will. It was decided that this grammar was sufficient to construct a parse tree, although if we wanted we could enforce that constrain in a context-free grammar.
 				\\ \\
 				It is sometimes the case that adding seemingly-simple constraints like these will make the grammar quite complicated, so it's sometimes better to just leave certain restrictions for enforcement through a context-sensitive syntax instead.
 			\end{ex}
@@ -2336,7 +2339,7 @@
 			\begin{defn}
 				$xA\beta \implies x \gamma \beta := A \to \gamma \in R$. That is, you must substitute the first nonterminal symbol.
 			\end{defn}
-			
+
 			\begin{defn}
 				$\alpha \stackrel{\star}{\implies} \beta := \alpha = \beta \text{ OR } \exists \gamma \cdot \alpha \implies \gamma, \gamma \stackrel{\star}{\implies} \beta$.
 			\end{defn}
@@ -2469,7 +2472,7 @@
 			\\ \\
 			To get around this, we'll introduce the notion of a term $T$. We'll re-define the rules for $E$ once more:
 			\begin{align*}
-				E &\to T \\ 
+				E &\to T \\
 				E &\to E + T \\
 				T &\to I \\
 				T &\to T * I
@@ -2574,7 +2577,7 @@
 					}
 					assert stack = $\epsilon$\;
 				\end{algorithm}
-				
+
 				\lecture{March 4, 2013}
 				The crux of a stack-based top-down parser is in each derivation step, we have this invariant:
 				\begin{align*}
@@ -2626,7 +2629,7 @@
 						\textbf{B} & $\set{}$ & $\set{}$ & $\set{}$ & $\set{}$ & $\set{5}$ & $\set{}$ & $\set{6}$ & $\set{}$ & $\set{}$ & $\set{}$ \\ \hline
 					\end{tabular}
 				\end{center}
-				
+
 				The $(B, e)$ position in this table means if $e$ is the next symbol, rule 5 must be used. We could have drawn this table without empty sets all over the place \textendash{} blank spaces indicate empty sets of applicable rules.
 				\\ \\
 				Here's the pseudocode for an LL(1) parser for input $x$: \\
@@ -2649,7 +2652,7 @@
 					assert stack = $\epsilon$;
 				\end{algorithm}
 
-				\underline{Aside}: if we added the rule (7) $A \to abdc$, we would have a set of two elements for $[A, a]$, which means the grammar would no longer be an LL(1) grammar. LL(1) is a deterministic parser. If we wanted to support multiple rules, like by adding that rule (7), we could build a non-LL(1) nondeterministic parser. 
+				\underline{Aside}: if we added the rule (7) $A \to abdc$, we would have a set of two elements for $[A, a]$, which means the grammar would no longer be an LL(1) grammar. LL(1) is a deterministic parser. If we wanted to support multiple rules, like by adding that rule (7), we could build a non-LL(1) nondeterministic parser.
 				\\ \\
 				Here's a sample LL(1) parse:
 				\begin{center}
@@ -2668,7 +2671,7 @@
 						$\vdash abhg \dashv$ & $\vdash abhg \dashv$ & $\epsilon$ & $\epsilon$ & assert stack = $\epsilon$ \\ \hline
 					\end{tabular}
 				\end{center}
-	
+
 
 				\textbf{Constructing the Predict Function}: we'll need some helper functions.
 				\begin{itemize}
@@ -2762,7 +2765,7 @@
 						\gamma_1 &= AhB \\
 						\gamma_0 &= S
 					\end{align*}
-					
+
 					\textbf{Stack-Based Bottom-Up Rightmost Parse}:
 					\\ \\
 					The key observation is that we have the stack written the opposite way:
@@ -2786,7 +2789,7 @@
 				\end{ex}
 
 			\subsubsection{LR(1) Parsing}
-				LR(1) parsing means we're analyzing input from left to right, using rightmost reversed derivations, and we have one symbol of lookahead. 
+				LR(1) parsing means we're analyzing input from left to right, using rightmost reversed derivations, and we have one symbol of lookahead.
 				\\ \\
 				The oracle, in this case, looks at the stack and the next symbol that has yet to be read. It tells you either:
 				\begin{itemize}
@@ -2794,7 +2797,7 @@
 					\item Reduce[start, symbol]: a set of rules to use to reduce the expression. Hopefully, this is at most one rule.
 				\end{itemize}
 
-				You can build this oracle in a sneaky way. 
+				You can build this oracle in a sneaky way.
 				\\ \\
 				In 1966, Donald Knuth made this key observation: when you do a stack-based rightmost derivation in reverse, the set of valid stacks is a regular language. That is, a valid stack can be recognized by a DFA. Assuming a stack is valid, if we push the next symbol onto the stack, will we still have a valid stack (will we still be in a final state)?
 				\\ \\
@@ -2830,11 +2833,11 @@
 								$\vdash$ Ahg $\dashv$ & $\vdash$ Ah & $\vdash$ abh & g $\dashv$ & shift h \\
 								$\vdash$ Ahg $\dashv$ & $\vdash$ Ahg & $\vdash$ abhg & $\dashv$ & shift g \\
 								$\vdash$ AhB $\dashv$ & $\vdash$ AhB & $\vdash$ abhg & $\dashv$ & reduce $B \to g$ \\
-								$\vdash$ S $\dashv$ & $\vdash$ S & $\vdash$ abhg & $\dashv$ & reduce $S \to AhB$ \\ 
+								$\vdash$ S $\dashv$ & $\vdash$ S & $\vdash$ abhg & $\dashv$ & reduce $S \to AhB$ \\
 								$\vdash$ S $\dashv$ & $\vdash$ S $\dashv$ & $\vdash$ abhg $\dashv$ & $\epsilon$ & shift $\dashv$ \\ \hline
 							\end{tabular}
 						\end{center}
-						
+
 						We don't need the actual symbols in the stack in this table. You may still want to keep them to make more intuitive sense, or if you're doing syntax-directed translation. But, if we wanted, we could label them just as numbers that will represent state numbers:
 						\begin{center}
 							\begin{tabular}{|c|c|c|c|c|}
@@ -2847,11 +2850,11 @@
 								$\vdash$ Ahg $\dashv$ & 2,4,9 & $\vdash$ abh & g $\dashv$ & shift h \\
 								$\vdash$ Ahg $\dashv$ & 2,4,9,13 & $\vdash$ abhg & $\dashv$ & shift g \\
 								$\vdash$ AhB $\dashv$ & 2,4,9,14 & $\vdash$ abhg & $\dashv$ & reduce $B \to g$ \\
-								$\vdash$ S $\dashv$ & 2,3 & $\vdash$ abhg & $\dashv$ & reduce $S \to AhB$ \\ 
+								$\vdash$ S $\dashv$ & 2,3 & $\vdash$ abhg & $\dashv$ & reduce $S \to AhB$ \\
 								$\vdash$ S $\dashv$ & 2,3,10 & $\vdash$ abhg $\dashv$ & $\epsilon$ & shift $\dashv$ \\ \hline
 							\end{tabular}
 						\end{center}
-						
+
 						We can construct this DFA with the state identifiers being the numbers from the stack in the table above:
 						\begin{center}
 						\begin{tikzpicture}[scale=0.2]
@@ -2960,10 +2963,10 @@
 						\draw (39.55,-7.03) node [below] {$\dashv$};
 						\end{tikzpicture}
 						\end{center}
-						
+
 						This DFA recognizes two different things: valid stacks \emph{and} stacks ending in right-hand sides of rules.
 				\end{ex}
-				
+
 				Goto[state, symbol] $\to$ state: this is the same DFA transition function from before.
 				\\ \\
 				Reduce[state, symbol] $\to 2^R$: yields a set of rules to reduce. If |Reduce[s, a]| > 1, then we have a reduce conflict (the oracle can't decide between two rules to reduce) which means this is not an LR(1) grammar. If |Reduce[s, a]| > 0 and Goto[s, a] $\in$ f, then we have a shift/reduce conflict.
@@ -2982,13 +2985,13 @@
 					}
 					accept if all assertions succeeded\;
 				\end{algorithm}
-				
+
 				In an LR(1) parse, if you ever shift $\dashv$, you know for a fact that your parse succeeded.
 		\subsection{Building a Parse Tree From a Bottom-Up Parse} \lecture{March 11, 2013}
 			A parse tree is a much more general and flexible representation over a rightmost reversed derivation.
 			\\ \\
 			\underline{Key}: in addition to the (parse) stack, use a parallel tree stack. For every symbol on the stack, we'll have a corresponding parse (sub)tree on the tree stack.
-			
+
 			\begin{ex}
 				We have an augmented grammar with this set of rules $R$:
 				\begin{align*}
@@ -3029,13 +3032,13 @@
 			\begin{algorithm}[H]
 				stack = Goto[stack, $\vdash$]\;
 				tree\_stack = makeleaf($\vdash$)\;
-				
+
 				\For{every $c$ in $x \dashv$}{
 					\While{reduce $A \to \alpha$}{
 						// LR(1) reduction: \\
 						pop $|\alpha|$ symbols from stack\;
 						push Goto[top of stack, c]\;
-						
+
 						// Tree build: \\
 						pop $|\alpha|$ subtrees from the tree\_stack\;
 						push makenode(root = A, subtrees = nodes that were just popped)\;
@@ -3048,7 +3051,7 @@
 				// Parse tree is now on the top of the tree\_stack.
 			\end{algorithm}
 			To perform syntax-directed translation, you just need to traverse the parse tree to determine meaning for each subtree.
-			
+
 			\subsubsection{Notes about Assignment 8}
 				Questions 1 and 2 are about reversed rightmost derivations, with the questions being similar to ones asked on assignment 7.
 				\\ \\
@@ -3067,7 +3070,7 @@
 					\item Add extra transition states indicating when to reduce.
 				\end{enumerate}
 
-				For each rule in the grammar you're given, you must construct several rules each placing a dot in a unique position on the right-hand side of the rule. These will represent states in the DFA. 
+				For each rule in the grammar you're given, you must construct several rules each placing a dot in a unique position on the right-hand side of the rule. These will represent states in the DFA.
 				\\ \\
 				Here are the states for the augmented grammar presented earlier.
 				\begin{align*}
@@ -3109,7 +3112,7 @@
 		At the end of the day, we want to be able to take a WLPP source file, send it into a compiler, and get MIPS assembly object code, which has equivalent meaning. We could then take the produced object code and send it into an assembler to get MIPS binary machine code, if we wanted.
 		\\ \\
 		The compiler portion consists of a scanner (from A7), which produces some output that will be fed into a parser (from A8), which will produce a WLPPI file. The WLPPI file will be the input for context sensitive analysis (from A9), which will produce a symbol table and a decorated parse tree, both of which will be fed into synthesis (from A10 and A11), where code generation occurs.
-		
+
 		\subsection{Context-Sensitive Analysis}
 			Context-sensitive analysis involves all syntax rules that are not conveniently expressed (or are not possible to express) in the scanner and parser. In WLPP, these are rules pertaining to symbols and their types.
 			\\ \\
@@ -3123,7 +3126,7 @@
 			\begin{itemize}
 				\item Every expression must have a valid type. In WLPP, types are \verb+int+ and \verb+int*+.
 			\end{itemize}
-			
+
 			There are many other context-sensitive rules for WLPP \textendash{} refer to the \href{https://www.student.cs.uwaterloo.ca/~cs241/wlpp/WLPP.html}{WLPP specification}.
 
 			\subsubsection{Building a Symbol Table}
@@ -3221,7 +3224,7 @@
 			lis $4
 			.word 4
 			lis $3  ;; expr -> term -> factor -> NUM (1) subtree
-			.word 1 
+			.word 1
 			sw $3, -4($30)
 			sub $30, $30, $4
 			lis $5 ;; term -> factor -> NUM (2) subtree
@@ -3236,7 +3239,7 @@
 			\begin{figure}[H]
 				\Tree [.expr [.expr [.term [.factor [.{NUM (1)} ] ] ] ] [.+ ] [.term [.factor [.{NUM (2)} ] ] ] ]
 			\end{figure}
-			
+
 			\textbf{Conventions used in this object code}:
 			\begin{itemize}
 				\item \$4 always contains 4.
@@ -3250,13 +3253,13 @@
 				\qroofy=5
 				\Tree [.expr [.{expr (C1)} \qroof{?}. ] [.+ ] [.{term (C2)} \qroof{?}. ] ] \\
 			\end{figure}
-			
+
 			In the above tree, C1 is decorating that instance of expr with:
 			\begin{verbatim}
 			lis $3
 			.word 1
 			\end{verbatim}
-			
+
 			Similarly, C2 is decorating that instance of term with:
 			\begin{verbatim}
 			lis $3
@@ -3324,7 +3327,7 @@
 			\end{verbatim}
 
 			Let's look at more conventions, specifically how to represent parameters. For now (and we'll change this later when we represent variables), \$1 is the first parameter and \$2 is the second parameter. We're going to need to expand our symbol table to include how each symbol is represented:
-			
+
 			\begin{center}
 				\begin{tabular}{|c|c|c|}
 					\hline
@@ -3436,7 +3439,7 @@
 				add $3, $0, $0 ;; 0 represents NULL in this case
 				sw $3, 4($29)
 				\end{verbatim}
-				
+
 				Note that the representation for NULL is conventionally zero. This is \emph{okay}, but ideally we'd choose a NULL representation that is not a power of four, so as not to confuse it with an actual memory address.
 				\\ \\
 				When representing variables of type int*, there are a few possibilities. You could store a word number, or an offset in an array, but it's highly recommended that you store the RAM address itself.
@@ -3537,7 +3540,7 @@
 				\end{itemize}
 
 				You might be able to be clever and make your compiler look ahead and realize that Code(bar) doesn't use \$6 (for instance), so Code(foo) could put its result in \$6 directly in order to skip the stack steps. This might be something to try for the bonus, but otherwise, use the \$3 stack-based approach for simplicity to get things working.
-			
+
 			\subsubsection{Statements}
 				Let's look at printing next. We don't want to reproduce all the print code every time we want to print something. Instead, we'll use a procedure. Recall the WLPP grammar rule for printing:
 				\begin{align*}
@@ -3694,7 +3697,7 @@
 				    beq $3, $0, else123
 				    code(statements_1) ;; true part
 				    beq $0, $0, done123
-				
+
 				else123:
 				    code(statements_2) ;; false part
 
@@ -3724,7 +3727,7 @@
 				                                                true123: ;; out of line, somewhere
 				                                                    statements_1
 				    statements_2                                    beq $0, $0, done123
- 
+
 				done123:
 				\end{verbatim}
 
@@ -3797,7 +3800,7 @@
 
 		The first step to implementing a heap is to identify some available RAM. This RAM is typically in one continuous block, which we will call the \textbf{arena}.
 		\\ \\
-		Where do we put the arena? It'll have to use some space normally available for the stack. We could create a fixed size arena by dedicating a certain number of words directly above your program's code, and leave the rest of the space for the stack. 
+		Where do we put the arena? It'll have to use some space normally available for the stack. We could create a fixed size arena by dedicating a certain number of words directly above your program's code, and leave the rest of the space for the stack.
 		\\ \\
 		The given \verb+alloc.asm+ file implements a fixed-size arena. That's why it must be at the very end of our program. It has a label \verb+end:+ at the very bottom of it that indicates where your program ends, which is also where the arena begins.
 		\\ \\
@@ -3826,11 +3829,11 @@
 				}
 				\Else{fail}
 			\end{algorithm}
-			
+
 			The loaf of bread \verb+alloc()+ algorithm runs in O(1) time, as does its \verb+init()+ algorithm (which just populates the \verb+bread+ and \verb+end+ pointers).
 			\\ \\
 			This algorithm is a bit hostile because it completely ignores \verb+free+s. Storage is never reclaimed.
-		
+
 		\subsection{Available Space List}
 			The available space list technique involves building up an array of elements that represent available blocks of memory, split into fixed-size pieces. Each block points to the next one, and we also have three pointers. The \verb+avail+ pointer points to the next available piece of memory. We also have \verb+tmp+ and \verb+i+ pointers, pointing to the end of our list.
 			\\ \\
@@ -3856,7 +3859,7 @@
 			\end{algorithm}
 
 			\verb+free(p)+ trivially runs in constant $O(1)$ time by following this algorithm:
-			
+
 			\begin{algorithm}[H]
 				next(p) = avail\;
 				avail = p\;
@@ -3875,7 +3878,7 @@
 			\end{algorithm}
 
 			\verb+alloc()+ now follows this algorithm, which also runs in constant $O(1)$ time (as before):
-			
+
 			\begin{algorithm}[H]
 				\uIf{avail $\ne$ NULL}{
 					tmp = avail\;
@@ -3898,7 +3901,7 @@
 			\end{algorithm}
 
 			This entire algorithm runs in constant time! However, it's important to remember that this algorithm only works for allocations of fixed size.
-		
+
 		\subsection{Implicit Freedom}
 			Modern languages that aren't archaic all have implicit \verb+free+. How does that work?
 			\\ \\
@@ -3939,10 +3942,10 @@
 			This copying has the effect of relocating code, since code is stored in memory. That might be tough in languages like C++ where memory addresses are part of the language. You could always convert pointers to integers, strings, or do other crazy things (like reverse the bits in a pointer), and the compiler will not be aware of that use.
 			\\ \\
 			Andrew Appel argued that instead of using the stack (which would involve a push and pop), just use \verb+alloc()+ instead. It's equivalent to just pushing onto the stack, and removes the need for the popping code.
-			
+
 		\subsection{Holes} \lecture{April 3, 2013}
 			We will refer to unallocated areas of memory as \textbf{holes}. That is, holes are areas of memory that are available to fill with some new data. In fixed-size memory allocation, all holes have the same size as each other.
-		
+
 		\subsection{Variable-Sized Dynamic Memory Allocation}
 			When we start to discuss variable-sized dynamic memory allocation, all of the properties we discussed for fixed-size allocation go out the window. But what would happen if we \emph{tried} to apply the same concepts to variable-sized allocation?
 			\\ \\
@@ -3956,7 +3959,7 @@
 				\item \textbf{Worst fit}: choosing the biggest hole we can find. This experiences \textbf{hole erosion} \textendash{} that is, all holes will tend to become very similar sizes over time.
 				\item \textbf{Best fit}: choosing the smallest hole that's big enough. Most of the time, you'll be able to use most of the hole you selected, but that'll leave a sliver of storage remaining. That sliver will be hard to fill later on. You waste less space now, but more space later (as the slivers accumulate in different areas of your arena).
 			\end{itemize}
-			
+
 			The choice between these three approaches is not clear cut because there is no analytical way to compare these.
 			\\ \\
 			With fixed-size allocation, you'll fail only if all memory is full, since all holes are the same size. With variable-size allocation, you'll fail if there is no hole that is big enough.
@@ -3966,7 +3969,7 @@
 			So, we'll need to keep track of the length of holes, and the length of allocated areas. We might as well standardize on a way to store these lengths. When you allocate $n$ bytes of storage, you'll actually allocate a few extra bytes that you won't expose to the user. These bytes will act as a header that can contain the length of the block as well as a pointer to the next block in the available space list (and a footer, which will be discussed later).
 			\\ \\
 			\textbf{Fragmentation} occurs when small holes collectively have enough space to satisfy an \verb+alloc(n)+ request, but no single hole is big enough to satisfy that request. This occurs with the best fit approach because the holes that turn into sliver-holes become smaller and smaller over time.
-		
+
 			\subsubsection{Coalescing Adjacent Holes}
 				When you \verb+free+ an area, combine it with adjacent hole(s) if there are any. This has the consequence of no two holes ever being beside each other anymore.
 				\\ \\
@@ -3979,7 +3982,7 @@
 					\item $p$ has other allocated memory on its right, and a hole on the left. We expand the hole as $p$ is freed. This causes no change in the number of holes.
 					\item $p$ is surrounded by allocated memory on both sides. This results in a new hole as $p$ is freed.
 				\end{itemize}
-				
+
 				We need some way of indicating which blocks of memory are holes and which are allocated. We could add another bit to the header. This introduces a problem, though: how do we find the header of the previous area, if we don't know its size? We could add the length of the block to the end of each area (adding a footer), as well as keeping the length in the header. We also need a pointer backwards to the previous area in the available space list. This makes our linked list a doubly linked list.
 				\\ \\
 				At the end of the day, each block of memory will have:
@@ -3987,7 +3990,7 @@
 					\item \textbf{Header}: length of the block, pointer forward in the available space list, pointer backward in the available space list, and a \verb+hole?+ bit.
 					\item \textbf{Footer}: length of the block.
 				\end{itemize}
-				
+
 			\subsubsection{The Buddy System}
 				The \verb+alloc.asm+ file we were given for assignment 11 implements the buddy system approach. This approach works by allocating a number of words that is a power of two. This has the consequence of there only being $\lg n$ possible sizes, which means up to 50\% of memory could be wasted in the worst case.
 				\\ \\
@@ -3996,25 +3999,25 @@
 				The buddy system approach doesn't perform better, and it's not easier to implement than the other approaches. It's just an alternative.
 				\\ \\
 				The bottom-line of variable-sized allocations is there's no perfect solution. It sucks. It gets particularly messy if you can't do relocation, such as in C/C++.
-				
+
 		\subsection{The 50\% Rule}
 			Donald Knuth has stated many important results in computer science. One of them applies here, called The 50\% Rule.
-			
+
 			\begin{theorem}[The 50\% Rule]
 				At equilibrium, the number of holes tends to be approximately half the number of allocated areas.
 			\end{theorem}
-			
+
 			There's also an interesting corollary to this.
-			
+
 			\begin{corollary}
 				If there is as much free space as allocated space in the arena, the average hole size is double the average allocated area.
 			\end{corollary}
-			
+
 			In the first fit approach, the size will on average be twice the size you actually need. You'll find an appropriate hole pretty quickly as a result of this. We can even go so far as to say that finding an appropriate hole with the first fit approach operates in constant $O(1)$ time.
-		
+
 		\subsection{Beyond Memory}
 			These principles apply beyond memory. Allocations on permanent filesystems have the same key issues. Most filesystems do a pretty good job at reducing fragmentation, but Windows' filesystem does not and sometimes users have to manually de-fragment Windows machines.
-	
+
 	\section{Compiler Optimization} \lecture{April 5, 2013}
 		Optimizing a compiler involves seeing into the future. Compiler optimization is not strictly a mathematical problem. The combinatorics and optimization people get pissed when we call it compiler ``optimization,'' because that implies that there's an optimal solution, but there is not.
 		\\ \\
@@ -4023,34 +4026,34 @@
 		The halting problem also has an effect here. If we could determine if a piece of code would result in an infinite loop, we could make further improvements with that in mind.
 		\\ \\
 		We'll aim to \emph{improve} our compilers as much as possible, using a proxy measurement technique of some sort.
-		
+
 		\subsection{Folding}
 			Folding is the act of evaluating constant expressions at compile-time. For example, \verb|x = 1 + 2 + 3;| could be replaced by \verb|x = 7;|. Similarly, \verb|y = x + 2;| could be replaced by \verb|y = 9;|, but only if we know that $x$ is not changed between the two expressions involving it.
 			\\ \\
-			Code(expr) implicitly returns a tuple containing (encoding, value). Up until this point, we've always returned (register, 3), because we've always placed the result of the expression in \$3. 
+			Code(expr) implicitly returns a tuple containing (encoding, value). Up until this point, we've always returned (register, 3), because we've always placed the result of the expression in \$3.
 			\\ \\
 			If we implement folding, we would return something like (register, 3) or (constant, 7) in some cases (where 3 could be any arbitrary register, and 7 is the arbitrary value of the constant).
 			\\ \\
 			Code(expr + term) will return the result of this addition if the result of the expression and the result of the term are both constant.
-			
+
 		\subsection{Common Subexpression Elimination}
 			Let's say you had the following code:
 			\begin{verbatim}
 				x = y + z * 3;
 				a = b + z * 3;
 			\end{verbatim}
-		
+
 			Notice that \verb+z * 3+ occurs in both of these expressions. \verb+x * 3+ is called a \textbf{common subexpression}. We can eliminate common subexpressions like these by only performing that computation once, like this:
 			\begin{verbatim}
 				t = z * 3;
 				x = y + t;
 				a = b + t;
 			\end{verbatim}
-		
+
 			However, it's important to note that we can only do this if the value of $z$ does not change between the two uses.
 			\\ \\
 			Similarly, when we have \verb|x = x + 1|, we can avoid computing the address of $x$ twice. You can instead just compute the address for the lvalue $x$, and then use that to get the data value of $x$, without computing the address twice.
-		
+
 		\subsection{Dead Code Elimination}
 			Sometimes source code contains dead code. For instance:
 			\begin{verbatim}
@@ -4060,19 +4063,19 @@
 				  code_B
 				}
 			\end{verbatim}
-			
+
 			Notice that in this code sample, $\text{code}_A$ will never be executed. After we perform folding, we can often determine if one path of a branch will never be taken, like in this case. So, we can remove all the code for $\text{code}_A$ and we can also remove all the code for the if statement itself, leaving only $\text{code}_B$.
 			\\ \\
 			We could keep track of the values of variables (as much as possible) in our compiler. Then, we'd be able to determine if a condition like \verb|x < 0| will ever be truthful or not.
-			
+
 		\subsection{Partial/Abstract Evaluation}
 			We could keep track of whether a given variable $x$ is $< 0, = 0,$ or $> 0$ at any given point. We can determine this for variables recursively in an expression like \verb|x = y * z| as well, by knowing the abstract evaluation of $y$ and $z$.
 			\\ \\
 			You may even be able to determine a bounded set of values that these variables could possibly have. Alternatively, you may be able to come up with a regular expression that represents all values that $x$ could take on.
-		
+
 		\subsection{Loop Optimization}
 			Loop optimization is done typically to improve the run-time speed of the programs you produce. It doesn't necessarily make your code smaller. In fact, in many cases optimized loops will actually produce more code than unoptimized loops.
-			
+
 			\subsubsection{Lifting}
 				Let's say you have code like this:
 				\begin{verbatim}
@@ -4086,7 +4089,7 @@
 					   .
 					}
 				\end{verbatim}
-				
+
 				Let's assume $y$ and $z$ don't change inside the loop. We could lift this statement out of the loop so it'll only be executed once, as needed. Basic lifting would produce (incorrect) code like this:
 				\begin{verbatim}
 					x = y + z * 3; // lifted code
@@ -4115,24 +4118,24 @@
 					  x[i] = 25;
 					}
 				\end{verbatim}
-				
+
 				Note that \verb|x[i] = 25;| is equivalent to \verb|*(x + i) = 25;|, which implicitly multiplies $i$ by 4. We want to avoid performing that multiplication on every iteration of the loop. Instead, we'll produce code like this:
 			\begin{verbatim}
 				for(I = 0; I < 40; I += 4) {
 				  (addr(x) + I) = 25;
 				}
 			\end{verbatim}
-			
+
 		\subsection{Register Allocation}
 			Register allocation is the mother of all variable optimizations. We want to use registers for storing variables and for storing temporary results of subexpressions.
 			\\ \\
 			There is a problem, however. Recall that we only have a finite number of registers.
-			
+
 			\subsubsection{Register Allocation for Variables}
 				Throughout our program, we'll keep track of \textbf{live ranges} of each variable. A live range is the point at which a variable is assigned to the last point where the variable is used with that assignment.
 				\\ \\
 				For example:
-			
+
 				\begin{verbatim}
 					int x = 0;
 					int y = 0;
@@ -4145,7 +4148,7 @@
 					z = 7;
 					println(z);
 				\end{verbatim}
-			
+
 				In this code, the live range for $x$ is from \verb|x = 3;| to \verb|println(x);|. The live range for $y$ is from \verb|y = 4;| to \verb|println(y);|. Finally, the live range for $z$ is from \verb|z = 7;| to \verb|println(z);|.
 				\\ \\
 				This follows the great philosophical discussion where if a tree falls in a forest and no one is there to hear it, does it really make a sound? If we set a variable to a value that is never used, do we have to set that variable to that value? The answer is no.
@@ -4155,8 +4158,8 @@
 				We can re-use registers for two different variables that don't interfere. This is called \textbf{register assignment}.
 				\\ \\
 				Register assignment is an example of graph coloring. Graph coloring is a well known NP-complete problem.
-				
-			\subsubsection{Register Allocation for Subexpressions}	
+
+			\subsubsection{Register Allocation for Subexpressions}
 				Let's now look at using registers to store the temporary results of subexpressions. Recall from earlier, we had Code(expr + term) being:
 				\begin{verbatim}
 					code(expr)
@@ -4165,7 +4168,7 @@
 					pop $5
 					add $3, $5, $3
 				\end{verbatim}
-			
+
 				Alternatively, we could have also generated:
 				\begin{verbatim}
 					code(term)
@@ -4174,7 +4177,7 @@
 					pop $5
 					add $3, $3, $5
 				\end{verbatim}
-			
+
 				Both of these approaches do a lot of stupid work, all because of our convention that all results are to be placed in \$3. Since we're placing all of our results in \$3, we have to constantly store that result somewhere else (i.e. on the stack). This is called \textbf{register spilling}.
 				\\ \\
 				It'd be nice to avoid register spilling whenever possible. It'd be nice if we could specify where we want the result to be placed, or to have some way to indicate that the result was placed in an alternate location. We have to tell our code generator which registers it's allowed to use, in order to indicate to it where it can place its result, as well as which registers it is allowed to clobber.
@@ -4185,14 +4188,14 @@
 					code(term, avail\{$r$}) ;; set difference
 					add $t, $r, $s ;; where $t is a member of avail.
 				\end{verbatim}
-				
+
 				We could've produced similar code for the case where we executed code(term) first:
 				\begin{verbatim}
 					code(term, avail) ;; let's say this returned that it placed its result in $r.
 					code(expr, avail\{$r}) ;; set difference
 					add $t, $s, $r ;; where $t is a member of avail.
 				\end{verbatim}
-			
+
 				Ultimately, we need to determine how many registers a given expression needs, and then we choose to evaluate the one that needs the maximum number of registers first.
 				\\ \\
 				This approach works remarkably well. The number of registers you need is equal to the depth of the expression tree, at worst.
@@ -4200,7 +4203,7 @@
 			Most compilers in the real world use a flow representation of the program their given. A flow representation analyzes the control flow of the program, rather than the in-order flow of the given program.
 			\\ \\
 			If you're interested in learning more about this, check out the \href{http://en.wikipedia.org/wiki/Static_single_assignment_form}{page about it on Wikipedia}.
-	
+
 	\section{Course Overview and Other Courses} \lecture{April 8, 2013}
 		\subsection{Course Overview \& Final Coverage}
 			The course started off discussing using abstractions that were implemented by other people, including:
@@ -4209,7 +4212,7 @@
 				\item Stored program computers. We programmed MIPS programs in machine code.
 				\item MIPS assembly language. We examined the meaning of assembly language and we programmed MIPS programs using assembly language.
 			\end{itemize}
-		
+
 			We then proceeded to implement some of our own abstractions:
 			\begin{itemize}
 				\item Assemblers.
@@ -4221,12 +4224,12 @@
 						\item Scanning and searching.
 					\end{itemize}
 			\end{itemize}
-		
+
 			All of the topics discussed up to this point were covered by the midterm. They may also appear on the final, but with less weight than the remainder of the course. The final will mostly consider the following topics:
 			\begin{itemize}
 				\item Context-free languages and their grammars.
 				\item Derivations.
-				\item Top-down (LL(1)) and bottom-up parsing (LR(1)). 
+				\item Top-down (LL(1)) and bottom-up parsing (LR(1)).
 					\begin{itemize}
 						\item Note that it's not easy to construct the DFA needed by a LR(1) parser by hand (we used an automated tool for this).
 					\end{itemize}
@@ -4251,7 +4254,7 @@
 						\item We aren't expected to write code that optimizes a compiler.
 					\end{itemize}
 			\end{itemize}
-			
+
 		\subsection{Related Waterloo CS Courses}
 			There are several other computer science courses offered at Waterloo that are relevant to CS 241 and its content.
 			\begin{itemize}

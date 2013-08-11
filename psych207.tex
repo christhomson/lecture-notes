@@ -23,7 +23,10 @@
 \begin{document}
 	\title{\bf{PSYCH 207: Cognitive Processes}}
 	\date{Winter 2013, University of Waterloo \\ \center Notes written from Jonathan Fugelsang's lectures.}
-	\author{Chris Thomson\thanks{See \href{https://github.com/christhomson/lecture-notes}{github.com/christhomson/lecture-notes}.}}
+	\author{Chris Thomson\thanks{See \href{https://github.com/christhomson/lecture-notes}{github.com/christhomson/lecture-notes}.
+	\ifdefined\sha % Also, \commitDate and \commitTime should be defined.
+		Last modified: \commitDateTime{} ({\href{https://github.com/christhomson/lecture-notes/commit/\sha}{\sha}}).
+	\fi}}
 	\maketitle
 	\newpage
 	\tableofcontents
@@ -34,7 +37,7 @@
 			The grading scheme is four in-class non-cumulative multiple-choice exams, equally weighted. There is also a 4\% bonus for research participation through SONA. You should get the textbook.
 			\\ \\
 			See the course syllabus for more information -- it's available on \href{https://learn.uwaterloo.ca/}{Waterloo LEARN}.
-		
+
 		\subsection{Introduction to Cognitive Processes}
 			\begin{quote}
 				``Cognitive psychology refers to all processes by which the sensory input is transformed, reduced, elaborated, stored, recovered, and used." \textendash{}  Neisser, 1967
@@ -46,15 +49,15 @@
 			Conscious experience is an \underline{active reconstructive process}. The external world and our internal representation of that world is \emph{not} an exact match. Our brain ends up filling in many gaps, making many assumptions.
 			\\ \\
 			Our brain cannot decontextualize the world.
-			
+
 	\section{Historical Overview \& Approaches} \lecture{January 10, 2013}
 		\underline{Attention} (notice \emph{something}) $\to$ \underline{Perception} (perceive that \emph{something}) $\to$ \underline{Pattern Recognition} (recognize what that \emph{something} is) $\to$ \underline{Memory} (recall previously-known attributes about the \emph{something}).
 		\\ \\
 		Our cognitive apparatus is ultimately an efficient simplification process.
-		
+
 		\subsection{Antecedent Philosophies and Traditions}
 			Many researchers take very strong views on empiricism vs. nativism, however reality is most likely somewhere between the two. The debate for structuralism vs. functionalism is similar.
-		
+
 			\subsubsection{Empiricism}
 				\begin{itemize}
 					\item Locke, Hume, and Stuart Hill.
@@ -62,7 +65,7 @@
 					\item Key is the \underline{association} between experiences.
 					\item This is observational learning -- the nurture side of the nature vs. nurture argument.
 				\end{itemize}
-				
+
 			\subsubsection{Nativism}
 				\begin{itemize}
 					\item Plato, Descartes, and Kant.
@@ -70,13 +73,13 @@
 					\item Innate causal mechanisms.
 					\item This is the nature side of the nature vs. nurture argument.
 				\end{itemize}
-				
+
 			\subsubsection{Structuralism}
 				\begin{itemize}
 					\item Wundt and Baldwin.
 					\item The focus is on the elemental components of mind.
 					\item Very reductive -- it's about stripping out context to understand the very basic elements.
-					
+
 					\item \underline{Introspection} (method)
 						\begin{itemize}
 							\item Report on the basic elements of consciousness.
@@ -85,7 +88,7 @@
 							\item Basic elements of the conscious experience include processes like identifying colors.
 						\end{itemize}
 				\end{itemize}
-			
+
 			\subsubsection{Functionalism}
 				\begin{itemize}
 					\item William James.
@@ -98,7 +101,7 @@
 							\item Must get out of the lab to conduct functionalist research.
 						\end{itemize}
 				\end{itemize}
-			
+
 			\subsubsection{Behaviorism}
 				\begin{itemize}
 					\item Watson and Skinner.
@@ -107,7 +110,7 @@
 					\item A behaviourist sees psychology as an objective, experimental branch of science. Psychology's goal is the prediction and control of behaviour. Therefore, they make behavior (not consciousness) the focus of their research.
 					\item Focus is on the relation between input and output, but the steps in between (which make up cognitive psychology) do not matter to behaviourists.
 				\end{itemize}
-				
+
 			\subsubsection{Gestalt Psychology}
 				\begin{itemize}
 					\item Wertheimer, Koffka, and Kohler.
@@ -121,7 +124,7 @@
 					\item How does the mind simplify the world to focus our attention on things/objects that matter?
 					\item We need to study phenomena in their entirety, since a unified whole is different than the sum of its parts.
 				\end{itemize}
-			
+
 			\subsubsection{Individual Differences}
 				\begin{itemize}
 					\item Sir Francis Galton.
@@ -129,21 +132,21 @@
 					\item Mental imagery was studied in both a lab and in natural settings. The vividness of mental imagery differs from person to person.
 					\item Galton invented the process of using questionnaires to assess abilities. This process has been used by cognitive psychologists ever since.
 				\end{itemize}
-			
+
 		\subsection{The Cognitive Revolution}
 			\begin{itemize}
 				\item The speed of information publishing, sharing, and retrieval has become very fast.
 				\item We're now running into the cognitive speed limit as our limiting factor, whereas before communication channels (snail mail, travel) slowed down research.
 				\item Recent advances in neuroimaging are also a mini-revolution in cognitive psychology.
 			\end{itemize}
-			
+
 			\subsubsection{Human factors engineering presented new problems}
 				\begin{itemize}
 					\item A machine should be designed for human use -- for use in the most efficient way possible. Knowledge of human cognition is required in order to increase efficiency.
 					\item We have to think about the $7 \pm 2$ information limitation of the human mind, and how to get around the limit.
 					\item NASA hires cognitive psychologists to study how the human mind operates in extreme conditions. Cognitive psychologists develop the user interfaces that astronauts use.
 				\end{itemize}
-			
+
 			\subsubsection{Behaviorism failed to adequately explain language}
 				\begin{itemize}
 					\item Skinner in 1957 (behaviorism): children learn language by imitation and reinforcement.
@@ -153,21 +156,21 @@
 							\item Children often use incorrect grammar, such as ``The boy hitted the ball'', despite a lack of reinforcement.
 						\end{itemize}
 				\end{itemize}
-				
+
 			\subsubsection{Localization of functions in the brain forced discussion of mind}
 				\begin{itemize}
 					\item Donald Hebb stated that some functions, like perception, are based on cell assemblies (collections of neurons).
 					\item Hubel and Weisel demonstrated the importance of early experiences on the development of the nervous system. Early experiences actually change how some cell assemblies physically develop.
 					\item Many things seem to happen without observational learning coming into play.
 				\end{itemize}
-				
+
 			\subsubsection{Development of computers and artificial intelligence gave a dominant metaphor}
 				\begin{itemize}
 					\item A computer takes input into short-term memory (RAM), may access long-term memory (a hard drive), and returns some output.
 					\item The mind may work in a similar way.
 					\item Perhaps we introspected and that's why we developed computers the way we did?
 				\end{itemize}
-				
+
 		\subsection{Paradigms of Cognitive Psychology}
 			\begin{itemize}
 				\item Emphasis is on serial processing.
@@ -175,13 +178,13 @@
 				\item The mind is an information processing system with systems of interrelated capacities.
 				\item All of these attributes are similar to that of typical computer systems.
 			\end{itemize}
-			
+
 			\subsubsection{Localist models}
 				\begin{itemize}
 					\item A symbolic concept, such as a letter, word, or meaning, is represented in your mind with a node.
 					\item You may have a node for `cat', `dot', or `house' (lexical knowledge). You may also have a node for `provides shelter', `barks', or `has four legs', all of which are boolean attributes (semantic knowledge).
 				\end{itemize}
-				
+
 			\subsubsection{Connectionism -- Neural network models}
 				\begin{itemize}
 					\item Parallel processing across a population of neurons.
@@ -190,21 +193,21 @@
 					\item Semantic knowledge and lexical knowledge for a particular symbolic concept have different activation patterns.
 					\item Units in neural networks are connected by weights that are modified by learning (positive weight $\to$ activation, negative weight $\to$ inhibition).
 				\end{itemize}
-		
+
 		\subsection{Major Assumptions of Approaches}
 			The major assumption of these approaches is that research must be done in the lab. This is believed for two key reasons:
 			\begin{itemize}
 				\item We must uncover the basic processes underlying cognition in order to fully understand it.
 				\item Processes are stable across situations, and can only be researched under controlled conditions (such as in a lab).
 			\end{itemize}
-		
+
 		\subsection{Other Approaches}
 			\subsubsection{The Evolutionary Approach}
 				\begin{itemize}
 					\item Mental processes are subject to natural selection.
 					\item Cognition is based off our history, and special processes have developed over time.
 				\end{itemize}
-				
+
 			\subsubsection{The Ecological Approach}
 				\begin{itemize}
 					\item Cognitive processes develop with culture and differ depending on the context and situation.
@@ -236,13 +239,13 @@
 				Brain damage or damage simulated by TMS can be useful in determining how the brain works. There are typically two approaches researchers take:
 				\begin{itemize}
 					\item \textbf{What function is supported by a given brain region?} Patients with similarly-damaged brains are examined for common cognitive deficits.
-					\item \textbf{What brain regions support a given cognitive function?} People with realizable behavior deficits are examined for common brain damage. 
+					\item \textbf{What brain regions support a given cognitive function?} People with realizable behavior deficits are examined for common brain damage.
 				\end{itemize}
 			\subsubsection{Brain Processing}
 				There is no direct means of knowing exactly what's happening in the mind. It can only be inferred or introspected. There are a couple of technologies that are commonly used to achieve this.
 				\begin{itemize}
 					\item \textbf{Functional magnetic resonance imaging (fMRI)}. fMRI specializes in providing a spatially-accurate view, however it is bad at timing brain activity. It works by indirectly measuring blood flow throughout the brain using magnets to distinguish between oxygenated and deoxygenated blood. fMRI machines are extraordinarily expensive -- they cost millions of dollars.
-					\item \textbf{Electroencephalography (EEG)}. EEG specializes in providing a temporally-accurate view, however it is bad at spatial representation (opposite of fMRI). It works by measuring electrical activity on the scalp. It's much faster than fMRI because electrical signals are instantaneous. EEG machines are not nearly as expensive as fMRI machines -- EEG machines cost about \$100,000. EEGs are used for event-related potential (ERP), which measures the brain's response that is a direct result of some event. 
+					\item \textbf{Electroencephalography (EEG)}. EEG specializes in providing a temporally-accurate view, however it is bad at spatial representation (opposite of fMRI). It works by measuring electrical activity on the scalp. It's much faster than fMRI because electrical signals are instantaneous. EEG machines are not nearly as expensive as fMRI machines -- EEG machines cost about \$100,000. EEGs are used for event-related potential (ERP), which measures the brain's response that is a direct result of some event.
 				\end{itemize}
 		\subsection{Structure of the Brain}
 			\subsubsection{Brain Planes}
@@ -279,7 +282,7 @@
 		\subsection{Localization of Function}
 			There is a lot history in cognitive psychology of claiming that functions are localized within the brain.
 			\\ \\
-			One theory was that different mental abilities were independent and autonomous functions that were carried out in different parts of the brain. The physical size of the regions was said to be related to the important of that particular cognitive function. They even made career suggestions based on bumps on your head, because bumps were said to indicate brain regions that were abnormally large. Obviously, this is not true, but localization might be! 
+			One theory was that different mental abilities were independent and autonomous functions that were carried out in different parts of the brain. The physical size of the regions was said to be related to the important of that particular cognitive function. They even made career suggestions based on bumps on your head, because bumps were said to indicate brain regions that were abnormally large. Obviously, this is not true, but localization might be!
 			\subsubsection{Faulty Assumptions}
 				\begin{itemize}
 					\item Brain location/region size $\ne$ power/capacity. Sometimes there is a loose relation between a brain region's size and its power, but it's not as black-and-white as it was described to be.
@@ -294,7 +297,7 @@
 				\end{itemize}
 
 				This is a \textbf{double dissociation}, where two patients' deficits correspond to the opposite deficit as each other.
-		
+
 		\subsection{Brain Imaging Techniques}
 			Brain imaging is mostly done with fMRI today. Brain imaging today can measure healthy, normal brains, whereas in the past there was only an opportunity to analyze damaged brains.
 			\subsubsection{Functional Neuroimaging}
@@ -311,7 +314,7 @@
 				The level of brain activity in various regions is illustrated on results by a color scheme. The more yellow a region is, the more active it is. Red regions are less active. Results and statistics are often superimposed over an MRI image. Statistics could also be plotted, with the \% change being plotted against time.
 	\section{Perception} \lecture{January 17, 2013}
 		\textbf{Housekeeping Note}: the first exam is next Thursday (January 24, 2013), and it will contain 30 multiple-choice questions and 2 short answer questions.
-		
+
 		\begin{itemize}
 			\item What our mind interprets is not a true representation of the world, but it's fairly close.
 			\item Our retinas are magical. They define edges and boundaries for the objects we see.
@@ -331,7 +334,7 @@
 				\item Percepts are built from low-level features only.
 				\item There are three general classes of bottom-up processes: template matching, feature analysis, and prototype matching.
 			\end{itemize}
-			
+
 			\subsubsection{Template Matching}
 				\begin{itemize}
 					\item An external stimulus is matched with an internal template (a stored pattern in memory).
@@ -353,7 +356,7 @@
 					\item The mind first recognizes individual features, then it recognizes the combination of them at a deeper level.
 					\item \underline{Examples}: pandemonium, recognition by components (RBC; involves complex features), and word reading.
 				\end{itemize}
-				
+
 				There are several advantages to feature analysis.
 				\begin{itemize}
 					\item It's more flexible than template matching.
@@ -551,7 +554,7 @@
 				\item Listening to a radio broadcast is not very distracting. However, talking on a cell phone increases the probability of errors and increases response time (which isn't good in situations like driving).
 				\item Why are cell phone calls bad? Two reasons: you have to hold the cell phone, and if you were instead talking to other people in the car, those people would be mindful of the situation whereas people on the other end of the line are not.
 			\end{itemize}
-	
+
 	\section{Memory Structures}
 		\begin{itemize}
 			\item Short-term memory records 20 seconds worth of information. If this information is rehearsed a sufficient amount, it'll be moved to long-term memory.
@@ -624,7 +627,7 @@
 				\item Long-term memory is akin to a hard drive in a computer. Both store information indefinitely. Information in LTM is stored forever, but it becomes harder to retrieve the information over time.
 				\item Our conscious memories are also a reconstructive process.
 				\item \textbf{Serial Position Effect}:
-					\begin{itemize} 
+					\begin{itemize}
 						\item You're given 20 items to recall.
 						\item You'll remember the last couple of items because of the \underline{recency effect}. These items are stored in sensory or working memory, and will be wiped out over time (i.e. with a delay between the items being presented and the time to recall them).
 						\item You'll also remember the first few items because of the \underline{primacy effect}. These items are stored in long-term memory and can be wiped out through subvocal rehearsal.
@@ -662,7 +665,7 @@
 						\item ``Recollection of an event, or a certain aspect, occurs if and only if properties of the trace of the event are sufficiently similar to the retrieval information.'' \textendash Endel Tulving.
 						\item More cues at encoding time means you'll store a more accurate representation.
 						\item This principle is why witnesses to crimes are often taken to visit the scene of the crime again.
-						\item There is a \emph{slight} benefit to writing a test in the same room you learned it in. 
+						\item There is a \emph{slight} benefit to writing a test in the same room you learned it in.
 					\end{itemize}
 				\item \textbf{Context Dependent Memory}: information learned in a particular context is better recalled if recall takes place in the same context. Memory is dependent on the context it was encoded in.
 					\begin{itemize}
@@ -750,7 +753,7 @@
 						\item Put concepts into your own words in order to increase meaning.
 					\end{itemize}
 
-				\item \textbf{The Generation Effect}: 
+				\item \textbf{The Generation Effect}:
 					\begin{itemize}
 						\item The act of generating lecture notes is more beneficial than reading them afterwards.
 						\item Not taking your own lecture notes will come back to bite you.
@@ -763,7 +766,7 @@
 						\item Testing in the same room you learned the content in can benefit you.
 					\end{itemize}
 
-				\item \textbf{Distributed Practice}: 
+				\item \textbf{Distributed Practice}:
 					\begin{itemize}
 						\item It's better to learn information in many small periods rather than one large period.
 						\item The retention level for distributed studying is much higher (especially over time) than massed studying.
@@ -838,7 +841,7 @@
 						\item Rug: stand on, woven, soft, flat.
 					\end{itemize}
 				\item The prototypicality of a category member predicts the performance on a number of tasks.
-				\item For instance, if you were asked to identify if a given concept is included in a category (``is X a fruit?''), you would perform worse on less typical members. You'd respond slower to ``is tomato a fruit?'' than ``is apple a fruit?''. 
+				\item For instance, if you were asked to identify if a given concept is included in a category (``is X a fruit?''), you would perform worse on less typical members. You'd respond slower to ``is tomato a fruit?'' than ``is apple a fruit?''.
 				\item Concepts will still have features in common with other categories as well, just less features in common than the main category it's considered to be part of.
 			\end{itemize}
 
@@ -965,13 +968,13 @@
 				\item Spatial and visual processing are quite similar. Mathematical ability is highly associated with mental rotation ability (since spatial processing is really just comparing magnitudes).
 				\item \textbf{Symbolic difference effect}: if you create an image of two things, the difference between the two determines the performance of the comparison. For example, comparing an elephant and a cat is quicker than comparing a beaver to a cat or a mouse to a rat. Comparing 7 to 2 is faster than comparing 3 to 2.
 				\item Shepard and Metzler (1971) conducted an experiment where they asked participants to compare two objects and decide if they are the same. The objects were presented at different orientations/rotations. They discovered the time to compare is directly related to the degree of rotation required. In their experiment, there was a rotation rate of 60 degrees per second.
-				\item Men perform better than woman (by one standard deviation) for mental rotations on average, and the converse is true for information processing. Females typically have more math anxiety on average, so this is fairly logical. 
+				\item Men perform better than woman (by one standard deviation) for mental rotations on average, and the converse is true for information processing. Females typically have more math anxiety on average, so this is fairly logical.
 				\item Performance is likely better for rotating letters exactly 180 degrees (upside down).
 			\end{itemize}
 
 		\subsection{Image Scanning}
 			\begin{itemize}
-				\item Kosslyn in 1973 said if imagery is spatial (like perception), then it should take longer for participants to find parts that are located further away from the initial point of focus. 
+				\item Kosslyn in 1973 said if imagery is spatial (like perception), then it should take longer for participants to find parts that are located further away from the initial point of focus.
 				\item Kosslyn performed an experiment with a map, and discovered that people would take longer to scan larger distances in their mental imagery, which suggests that it is spatial.
 				\item However, this experiment could have suffered from experiment bias (the expected outcome of the experiment is obvious to participants) or other confounds (other variables).
 			\end{itemize}
@@ -1009,7 +1012,7 @@
 				\item The same neurons respond to perception and images. Neurons are actually category-specific, too.
 				\item In experiments, a ``sham'' is a magnetic pulse that is sent to the brain in an unrelated location. It's like a control condition to ensure that magnetic pulses are actually having an effect only where they hypothesize that an effect is occurring \textendash{} not just everywhere in the brain.
 			\end{itemize}
-	
+
 	\section{Language} \lecture{March 12, 2013}
 		\begin{itemize}
 			\item If you're given some distorted audio to listen to, you may not be able to understand it at all. However, if you're presented the text visually, you'll be able to hear the words in the distorted audio.
@@ -1032,9 +1035,9 @@
 					\item \textbf{Arbitrariness}: lack of necessary resemblance between a word or sentence and what it refers to.
 					\item \textbf{Discreteness}: system can be subdivided into recognizable parts.
 				\end{itemize}
-		
+
 				Out of the four characteristics, most other animals fail at meeting the productivity and arbitrary requirements of languages. Bee dances are not productive, and meerkats are not arbitrary in their communications.
-			
+
 			\subsubsection{Structure of Language}
 				\begin{itemize}
 					\item \textbf{Phoneme}: the smallest unit of sound we can make. For example: \textbf{m}at vs. \textbf{c}at.
@@ -1052,7 +1055,7 @@
 						\item A single phoneme sounds different depending on the context.
 					\end{itemize}
 				\item The auditory input we receive is dirty or messy. We may hear mumbles, or accents that are harder for us to understand.
-				\item We perceive speech by breaking its continuity up into chunks (words). 
+				\item We perceive speech by breaking its continuity up into chunks (words).
 				\item Like visual perception, context aids our interpretation of sounds and words, and can create illusions in some cases.
 				\item \textbf{Acoustic context effect}: perception of speech is context-sensitive. Neighboring stimuli can change how sound is perceived.
 				\item \textbf{Visual context effect}: watching a guy's lips say ``ga'' when his voice is actually saying ``ba'' will make you hear any number of things, even things like ``da.''
@@ -1096,7 +1099,7 @@
 				\item Thinking could either be focused or unfocused. Focused thinking is goal-based, problem solving. Unfocused thinking is daydreaming and unintentional.
 				\item People tend to think creative thinking falls under unfocused thinking, but Fugelsang argues that creative thinking does require goals / problem solving techniques.
 				\item Problems could be either well-defined (have a beginning and end, and have rules or guidelines), or they could be ill-defined otherwise.
-				\item The vast majority of psychologists tend to research focused problem solving in well-defined problems. 
+				\item The vast majority of psychologists tend to research focused problem solving in well-defined problems.
 				\item There's a lot of mystery/magic that happens in order to solve a problem. It's a huge black box. It's unconstrained.
 				\item Ill-defined problems potentially have no clear solution. It's hard to find a clear solution path for the problem. Specifically, it's hard to account for all potential variables.
 			\end{itemize}
@@ -1263,7 +1266,7 @@
 					\item In science, no theory can be absolutely proven to be true (or at least, by example it cannot be proven), but it can be proven to be false.
 					\item \textbf{Wason's Selection Task}: if the document has an A on one side, then it must have a 4 on the other. There might be some errors in the cards, but each card \emph{does} have one numerical side and one alphabetic side. Which of the following cards do you have to check for validity? A D 4 7.
 					\item Answer: A and 7. The A needs to be checked to ensure there's a 4. The 7 needs to be checked to ensure there's not an A.
-					\item A logically equivalent example could occur if you're asked to determine legal drinking ages. If you have someone drinking a beer, someone drinking a coke, someone who is 22, and someone who is 16, who do you need to check? 
+					\item A logically equivalent example could occur if you're asked to determine legal drinking ages. If you have someone drinking a beer, someone drinking a coke, someone who is 22, and someone who is 16, who do you need to check?
 					\item Answer: the beer drinker and the 16-year-old. We don't care who drinks coke and we don't care what a 22-year-old is drinking, since they're above the legal drinking age.
 					\item Why is the drinking age problem easier than the more abstract problem involving letters and numbered cards, despite them being logically equivalent? Our intuitions guide us based on our experiences. Also, cheater detection is innate.
 					\item We've evolved to have cheater detection \textendash{} that is, we're really good at determining if anyone is violating a social contract. We define cheating as someone who deliberately takes benefits without paying costs or meeting certain requirements.
@@ -1282,7 +1285,7 @@
 					\item The ability to form inferences about two events is part of the left hemisphere.
 					\item Each hemisphere responds differently to the kinds of relations it has to solve.
 				\end{itemize}
-				
+
 			\subsubsection{Decision Making, Emotion, and the Brain}
 				\begin{itemize}
 					\item Cognition is part of a highly interactive system involving the interplay between attention, perception, emotion, and social interactions.
@@ -1294,7 +1297,7 @@
 					\item This experiment is an example of a highly cognitive act that is affected by emotions.
 					\item Often times, emotional processing happens quicker than cognitive processing.
 				\end{itemize}
-	
+
 	\section{Individual Differences}
 		\begin{itemize}
 			\item There is less variability in low-level processes.
@@ -1302,7 +1305,7 @@
 			\item Recall that chess novices have a superficial representation of the board while experts have a deeper understanding. They define importance differently, too.
 			\item Individual differences and expertise will change cognition.
 		\end{itemize}
-		
+
 		\subsection{Aging}
 			\begin{itemize}
 				\item Aging also changes cognition as part of individual differences.
@@ -1316,9 +1319,9 @@
 						\item Synaptic degeneration which impairs communication between neurons.
 						\item Reductions in regional cerebral blood flow (rCBF) to the brain.
 					\end{itemize}
-					
+
 				\item Changes (1) and (3) can be slowed down, by doing things like aerobic exercises. It's hard to say the same about (2) because it's harder to measure.
-				
+
 				\item There are reductions in bottom-up perceptual processing abilities, and an increase in top-down processes (involving the frontal lobes), as people age. \lecture{April 2, 2013}
 				\item Compensatory strategies are used to alleviate these ability reductions.
 				\item Arthur Rubinstein, a pianist, used several compensatory strategies as he got older:
@@ -1327,12 +1330,12 @@
 						\item Optimization. He practiced these pieces more often.
 						\item Compensation. He would play slower before fast segments to make the fast segments seem faster. He did this to counteract his loss in mechanical speed.
 					\end{itemize}
-					
+
 				\item People often use distributed cognition (off-loading) more as they get older. They use Google more, or rely on partners/family members to fill in gaps.
 				\item A cue experiment was conducted where youth and adults had to remember pairs of words. The adults were separated into two groups: low performance, and high performance (at this specific task). The right hemisphere was active for this task for the youth. The older, low performance adults used the same neural tissue more intensively. The older, high performance adults used a combination of the corresponding (homologous) regions in both the left and right hemispheres.
 				\item The more active the mind is, the less of a memory deficit that forms over time. Surprisingly, physical exercise also helps maintain cognitive abilities. One study showed that regular exercise reduced the likelihood of developing Alzheimer's disease, even in people who were predisposed to the disease.
 			\end{itemize}
-			
+
 		\subsection{Sex Differences}
 			\begin{itemize}
 				\item People place a lot of emphasis on finding differences between the sexes, and not on other arbitrary differentiators like eye color.
@@ -1347,7 +1350,7 @@
 						\item \textbf{Lateralization}: it might be genetics. Women have more brain resources that are used for verbal processing. They have bilateral resources (both hemispheres), which makes them more likely to retain their verbal skills after brain damage than men. The reverse is true for men, and spatial abilities.
 					\end{itemize}
 			\end{itemize}
-			
+
 	\section{The Big Picture, and Future Directions}
 		\begin{itemize}
 			\item Conscious experience is largely reconstructive.
@@ -1361,7 +1364,7 @@
 					\item Bad ideas took slightly longer for both adults and teens, but teens took significantly longer than adults to think about bad ideas.
 					\item Why is this? Adults have an insula activation (an initial disgust response). It's an emotionally negative response. Meanwhile, teens activate the analytical regions of their brain.
 				\end{itemize}
-				
+
 			\item An fMRI could be used as a lie detector.
 				\begin{itemize}
 					\item Traditional polygraph detectors measure bodily response (sweating, heart rate), but they aren't helpful if the individual doesn't feel guilty.
@@ -1370,7 +1373,7 @@
 					\item Lies are indicated by heightened activity in the dorsomedial prefrontal cortex (DMPFC).
 					\item It's a good deception detector. It determines if the person is self-monitoring or not.
 				\end{itemize}
-				
+
 			\item Neuroeconomics: using cognitive science to think about the impact your behavior has on others.
 		\end{itemize}
 \end{document}

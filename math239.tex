@@ -60,12 +60,15 @@
 	\let\ref\Cref
 	\title{\bf{MATH 239: Introduction to Combinatorics}}
 	\date{Winter 2013, University of Waterloo \\ \center Notes written from Bertrand Guenin's lectures.}
-	\author{Chris Thomson\thanks{See \href{https://github.com/christhomson/lecture-notes}{github.com/christhomson/lecture-notes}.}}
+	\author{Chris Thomson\thanks{See \href{https://github.com/christhomson/lecture-notes}{github.com/christhomson/lecture-notes}.
+	\ifdefined\sha % Also, \commitDate and \commitTime should be defined.
+		Last modified: \commitDateTime{} ({\href{https://github.com/christhomson/lecture-notes/commit/\sha}{\sha}}).
+	\fi}}
 	\maketitle
 	\newpage
 	\tableofcontents
 	\newpage
-	
+
 	\section{Introduction, Permutations, and Combinations} \lecture{January 7, 2013}
 		\subsection{Course Structure}
 			The grading scheme is \st{50\%} 55\% final, 30\% midterm, \st{10\% quizzes} 5\% participation marks (clicker questions), and 10\% assignments. There are \st{ten quizzes and} ten assignments. \st{The quizzes will not be announced in advance, and each quiz consists of a single clicker question}. Assignments are typically due on Friday mornings at 10 am. in the dropboxes outside of MC 4066. The midterm exam is scheduled for March 7, 2013, from 4:30 pm - 6:20 pm. There is no textbook for the course, but there are course notes available at Media.doc in MC, and they're \emph{highly} recommended.
@@ -78,7 +81,7 @@
 			\begin{problem}
 				How many ways are there to cut a string of length 5 into parts of sizes 1 and 2?
 			\end{problem}
-		
+
 			Here are a few example cuts:
 			\\ \\
 			\begin{tabular}{|c|c|c|c|c|}
@@ -94,7 +97,7 @@
 				\hline
 			\end{tabular}
 			3 cuts: size 2, size 2, size 1.
-		
+
 			\begin{tabular}{|c|c|c|c|c|}
 				\hline
 				1 & 2 & 2 & 3 & 3 \\
@@ -103,50 +106,50 @@
 			3 cuts: size 1, size 2, size 2.
 			\\ \\
 			This is a finite problem. You could count all of the possibilities manually in this case. However, this problem could be made more complicated to a point where manually counting all possibilities would become quite cumbersome, as is the case in the next problem.
-		
+
 			\begin{problem}[Cuts]
 				How many ways are there to cut a string of size 372,694 into parts of sizes 3, 17, 24, and 96?
 			\end{problem}
-		
+
 			\begin{defn}
 				A positive integer $n$ has a \textbf{composition} $(m_1, m_2, \ldots, m_k)$, where $m_1, \ldots, m_k$ are positive integers and where $n = m_1 + m_2 + \ldots + m_k$. $m_1, \ldots, m_k$ are the \textbf{parts} of the composition.
 			\end{defn}
-		
+
 			Problem 1 could be rephrased as looking for the number of compositions of 5 where all parts are 1 or 2.
-		
+
 			\begin{problem}
 				How many compositions of $n$ exist such that all parts are odd?
 			\end{problem}
-		
+
 			\begin{problem}[Binary Strings]
 				Let $S = a_1, a_2, \ldots, a_n$ where $a_i \in \set{0, 1}$. How many strings $S$ exist?
 			\end{problem}
-		
+
 			For each $a_i$, there is the choice between $0$ or $1$, and that choice is independent for each character of the string (for each $a_i$). So, there are $2^n$ binary strings of length $n$.
-		
+
 			\begin{problem}
 				How many binary strings of size $n$ exist that do not include the substring $1100$?
 			\end{problem}
-		
+
 			For example: $1010\underline{1100}101 \not \in S$.
-		
+
 			\begin{problem}
-				How many binary strings of size $n$ exist such that there is no odd-length sequences of zeroes? 
+				How many binary strings of size $n$ exist such that there is no odd-length sequences of zeroes?
 			\end{problem}
-		
+
 			For example: $1001001\underline{000}11 \not \in S$.
-		
+
 			\begin{problem}[Recurrences]
 				How many times does a recursive function get called for a particular input $n$?
 			\end{problem}
-		
+
 		\subsection{Sample Graph Theory Problems}
 			\begin{problem}
 				For any arbitrary map of regions, colour the regions such that no two touching boundaries do not have the same colour, with the least number of colours possible.
 			\end{problem}
-		
+
 			The \textbf{four-colour theorem} states that you can always do this with four colours. It's also always possible to colour these regions with five colours. It's \emph{sometimes} possible to colour the regions with three or fewer colours, depending on the layout of the regions and their boundaries.
-		
+
 		\subsection{Permutations and Combinations}
 			\subsubsection{Set Notation}
 				The usual set and sequence notation is used in this course. $(1, 2, 3)$ is a sequence (where order matters), and $\set{1, 2, 3}$ is a set (where order does not matter).
@@ -155,9 +158,9 @@
 
 			\subsubsection{Permutations}
 				\begin{defn}
-					A \textbf{permutation} of $[n]$ is a rearrangement of the elements of $[n]$. The number of permutations of a set of $n$ objects is $n \times (n - 1) \times \ldots \times 1 = n!$. 
+					A \textbf{permutation} of $[n]$ is a rearrangement of the elements of $[n]$. The number of permutations of a set of $n$ objects is $n \times (n - 1) \times \ldots \times 1 = n!$.
 				\end{defn}
-			
+
 				For example: the number of permutations of $6$ objects is $6 \times 5 \times 4 \times 3 \times 2 \times 1 = 6!$ permutations.
 				\\ \\
 				Why is this the case? Simple: there are $n$ choices for the first position, $(n - 1)$ choices for the second position, $(n - 2)$ choices for the third position, and so on, until there's $1$ choice for the $n$th position.
@@ -172,80 +175,80 @@
 
 				Let's consider a more specific case: how many 4-subsets of 6 are there? $\frac{6 \times 5 \times 4 \times 3}{4!}$.
 				\\ \\
-				For simplicity's sake, we will introduce notation for this, which we will refer to as a \textbf{combination}, denoted as 
+				For simplicity's sake, we will introduce notation for this, which we will refer to as a \textbf{combination}, denoted as
 					$\binom{n}{k} = \frac{n!}{k!(n-k)!}$ where $n, k \in \mathbb{Z} \ge 0$.
-				
+
 				\begin{proposition}
 					There are $\binom{n}{k}$ $k$-subsets of $[n]$.
 				\end{proposition}
-				
+
 				\subsubsection{Application: Binomial Theorem} \lecture{January 9, 2013}
 					\begin{align*}
 						(1 + x)^n = \sum_{k = 0}^{n} \binom{n}{k} x^k
 					\end{align*}
-					
+
 					Why is this true?
-					
+
 					\begin{align*}
 						(1 + x)^3 = \overbrace{(1 + x)}^1\overbrace{(1 + x)}^2\overbrace{(1 + x)}^3 = 1 + 3x + 3x^2 + x^3 = \binom{3}{0} + \binom{3}{1}x + \binom{3}{2}x^2 + \binom{3}{3}x^3
 					\end{align*}
-					
+
 					\begin{proof}
 						\begin{align*}
 							(1 + x)^n = \overbrace{(1 + x)}^1 \overbrace{(1 + x)}^2 \cdots \overbrace{(1 + x)}^n
 						\end{align*}
-						
+
 						In order to get $x^k$, we need to choose $x$ in $k$ of $\set{1, \ldots, n }$. There are $\binom{n}{k}$ ways of doing this.
 					\end{proof}
-		
+
 		\section{Simple Tools for Counting}
 			\subsection{Partitioning}
 				Sets $S_1, S_2$ partition the set $S$ if $S = S_1 \union S_2$ and $S_1 \intersection S_2 = \emptyset$.
-				
+
 				\begin{ex}
 					\begin{align*}
-						S &= [5] = \begin{cases} 
+						S &= [5] = \begin{cases}
 							S_1 = \set{1, 2 } \\
 							S_2 = \set{3, 4, 5}
 						\end{cases} \\
 						|S| &= |S_1| + |S_2|
 					\end{align*}
 				\end{ex}
-				
+
 				\begin{proposition}
 					$\displaystyle 2^n = \sum_{k = 0}^{n} \binom{n}{k}$
 				\end{proposition}
-				
+
 				\begin{proof}
 					We will discuss two proof methods.
-					
+
 					\begin{enumerate}
 						\item \textbf{Algebraic proof}. Set $x = 1$ in the Binomial Theorem.
 						\item \textbf{Combinatorial proof}. We will count the left-hand side and the right-hand side in different ways to reach the same result.
-						
+
 						Let $S$ be the set of subsets of $[n]$. $|S| = 2^n$, since for every element of $[n]$ we have two possibilities: include or don't include the element in $S$.
-						
-						\underline{Aside}: suppose $n = 2$. Then $S = \set{\emptyset, \set{1}, \set{2}, \set{1, 2}}$. 
-						
+
+						\underline{Aside}: suppose $n = 2$. Then $S = \set{\emptyset, \set{1}, \set{2}, \set{1, 2}}$.
+
 						Partition $S$ into $S_0, S_1, \ldots, S_n$, where $S_k$ is the set of $k$-subsets of $[n]$.
-						
+
 						\begin{align*}
 							\underbrace{|S|}_{2^n} = \underbrace{|S_0|}_{\binom{n}{0}} + \underbrace{|S_1|}_{\binom{n}{1}} + \cdots + \underbrace{|S_n|}_{\binom{n}{n}}
 						\end{align*}
 						\qedhere
 					\end{enumerate}
 				\end{proof}
-				
+
 				\begin{proposition}
 					$\displaystyle \binom{n}{k} = \binom{n - 1}{k} + \binom{n - 1}{k - 1}$
 				\end{proposition}
-				
+
 				\begin{proof}
 					Let $S$ be the set of $k$-subsets of $[n]$. Then $|S| = \binom{n}{k}$. Partitioning $S$, let $S_1$ be the subsets of $S$ containing $n$, and let $S_2$ be the subsets of $S$ not containing $n$.
 					\\ \\
 					It's easy to see that $|S_1| = \binom{n - 1}{k - 1}$ ($n$ is already included in our choices) and $|S_2| = \binom{n - 1}{k}$. We now have $|S| = |S_1| + |S_2| = \binom{n - 1}{k - 1} + \binom{n - 1}{k}$.
 				\end{proof}
-				
+
 			\subsection{Pascal's Triangle}
 				Pascal's Triangle is a triangle where each value is determined by the sum of its two direct parents. The uppermost value is 1.
 				\\ \\
@@ -258,23 +261,23 @@
 						$n = 4$:&  1 &    &  4 &    &  6 &    &  4 &    &  1\\\noalign{\smallskip\smallskip}
 					\end{tabular}
 				\end{center}
-				
+
 				\begin{proposition}
 					$\displaystyle \binom{q + r}{q} = \sum_{i = 0}^{r} \binom{q + i - 1}{q - 1}$
 				\end{proposition}
-				
+
 				For example: let $q = 3, r = 2$. Then we have: $\displaystyle \binom{5}{3} = \binom{2}{2} + \binom{3}{2} + \binom{4}{2}$.
-				
+
 				\begin{proof}
 					Let $S$ be the set of $q$-subsets of $[q + r]$, so $|S| = \binom{q + r}{q}$. Partition $S$ such that $S_i$ is the set of $q$-subsets where the largest element is $q + i$ (where $i = 0, \ldots, r$).
 					\\ \\
 					We have: $|S| = |S_0| + |S_1| + \cdots + |S_r|$. Note that $|S_i| = \binom{q + i - 1}{q - 1}$. That gives us:
-					
+
 					\begin{align*}
 						\underbrace{|S|}_{\binom{q + r}{q}} = \underbrace{\sum_{i = 0}^{r} |S_i|}_{\binom{q + i - 1}{q - 1}}
 					\end{align*}
 				\end{proof}
-		
+
 		\subsection{Injections, Bijections, and Onto} \lecture{January 11, 2013}
 			Let's consider a function $f: S \to T$.
 			\begin{defn}
@@ -292,7 +295,7 @@
 			\begin{proposition}
 				If $S$ and $T$ are finite, $|S| = |T|$ if $f$ is bijective.
 			\end{proposition}
-			
+
 			\begin{defn}
 				$g$ is the inverse of $f$ if:
 				\begin{enumerate}
@@ -300,16 +303,16 @@
 					\item For all $y \in T, f(g(y)) = y$.
 				\end{enumerate}
 			\end{defn}
-			
+
 			In order to show that a function has a bijection, find the inverse function.
-			
+
 			\subsection{Application: Binomial Coefficients}
 				\begin{proposition}
 					$\displaystyle \binom{n}{k} = \binom{n}{n - k}$
 				\end{proposition}
-				
+
 				\begin{proof}
-					I will prove this proposition in a combinatorial proof using the bijection technique. We want to show that the cardinalities are the same. 
+					I will prove this proposition in a combinatorial proof using the bijection technique. We want to show that the cardinalities are the same.
 					\\ \\
 					Let $S_1$ be the set of $k$-subsets of $[n]$, so $|S_1| = \binom{n}{k}$, as shown earlier. Let $S_2$ be the set of $(n-k)$-subsets of $[n]$, so $|S_2| = \binom{n}{n - k}$. We need to show that $|S_1| = |S_2|$, so we need to show that there is a bijection between $S_1$ and $S_2$, $f: S_1 \to S_2$.
 					\\ \\
@@ -317,7 +320,7 @@
 					\\ \\
 					The bijective function is $f(A) = [n]\backslash A$ (the complement function). Check: $f$ is its own inverse (let $g = f$).
 				\end{proof}
-				
+
 	\section{Power Series and Generating Functions}
 		\subsection{Power Series}
 			\begin{defn}
@@ -325,23 +328,23 @@
 					\begin{align*}
 						A(x) = \sum_{i \ge 0} a_i x^i
 					\end{align*}
-					
+
 					This is called a \textbf{power series}.
 			\end{defn}
-			
+
 			\begin{ex}
 				$a_i = 2^i \implies A(x) = 1 + 2x + 4x^2 + 8x^3 + \cdots$
 			\end{ex}
 
 			If the sequence is finite, it is just a polynomial.
-			
+
 			\subsubsection{A General Counting Problem}
 				Let $S$ be the set of objects $\sigma$. Each object $\sigma$ has a weight $w(\sigma)$. We want to know how many objects of $S$ have some weight $k$.
-				
+
 				\begin{ex}
 					Let $\sigma \subseteq [n], w(\sigma) = |\sigma|$. The question becomes: how many $k$-subsets of $[n]$?
 				\end{ex}
-				
+
 				\begin{ex}
 					Let $\sigma$ be a set of coins (1\cent, 5\cent, 10\cent, 25\cent, \$1, \$2), and let $w(\sigma)$ be the total value of the coins in $\sigma$.
 					\\ \\
@@ -353,13 +356,13 @@
 				\begin{align*}
 					\phi_S(x) = \sum_{\sigma \in S} x^{w(\sigma)}
 				\end{align*}
-				
+
 				This is called the \textbf{generating function for S, w}.
 			\end{defn}
-			
+
 			\begin{ex}
 				Let $S = \set{\sigma | \sigma \subseteq \set{1, 2, 3} }, w(\sigma) = |\sigma|$.
-				
+
 				\begin{center}
 					\begin{tabular}{c|c|c}
 						$\sigma$ & $w(\sigma)$ & $x^{w(\sigma)}$ \\ \hline
@@ -373,10 +376,10 @@
 						$\set{1, 2, 3}$ & 3 & $x^3$ \\
 					\end{tabular}
 				\end{center}
-				
+
 				$\phi_S(x) = 1 + 3x + 3x^2 + x^3 = (1 + x)^3$ is the generating function. Notice that the coefficients of each term are the number of objects who have that the weight indicated by the exponent of the $x$ in that term.
 			\end{ex}
-			
+
 			\textbf{Remember}: the generating function for $S$ with weights $w$ is $\phi_S(x) = \sum_{k \ge 0} a_k x^k$, where $a_k$ is the number of objects of size $k$ in $S$.
 
 			\begin{ex}
@@ -385,7 +388,7 @@
 				\begin{align*}
 					\phi_S(x) = \sum_{k \ge 0} \binom{n}{k} x^k = (1 + x)^n
 				\end{align*}
-				
+
 				Note that $\binom{n}{k}$ is included because that's the number of $k$-subsets of $[n]$. $\phi_S(x) = (1 + x)^n$ by the binomial theorem.
 			\end{ex}
 
@@ -413,13 +416,13 @@
 			\begin{proof}
 				We will prove the two parts of the proposition separately. The average weight clearly follows from those two results.
 				\begin{enumerate}
-					\item 
+					\item
 						\begin{align*}
 							\phi_S(x) = \sum_{\sigma \in S} x^{w(\sigma)}
 						\end{align*}
 						Choose $x = 1$. Then $\phi_S(1) = \sum_{\sigma \in S} 1 = |S|$.
 
-					\item 
+					\item
 						\begin{align*}
 							\phi_S'(x) = \sum_{\sigma \in S} w(\sigma)x^{w(\sigma) - 1}
 						\end{align*}
@@ -462,7 +465,7 @@
 			\begin{defn}
 				$B(x)$ is the \textbf{inverse} of $A(x)$ if $A(x)B(x) = 1$ (alternatively, $B(x)A(x) = 1$).
 				\\ \\
-				We will use the notation $B(x) = \frac{1}{A(x)}$ to indicate that $B(x)$ is the inverse of $A(x)$, and vice versa. 
+				We will use the notation $B(x) = \frac{1}{A(x)}$ to indicate that $B(x)$ is the inverse of $A(x)$, and vice versa.
 			\end{defn}
 
 			\begin{ex}
@@ -490,7 +493,7 @@
 				\begin{align*}
 					\underbrace{(1 - x + x^2 - x^3 + x^4 - \cdots)(b_0 + b_1x + b_2x^2 + \cdots)}_{(\star)} = 1
 				\end{align*}
-				
+
 				\begin{align*}
 					[x^0](\star) = 1 \implies 1 \cdot b_0 = 1 &\implies b_0 = 1 \\
 					[x^1](\star) = 0 \implies 1 \cdot b_1 - 1 \cdot b_0 = 0 &\implies b_1 = b_0 = 1 \\
@@ -525,7 +528,7 @@
 				\textbf{Some useful formul\ae}:
 					\begin{align*}
 						\frac{1}{1 - x} = 1 + x + x^2 + x^3 + \cdots &\text{ since } 1 = (1 + x + x^2 + \cdots)(1 - x) \\
-						\frac{1 - x^{k+1}}{1-x} = 1 + x + x^2 + \cdots + x^k &\text{ since } 1 - x^{k+1} = (1 + x + x^2 + \cdots + x^k)(1-x) 
+						\frac{1 - x^{k+1}}{1-x} = 1 + x + x^2 + \cdots + x^k &\text{ since } 1 - x^{k+1} = (1 + x + x^2 + \cdots + x^k)(1-x)
 					\end{align*}
 			\subsubsection{Compositions}
 				\begin{defn}
@@ -555,7 +558,7 @@
 					\\ \\
 					We have $A(B(x)) = 1 + (x + x^2)^1 + (x + x^2)^2 + \cdots$. In order to show that this is a formal power series, we need to show that the coefficient of $x^k$ (which is $a_k$) is finite for all $k$.
 				\end{ex}
-				
+
 				\begin{theorem}
 					Let $A(x)$ and $B(x)$ be formal power series, and $[x^0]B(x) = 0$ ($B(x)$'s constant is zero). Then $A(B(x))$ is a formal power series.
 				\end{theorem}
@@ -603,7 +606,7 @@
 
 				The cardinality of $A \times B$ is the product of the cardinalities of $A$ and $B$: $|A \times B| = |A||B|$.
 		\subsection{The Sum and Product Lemmas}
-			Let's consider a bin of two red marbles -- one large marble (denoted $R$), and one small marble (denoted $r$). We define $A$ to be the set of all selections of $\ge 1$ marbles. We know: 
+			Let's consider a bin of two red marbles -- one large marble (denoted $R$), and one small marble (denoted $r$). We define $A$ to be the set of all selections of $\ge 1$ marbles. We know:
 			\begin{align*}
 				A &= \set{\set{r}, \set{R}, \set{r, R} } \\
 				w(\sigma) &= |\sigma| \\
@@ -621,7 +624,7 @@
 					\phi_S(x) = \underbrace{(x + x + x^2)}_{\phi_A(x)} + \underbrace{(x  + x^2)}_{\phi_B(x)}
 				\end{align*}
 				This works in general.
-				
+
 				\begin{theorem}[Sum Lemma]
 					We have a set $S$ of objects with weight $w$. Let $A$ and $B$ be partitions of $S$. Then:
 					\begin{align*}
@@ -661,7 +664,7 @@
 						&= \underbrace{\bigg[ \sum_{a \in A} x^{\alpha(a)} \bigg]}_{\phi_A(x)} \cdot \underbrace{\bigg[ \sum_{b \in B} x^{\beta(b)} \bigg]}_{\phi_B(x)}
 					\end{align*}
 				\end{proof}
-			
+
 				\begin{ex}
 					Given integers $n \ge 0$ and $k \ge 0$, how many $k$-tuples $(m_1, m_2, \ldots, m_k)$ (where $m_i \ge 0, m_i \in \mathbb{Z}$) exist where $m_1 + m_2 + \ldots + m_k = n$?
 					\\ \\
@@ -685,7 +688,7 @@
 					\item Ensure it's used on something found by taking the cartesian product.
 					\item The weight is equal to the sum of the weights.
 				\end{enumerate}
-				
+
 				\begin{ex}
 					Let $n = 5$ and $k = 3$. We have:
 
@@ -711,7 +714,7 @@
 				\begin{defn}
 					Some integer $n$ has \textbf{composition} $(m_1, m_2, \ldots, m_k)$ if $m_1 + m_2 + \ldots + m_k = n$, where $m_i \ge 1, m_i \in \mathbb{Z}$. Note that the only difference from earlier is that $m_i \ge 1$ instead of $m_i \ge 0$.
 				\end{defn}
-				
+
 				\begin{ex}
 					We have $\mathbb{N} = \set{1, 2, 3, \ldots }, w(a) = a$ (for $a \in \mathbb{N}$), which gives us:
 					\begin{align*}
@@ -767,9 +770,9 @@
 				\end{ex}
 
 				We might be able to avoid generating functions in some cases by using a combinatorial proof. Now, we'll look at an arbitrary, convoluted example where a combinatorial proof would not suffice. This aims to show that generating functions are solid and can apply in many more situations than combinatorial proofs.
-				
+
 				\begin{ex}
-					We want to find the number of compositions of $n$ with $2k$ parts, where the first $k$ parts are $\le 5$ and the last $k$ parts are $\ge 3$. 
+					We want to find the number of compositions of $n$ with $2k$ parts, where the first $k$ parts are $\le 5$ and the last $k$ parts are $\ge 3$.
 					\\ \\
 					A specific instance of this problem is when $n = 22$ and $k = 3$, we have:
 					\begin{align*}
@@ -863,7 +866,7 @@
 					\end{align*}
 
 					We know $a_0 = 1$ and $(a_1 - a_0) = 0$, and so on. We can express a recurrence relation for this.
-					
+
 					\begin{align*}
 						a_0 &= 1 \\
 						a_1 - a_0 = 0 \implies a_1 &= 1 \\
@@ -876,20 +879,20 @@
 
 					For all $n \ge 3$, we have that $a_n = a_{n - 1} + a_{n - 2}$. This defines the \textbf{fibonacci numbers}.
 				\end{ex}
-				
+
 				\begin{defn}
 					The \textbf{golden ratio} is a pair of integers $a$ and $b$ such that $\frac{a + b}{a} = {a}{b}$. It's a ratio that comes up in nature a lot, and is aesthetically pleasing.
 				\end{defn}
 
 				You can approximate the golden ratio with the Fibonacci numbers. $\frac{a_n}{a_{n - 1}}$ approaches the golden ratio as $n \to \infty$.
-				
+
 				\begin{ex}
 					Let $S_n$ be the set of compositions into odd numbers of $n$. $|S_n| = |S_{n - 1}| + |S_{n - 2}|$ for $n \ge 2$. $S_n$ is partitioned by $S_{n - 1}$ and $S_{n - 2}$. Is there a bijection between $S_n$ and $S_{n - 1} \cup S_{n - 2}$?
 					\\ \\
 					Let's look at the case where $n = 5$. We have: \lecture{January 25, 2013}
 					\begin{align*}
 						\overbrace{\set{(1, 1, 1, 1, 1), (3, 1, 1), (1, 3, 1), (1, 1, 3), (5) }}^{S_n} \\
-						\set{\underbrace{(1, 1, 1, 1), (3, 1), (1, 3)}_{S_{n - 1}}, \underbrace{(1, 1, 1), (3)}_{S_{n - 2}} } 
+						\set{\underbrace{(1, 1, 1, 1), (3, 1), (1, 3)}_{S_{n - 1}}, \underbrace{(1, 1, 1), (3)}_{S_{n - 2}} }
 					\end{align*}
 					Notice that each element in $S_{n - 1}$ and $S_{n - 2}$ can be obtained from $S_n$ by either removing the last element entirely, or by subtracting 2 from the last element. That's the bijection we're looking for, which we will now define more formally as $f : S_n \to S_{n - 1} \cup S_{n - 2}$:
 					\begin{align*}
@@ -898,13 +901,13 @@
 							(a_1, \ldots, a_{k - 2}) & a_k \ge 3
 						\end{cases}
 					\end{align*}
-					Note that $f(a_1, \ldots, a_k)$ is undefined for $1 < k < 3$, but that's okay because we're only interested in odd natural numbers. 
+					Note that $f(a_1, \ldots, a_k)$ is undefined for $1 < k < 3$, but that's okay because we're only interested in odd natural numbers.
 					\\ \\
 					We have to somehow show that $f$ actually is a bijection. We can do that by constructing its inverse. In our case, the inverse is simply providing an inverse procedure.
 					\\ \\
 					Therefore, $|S_n| = |S_{n - 1}| + |S_{n - 2}|$, which is a general property of bijections.
 				\end{ex}
-	
+
 	\section{Binary Strings}
 		\begin{defn}
 		A \textbf{binary string} is a string composed of 0s and 1s. For example, $011001110011$ is a binary string.
@@ -941,7 +944,7 @@
 			\begin{align*}
 				c = \underbrace{0,110,0,10,0,110}_{(1)},\underbrace{11}_{(2)} \in S
 			\end{align*}
-			
+
 			\begin{enumerate}
 				\item A sequence of at most two ones followed by zero, repeated: $\set{0, 10, 110 }^\star$
 				\item A sequence of zero, one, or two ones: $\set{\epsilon, 1, 11 }$.
@@ -953,7 +956,7 @@
 		\begin{defn}
 			A \textbf{block} in a binary string is equal to the maximum sequence of 0s or 1s.
 		\end{defn}
-		
+
 		\begin{ex}
 			List all the blocks in the string $1100011110110101$.
 			\begin{align*}
@@ -1016,7 +1019,7 @@
 			\begin{proof}
 				In order to prove this theorem, we need to show that under the given assumptions, $|AB| = |A \times B|$, which we can show by showing there is a bijection between $AB$ and $A \times B$.
 				\\ \\
-				Let $S_n$ be the set of strings of length $n$ of $AB$, and let $T_n$ be the set of pairs $(a, b) \in A \times B$ such that $\text{length}(a) + \text{length}(b) = n$. Our claim is that $f[(a, b)] = ab, f : T_n \to S_n$ is a bijection. 
+				Let $S_n$ be the set of strings of length $n$ of $AB$, and let $T_n$ be the set of pairs $(a, b) \in A \times B$ such that $\text{length}(a) + \text{length}(b) = n$. Our claim is that $f[(a, b)] = ab, f : T_n \to S_n$ is a bijection.
 				\\ \\
 				In order to prove that $T_n \to S_n$ is a bijection, two things must be proven. We have to show that it is both onto and injective.
 				\begin{enumerate}
@@ -1107,7 +1110,7 @@
 					&= \frac{(1 + f)^2}{1 - f^2} \\
 					&= \frac{(1 + f)(1 + f)}{(1 + f)(1 - f)} \\
 					&= \frac{1 + f}{1 - f} \\
-					&\hspace{1cm} \text{\vdots} \\ 
+					&\hspace{1cm} \text{\vdots} \\
 					&= \frac{1 - x^2 + x^3}{1 - 2x + x^2 - x^3}
 				\end{align*}
 			\end{ex}
@@ -1165,7 +1168,7 @@
 					\\ \\
 					Suppose $a \in S$, or $a = \epsilon$. Then clearly, $a \in S \set{0, 1 }$. Suppose $a \in F$, then $a \in S \set{0, 1 }$.
 					\\ \\
-					The second equation relating $S$ and $F$ is $S\set{11010} = F$. As before, we need to verify this by showing both directions of the equality. \lecture{February 4, 2013} 
+					The second equation relating $S$ and $F$ is $S\set{11010} = F$. As before, we need to verify this by showing both directions of the equality. \lecture{February 4, 2013}
 					\\ \\
 					\underline{Showing $S\set{11010} \supseteq F$}: let $a \in F$. Then we know that the string $a$ with its last character truncated off is an element of $S$ (it no longer can contain the forbidden string). Therefore, the prefix to $11010$ is also an element of $S$, as required.
 					\\ \\
@@ -1216,7 +1219,7 @@
 					We then have that $S = \set{1}^\star(A \mathbin{\backslash} B)^\star \set{0}^\star$.
 
 				\end{ex}
-	
+
 	\section{Coefficients from Rational Functions} \lecture{February 6, 2013}
 		We're interested in finding $[x^n]\frac{f(x)}{g(x)}$ where $f(x)$ and $g(x)$ are polynomials.
 		\\ \\
@@ -1255,9 +1258,9 @@
 		\begin{align*}
 			[x^n] \frac{f(x)}{g(x)} = c_1 a_1^n + c_2 a_2^n + \ldots + c_k a_k^n
 		\end{align*}
-		
+
 		The previous example used this generalized form but with $k = 2$, $c_1 = A = 3$, and $c_2 = B = -2$, which made $a_1 = 2$ and $a_2 = 3$ (from the denominators).
-		
+
 		\begin{ex}
 			Suppose we want to find the $n$-th coefficient of:
 			\begin{align*}
@@ -1305,7 +1308,7 @@
 		\begin{align*}
 			[x^n] \frac{1}{(1 - ax)^p} = a^n \binom{n + p - 1}{p - 1} \\
 		\end{align*}
-		
+
 		Which gives us:
 		\begin{align*}
 			[x^n]\frac{f(x)}{g(x)} = \sum_{p = 1}^{k} C_p \binom{n + p - 1}{p - 1} a^n
@@ -1317,7 +1320,7 @@
 		\begin{align*}
 			[x^n] \frac{f(x)}{g(x)} = a^n \times (\text{polynomial of } n \text{ of degree } k - 1)
 		\end{align*}
-		
+
 		\lecture{February 11, 2013}
 		\begin{align*}
 			[x^n] \frac{f(x)}{(x - 3)^2(x + 2)} &= [x^n] \frac{A}{(x - 3)} + [x^n] \frac{B}{(x - 3)^2} + [x^n] \frac{C}{x + 2} \\
@@ -1325,7 +1328,7 @@
 		\end{align*}
 
 		(for $f(x)$ of degree 2)
-		
+
 	\section{Solving Recurrence Relations}
 		\begin{ex}
 			We're given:
@@ -1487,7 +1490,7 @@
 				p(x) = x^3 + 3x^2 + 3x + 1 = (1 + x)^3 \text{ by binomial theorem}
 			\end{align*}
 
-			There is one root of $p(x)$, -1, with multiplicity 3. The general form of $a_n$ is: 
+			There is one root of $p(x)$, -1, with multiplicity 3. The general form of $a_n$ is:
 			\begin{align*}
 				a_n = (A + Bn + Cn^2)(-1)^n
 			\end{align*}
@@ -1526,7 +1529,7 @@
 			\end{ex}
 
 			\begin{ex}
-				Suppose we have the recurrence relation $a_n + a_{n - 1} - 2a_{n - 2} = 9$, with initial conditions $a_0 = 2$ and $a_1 = 2$. 
+				Suppose we have the recurrence relation $a_n + a_{n - 1} - 2a_{n - 2} = 9$, with initial conditions $a_0 = 2$ and $a_1 = 2$.
 				\\ \\
 				We'll guess that $a_n = \alpha$ (a constant). We'd then have that $\alpha + \alpha - 2 \alpha \stackrel{?}{=} 9$, but $0 \ne 9$, so this won't work for any value of $\alpha$. It was a bad guess.
 				\\ \\
@@ -1535,12 +1538,12 @@
 					\alpha n + \alpha(n - 1) - 2 \alpha(n - 2) &= 9 \\
 					\alpha &= 3
 				\end{align*}
-				
+
 				So, $a_n = 3n$ will satisfy $a_n + a_{n - 1} - 2a_{n - 2} = 9$ for any $n$.
 			\end{ex}
 
 			This concludes the counting portion of the course.
-	\section{Introduction to Graph Theory} \lecture{February 15, 2013} % Today's notes were taken from Kevin Cho's handwritten notes (thanks!). 
+	\section{Introduction to Graph Theory} \lecture{February 15, 2013} % Today's notes were taken from Kevin Cho's handwritten notes (thanks!).
 		\begin{defn}
 			A \textbf{graph} $G$ is defined as $G = (V, E)$, where $V$ is a finite set of vertices and $E$ is a set of edges, in the form of a set of unordered pairs of $V$.
 		\end{defn}
@@ -1566,17 +1569,17 @@
 					\node [dot={90}{5}] at (2,2) {};
 
 					\draw[line width=1pt]
-						(0,1) -- (1,0) -- (3,0) -- (4,1) -- (2,2) -- (0,1) -- (3,0) -- (1,0) -- (4,1);	
+						(0,1) -- (1,0) -- (3,0) -- (4,1) -- (2,2) -- (0,1) -- (3,0) -- (1,0) -- (4,1);
 				\end{tikzpicture}
 			\end{center}
 
 			These are two different illustrations that both represent $G$.
 		\end{ex}
-		
+
 		\begin{defn}
 			The \textbf{complement} of the graph $G$, denoted $\overline G$, is the graph with $V(\overline G) = V(G)$ and edges $uv \in E(\overline G)$ if and only if $uv \not \in E(G)$.
 		\end{defn}
-		
+
 		\begin{defn}
 			Given the following graph:
 			\begin{center}
@@ -1711,7 +1714,7 @@
 			\begin{defn}
 				$G_1 = (V_1, E_1)$ and $G_2 = (V_2, E_2)$ are \textbf{isomorphic} if there exists a bijection $\phi: V_1 \to V_2$ such that $uv \in E_1 \to \phi(u) \phi(v) \in E_2$ and $uv \not \in E_1 \to \phi(u) \phi(v) \not \in E_2$.
 			\end{defn}
-			
+
 			In other words, two graphs are isomorphic if adjacency is preserved.
 			\\ \\
 			Examining the two graphs above, we have:
@@ -1752,7 +1755,7 @@
 						\node [dot={180}{d}] at (0,1) {};
 						\node [dot={-90}{e}] at (1,0) {};
 						\node [dot={90}{f}] at (2,2) {};
-						
+
 						\draw (0,1) -- (1,2) -- (2,2) -- (3,1) -- (2,0) -- (1,0) -- (0,1);
 						\draw (0,1) -- (3,1);
 						\draw (1,2) -- (2,0);
@@ -1831,7 +1834,7 @@
 			\begin{corollary}[Handshake Lemma]
 				There is an even number of vertices of odd degree.
 			\end{corollary}
-			
+
 			\begin{ex} Given the following table:
 				\begin{center}
 					\begin{tabular}{c|c}
@@ -1847,10 +1850,10 @@
 						i & 4
 					\end{tabular}
 				\end{center}
-				
+
 				There are 5 odd numbers of friends. One of them must be lying.
 			\end{ex}
-			
+
 			\lecture{February 25, 2013}
 			\begin{ex}
 				Given the following graph:
@@ -1881,7 +1884,7 @@
 			\begin{defn}
 				A graph in which every vertex has degree $k$ (for some fixed $k$) is called a \textbf{$\boldsymbol{k}$-regular} graph.
 			\end{defn}
-			
+
 			\begin{defn}
 				A \textbf{complete graph} is a graph in which all pairs of distinct vertices are adjacent to each other. That is, each vertex is joined to every other vertex. The complete graph with $p$ vertices is denoted $K_p$ (where $p \ge 1$).
 			\end{defn}
@@ -1956,8 +1959,8 @@
 						\node [rdot={0}{}] at (1,1) {};
 
 						\draw (0,0) -- (0,1) -- (1,1) -- (1,0) -- (0,0);
-						
-						
+
+
 						\node [gdot={0}{}] at (0,2) {};
 						\node [rdot={0}{}] at (1,2) {};
 						\node [rdot={0}{}] at (0,3) {};
@@ -1972,7 +1975,7 @@
 			\begin{defn}
 			The $\boldsymbol{n}$\textbf{-cube} is the graph $G = (V, E)$ where $V$ is the set of binary strings of length $n$ and $uv$ is an edge if $u$ and $v$ differ in exactly one position.
 			\end{defn}
-			
+
 			For $n = 2$, we have the following $n$-cube:
 			\begin{center}
 				\begin{tikzpicture}[scale=1.5]
@@ -2022,7 +2025,7 @@
 					\node [dot={0}{}] at (2, 1) {};
 					\node [dot={0}{end}] at (3, 1) {};
 
-					\draw [orange, ultra thick] (0, 1) -- (1, 0) -- (1, 1) -- (2, 1) -- (1, 0) -- (2, 0) -- (3, 1); 
+					\draw [orange, ultra thick] (0, 1) -- (1, 0) -- (1, 1) -- (2, 1) -- (1, 0) -- (2, 0) -- (3, 1);
 					\draw (0, 1) -- (1, 1);
 					\draw (2, 1) -- (3, 1);
 					\draw (2, 1) -- (2, 0);
@@ -2058,14 +2061,14 @@
 						\draw (1, 2) -- (2, 2) node [midway,fill=white] {4};
 					\end{tikzpicture}
 				\end{center}
-				
+
 				In this graph, we've visualized a path $P$ (in orange) and a cycle $C$ (in blue). We can express $P$ as $P = s1a2c5d8t$ and we can express $C$ similarly as $C = b7t8d6b$.
 			\end{ex}
-			
+
 			\begin{proposition}
 				Let $G = (V, E)$ be a graph, and $x, y \in V$ where $x \ne y$. If there exists a walk from $x$ to $y$, then there also exists a path from $x$ to $y$.
 			\end{proposition}
-			
+
 			To find the path from a walk, when you reach a vertex that is equal to another, you ignore that cycle.
 
 			\lecture{February 27, 2013}
@@ -2108,7 +2111,7 @@
 				If there exists a path from $x$ to $y$ and there exists a path from $y$ to $z$, then there exists a path from $x$ to $z$.
 			\end{corollary}
 
-			This corollary is not as trivial to show as you might initially think. You can't just join the two paths, because the two paths may share some vertices. 
+			This corollary is not as trivial to show as you might initially think. You can't just join the two paths, because the two paths may share some vertices.
 			\begin{proof}
 				The path from $x$ to $y$ followed by the path from $y$ to $z$ is a walk from $x$ to $z$ (\emph{not} a path). By the previous result, there exists a path from $x$ to $z$.
 			\end{proof}
@@ -2296,7 +2299,7 @@
 						\node [dot={0}{}] at (3,1) {};
 						\node [dot={0}{s}] at (0,2) {};
 						\node [dot={0}{}] at (4,2) {};
-						
+
 						\draw (0,0) -- (1,1) -- (0,2) -- (0,0);
 						\draw (4,0) -- (4,2) -- (3,1) -- (4,0);
 						\draw [dashed] (2,2) -- (2,0);
@@ -2351,7 +2354,7 @@
 
 				Are there two edge disjoint paths from $s$ to $t$? No. For the same reason as the two examples above, the center edge must be used in all paths because it is the only edge that connects two otherwise disjoint sets of vertices.
 			\end{ex}
-			
+
 			\begin{ex}
 				Given the following graph:
 				\begin{center}
@@ -2372,11 +2375,11 @@
 						\draw [green, ultra thick] (0,2) -- (0,0) -- (4,0);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				Are there \underline{three} edge disjoint paths from $s$ to $t$? Yes, as shown.
 				\label{ex:threedisjointpaths}
 			\end{ex}
-			
+
 			\begin{ex}
 				Given the following graph:
 				\begin{center}
@@ -2388,7 +2391,7 @@
 						\node [dot={0}{}] at (3,0) {};
 						\node [dot={0}{}] at (3,2) {};
 						\node [dot={0}{t}] at (4,1) {};
-						
+
 						\draw (0,1) -- (1,2) -- (3,2) -- (4,1) -- (3,0) -- (1,0) -- (0,1);
 						\draw (0,1) -- (1,1);
 						\draw (1,0) -- (1,2);
@@ -2397,22 +2400,22 @@
 						\draw [dashed] (2,0) -- (2,2);
 ;					\end{tikzpicture}
 				\end{center}
-				
+
 				This is an example of a graph with two disjoint paths but not three. There are just two edges connecting two otherwise disjoint sets of vertices.
 				\label{ex:twodisjointpaths}
 			\end{ex}
-			
+
 			\begin{defn}
 				Let $G = (V,E)$, and let $S \subseteq V, S \ne \emptyset, S \ne V$ (we pick a proper subset of vertices). The \textbf{cut induced} by $S$ is:
 				\begin{align*}
 					\delta(S) := \set{uv \in E | u \in S, v \not \in S}
 				\end{align*}
 			\end{defn}
-			
+
 			We say it's a cut because if we removed (cut) those edges, we would get two sets of edges with no edges connecting the two sets, so the graph would fall apart.
 			\\ \\
 			Informally, $\delta(S)$ is the set of edges between $V$ and $V \backslash S$.
-			
+
 			\begin{ex}
 				Given the following graph:
 				\begin{center}
@@ -2431,10 +2434,10 @@
 						\draw [dashed] (3,2) -- (3,0);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				If $S = \set{s, a, b, c}$, we get $\delta(S) = \set{cd}$.
 			\end{ex}
-			
+
 			\begin{ex}
 				Given the following graph:
 				\begin{center}
@@ -2451,14 +2454,14 @@
 						\draw (1,0) -- (1,2) -- (1,0) -- (3,2) -- (3,0);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				If $S = \set{b, e}$, we get $\delta(S) = \set{ab, bc, bd, ec, ed, ef}$.
 			\end{ex}
 
 			\begin{defn}
 				Let $s, t \in V (s \ne t)$. If $s \in S$ and $t \not \in S$, then $\delta(S)$ is an \textbf{$\mathbf{st}$-cut}.
 			\end{defn}
-			
+
 			In \ref{ex:twodisjointpaths}, we have a $st$-cut of size 2, which is why we cannot find three disjoint paths from $s$ to $t$.
 
 			\subsubsection{Menger's Theorem}
@@ -2467,30 +2470,30 @@
 					\\ \\
 					Equivalently, if you have an $st$-cut of size less than $k$, you cannot find $k$ disjoint paths from $s$ to $t$.
 				\end{theorem}
-			
+
 				\begin{proof}
 					Let $\delta(S)$ be an $st$-cut ($s \in S, t \not \in S$). Let $i \in \set{1, \ldots, k}$. Follow $P_i$ from $s$ to $t$. Let $v_i$ be the last vertex in $S$ of $P_i$, and let $w_i$ be the first vertex \emph{not} in $S$ of $P_i$. Then $e_i = v_i w_i$ is an edge of $P_i$ and $e_i \in \delta(S)$. This implies $\set{e_1, e_2, \ldots, e_k} \subseteq \delta(S)$.
 					\\ \\
 					Since $P_1, P_2, \ldots, P_k$ are edge disjoint, $e_1, e_2, \ldots, e_k$ are all different. This implies that $|\delta(S)| \ge k$. Since $\delta(S)$ was an arbitrary cut, we have shown that all $st$-cuts have at least $k$ edges.
 				\end{proof}
-			
+
 				The converse is also true, which is known as Menger's Theorem.
-			
+
 				\begin{theorem}[Menger's Theorem]
 					Let $G = (V, E)$ be a graph, and $s, t \in V (s \ne t)$. If for all $st$-cuts $\delta(S)$, $|\delta(S)| \ge k$, then there exist edge disjoint paths $P_1, \ldots, P_k$ from $s$ to $t$.
 				\end{theorem}
-			
+
 				\begin{proof}
 					The proof of Menger's Theorem is by performing induction on $|E| + |V|$. The base case is where you have two vertices and no edge between them, as seen here:
 					\begin{center}
 						\begin{tikzpicture}[scale=1.5]
 							\node [dot={180}{s}] at (0,1) {};
 							\node [dot={0}{t}] at (2,1) {};
-						
+
 							\draw [dashed] (1,2) -- (1,0);
 						\end{tikzpicture}
 					\end{center}
-				
+
 					There are then two cases:
 					\begin{enumerate}
 						\item There exists $e_1$ and no $st$-cut that contains $e_1$ has exactly $k$ edges.
@@ -2505,7 +2508,7 @@
 				\begin{proof}
 					Let us prove that (2) implies (1).
 					\\ \\
-					Let $U = \set{s} \cup \set{v | \exists \text{ a path from } s \text{ to } v}$. If $t \in U$, we're done. 
+					Let $U = \set{s} \cup \set{v | \exists \text{ a path from } s \text{ to } v}$. If $t \in U$, we're done.
 					\\ \\
 					Let's assume $t \not \in U$. By (2), there exists $ab \in \delta(v)$, say $a \in U, b \not \in U$. That is, we have at least one edge leaving $U$.
 					\\ \\
@@ -2518,7 +2521,7 @@
 				\begin{defn}
 					A graph is \textbf{connected} if there exists a path between any pair of vertices. If a graph is not connected, it is \textbf{disconnected}.
 				\end{defn}
-				
+
 				\begin{ex}
 					This graph is disconnected:
 					\begin{center}
@@ -2633,7 +2636,7 @@
 				\end{ex}
 
 				You can always partition your set $S$ into \textbf{equivalence classes}.
-				
+
 				\begin{ex}
 					Let $G = (V, E)$ be a graph. Given $a, b \in V$, $a \sim b$ if $a = b$ or there exists a path from $a$ to $b$. We propose that $\sim$ is an equivalence relation, and we want to prove it.
 					\begin{proof}
@@ -2654,7 +2657,7 @@
 				\textbf{Exercise}: look at set $S$ (the set of all possible graphs). We propose that $G \sim H$ if $G$ is isomorphic to $H$. Prove that $\sim$ is an equivalence relation.
 				\\ \\
 				\textbf{Remark}: it's useful to think of paths and cycles as sets of edges. Reflexivity makes a lot more sense under this interpretation, for instance. Cycles become a set of edges of a connected subgraph where every vertex has degree two. Paths are edges of a connected subgraph where two vertices have degree one and every other vertex degree two.
-				
+
 			\subsubsection{Bridges}
 				\begin{defn}
 					Let $G = (V, E)$ be a graph, and $e \in E$. Then, $G \backslash e$ is the graph obtained from $G$ by deleting edge $e$. We say $e$ is a \textbf{bridge} of $G$ if $G \backslash e$ has more components than $G$.
@@ -2681,7 +2684,7 @@
 					The edge $xy$ is a bridge, because if it was removed the number of components will increase from one to two. If this edge was removed, $x$ and $y$ would be in different components. This can be proven by transitivity.
 				\end{ex}
 
-				
+
 				\begin{proposition} \lecture{March 6, 2013}
 					If $e = xy$ is a bridge of $G$, then $x$ and $y$ are in distinct components of $G \backslash e$.
 				\end{proposition}
@@ -2719,7 +2722,7 @@
 				\begin{proposition}
 					Let $G = (V, E)$ be a graph, and $e \in E$. $e$ is \emph{not} a bridge (1) if and only if $e$ is in a cycle (2).
 				\end{proposition}
-				
+
 				In fact, this is the only reason you wouldn't have a bridge.
 
 				\begin{proof}
@@ -2848,7 +2851,7 @@
 
 			Keep this graph (just one vertex with no edges) in mind when doing inductive proofs involving trees.
 		\end{ex}
-		
+
 		\begin{proposition} \lecture{March 8, 2013}
 			If $G$ is a tree, then:
 			\begin{enumerate}
@@ -2913,7 +2916,7 @@
 					\node [gdot={0}{}] at (2,1) {};
 					\node [gdot={0}{}] at (3,2) {};
 					\node [dot={0}{}] at (3,0) {};
-					
+
 					\draw [green, ultra thick] (1,1) -- (0,2) -- (3,2) -- (2,1);
 					\draw (0,0) -- (3,0) -- (3,2) -- (0,2) -- (0,0);
 					\draw (0,0) -- (1,1) -- (0,2);
@@ -2933,7 +2936,7 @@
 					\node [gdot={0}{}] at (2,1) {};
 					\node [gdot={0}{}] at (3,2) {};
 					\node [gdot={0}{}] at (3,0) {};
-					
+
 					\draw [green, ultra thick] (0,2) -- (1,1) -- (0,0) -- (3,0) -- (2,1) -- (1,1);
 					\draw (0,0) -- (3,0) -- (3,2) -- (0,2) -- (0,0);
 					\draw (0,0) -- (1,1) -- (0,2);
@@ -3053,7 +3056,7 @@
 			\begin{proof}
 				Let $C = V_1, V_2, \ldots, V_{2n}$, where $V_1 = V_{2n}$.
 				\\ \\
-				Suppose there exists partition $X, Y$. We may assume $V_1 \in X, V_2 \in Y, V_3 \in X, \ldots$. This implies that $V_{2n} \in Y$ since all vertices with even indices are members of $Y$. 
+				Suppose there exists partition $X, Y$. We may assume $V_1 \in X, V_2 \in Y, V_3 \in X, \ldots$. This implies that $V_{2n} \in Y$ since all vertices with even indices are members of $Y$.
 				\\ \\
 				Notice that $V_1 \in X$ and $V_{2n} \in Y$, but $V_1 = V_{2n}$. This is a contradiction.
 			\end{proof}
@@ -3062,7 +3065,7 @@
 			\begin{proposition}
 				A graph is bipartite if and only if all its components are bipartite.
 			\end{proposition}
-			
+
 			The proof of this proposition is left as an exercise.
 			\begin{proposition}
 				Trees are bipartite.
@@ -3090,7 +3093,7 @@
 
 			There are a couple of different proof techniques we could use to prove this proposition.
 			\begin{enumerate}
-				\item We could call one vertex $V_1$ and then define even/odd vertices based on whether their distance from $V_1$ is even or odd (since there exists a unique path from $V_1$ to any other vertex in a tree). 
+				\item We could call one vertex $V_1$ and then define even/odd vertices based on whether their distance from $V_1$ is even or odd (since there exists a unique path from $V_1$ to any other vertex in a tree).
 				\item More simplistically, we could build up the partition recursively. As we add an additional edge, each endpoint of the edge should be in the opposite partition.
 			\end{enumerate}
 
@@ -3126,7 +3129,7 @@
 				\\ \\
 				This implies that the cycle $P \cup \set{ab}$ is an odd cycle, which is a contradiction.
 			\end{proof}
-			
+
 		\subsection{Graph Colouring}
 			\begin{problem}
 				Assign colours to vertices such that every edge has endpoints of different colours. The goal is to use as few colours as possible.
@@ -3197,7 +3200,7 @@
 			\end{ex}
 
 			\underline{Observation}: the same graph can have many different planar embeddings. We'll formally define ``different'' a bit later.
-			
+
 			\begin{ex}
 				Here are two planar embeddings of the same graph $G_1$:
 				\begin{center}
@@ -3301,7 +3304,7 @@
 						\node [dot={0}{}] at (0,3) {};
 						\node [dot={0}{}] at (4,3) {};
 						\node [dot={0}{}] at (2,4) {};
-						
+
 						\draw (1,0) -- (3,0) -- (4,3) -- (2,4) -- (0,3) -- (1,0);
 						\draw (1,0) -- (2,4) -- (3,0) -- (0,3) -- (4,3) -- (1,0);
 					\end{tikzpicture}
@@ -3436,7 +3439,7 @@
 					\node [dot={0}{}] at (3,0) {};
 					\node [dot={0}{}] at (4,0) {};
 					\node [dot={0}{}] at (4,2) {};
-					
+
 					\draw [green, ultra thick] (3,0) -- (4,0) node [midway,fill=white] {9} -- (4,2) node [midway,fill=white] {10} -- (3,2) node [midway,fill=white] {8} -- (3,0) node [midway,fill=white] {7};
 					\draw (0,0) -- (1,1) node [midway,fill=white] {3} -- (0,2) node [midway,fill=white] {1} -- (0,0) node [midway,fill=white] {2};
 					\draw (1,1) -- (2,1) node [midway,fill=white] {4} -- (3,0) node [midway,fill=white] {6};
@@ -3487,7 +3490,7 @@
 			\end{proof}
 
 			Let $p$ be the number of vertices, $q$ be the number of edges, and $f$ be the number of faces.
-			
+
 			Here are $G_1$, $G_2$, $G_3$, and $G_4$:
 			\begin{center}
 				\begin{tikzpicture}
@@ -3511,7 +3514,7 @@
 					\node [dot={0}{}] at (4,0) {};
 					\node [dot={0}{}] at (4,2) {};
 					\node[draw=none] at (1.90,0.5) {$G_2$};
-					
+
 					\draw (0,0) -- (1,1) -- (0,2);
 					\draw (1,1) -- (3,1) -- (4,0);
 					\draw (3,1) -- (4,2);
@@ -3525,7 +3528,7 @@
 					\node [dot={0}{}] at (4,0) {};
 					\node [dot={0}{}] at (4,2) {};
 					\node[draw=none] at (1.90,0.5) {$G_3$};
-					
+
 					\draw (0,0) -- (1,1) -- (0,2);
 					\draw (1,1) -- (3,1) -- (4,0);
 					\draw (3,1) -- (4,2);
@@ -3540,7 +3543,7 @@
 					\node [dot={0}{}] at (4,0) {};
 					\node [dot={0}{}] at (4,2) {};
 					\node[draw=none] at (1.90,0.5) {$G_4$};
-					
+
 					\draw (0,0) -- (1,1) -- (0,2);
 					\draw (1,1) -- (3,1) -- (4,0);
 					\draw (3,1) -- (4,2);
@@ -3553,7 +3556,7 @@
 			In $G_1$, we have $p = 6, q = 5$, and $f = 1$. In $G_2$, we have $p = 6, q = 6$, and $f = 2$. In $G_3$, we have $p = 6, q = 7$, and $f = 3$. In $G_4$, we have $p = 6, q = 8$, and $f = 4$.
 			\\ \\
 			$G_1$ is a spanning tree, so we have $p = q + 1$. This implies that $p - q + f = 2$.
-			
+
 			\begin{theorem}[Euler's Formula]
 				For any connected planar embedding of a graph $G = (V, E)$, we have $p - q + f = 2$, where $p$ is the number of vertices, $q$ is the number of edges, and $f$ is the number of faces.
 			\end{theorem}
@@ -3571,7 +3574,7 @@
 				\\ \\
 				We know that $p' = p$ and $q' = (q - 1)$, but we need to show that $f' = (f - 1)$. $f' = (f - 1)$ follows from the Jordan Curve Theorem, because by adding another edge we're adding an additional boundary which creates a new face.
 			\end{proof}
-			
+
 			\begin{defn} \lecture{March 15, 2013}
 				A graph is \textbf{simple} if it has no parallel edges and it has no loops. A graph that is not simple is called a \textbf{multigraph}.
 			\end{defn}
@@ -3587,7 +3590,7 @@
 			\begin{proof}
 				We'll prove each part of this proposition in turn.
 				\begin{enumerate}
-					\item 
+					\item
 						The fact that $G$ is planar implies that there exists a planar embedding with $f$ faces. Since the graph is simple, every face $F$ must have $\deg(F) \ge 3$. So, we know:
 						\begin{align*}
 							2q &= \sum_{F \in \text{faces}} \underbrace{\deg(F)}_{\ge 3} \\
@@ -3599,7 +3602,7 @@
 
 						Euler's formula can be used as a general trick when we want to compare two of these quantities.
 
-					\item 
+					\item
 						Now, let's also exclude triangles (cycles of length 3). We have:
 						\begin{align*}
 							2q &= \sum_{F \in \text{faces}} \underbrace{\deg(F)}_{\ge 4} \\
@@ -3619,7 +3622,7 @@
 					\node [dot={0}{}] at (0,3) {};
 					\node [dot={0}{}] at (4,3) {};
 					\node [dot={0}{}] at (2,4) {};
-				
+
 					\draw (1,0) -- (3,0) -- (4,3) -- (2,4) -- (0,3) -- (1,0);
 					\draw (1,0) -- (2,4) -- (3,0) -- (0,3) -- (4,3) -- (1,0);
 				\end{tikzpicture}
@@ -3717,8 +3720,8 @@
 				\end{tikzpicture}
 			\end{center}
 
-			There are also two more graphs ($k = 3, l = 5$ and $k = 5, l = 3$), which we won't show here for simplicity. 
-			
+			There are also two more graphs ($k = 3, l = 5$ and $k = 5, l = 3$), which we won't show here for simplicity.
+
 		% Eric Katz gave this lecture.
 		\subsection{Review of Planar Graphs} \lecture{March 18, 2013}
 			\begin{itemize}
@@ -3729,7 +3732,7 @@
 			\end{itemize}
 
 		\subsection{Planar Solids}
-			There are solids that correspond to the five platonic graphs. What do they have in common? Every vertex has the same degree \emph{and} every face has the same degree. 
+			There are solids that correspond to the five platonic graphs. What do they have in common? Every vertex has the same degree \emph{and} every face has the same degree.
 			\\ \\
 			We'll now finally define platonic graphs formally.
 			\begin{defn}
@@ -3741,7 +3744,7 @@
 			Which values of $(k, l)$ are possible? If we try drawing the graphs for $(4,4)$ and $(5,4)$, we'll see that as we're constructing them, they'd each need to be infinite in size to satisfy the $k$ and $l$ constraints. Since these graphs cannot be finite, we say $(4,4)$ and $(5,4)$ are two particular instances of $(k, l)$ for which the constraints are not satisfied.
 			\\ \\
 			\underline{Idea}: use the facts about planar graphs to constrain $(k, l)$.
-			
+
 			\begin{itemize}
 				\item By the handshake lemma, $\sum \deg(v) = kp = 2q$.
 				\item By the dual handshake lemma, $\sum \deg(f) = ls = 2q$. This implies that $p = \frac{2q}{k} = s = \frac{2q}{l}$. This is known as the duality of graphs.
@@ -3756,14 +3759,14 @@
 				2l + 2k &> kl \\
 				kl - 2k - 2l &< 0 \\
 				kl - 2k - 2l + 4 - 4 &< 0 \\
-				(k-2)(l-2) &< 4 
+				(k-2)(l-2) &< 4
 			\end{align*}
 
 			So, we know that $k \ge 3$ and $l \ge 3$. This gives us:
 			\begin{align*}
 				&(k-2)(l-2) < 4 \\
 				\implies& k - 2, l - 2 \ge 1 \text{ and } k-2, l-2 < 4 \\
-				\implies& k, l \le 5 
+				\implies& k, l \le 5
 			\end{align*}
 
 			All of this gives us:
@@ -3777,7 +3780,7 @@
 				If $G$ is a platonic graph, then $(k, l)$ must be one of (3, 3), (3, 4), (3, 5), (4, 3), or (5, 3).
 			\end{theorem}
 
-			Does each of these possibilities of $(k, l)$ occur for a platonic graph? That is, we know these are all \emph{possibilities}, but are they all \emph{actually} possible? For any choice of $(k, l)$, how many platonic graphs are there? 
+			Does each of these possibilities of $(k, l)$ occur for a platonic graph? That is, we know these are all \emph{possibilities}, but are they all \emph{actually} possible? For any choice of $(k, l)$, how many platonic graphs are there?
 			\\ \\
 			\underline{Claim}: each of the five possibilities for $(k, l)$ can be achieved by a platonic graph.
 			\begin{proof}
@@ -3842,7 +3845,7 @@
 					\node[draw=none] at (2, -0.25) {$K_{3, 3}$};
 				\end{tikzpicture}
 			\end{center}
-			$K_5$ and $K_{3,3}$ are non-planar because they have edges that unavoidably must cross. Are there any other planar graphs? Yes! You can just add more edges to $K_5$ or $K_{3,3}$. We could also add some vertices in the middle or edges, if we'd like. 
+			$K_5$ and $K_{3,3}$ are non-planar because they have edges that unavoidably must cross. Are there any other planar graphs? Yes! You can just add more edges to $K_5$ or $K_{3,3}$. We could also add some vertices in the middle or edges, if we'd like.
 			\\ \\
 			The two following graphs are also non-planar, and are built by adding more edges and vertices to $K_5$.
 			\begin{center}
@@ -3883,7 +3886,7 @@
 					\node [dot={0}{}] at (2,1.25) {};
 					\node [dot={0}{}] at (2,1.5) {};
 					\node [dot={0}{}] at (2,1.75) {};
-					
+
 					\draw (0,0) -- (2,0) -- (2,2) -- (1,3) -- (0,2) -- (0,0);
 					\draw (2,0) -- (0,2) -- (2,2);
 					\draw (0,0) -- (2,2);
@@ -3893,11 +3896,11 @@
 					\draw (1,2) -- (2,0);
  				\end{tikzpicture}
 			\end{center}
-			
+
 			\begin{defn}
 				A graph $H$ is a \textbf{subdivision} of a graph $G$ if $H$ is obtained from $G$ by replacing each edge by a path.
 			\end{defn}
-			
+
 			\begin{ex}
 				Here's a graph $G$ and a subdivision of $G$.
 				\begin{center}
@@ -3906,7 +3909,7 @@
 						\node [dot={0}{}] at (0,1) {};
 						\node [dot={0}{}] at (1,0) {};
 						\node [dot={0}{}] at (1,1) {};
-						
+
 						\draw (0,0) -- (1,0) -- (1,1) -- (0,1) -- (0,0);
 						\draw (1,0) -- (0,1);
 						\draw (0,0) to[out=150,in=190] (0,1.25) to[out=10,in=90] (1,1);
@@ -3930,13 +3933,13 @@
 						\node [dot={0}{}] at (0.25,1) {};
 						\node [dot={0}{}] at (0.15,1) {};
 						\node [dot={0}{}] at (0,1.25) {};
-						
+
 						\draw (0,0) -- (1,0) -- (1,1) -- (0,1) -- (0,0);
 						\draw (1,0) -- (0,1);
 						\draw (0,0) to[out=150,in=190] (0,1.25) to[out=10,in=90] (1,1);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				In addition, the following is \emph{not} a subdivision of $G$ because a vertex was introduced where there was previously a crossing:
 				\begin{center}
 					\begin{tikzpicture}[scale=2]
@@ -3945,18 +3948,18 @@
 						\node [dot={0}{}] at (1,0) {};
 						\node [dot={0}{}] at (1,1) {};
 						\node [dot={0}{}] at (0.5,0.5) {};
-						
+
 						\draw (0,0) -- (1,0) -- (1,1) -- (0,1) -- (0,0);
 						\draw (1,0) -- (0,1);
 						\draw (0,0) -- (1,1);
 					\end{tikzpicture}
 				\end{center}
 			\end{ex}
-			
+
 			\begin{theorem}
 				If $G$ has a subgraph that is a subdivision of $K_5$ or $K_{3,3}$, then $G$ is not planar.
 			\end{theorem}
-			
+
 			\begin{ex}
 				Consider the following graph, $G$.
 				\begin{center}
@@ -3968,7 +3971,7 @@
 						\node [dot={0}{}] at (4,0) {};
 						\node [dot={0}{}] at (5,0) {};
 						\node [dot={0}{}] at (6,0) {};
-						
+
 						\node [dot={0}{}] at (0,1) {};
 						\node [dot={0}{}] at (1,1) {};
 						\node [dot={0}{}] at (2,1) {};
@@ -3976,14 +3979,14 @@
 						\node [dot={0}{}] at (4,1) {};
 						\node [dot={0}{}] at (5,1) {};
 						\node [dot={0}{}] at (6,1) {};
-						
+
 						\draw (0,0) -- (6,0) -- (6,1) -- (0,1) -- (0,0);
 						\draw (1,0) -- (1,1);
 						\draw (2,0) -- (2,1);
 						\draw (3,0) -- (3,1);
 						\draw (4,0) -- (4,1);
 						\draw (5,0) -- (5,1);
-						
+
 						\draw (0,0) .. controls (7,-0.5) .. (6,1);
 						\draw (0,1) .. controls (7,1.5) .. (6,0);
 					\end{tikzpicture}
@@ -3991,21 +3994,21 @@
 				Katz claims he has a bridge in New York and some cheap land in Florida to sell you, and he claims he has a planar embedding for $G$. Why must he be lying?
 				\\ \\
 				Essentially, we know he's lying about having a planar embedding for $G$, since then he could erase subdivisions and get a planar embedding for $K_{3, 3}$. Let's state that more formally.
-				
+
 				\begin{proof}
 					Suppose $G$ is planar. Then, take a planar embedding of $G$. Since $H$ is a subgraph of $G$, we get a planar embedding of $H$. Undo that subdivision. Then we get a planar embedding of $K_{3, 3}$ or $K_5$, and that's ``unpossible.''
 				\end{proof}
 			\end{ex}
-			
+
 		\subsection{Kuratowski's Theorem}
 			\begin{theorem}[Kuratowski's Theorem]
 				A graph $G$ is non-planar if and only if it contains a subdivision of $K_{3,3}$ or $K_5$.
 			\end{theorem}
-			
+
 			\begin{defn}
 				The \textbf{crossing number} of a graph $G$ is the minimum number of crossings in drawings of $G$.
 			\end{defn}
-			
+
 			That is, there may be some ways to draw non-planar graphs that are smarter than other ways. Smarter ways involve drawing the graph in such a way that the crossing number is minimized.
 			\\ \\
 			\underline{Observation}: a graph is planar if and only if it has crossing number zero.
@@ -4016,7 +4019,7 @@
 			\begin{defn}
 				Let $n$ be a positive integer. A \textbf{graph colouring} is an assignment of one of $\set{1, 2, \ldots, n}$ to each vertex such that no edge connects vertices with the same label. (In other words, no two adjacent vertices are assigned the same colour.)
 			\end{defn}
-			
+
 			\begin{ex}
 				This is $K_4$:
 				\begin{center}
@@ -4034,24 +4037,24 @@
 						\draw (1,1) -- (2,0) {};
 					\end{tikzpicture}
 				\end{center}
-			
+
 				Since every vertex of $K_4$ has an edge to every other vertex, every edge needs its own colour.
 			\end{ex}
 
 			\underline{Note}: $K_n$ needs $n$ colours. You must colour every vertex differently.
 			\\ \\
 			\underline{Note}: $K_{m, n}$ needs two colours, because it's a bipartite graph.
-			
+
 			\begin{theorem}[Four Colour Theorem]
 				Every planar graph is 4-colourable.
 			\end{theorem}
-			
+
 			The four colour theorem is known to be true, but it's not known to be true in a nice way. The proof is basically a bunch of counterexamples. The proof also involved a computer to generate various cases. \lecture{March 22, 2013}
 			\\ \\
 			We only consider simple graphs when discussing graph colouring. We can't colour loops, for instance.
 			\\ \\
 			We can expand on the four colour theorem and also introduce two very similar theorems.
-			
+
 			\begin{theorem}[Five Colour Theorem]
 				Every simple planar graph can be 5-coloured.
 			\end{theorem}
@@ -4133,7 +4136,7 @@
 			\end{ex}
 
 			When you apply contraction, you could introduce loops into the graph. Be careful.
-			
+
 			\begin{ex}
 				We'll take a graph and then contract edge 5, then contract edge 6. Notice that this introduces a loop into the graph.
 				\begin{center}
@@ -4143,7 +4146,7 @@
 						\node [dot={0}{}] at (0,1) {};
 						\node [dot={0}{}] at (1,1) {};
 						\node [dot={0}{}] at (1.5,0.5) {};
-						
+
 						\draw (0,0) -- node [midway,fill=white] {3} (1,0) -- node [midway,fill=white] {4} (1,1) -- node [midway,fill=white] {1} (0,1) -- node [midway,fill=white] {2} (0,0);
 						\draw (1,0) -- node [midway,fill=white] {6} (1.5,0.5) -- node [midway,fill=white] {5} (1,1);
 					\end{tikzpicture}
@@ -4152,7 +4155,7 @@
 						\node [dot={0}{}] at (1,0) {};
 						\node [dot={0}{}] at (0,1) {};
 						\node [dot={0}{}] at (1,1) {};
-						
+
 						\draw (0,0) -- node [midway,fill=white] {3} (1,0) -- node [midway,fill=white] {4} (1,1) -- node [midway,fill=white] {1} (0,1) -- node [midway,fill=white] {2} (0,0);
 						\draw (1,0) to[out=0,in=0] node [midway,fill=white] {6} (1,1);
 					\end{tikzpicture}
@@ -4161,7 +4164,7 @@
 						\node [dot={0}{}] at (0.5,0.5) {};
 
 						\node [dot={0}{}] at (0,1) {};
-						
+
 						\draw (0,0) -- node [midway,fill=white] {3} (0.5,0.5) -- node [midway,fill=white] {1} (0,1) -- node [midway,fill=white] {2} (0,0);
 						\draw (0.5,0.5) to[out=-20,in=-90] (1,0.5) to[out=90,in=20] node [midway,fill=white] {4} (0.5,0.5);
 					\end{tikzpicture}
@@ -4171,9 +4174,9 @@
 			\begin{proposition}
 				If $G$ is planar, then $G/e$ is planar.
 			\end{proposition}
-			
+
 			Our goal is to 5-colour a planar graph. We can do this by taking a graph with five vertices, removing a vertex, applying colours, then adding back the vertex that we removed.
-			
+
 			\begin{ex}
 				We're going to 5-colour the following graph.
 				\begin{center}
@@ -4183,12 +4186,12 @@
 						\node [dot={0}{}] at (1,1) {};
 						\node [dot={0}{}] at (0,2) {};
 						\node [dot={0}{}] at (2,2) {};
-						
+
 						\draw (0,0) -- (1,1) -- (2,2);
 						\draw (0,2) -- (1,1) -- (2,0);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				First, we'll remove the vertex in the middle and colour the remaining vertices:
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
@@ -4198,7 +4201,7 @@
 						\node [dot={0}{2}] at (2,2) {};
 					\end{tikzpicture}
 				\end{center}
-				
+
 				Then, we'll put the middle vertex back and give it the remaining colour:
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
@@ -4207,13 +4210,13 @@
 						\node [dot={0}{5}] at (1,1) {};
 						\node [dot={0}{1}] at (0,2) {};
 						\node [dot={0}{2}] at (2,2) {};
-						
+
 						\draw (0,0) -- (1,1) -- (2,2);
 						\draw (0,2) -- (1,1) -- (2,0);
 					\end{tikzpicture}
 				\end{center}
 			\end{ex}
-			
+
 			\begin{ex}
 				Let's now look at a slightly more complex graph \textendash{} a graph with six vertices.
 				\begin{center}
@@ -4224,14 +4227,14 @@
 						\node [dot={0}{}] at (0,2) {};
 						\node [dot={0}{}] at (2,2) {};
 						\node [dot={0}{}] at (2,1) {};
-						
+
 						\draw [red, ultra thick] (0,2) -- (1,1) -- (2,1);
 						\draw (0,0) -- (1,1) -- (2,2);
 						\draw (0,2) -- (1,1) -- (2,0);
 						\draw (1,1) -- (2,1);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				We're going to contract the edges indicated in red, and then assign colours to the remaining vertices.
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
@@ -4239,12 +4242,12 @@
 						\node [dot={0}{2}] at (2,0) {};
 						\node [dot={0}{4}] at (1,1) {};
 						\node [dot={0}{1}] at (2,2) {};
-						
+
 						\draw (0,0) -- (1,1) -- (2,2);
 						\draw (1,1) -- (2,0);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				Finally, let's uncontract and assign a colour to the re-introduced vertices.
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
@@ -4254,21 +4257,21 @@
 						\node [dot={0}{4}] at (0,2) {};
 						\node [dot={0}{1}] at (2,2) {};
 						\node [dot={0}{4}] at (2,1) {};
-				
+
 						\draw [red, ultra thick] (0,2) -- (1,1) -- (2,1);
 						\draw (0,0) -- (1,1) -- (2,2);
 						\draw (0,2) -- (1,1) -- (2,0);
 						\draw (1,1) -- (2,1);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				Note that in this example, it could've been possible for a loop to be created, if the two endpoints of the red path had an edge.
 			\end{ex}
-			
+
 			We know there must exist a pair of vertices that do not have an edge between them. Otherwise, we'd have $K_5$, but we were told the graph is planar.
 			\\ \\
 			Let's now prove the five colour theorem.
-			
+
 			\begin{proof}
 				Let $G = (V, E)$ be a simple planar graph. By induction on $k = |V|$:
 				\\ \\
@@ -4294,7 +4297,7 @@
 				\\ \\
 				Thus, we have coloured all vertices of $G$ except $v$, and the same colour appears twice among the neighbours of $v$. We can pick colour $c$, unused among the neighbours of $v$, to colour $v$.
 			\end{proof}
-		
+
 		\subsection{Dual Graphs} \lecture{March 25, 2013}
 			Whenever you find a planar graph, you actually find two. You get two planar graphs for the price of one!
 			\begin{ex}
@@ -4307,14 +4310,14 @@
 						\node [dot={0}{}] at (3,1) {};
 						\node [dot={0}{}] at (0,2) {};
 						\node [dot={0}{}] at (3,2) {};
-					
+
 						% dual graph:
 						\node [gdot={0}{}] at (-1, 1) {};
 						\node [gdot={0}{}] at (1.5,0.5) {};
 						\node [gdot={0}{}] at (1.5,1.5) {};
 						\node [gdot={0}{}] at (1.5,2.5) {};
 						\node [gdot={0}{}] at (4, 1) {};
-					
+
 						\draw (0,0) -- (3,0) -- (3,2) -- (0,2) -- (0,0);
 						\draw (0,1) -- (3,1);
 						\draw (0,0) .. controls (-2, 1) .. (0,2);
@@ -4325,7 +4328,7 @@
 						\draw[color=green] (1.5,0.5) to[out=240,in=-90] (-2,1) to[out=90,in=180] (1.5,2.5);
 					\end{tikzpicture}
 				\end{center}
-			
+
 				Here, we started with five faces, and created one new vertex per face (including the infinite face). The faces in the original planar graph correspond to vertices in the dual (indicated as the green graph, above). For each edge in the boundary walk of each face, draw an edge between the two faces. We call this second graph the dual graph.
 			\end{ex}
 
@@ -4401,19 +4404,19 @@
 				\end{tikzpicture}
 			\end{center}
 		\end{ex}
-		
+
 		Our goal for the remainder of the course: we want to find an algorithm to produce a matching with as many edges as possible. That's a tough goal, so we will restrict ourselves to finding a maximum matching in bipartite graphs only.
 		\\ \\
 		Ideally, the algorithm will be fast and easily verifiable. We need to be able to quickly produce a result, and we need to be able to easily convince someone that it is indeed a \emph{maximum} matching.
-		
+
 		\begin{defn}
 			A \textbf{maximum matching} is a matching with as many edges as possible in $G$.
 		\end{defn}
-		
+
 		\begin{defn}
 			A matching is said to be \textbf{maximal} if adding any additional edge will result in a set that is no longer a matching.
 		\end{defn}
-		
+
 		\begin{ex} \lecture{March 27, 2013}
 			Find a maximum matching (a matching with as many edges as possible) for the following graph.
 			\begin{center}
@@ -4424,7 +4427,7 @@
 					\node [dot={0}{}] at (3,0) {};
 					\node [dot={0}{}] at (3,2) {};
 					\node [dot={0}{}] at (4,1) {};
-					
+
 
 					\draw[green, ultra thick] (0,1) -- (1,2);
 					\draw[green, ultra thick] (1,0) -- (3,0);
@@ -4435,12 +4438,12 @@
 					\draw[red, thin] (1,2) -- (3,2);
 				\end{tikzpicture}
 			\end{center}
-			
+
 			(The bottom-center edge is both green and red.)
 			\\ \\
 			The red edges represent a matching that is not maximum. The green edges represent a maximum matching, as required.
 		\end{ex}
-		
+
 		\subsection{Application: co-op}
 			Let $A$ be a set of applicants, and let $J$ be a set of jobs. For all $a \in A$ and $j \in J$, we know if applicant $a$ is qualified for job $j$.
 			\\ \\
@@ -4450,26 +4453,26 @@
 				\item Bob is qualified for jobs 2 and 4.
 				\item Carol is qualified for jobs 1, 2, and 4.
 			\end{itemize}
-			
+
 			We want to assign applicants to jobs such that:
 			\begin{itemize}
 				\item No applicant is assigned two or more jobs.
 				\item No job is assigned two or more applicants.
 			\end{itemize}
-			
+
 			We want to represent this as a graph problem. Note that it's a bipartite graph, as illustrated here:
-			
+
 			\begin{center}
 				\begin{tikzpicture}[scale=1.5]
 					\node [gdot={180}{carol}] at (0,0) {};
 					\node [gdot={180}{bob}] at (0,1) {};
 					\node [gdot={180}{alice}] at (0,2) {};
-					
+
 					\node [rdot={0}{4}] at (1,0) {};
 					\node [rdot={0}{3}] at (1,1) {};
 					\node [rdot={0}{2}] at (1,2) {};
 					\node [rdot={0}{1}] at (1,3) {};
-					
+
 					\draw (0,0) -- (1,0) -- (0,1) -- (1,2) -- (0,0);
 					\draw (0,0) -- (1,3) -- (0,2) -- (1,1);
 				\end{tikzpicture}
@@ -4478,13 +4481,13 @@
 			The edges represent all cases where a particular applicant is considered to be qualified for a job. The vertices are partitioned into applicants and jobs.
 			\\ \\
 			We want to assign as many applicants to jobs as possible. That's equivalent to saying we want to find a maximum matching.
-			
+
 			\subsection{Saturation}
 				In order for us to move on, we need a few definitions.
 				\begin{defn}
 					Let $G$ be a graph with matching $M$. Vertex $v$ is \textbf{saturated} if $v$ is the endpoint of an edge of $M$. Otherwise, $v$ is said to be \textbf{unsaturated}.
 				\end{defn}
-				
+
 				\begin{ex}
 					Consider the following matching $M$, illustrated as green edges:
 					\begin{center}
@@ -4495,22 +4498,22 @@
 							\node [gdot={0}{}] at (1,0) {};
 							\node [gdot={0}{}] at (1,1) {};
 							\node [dot={0}{}] at (2,1) {};
-						
+
 							\draw[color=green] (0,1) -- (1,1);
 							\draw[color=green] (1,0) -- (2,0);
 							\draw (0,1) -- (0,0) -- (1,0) -- (1,1) -- (2,1) -- (2,0);
 						\end{tikzpicture}
 					\end{center}
-				
+
 					The green vertices are saturated.
 				\end{ex}
-				
+
 				Note that choosing a different matching may give you a different set of saturated vertices.
-				
+
 				\begin{defn}
 					A matching is \textbf{perfect} is every vertex is saturated.
 				\end{defn}
-				
+
 				\begin{ex}
 					The following matching is perfect:
 					\begin{center}
@@ -4521,7 +4524,7 @@
 							\node [dot={0}{}] at (3,0) {};
 							\node [dot={0}{}] at (3,2) {};
 							\node [dot={0}{}] at (4,1) {};
-					
+
 
 							\draw[green, ultra thick] (0,1) -- (1,2);
 							\draw[green, ultra thick] (1,0) -- (3,0);
@@ -4532,13 +4535,13 @@
 						\end{tikzpicture}
 					\end{center}
 				\end{ex}
-				
+
 				Suppose you're given $K_{n,m}$ (a complete bipartite graph). How many perfect matchings are there? Well, we have two cases:
 				\begin{enumerate}
 					\item $n \ne m$. Zero perfect matchings exist. One vertex will not have any corresponding vertex in the other partition.
 					\item $n = m$. $n!$ perfect matchings exist. For the first vertex, we have $n$ choices, $n-1$ choices for the second vertex, and so on.
 				\end{enumerate}
-				
+
 				Writing down every matching to determine a maximum matching is probably not a great idea. Factorials become large very quickly.
 				\\ \\
 				We want to know how to make a matching bigger. Consider this graph:
@@ -4554,7 +4557,7 @@
 						\node [dot={0}{}] at (4,0) {};
 						\node [dot={0}{}] at (4,2) {};
 						\node [dot={0}{t}] at (5,1) {};
-				
+
 						\draw (0,1) -- (1,0) -- (1,2);
 						\draw (2,0) -- (3,0) -- (3,2);
 						\draw (4,2) -- (4,0) -- (5,1);
@@ -4570,21 +4573,21 @@
 						\draw[color=red,ultra thick] (3,2) -- (4,2);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				In this graph, the red edges are a smaller, non-perfect matching, and the green edges represent a perfect matching.
 				\\ \\
 				To get a larger matching, we need to remove something and add something \textendash{} we can't just add an edge. In the red path, the first and last edges are not in the matching, and they're alternating. We can just shift our matching over to add that additional edge (which is what the green matching represents). This will result in matching that is larger by one edge.
-				
+
 				\begin{defn}
 					Let $G$ be a graph with matching $M$, and let $P = e_1, e_2, \ldots, e_k$ be a path between vertices $s$ and $t$. $P$ is \textbf{alternating} if for all $i = 1, \ldots, k - 1$, exactly one of $e_i, e_{i + 1}$ is in $M$.
 				\end{defn}
-				
+
 				\begin{defn}
 					$P$ is \textbf{augmenting} if it is alternating and $s$ and $t$ are unsaturated.
 				\end{defn}
-				
+
 				\textbf{Remark}: let $G$ be a graph, and let $M$ be a matching of $G$. Let $P$ be an augmenting path. Let $M' = M \Delta P$ (where $M \Delta P = (M \cup P) \backslash (M \cap P)$). Then $M'$ is a matching and $|M'| = |M| + 1$.
-				
+
 				\subsubsection{Algorithm for Maximum Matching} \lecture{April 1, 2013}
 					A high-level algorithm for finding a maximum matching is as follows. \\
 					\begin{algorithm}[H]
@@ -4597,11 +4600,11 @@
 							}
 						}
 					\end{algorithm}
-					
+
 					This algorithm is a nice idea, but it is not nearly precise enough \textendash{} you couldn't program it currently. How do we know if $M$ is maximum? We can't simply enumerate all matchings, that'd get out of hand quickly. Also, how do we find an augmenting path $P$?
 					\\ \\
 					We will determine how to know if $M$ is maximum, and how to find an augmenting path $P$, on bipartite graphs.
-				
+
 		\subsection{Vertex Covers}
 			Informally, a vertex cover is a set of vertices where every edge in a graph has at least one endpoint that is a vertex in that set.
 			\begin{ex}
@@ -4613,20 +4616,20 @@
 						\node [gdot={0}{}] at (0,2) {};
 						\node [dot={0}{}] at (2,2) {};
 						\node [gdot={0}{}] at (1,1) {};
-					
+
 						\draw (0,0) -- (2,0) -- (2,2) -- (0,2) -- (0,0);
 						\draw (0,0) -- (1,1) -- (2,2);
 						\draw (0,2) -- (1,1) -- (2,0);
 					\end{tikzpicture}
 				\end{center}
 			\end{ex}
-			
+
 			\begin{defn}
 				$C \supseteq V$ is a \textbf{vertex cover} if every edge has at least one endpoint in $C$.
 			\end{defn}
-			
+
 			Note that the easiest vertex cover is the cover where $C = V$. However, we're interested in picking a cover with as few vertices as possible. This is similar to how the empty set is a matching, but we aren't interested in that \textendash{} we're interested in matchings with as many edges as possible.
-			
+
 			\begin{ex}
 				A minimum vertex cover is indicated in green:
 				\begin{center}
@@ -4647,7 +4650,7 @@
 						\node [gdot={0}{}] at (1,3) {};
 						\node [dot={0}{}] at (2,3) {};
 						\node [gdot={0}{}] at (3,3) {};
-						
+
 						\draw (0,0) -- (3,0) -- (3,3) -- (0,3) -- (0,0);
 						\draw (0,1) -- (3,1);
 						\draw (0,2) -- (3,2);
@@ -4656,11 +4659,11 @@
 					\end{tikzpicture}
 				\end{center}
 			\end{ex}
-			
+
 			The \textbf{minimum vertex cover problem} is where you aim to find a vertex cover with as few vertices as possible.
 			\\ \\
 			Let's examine the size of a graph's maximum matching with the size of its minimum vertex cover.
-			
+
 			\begin{ex}
 				Consider the following graph.
 				\begin{center}
@@ -4668,15 +4671,15 @@
 						\node [gdot={0}{}] at (0,0) {};
 						\node [dot={0}{}] at (2,0) {};
 						\node [gdot={0}{}] at (1,2) {};
-					
+
 						\draw[red,ultra thick] (1,2) -- (2,0);
 						\draw (2,0) -- (0,0) -- (1,2);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				In this graph, $|M| = 1$ and $|C| = 2$.
 			\end{ex}
-			
+
 			\begin{ex}
 				Consider the following graph.
 				\begin{center}
@@ -4698,11 +4701,11 @@
 						\draw (0,1) -- (3,1);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				In this graph, $|M| = 4$ and $|C| = 4$.
 			\end{ex}
-			
-			
+
+
 			\begin{ex}
 				Consider the following graph.
 				\begin{center}
@@ -4712,25 +4715,25 @@
 						\node [gdot={0}{}] at (0,1) {};
 						\node [gdot={0}{}] at (3,1) {};
 						\node [dot={0}{}] at (1.5,2) {};
-						
+
 						\draw (1,0) -- (2,0);
 						\draw (0,1) -- (1.5,2) -- (3,1);
 						\draw[color=red, ultra thick] (0,1) -- (1,0);
 						\draw[color=red, ultra thick] (2,0) -- (3,1);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				In this graph, $|M| = 2$ and $|C| = 3$.
 			\end{ex}
-			
+
 			We'll use these results to introduce a lemma.
-			
+
 			\begin{theorem}
 				Let $M$ be a matching, and let $C$ be a cover. Then $|M| \le |C|$.
 			\end{theorem}
-			
+
 			To prove this lemma, just look at the edges in the matching. At least one vertex is needed for every edge in the matching, and those vertices are all distinct. Let's formalize this proof.
-			
+
 			\begin{proof}
 				Let $M = \set{e_1, \ldots, e_k}$ be a matching. Since $C$ is a cover, for every edge $e_i$, $C$ contains one endpoint, say $w_i$, of $e_i$.
 				\\ \\
@@ -4738,9 +4741,9 @@
 				\\ \\
 				As $C \supseteq \set{w_1, \ldots, w_k}, |C| \ge k$.
 			\end{proof}
-			
+
 			Now, how can we convince someone that a particular matching is a maximum matching? We can note that there exists a cover of a certain size, which implies that no matching of a greater size exists, according to the lemma we just introduced.
-			
+
 			\begin{theorem}
 				Let $M$ be a matching, and let $C$ be a cover. Suppose $|M| = |C|$. Then:
 				\begin{enumerate}
@@ -4748,26 +4751,26 @@
 					\item $C$ is a minimum cover.
 				\end{enumerate}
 			\end{theorem}
-			
+
 			\begin{proof}
 				For (1): let $M'$ be any matching. We know that $|M'| \le |C|$, by the previous theorem, and we know that $|C| = |M|$ (by definition in this lemma). Therefore, $|M'| \le |M|$.
 				\\ \\
 				For (2): let $C'$ be any cover. We know that $|C'| \ge |M|$, by the previous theorem, and we know that $|M| = |C|$ (by definition in this theorem). Therefore, $|C'| \ge |C|$.
 			\end{proof}
-			
+
 			Note that the second theorem we just introduced implies that $\max \set{|M| : M \text{ is a matching}} \le \min \set{|C| : C \text{ is a cover}}$. However, is this $\le$, or is it always =? It turns out, if the graph contains an odd cycle, then $|M| \ne |C|$.
-			
+
 			\begin{theorem}[K\"onig's Theorem]
 				In a bipartite graph, $\max \set{|M| : M \text{ is a matching}} \le \min \set{|C| : C \text{ is a cover}}$ holds with equality.
 			\end{theorem}
-			
+
 			That is, K\"onig's Theorem states that the size of the maximum matching of a bipartite graph is equal to the size of the smallest cover of that graph.
 			\\ \\
 			Before we can discuss the proof of K\"onig's Theorem, we'll need to introduce some additional terminology.
-			
+
 		\subsection{XY-Structures}
 			Let $G = (V, E)$ be a bipartite graph with partition $A, B$ of $V$. Let $M$ be a matching of $G$.
-			
+
 			\begin{defn}
 				A vertex $v$ is \textbf{special} if:
 				\begin{enumerate}
@@ -4775,13 +4778,13 @@
 					\item There exists an alternating path $P(v)$ where one endpoint is $v$ and the other is of type (1).
 				\end{enumerate}
 			\end{defn}
-			
+
 			\begin{defn} \lecture{April 3, 2013}
 				Let $X$ denote the special vertices in partition $A$, and let $Y$ denote the special vertices in partition $B$.
 			\end{defn}
-			
+
 			Let's now prove K\"onig's Theorem.
-			
+
 			\begin{proof}
 				Let $M$ be a maximum matching, and let $C = (A \backslash X) \cup Y$.
 				\\ \\
@@ -4790,7 +4793,7 @@
 					\item $C$ is a cover.
 					\item $|C| = |M|$.
 				\end{enumerate}
-				
+
 				Let's start with (1). Suppose $C$ is not a cover. Then there exists an edge $uv$ with $u \in X$ and $v \in B \backslash Y$.
 				\\ \\
 				\underline{Case 1}: $u$ is unsaturated. The edge $uv$ implies that $v$ must be special, which implies that $v \in Y$, which is a contradiction.
@@ -4805,21 +4808,21 @@
 					\item Vertices in $A \backslash X$ are saturated.
 					\item Vertices in $Y$ are saturated.
 				\end{enumerate}
-				
+
 				Let's start with (i). Suppose (i) does not hold. Then there exists an edge $uv \in M$ where $u \in Y$ and $v \in A \backslash X$. Since $v$ is special, there exists an alternating path $P(u)$. The alternating path obtained by adding $uv$ to $P(u)$ implies that $v$ is special, which implies that $v \in X$, which is a contradiction.
 				\\ \\
 				The proof for (ii) is very simple. (ii) holds because unsaturated vertices of $A$ are in $X$.
 				\\ \\
 				Finally, let's prove (iii). Suppose there exists $u \in Y$ where $u$ is not saturated. Then $P(u)$ is an alternating path. This is a contradiction since $M$ is a \emph{maximum} matching.
 			\end{proof}
-			
+
 			We'll use a similar approach to that of this proof for the algorithm we need.
-			
+
 			\subsubsection{Algorithm For Finding a Maximum Matching and Minimal Vertex Cover}
 				\underline{Input}: a bipartite graph $G = (V, E)$ with partition $A, B$.
 				\\ \\
 				\underline{Output}: a matching $M$ and a cover $C$ where $|M| = |C|$. \\
-				
+
 				\begin{algorithm}[H]
 					$M = \emptyset$ (or any other matching)\;
 					\While{(loop)}{
@@ -4833,18 +4836,18 @@
 						}
 					}
 				\end{algorithm}
-				
-				In this algorithm, $S_1 \Delta S_2$ (for any sets $S_1$ and $S_2$) is defined as the symmetric difference of $S_1$ and $S_2$ (the same way as earlier). That is, $S_1 \Delta S_2 := (S_1 \cup S_2) \backslash (S_1 \cap S_2)$. 
-			
+
+				In this algorithm, $S_1 \Delta S_2$ (for any sets $S_1$ and $S_2$) is defined as the symmetric difference of $S_1$ and $S_2$ (the same way as earlier). That is, $S_1 \Delta S_2 := (S_1 \cup S_2) \backslash (S_1 \cap S_2)$.
+
 			\begin{ex} \lecture{April 5, 2013}
 				Let's say you've already run the algorithm for a few iterations, and you have this bipartite graph:
-				
+
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
-						
+
 						\node at (0,3.5) {A};
 						\node at (1,3.5) {B};
-						
+
 						\node [dot={180}{4}] at (0,0) {};
 						\node [dot={0}{8}] at (1,0) {};
 						\node [dot={180}{3}] at (0,1) {};
@@ -4853,7 +4856,7 @@
 						\node [dot={0}{6}] at (1,2) {};
 						\node [dot={180}{1}] at (0,3) {};
 						\node [dot={0}{5}] at (1,3) {};
-						
+
 						\draw (0,0) -- (1,0);
 						\draw (0,1) -- (1,1);
 						\draw (0,1) -- (1,2);
@@ -4863,7 +4866,7 @@
 						\draw[color=green, ultra thick] (0,1) -- (1,0);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				$X$ is defined as all unsaturated vertices in $A$ and all vertices accessible to such vertices via an alternating path. The definition of $Y$ is similar, but on partition $B$.
 				\\ \\
 				So, we have:
@@ -4873,37 +4876,37 @@
 						\node at (1, 1.75) {Y};
 						\node at (2, 1.75) {X};
 						\node at (3, 1.75) {Y};
-						
+
 						\node [dot={-90}{4}] at (0,0) {};
 						\node [dot={-90}{8}] at (1,0) {};
 						\node [dot={-90}{3}] at (2,0) {};
 						\node [dot={0}{7}] at (3, -0.5) {};
 						\node [dot={0}{6}] at (3,0.5) {};
-						
+
 						\node [dot={90}{2}] at (0,1) {};
 						\node [dot={90}{5}] at (1,1) {};
 						\node [dot={90}{1}] at (2,1) {};
-						
+
 						\draw (0,0) -- (1,0);
 						\draw (2,0) -- (3, -0.5);
 						\draw (2,0) -- (3, 0.5);
 						\draw[color=green, ultra thick] (1,0) -- (2,0);
-						
+
 						\draw (0,1) -- (1,1);
 						\draw[color=green, ultra thick] (1,1) -- (2,1);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				We now have that $7 \in Y$ is unsaturated. $P(7) = 48, 83, 37$. We now have $M'$: $$M' = \set{15, 38} \Delta \set{48, 38, 37} = \set{15, 48, 37}$$
-				
+
 				We now have to repeat the process with our new matching $M'$.
-				
+
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
-						
+
 						\node at (0,3.5) {A};
 						\node at (1,3.5) {B};
-						
+
 						\node [dot={180}{4}] at (0,0) {};
 						\node [dot={0}{8}] at (1,0) {};
 						\node [dot={180}{3}] at (0,1) {};
@@ -4912,7 +4915,7 @@
 						\node [dot={0}{6}] at (1,2) {};
 						\node [dot={180}{1}] at (0,3) {};
 						\node [dot={0}{5}] at (1,3) {};
-						
+
 						\draw[color=green, ultra thick] (0,0) -- (1,0);
 						\draw[color=green, ultra thick] (0,1) -- (1,1);
 						\draw (0,1) -- (1,2);
@@ -4922,9 +4925,9 @@
 						\draw (0,1) -- (1,0);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				At this point we have:
-				
+
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
 						\node at (0, 1.75) {X};
@@ -4938,34 +4941,34 @@
 						\draw[color=green, ultra thick] (1,1) -- (2,1);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				We have that $X = \set{1, 2}$ and $Y = \set{5}$. $Y$ contains only saturated vertices, so we stop. The cover we found is: $$C = (A \backslash X) \cup Y = \set{1, 2, 3, 4} \backslash \set{1, 2} \cup \set{5} = \set{3, 4, 5}$$
-				
+
 				Take the time to verify that the cover is valid.
 			\end{ex}
-			
+
 			\begin{ex}
 				Once again, suppose you have run the algorithm for a few iterations and you currently have this:
-				
+
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
 						\node [gdot={-90}{5}] at (0,0) {};
 						\node [rdot={-90}{2}] at (1,0) {};
 						\node [gdot={-90}{7}] at (2,0) {};
 						\node [rdot={-90}{4}] at (3,0) {};
-						
+
 						\node [rdot={90}{1}] at (0,1) {};
 						\node [gdot={90}{6}] at (1,1) {};
 						\node [rdot={90}{3}] at (2,1) {};
 						\node [gdot={90}{8}] at (3,1) {};
-						
+
 						\draw (0,1) -- (0,0) -- (1,0) -- (1,1) -- (2,1) -- (2,0) -- (3,0) -- (3,1);
 						\draw[color=blue, ultra thick] (0,1) -- (1,1);
 						\draw[color=blue, ultra thick] (1,0) -- (2,0);
 						\draw[color=blue, ultra thick] (2,1) -- (3,1);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				This is a bipartite graph with partitions $A = \set{1, 2, 3, 4}$ (red) and $B = \set{5, 6, 7, 8}$ (green).
 				\\ \\
 				We have $4 \in A$ as an unsaturated vertex, so we get:
@@ -4976,31 +4979,31 @@
 						\node at (2,2.75) {X};
 						\node at (3,2.75) {Y};
 						\node at (4,2.75) {X};
-						
+
 						\node [dot={90}{4}] at (0,1) {};
 
 						\node [dot={90}{7}] at (1,0) {};
 						\node [dot={90}{2}] at (2,0) {};
 						\node [dot={90}{5}] at (3,0) {};
-						
+
 						\node [dot={90}{8}] at (1,2) {};
 						\node [dot={90}{3}] at (2,2) {};
 						\node [dot={90}{6}] at (3,2) {};
 						\node [dot={90}{1}] at (4,2) {};
-						
+
 						\draw (0,1) -- (1,0);
 						\draw[color=blue, ultra thick] (1,0) -- (2,0);
 						\draw (2,0) -- (3,0);
-						
+
 						\draw (0,1) -- (1,2);
 						\draw[color=blue, ultra thick] (1,2) -- (2,2);
 						\draw (2,2) -- (3,2);
 						\draw[color=blue, ultra thick] (3,2) -- (4,2);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				We now have $5 \in Y$ which is an unsaturated vertex. $P(5) = 47, 72, 25$. We now have $M'$: $$M' = M \Delta P(5) = \set{16, 38, 27} \backslash \set{47, 72, 25} = \set{16, 38, 47, 25}$$
-				
+
 				We have to repeat the procedure on $M'$.
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
@@ -5008,12 +5011,12 @@
 						\node [rdot={-90}{2}] at (1,0) {};
 						\node [gdot={-90}{7}] at (2,0) {};
 						\node [rdot={-90}{4}] at (3,0) {};
-						
+
 						\node [rdot={90}{1}] at (0,1) {};
 						\node [gdot={90}{6}] at (1,1) {};
 						\node [rdot={90}{3}] at (2,1) {};
 						\node [gdot={90}{8}] at (3,1) {};
-						
+
 						\draw (0,1) -- (0,0) -- (1,0) -- (1,1) -- (2,1) -- (2,0) -- (3,0) -- (3,1);
 						\draw[color=blue, ultra thick] (0,1) -- (1,1);
 						\draw[color=blue, ultra thick] (2,1) -- (3,1);
@@ -5022,17 +5025,17 @@
 						\draw (1,0) -- (2,0);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				We now have that $X = Y = \emptyset$. There is no vertex in $A$ that is unsaturated, so we should be done. The cover we found is: $$C = (A \backslash X) \cup Y = A = \set{1, 2, 3, 4}$$
 			\end{ex}
-			
+
 		\subsection{Hall's Theorem}
 			Consider the following graph:
 			\begin{center}
 				\begin{tikzpicture}[scale=1.5]
 					\node at (0, 3.5) {A};
 					\node at (1, 3.5) {B};
-					
+
 					\node [bdot={0}{}] at (0,0) {};
 					\node [dot={0}{}] at (1,0) {};
 					\node [gdot={0}{}] at (0,1) {};
@@ -5041,7 +5044,7 @@
 					\node [bdot={0}{}] at (1,2) {};
 					\node [gdot={0}{}] at (0,3) {};
 					\node [bdot={0}{}] at (1,3) {};
-					
+
 					\draw (0,0) -- (1,0);
 					\draw (0,0) -- (1,1);
 					\draw (0,0) -- (1,2);
@@ -5052,38 +5055,38 @@
 					\draw (0,3) -- (1,3);
 				\end{tikzpicture}
 			\end{center}
-			
+
 			Does this graph have a perfect matching? No, since there exists a cover of size 3 (indicated in blue).
 			\\ \\
 			Let's look at another reason we wouldn't have a perfect matching. Look at the vertices indicated in green. One of these vertices will not be covered by a matching.
 			\\ \\
 			We need at least the same number of vertices in $N(S)$ (the neighbours of $S$), otherwise a perfect matching is not possible.
-			
+
 			\begin{defn}
 				Let $G = (V, E)$ be a bipartite graph with partitions $A$ and $B$. Let $S \subseteq A$. Then $N(S) = \set{v \in V | \exists uv \in E, u \in S}$. That is, $N(S)$ denotes the \textbf{neighbours} of $S$.
 			\end{defn}
-			
+
 			\begin{ex}
 				Consider the following graph.
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
 						\node at (0,2.75) {A};
 						\node at (1,2.75) {B};
-						
+
 						\node [rdot={180}{3}] at (0,0) {};
 						\node [gdot={0}{6}] at (1,0) {};
 						\node [rdot={180}{2}] at (0,1) {};
 						\node [gdot={0}{5}] at (1,1) {};
 						\node [rdot={180}{1}] at (0,2) {};
 						\node [gdot={0}{4}] at (1,2) {};
-						
+
 						\draw (0,0) -- (1,0) -- (0,1) -- (1,2) -- (0,2) -- (1,1);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				In this graph, if $S = \set{1}, N(S) = \set{4, 5}$. Similarly, if $S = \set{2, 3}, N(S) = \set{4, 6}$.
 			\end{ex}
-			
+
 			\begin{proposition}
 				Suppose the bipartite graph $G = (V, E)$ has a perfect matching. Then:
 				\begin{enumerate}
@@ -5091,9 +5094,9 @@
 					\item $\forall S \subseteq A$, $|N(S) \ge |S|$.
 				\end{enumerate}
 			\end{proposition}
-			
+
 			((1) and (2) are necessary conditions.)
-			
+
 			\begin{proof}
 				Let $M$ be a perfect matching.
 				\begin{enumerate}
@@ -5101,11 +5104,11 @@
 					\item Let $S = \set{v_1, \ldots, v_k}$. Since $M$ is a perfect matching, there exist edges of $M$ $v_i w_i$ for $i = i, \ldots, k$. This implies that $w_1, \ldots, w_k \in N(S)$, since $w_i, \ldots, w_k$ are distinct. Therefore, $|N(S)| \ge k = |S|$. \qedhere
 				\end{enumerate}
 			\end{proof}
-			
+
 			\begin{theorem}[Hall's Theorem]
 				A bipartite graph $G = (V, E)$ with partitions $A$ and $B$ has a perfect matching if and only if $|A| = |B|$ and for all $S \subseteq A, |N(S)| \ge |S|$.
 			\end{theorem}
-			
+
 			\begin{proof} \lecture{April 8, 2013}
 				We proved the forwards direction of this statement in the previous proposition.
 				\\ \\
@@ -5120,15 +5123,15 @@
 					|C| - |A \cap C| &< |A| - |A \cap C| \\
 					&< |A \backslash C| \text{ since } |C| < |A| \text{ by K\"onig's Theorem}
 				\end{align*}
-				
+
 				Therefore, $|N(A \backslash C)| < |A \backslash C|$, as necessary.
 			\end{proof}
-			
+
 			We'll now look at one application of this.
 			\begin{corollary}
 				Let $G = (V, E)$ be a bipartite graph with partitions $A, B$. Suppose $G$ is $k$-regular ($k \ge 1$). Then $G$ has a perfect matching.
 			\end{corollary}
-			
+
 			\begin{proof}
 				We'll check the hypothesis of Hall's Theorem.
 				\begin{enumerate}
@@ -5136,20 +5139,20 @@
 						\begin{align*}
 							k|A| = \sum_{v \in A} \deg(v) = |E| = \sum_{v \in B} \deg(v) = k|B|
 						\end{align*}
-						
+
 						This implies that $|A| = |B|$ by dividing by $k$ (since $k \ne 0$).
-					
+
 					\item Check that for every $S \subseteq A, |N(S) \ge |S|$. We have:
 						\begin{align*}
 							k|S| = \sum_{v \in S} \deg(v) \le \sum_{v \in N(S)} \deg(v) = k|N(S)|
 						\end{align*}
-						
+
 						This implies that $|S| \le |N(S)|$.
 				\end{enumerate}
-				
+
 				Therefore, by Hall's Theorem, $G$ is a perfect matching.
 			\end{proof}
-			
+
 	\newpage
 	\section*{Clicker Questions}
 		\begin{itemize}
@@ -5236,14 +5239,14 @@
 				\end{center}
 
 				$W$ is a walk but not a cycle nor a path.
-				
+
 			\item \lecture{March 15, 2013}
 				Let $T$ be a tree with 123 vertices. How many bridges does it have? 122, since no edge is in a cycle in a tree, and the number of edges is equal to the number of vertices minus one (in a tree).
-			
+
 			\item Let $G$ be a graph with $p$ vertices and $q$ edges. Suppose $G$ has 17 components and no cycles. Then $q = p + 17$. Each of the 17 components is a tree, and every tree has one more vertex than edges.
-			
+
 			\item Let $G$ be a bipartite graph with partitions $X, Y$. Suppose $G$ is $k \ge 1$ regular. Is $|X| = |Y|$ true? Yes, always, since $|X|k$ is equal to the number of edges, which equals $|Y|k$.
-			
+
 			\item Is the following graph $G$ planar?
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
@@ -5273,7 +5276,7 @@
 						\draw (-0.5,-0.5) to[out=310,in=210] (1,0) to[out=30,in=-30] (1.25,1.25) to[out=120,in=60] (0,1);
 					\end{tikzpicture}
 				\end{center}
-			
+
 			\item Consider the following graph:
 				\begin{center}
 					\begin{tikzpicture}[scale=1.5]
@@ -5291,9 +5294,9 @@
 				\end{center}
 
 				What is the boundary walk for $F$? 7, 8, 8, 2, 1, 6. (Note that 8 is included twice.)
-			
+
 			\item Can 2, 2, 3, 3, 4, 4, 5, 6 be the degree sequence for the faces of a planar embedding? No. There must be an even number of odd faces.
-			
+
 			\item \lecture{March 27, 2013}
 			Is the following graph planar?
 				\begin{center}
@@ -5304,7 +5307,7 @@
 						\node [dot={0}{}] at (4,3) {};
 						\node [dot={0}{}] at (2,4) {};
 						\node [dot={0}{}] at (0,4) {};
-						
+
 						\draw (1,0) -- (3,0) -- (4,3) -- (2,4) -- (0,3) -- (1,0);
 						\draw (1,0) -- (2,4) -- (3,0) -- (0,3) -- (4,3) -- (1,0);
 						\draw (0,3) -- (0,4) -- (2,4);
@@ -5312,8 +5315,8 @@
 				\end{center}
 
 				No. There is a subdivision of $K_5$ in this graph, which makes it non-planar.
-			
-			\item What is the minimum number of colours needed to colour this graph (not shown here)? Four, because this was contained within the graph:		
+
+			\item What is the minimum number of colours needed to colour this graph (not shown here)? Four, because this was contained within the graph:
 				\begin{center}
 					\begin{tikzpicture}[scale=2]
 						\node [dot={0}{}] at (0,0) {};
@@ -5329,7 +5332,7 @@
 						\draw (1,1) -- (2,0) {};
 					\end{tikzpicture}
 				\end{center}
-			
+
 			\item Do the following embeddings have the same duals?
 				\begin{center}
 					\begin{tikzpicture}[scale=2.5]
@@ -5338,7 +5341,7 @@
 						\node [dot={0}{}] at (1,0) {};
 						\node [dot={0}{}] at (1.75,1.5) {};
 						\node [dot={0}{}] at (0.75,0.75) {};
-						
+
 						\draw (0,0) -- node [midway,fill=white] {1} (0,1) -- node [midway,fill=white] {2} (1.75, 1.5) -- node [midway,fill=white] {4}  (0.75,0.75) -- node [midway,fill=white] {7} (1,0) -- node [midway,fill=white] {6} (0,0);
 						\draw (1,0) -- node [midway,fill=white] {3} (0,1);
 						\draw (1,0) -- node [midway,fill=white] {5} (1.75,1.5);
@@ -5349,19 +5352,19 @@
 						\node [dot={0}{}] at (1,0) {};
 						\node [dot={0}{}] at (1.75,1.5) {};
 						\node [dot={0}{}] at (2,0.33) {};
-						
+
 						\draw (0,0) -- node [midway,fill=white] {1} (0,1) -- node [midway,fill=white] {2} (1.75, 1.5) -- node [midway,fill=white] {4}  (2,0.33) -- node [midway,fill=white] {7} (1,0) -- node [midway,fill=white] {6} (0,0);
 						\draw (1,0) -- node [midway,fill=white] {3} (0,1);
 						\draw (1,0) -- node [midway,fill=white] {5} (1.75,1.5);
 					\end{tikzpicture}
 				\end{center}
-				
+
 				No. There are no boundary walks of length five in the first graph, but there are in the second. The planar duals are not the same. Note that the dual is of the \emph{drawing}, not of the graph itself.
-		
+
 			\item How many faces does a connected planar graph with 30 vertices and 100 edges have? By Euler's formula, $p - q + f 2$, we get that $f = 2 - p + q = 2 - 30 + 100 = 72$.
-		
+
 			\item What is the minimum number of edges you need to remove from this graph to make it planar?
-			
+
 			\begin{center}
 				\begin{tikzpicture}[scale=3]
 					\node [dot={0}{}] at (0,1) {};
@@ -5370,7 +5373,7 @@
 					\node [dot={0}{}] at (0.75,0.5) {};
 					\node [dot={0}{}] at (1.25,0.5) {};
 					\node [dot={0}{}] at (1,0.90) {};
-					
+
 					\draw (0,1) -- (1,0) -- (2,1) -- (0.75,0.5) -- (1.25,0.5) -- (1,0.9) -- (0.75,0.5);
 					\draw (2,1) -- (0,1) -- (1.25,0.5);
 					\draw (1,0) -- (1,0.9);
@@ -5382,11 +5385,11 @@
 					\draw (2,1) -- (1,0.9);
 				\end{tikzpicture}
 			\end{center}
-			
+
 			3. Note that the number of edges is $\binom{6}{2} = 15$. A planar graph with six vertices can only have $3 \cdot 6 - 6 = 12$ edges.
-			
+
 			\item Do the red edges in the following form a matching?
-			
+
 			\begin{center}
 				\begin{tikzpicture}[scale=2]
 					\node [dot={0}{}] at (0,0) {};
@@ -5400,7 +5403,7 @@
 					\node [dot={0}{}] at (0,2) {};
 					\node [dot={0}{}] at (4,2) {};
 					\node [dot={0}{}] at (4,0) {};
-					
+
 					\draw[color=red, ultra thick] (0,0) -- (0,1);
 					\draw[color=red, ultra thick] (0,2) -- (1,1);
 					\draw[color=red, ultra thick] (2,1.5) -- (2,0);
@@ -5411,7 +5414,7 @@
 					\draw (0,2) -- (2,1.5);
 				\end{tikzpicture}
 			\end{center}
-			
+
 			Yes.
 		\end{itemize}
 \end{document}
