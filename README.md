@@ -1,18 +1,18 @@
 # UW Course Notes
-This term I've decided to start typesetting all of the notes I take during lectures (with LaTeX).
+In Winter 2013, I decided to start typesetting all of the notes I take during lectures (with LaTeX).
 
-I'm typing up these notes myself, and they're a combination from what was written on the board as well as things the professor has said verbally.
+These notes are a combination of what was written on the board as well as things the professor said verbally.
 
-If you simply want to view the notes, look at the PDFs. I've also included the original LaTeX files if you're curious or if you'd like to extend the notes in some way.
+If you simply want to view the notes, [look at the PDFs](http://cthomson.ca/notes). I've also included the original LaTeX files here if you're curious or if you'd like to extend the notes in some way.
 
 I'd greatly appreciate reports of any typos and factual errors you find. [Open an issue](https://github.com/christhomson/lecture-notes/issues/new) if you find something that should be fixed.
 
 ## Courses
 ### 2B - Winter 2013:
-* [CS 240 - Data Structures and Data Management](https://github.com/christhomson/lecture-notes/raw/master/cs240.pdf) (I personally don't like my notes for this course very much.)
-* [CS 241 - Foundations of Sequential Programs](https://github.com/christhomson/lecture-notes/raw/master/cs241.pdf)
-* [MATH 239 - Introduction to Combinatorics](https://github.com/christhomson/lecture-notes/raw/master/math239.pdf)
-* [PSYCH 207 - Cognitive Processes](https://github.com/christhomson/lecture-notes/raw/master/psych207.pdf)
+* [CS 240 - Data Structures and Data Management](http://noteface.cthomson.ca/dl/latest/cs240.pdf) (I personally don't like my notes for this course very much.)
+* [CS 241 - Foundations of Sequential Programs](http://noteface.cthomson.ca/dl/latest/cs241.pdf)
+* [MATH 239 - Introduction to Combinatorics](http://noteface.cthomson.ca/dl/latest/math239.pdf)
+* [PSYCH 207 - Cognitive Processes](http://noteface.cthomson.ca/dl/latest/psych207.pdf)
 * ~~CS 251 - Computer Organization and Design~~ (Not covered because the slides and printed course notes seem more than sufficient.)
 
 ## Disclaimer
