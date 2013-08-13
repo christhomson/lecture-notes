@@ -20,3 +20,5 @@ I'm trying to make these notes as accurate as possible, however there might be s
 
 ## License
 You can do what you want with these notes with two restrictions: you may not profit from them in any way, and you must leave my name in them somewhere. Don't be evil. Thanks! :)
+
+For more information, see the [Creative Commons Attribution-NonCommercial-ShareAlike 2.5 Canada license](http://creativecommons.org/licenses/by-nc-sa/2.5/ca/).
