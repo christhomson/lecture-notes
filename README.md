@@ -8,6 +8,9 @@ If you simply want to view the notes, [look at the PDFs](http://cthomson.ca/note
 I'd greatly appreciate reports of any typos and factual errors you find. [Open an issue](https://github.com/christhomson/lecture-notes/issues/new) if you find something that should be fixed.
 
 ## Courses
+### 3A - Fall 2013:
+* [CS 360 - Introduction to the Theory of Computing](http://noteface.cthomson.ca/dl/latest/cs360.pdf)
+
 ### 2B - Winter 2013:
 * [CS 240 - Data Structures and Data Management](http://noteface.cthomson.ca/dl/latest/cs240.pdf) (I personally don't like my notes for this course very much.)
 * [CS 241 - Foundations of Sequential Programs](http://noteface.cthomson.ca/dl/latest/cs241.pdf)
