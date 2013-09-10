@@ -1,0 +1,192 @@
+\documentclass[]{article}
+\usepackage[margin = 1.5in]{geometry}
+\setlength{\parindent}{0in}
+\usepackage{amsfonts}
+\usepackage{amssymb}
+\usepackage{hyperref}
+\usepackage{cleveref}
+\usepackage{amsmath}
+\usepackage{amsthm}
+\usepackage{mathtools}
+\usepackage{tikz}
+\usepackage{qtree}
+\usepackage{float}
+\usepackage[lined]{algorithm2e}
+\usepackage[T1]{fontenc}
+\usepackage{ae,aecompl}
+\usepackage{color}
+\usepackage{bussproofs}
+\usepackage{enumerate}
+
+\DeclarePairedDelimiter{\set}{\lbrace}{\rbrace}
+
+\definecolor{darkish-blue}{RGB}{25,103,185}
+
+\hypersetup{
+    colorlinks,
+    citecolor=darkish-blue,
+    filecolor=darkish-blue,
+    linkcolor=darkish-blue,
+    urlcolor=darkish-blue
+}
+
+\theoremstyle{definition}
+\newtheorem*{defn}{Definition}
+\newtheorem*{theorem}{Theorem}
+\newtheorem*{corollary}{Corollary}
+\newtheorem{ex}{Example}[section]
+
+\crefname{ex}{Example}{Example}
+
+\setlength{\marginparwidth}{1.5in}
+\newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
+
+\stepcounter{footnote} % because daggers are cool
+
+\begin{document}
+	\let\ref\Cref
+
+	\title{\bf{CS 360: Introduction to the Theory of Computing}}
+	\date{Fall 2013, University of Waterloo \\ \center Notes written from Shai Ben-David's lectures.}
+	\author{Chris Thomson\thanks{See \href{http://cthomson.ca/notes}{cthomson.ca/notes}.
+	\ifdefined\sha % Also, \commitDateTime should be defined.
+		Last modified: \commitDateTime{} ({\href{https://github.com/christhomson/lecture-notes/commit/\sha}{\sha}}).
+	\fi}}
+
+	\maketitle
+	\newpage
+	\tableofcontents
+	\newpage
+
+	\section{Introduction \& Course Structure} \lecture{September 10, 2013}
+    \subsection{Course Structure}
+      The grading scheme is 30\% assignments, 30\% midterm, and 40\% final. If your final grade is better than your midterm grade, your final will be worth 70\% and the midterm will be worth 0\%.
+      \\ \\
+      In terms of textbooks, any textbook relating to ``automata theory'', ``theory of computation'', or ``formal language theory'' is acceptable.
+      \\ \\
+      The professor's office is in DC 1311, and his office hours are on Tuesdays from 2:00 to 3:00 pm.
+      \\ \\
+      This course is mathematical. The relevant background required is heavily logic-based, and requires (almost) no programming experience.
+
+    \subsection{Introduction}
+      The goal of the course is to develop the theory of computation. We want to understand the mathematics that govern computers. We will explore questions like:
+      \begin{itemize}
+        \item What are computers?
+        \item Which tasks can computers carry out?
+        \item Which tasks are easy or hard for computers?
+      \end{itemize}
+
+      We make abstractions and use them as common properties that are relevant to many phenomenon. We aren't going to be focussing on any particular language, but instead, we'll focus on common properties.
+      \\ \\
+      We aim to create abstractions that will allow us to generalize with fundamental properties. These abstractions allow us to form conclusions that are relevant to computing in general, and not just for today's hardware and software.
+      \\ \\
+      This course has two key goals:
+      \begin{enumerate}
+        \item To familiarize you with the fundamentals of computer science theory.
+        \item To develop the ability to reason formally and abstractly about computing.
+      \end{enumerate}
+
+  \section{CS 245 Review}
+    We'll start off by reviewing some of the basics that were covered on CS 245, to ensure that everyone's on the same page.
+    \\ \\
+    Throughout the course, we will follow two main threads concurrently: abstract models of computers, and computing tasks. We'll progress from simple models and simple tasks to complex models and complex tasks, and along the way connections will be made between the two.
+
+    \subsection{Computing Tasks}
+      We're going to focus on \textbf{decision problems}. Decisions problems are problems which have an input and produce a binary (yes/no) output. Some examples of decision problems are:
+      \begin{itemize}
+        \item Input: a number. Decision: is it a prime number?
+        \item Input: email message. Decision: is it spam?
+        \item Input: a graph. Decision: is it connected?
+      \end{itemize}
+
+      We're interested in seeing which of these questions a computer can figure out.
+
+      \subsubsection{Modelling Decision Problems}
+        We model decision problems using \textbf{formal languages}. A decision problem has two components:
+        \begin{itemize}
+          \item A domain set $X$.
+          \item A language $L \subseteq X$.
+        \end{itemize}
+
+        Our decision problem is then ``for some $x \in X$, is $x \in L$?'' Re-examining our examples from earlier, we would define:
+        \begin{itemize}
+          \item $X = \mathbb{Z}$ (the set of all integers), and $L = $ the set of all prime numbers.
+          \item $X = $ the set of all email messages, and $L = $ the set of all spam email messages.
+          \item $X = $ the set of all graphs, and $L = $ the set of all connected graphs.
+        \end{itemize}
+
+        For further concreteness, we will fix some finite set $\Sigma$, which we will call the \textbf{alphabet}. Some examples of alphabets are $\set{a, b}$, $\set{0, 1}$, and $\set{0, 1, 2, 3}$.
+        \\ \\
+        $\Sigma^\star$ represents the set of all finite strings over the alphabet $\Sigma$. In many cases, we define $X = \Sigma^\star$. For example, if $\Sigma = \set{0, 1}$ then $\Sigma^\star = \set{ \epsilon, 0, 1, 00, 11, 01, 10, \ldots }$. Note that $\Sigma^\star$ is an infinite set, but every member of $\Sigma^\star$ is finite.
+        \\ \\
+        We will define just one operation for strings, for the time being: \textbf{concatenation}. Given two strings, $\sigma$ and $\eta$, we get $\sigma \eta$. That is,
+          \AxiomC{$\sigma$}
+          \AxiomC{$\eta$}
+          \BinaryInfC{$\sigma \eta$}
+          \DisplayProof . For example, if $\sigma = 01$ and $\eta = 111$, then $\sigma \eta$ is 01111.
+        \\ \\
+        \textbf{Languages} are subsets of $\Sigma^\star$ (that is, a language is a collection of strings). Some examples of languages include:
+        \begin{itemize}
+          \item $L = \emptyset$. This is the \textbf{empty language}, which no strings belong to. Note that $|L| = 0$. This is analogous to an empty fridge.
+          \item $L = \set{ \epsilon }$. This is a non-empty language that contains one element ($|L| = 1$), which just happens to be $\epsilon$. This is analogous to having a fridge that contains only an empty can.
+          \item $L = \set{\epsilon, 0, 01, 11111}$.
+          \item $L = \Sigma^\star$.
+        \end{itemize}
+
+        Compilers use languages to check their input (the code of a program) to see if the program is valid (if the code is in the language).
+        \\ \\
+        We will discuss tasks that help us determine if a particular string belongs to a particular language or not.
+
+      \subsubsection{Formal Tools for Defining Sets}
+        We want languages to model every computational task, some of which are complex. We need several different methods for formally defining sets, since all languages are sets.
+
+        \begin{enumerate}
+          \item \textbf{List all members of the set}. This method is very precise and concrete, but it makes look-ups difficult ($O(n)$) and it fails if the set is infinitely large.
+          \item \textbf{Common property that characterizes the set}. For example, consider the set of all even numbers. This set is not definable by a list because it's an infinite set. However, there is a common property that's shared between all members of the set: if you divide by two and examine the remainder, every member in the set will have a remainder of zero.
+          \item \textbf{Induction}. Methods (1) and (2) don't offer us a way to define a set of all your blood relatives, since there's no common property. Instead, we could use induction to define that set.
+          \\ \\
+          Defining a set with induction requires three components:
+          \begin{itemize}
+            \item A domain set $X$ (sometimes omitted if it is obvious).
+            \item A finite core set $A$ (as in ``atoms''), such as $\set{ \text{me} }$.
+            \item A finite set of operations $P$, such as $\set{ \text{``son of''}, \text{``father of''}, \text{``mother of''}}$. This set is a set of functions from $X \to X$.
+          \end{itemize}
+
+          Then, we would say that the \textbf{inductive set} $I(A, P)$, the set of blood relatives is defined as all people that can be reached from the core set by applying a finite sequence of operations.
+          \\ \\
+          More formally, we say that $I(A, P)$ is the inductive set defined by core $A$ and operations $P$, and that $I(A, P)$ is the smallest set which:
+          \begin{itemize}
+            \item Contains all members of $A$, and
+            \item Is closed under the operations in $P$.
+          \end{itemize}
+
+          Let's say we define the core set as $\set{2}$, and the set of operations as $\set{ \text{``add 2''}, \text{``subtract 2''}}$. The defined set is the set of all even numbers, both positive and negative.
+          \\ \\
+          Or, let's say we want to define the set of all algebraic expressions. Our core set would be $\set{x, y, z, 1, 2, 3, \ldots, a, b, c, \ldots}$. Our operations would be:
+          \AxiomC{$\sigma$} \AxiomC{$\eta$} \BinaryInfC{$(\sigma + \eta)$} \DisplayProof,\AxiomC{$\sigma$} \AxiomC{$\eta$} \BinaryInfC{$(\sigma \cdot \eta)$} \DisplayProof.
+          \\ \\
+          Given a set (language) defined inductively, how can we tell if some $x \in X$ is in the language or not? We must provide a particular sequence of operations necessary to produce that $x$.
+
+          \begin{ex}
+            Let $X = \set{a, b}^\star$, $A = \set{a}$, and $P = $ \bigg\{ \AxiomC{X} \UnaryInfC{aX} \DisplayProof, \AxiomC{X} \UnaryInfC{Xa} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{bXY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XbY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XYb} \DisplayProof \bigg\}.
+            \\ \\
+            A typical question would be: is $abbaa \stackrel{?}{\in} I(A, P)$? The answer: yes! However, we must show how to generate $abbaa$ using the operations in $P$, in a finite number of steps.
+
+            \begin{enumerate}[1.]
+            \item $a$, belongs to the core $A$.
+            \item $baa$, after applying $P_3(a, a)$.
+            \item $abbaa$, after applying $P_4(a, baa)$.
+            \end{enumerate}
+
+            Note that the first step must always be an element in the core set.
+            \\ \\
+            Is $\epsilon \in I(A, P)$? No. We could use simple reasoning to show that $\epsilon \not \in I(A, P)$ (each function in $P$ increases the length). However, in general, it is more difficult to prove non-membership of an element than it is to prove membership of another element.
+          \end{ex}
+
+          A \textbf{certificate} (or \textbf{generating sequence}) for $x$ is a sequence of elements of $X, \theta_1, \theta_2, \theta_3, \ldots, \theta_n$ such that:
+          \begin{itemize}
+            \item $\theta_n = x$, and
+            \item Every $\theta_i$ in the sequence is either an element of the core set $A$ or is the result of applying an operation from $P$ to a $\theta_j, \theta_l$ that appeared earlier in the sequence ($j < i$ and $l < i$).
+          \end{itemize}
+        \end{enumerate}
+\end{document}
