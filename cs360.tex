@@ -34,6 +34,7 @@
 \newtheorem*{defn}{Definition}
 \newtheorem*{theorem}{Theorem}
 \newtheorem*{corollary}{Corollary}
+\newtheorem*{aside}{Aside}
 \newtheorem{ex}{Example}[section]
 
 \crefname{ex}{Example}{Example}
@@ -152,7 +153,7 @@
             \item A finite set of operations $P$, such as $\set{ \text{``son of''}, \text{``father of''}, \text{``mother of''}}$. This set is a set of functions from $X \to X$.
           \end{itemize}
 
-          Then, we would say that the \textbf{inductive set} $I(A, P)$, the set of blood relatives is defined as all people that can be reached from the core set by applying a finite sequence of operations.
+          Then, we would say that the \textbf{inductive set} $I(A, P)$, the set of blood relatives, is defined as all people that can be reached from the core set by applying a finite sequence of operations.
           \\ \\
           More formally, we say that $I(A, P)$ is the inductive set defined by core $A$ and operations $P$, and that $I(A, P)$ is the smallest set which:
           \begin{itemize}
@@ -168,6 +169,7 @@
           Given a set (language) defined inductively, how can we tell if some $x \in X$ is in the language or not? We must provide a particular sequence of operations necessary to produce that $x$.
 
           \begin{ex}
+            \label{strConcatenationExample}
             Let $X = \set{a, b}^\star$, $A = \set{a}$, and $P = $ \bigg\{ \AxiomC{X} \UnaryInfC{aX} \DisplayProof, \AxiomC{X} \UnaryInfC{Xa} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{bXY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XbY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XYb} \DisplayProof \bigg\}.
             \\ \\
             A typical question would be: is $abbaa \stackrel{?}{\in} I(A, P)$? The answer: yes! However, we must show how to generate $abbaa$ using the operations in $P$, in a finite number of steps.
@@ -186,7 +188,134 @@
           A \textbf{certificate} (or \textbf{generating sequence}) for $x$ is a sequence of elements of $X, \theta_1, \theta_2, \theta_3, \ldots, \theta_n$ such that:
           \begin{itemize}
             \item $\theta_n = x$, and
-            \item Every $\theta_i$ in the sequence is either an element of the core set $A$ or is the result of applying an operation from $P$ to a $\theta_j, \theta_l$ that appeared earlier in the sequence ($j < i$ and $l < i$).
+            \item Every $\theta_i$ in the sequence is either an element of the core set $A$ or is the result of applying an operation from $P$ to a $\theta_j, \theta_l$ that appeared earlier in the sequence ($j < i$ and $l < i$). \lecture{September 12, 2013}
           \end{itemize}
         \end{enumerate}
+
+        Our definition of $I(A, P)$ is still somewhat informal, however. We haven't formally defined what it means for a subset to be the smallest subset, and we also haven't formally defined what it means for a set to be ``closed'' under a set of operations.
+
+        \subsubsection{More on Inductive Sets and Structural Induction}
+        More formally, we say that a set $B$ is \textbf{closed under the operations of $\boldsymbol P$} if for every $f \in P$ and every $x, y \in B$, $f(x, y) \in B$. For example, the set of even numbers is closed under the operation +.
+        \\ \\
+        Now, let's redefine $I(A, P)$ in a more formal way:
+        $$
+          I(A, P) = \bigcap \left\{ B : A \subseteq B \text{ and } B \text{ is closed under } P \right\}
+        $$
+
+        Note that $I(A, P)$ is a unique set which is the intersection over the \emph{entire} collection of sets.
+
+        \begin{ex}
+          Let $X = \mathbb{N}, A = \set{10}, P = \set{+}$.
+          \\ \\
+          $I(A, P)$ is defined as the intersection of all sets $B$ such that $ A \subseteq B $ and $B$ is closed under $P$ (that is, $B$ is closed under $+$). So, we have:
+          \begin{itemize}
+            \item $B_1 = \set{\text{all even numbers}}$
+            \item $B_2 = \set{\text{all numbers divisible by 5}}$
+            \item $B_3 = \set{\text{all numbers divisible by 10}}$
+          \end{itemize}
+
+          In this case, $I(A, P) = \set{10, 20, \ldots}$, since $I(A, P)$ must be the minimal set among all possible sets $B$.
+        \end{ex}
+
+        \begin{aside}
+          \begin{align*}
+            \bigcap \left\{ [0, r] : r > 0 \right\} &= \set{0} \\
+            \bigcap \left\{ (0, r) : r > 0 \right\} &= \emptyset \\
+            \bigcup \left\{ \set{1, \ldots, n} : n \in \mathbb{N} \right\} &= \mathbb{N} \\
+            \bigcap \left\{ \set{1, \ldots, n} : n \in \mathbb{N} \right\} &= \set{1}
+          \end{align*}
+        \end{aside}
+
+        The equivalence of the two definitions of $I(A, P)$ is not immediately clear. We claim that $I(A, P)$ is closed under the operations of $P$, and $A \subseteq I(A, P)$.
+
+        \begin{proof}
+          Pick any $x, y \in I(A, P)$ and operation $f \in P$. Therefore, for every $B$ which contains $A$ and is closed under $P$, $x, y \in B$.
+          \\ \\
+          Since every such $B$ is closed under $P$, $f(x, y) \in B$ for every such $B$. Therefore, $f(x, y) \in \cap \set{ B : A \subseteq B \text{ and } B \text{ is closed under } P}$.
+          \\ \\
+          \underline{Exercise}: prove that $A \subseteq I(A, P)$.
+        \end{proof}
+
+        \begin{corollary}[Proof by Structural Induction Theory]
+          Any $B \subseteq X$ which contains $A$ and is closed under $P$ is a superset of $I(A, P)$. Namely, $I(A, P) \subseteq B$.
+        \end{corollary}
+
+        We could rephrase this corollary as follows: given any set $B$, if you want to prove that $I(A, P) \subseteq B$, it suffices to show:
+        \begin{itemize}
+          \item $A \subseteq B$, and
+          \item $B$ is closed under $P$.
+        \end{itemize}
+
+      \subsubsection{Mathematical Induction}
+        Let's say we want to show that for every $n$, $n^2 + n$ is even. A proof by usual (mathematical) induction requires us to show two things:
+        \begin{itemize}
+          \item Prove the claim holds for $n = 1$. This is equivalent to showing that $A \subseteq B$.
+          \item Prove that if the claim holds for $n$, it also holds for $n + 1$. This is equivalent to showing that $B$ is closed under $P$.
+        \end{itemize}
+
+        How is this the same as structural induction? Usual induction shows that $\mathbb{N} = I(A, P)$, where $A = \set{1}$ and $P = \set{ \text{``+1''}}$. That is, mathematical induction is just one specific case of structural induction.
+
+      \subsubsection{Examples of Proofs by Structural Induction}
+        \begin{ex}
+          Imagine we have three paper cups placed on a desk, with two of them facing upwards and one upside down. You must flip exactly two cups at a time. We want to get all of the cups facing upwards. Can we prove that this goal is not achievable?
+          \\ \\
+          Let $X$ be the set of all possible configurations of the cups. Let our core set $A$ contain only the state ``[up] [down] [up]''. Let our set of operations $P$ contain:
+          \begin{itemize}
+            \item $P_1$: flip the two rightmost cups.
+            \item $P_2$: flip the two leftmost cups.
+            \item $P_3$: flip the rightmost and leftmost cups.
+          \end{itemize}
+
+          We claim that the state ``[up] [up] [up]'' $\not \in I(A, P)$.
+          \begin{proof}
+            Let $B$ be the set of all configurations with an even number of ``up'' cups.
+            \\ \\
+            We want to show that $I(A, P) \subseteq B$. This would show that ``[up] [up] [up]'' is not attainable because it is not a member of $B$. We will use structural induction to show this.
+            \\ \\
+            \textbf{Induction base}: $A \subseteq B$.
+            \\ \\
+            \textbf{Induction step}: $B$ is closed under $P$. Namely, if $c \in B$, then $P_1(c), P_2(c)$, and $P_3(c) \in B$. There are three cases:
+            \begin{itemize}
+              \item We flip one ``up'' cup and one ``down'' cup. This is a difference of +0 ``up'' cups.
+              \item We flip two ``up'' cups. This causes us to remove two (which is even) from an already even number, which gives us another even number of ``up'' cups.
+              \item We flip two ``down'' cups. This causes us to add two (which is even) to an already even number, which gives us another even number of ``up'' cups.
+            \end{itemize}
+
+            Note that these three cases show us that no matter which operation we use, it is not possible to obtain all three ``up'' cups, since the number of ``up'' cups must always be even.
+          \end{proof}
+        \end{ex}
+
+        \begin{ex}
+          Recall in \ref{strConcatenationExample} we defined $X = \set{a, b}^\star$, $A = \set{a}$, and $P = $ \bigg\{ \AxiomC{X} \UnaryInfC{aX} \DisplayProof, \AxiomC{X} \UnaryInfC{Xa} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{bXY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XbY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XYb} \DisplayProof \bigg\}.
+          \\ \\
+          For this example, let $\#_a(x)$ denote the number of ``a''s in the string $x$ and similarly, let $\#_b(x)$ denote the number of ``b''s in the string $x$.
+          \\ \\
+          \textbf{Claim}: every member of $I(A, P)$ has more ``a''s than ``b''s. To put this more simply, let $B = \set{ x : \#_a(x) > \#_b(x) }$. We wish to show that $I(A, P) \subseteq B$.
+          \begin{proof}
+            We will prove this claim by structural induction.
+            \\ \\
+            \textbf{Induction base}: $A \subseteq B$. It is trivial to see that the string ``a'' has more ``a''s than ``b''s (since it has no ``b''s).
+            \\ \\
+            \textbf{Induction step}: if $x, y \in B$, then we must show that $P_1(x) \in B, P_2(x) \in B, P_3(x, y) \in B, P_4(x,y) \in B$, and $P_5(x, y) \in B$.
+            \\ \\
+            It is clear that for $P_1$ and $P_2$, one ``a'' is being added to a string that must already include more ``a''s than ``b''s, so this trivially holds true.
+            \\ \\
+            The case of $P_3$ isn't as immediately obvious. Assume $\#_a(x) > \#_b(x)$, and $\#_a(y) > \#_b(y)$. So, $\#_a(x) \ge \#_b(x) + 1$ and $\#a(y) \ge \#_b(y) + 1$. This gives us $\#_a(xy) \ge \#_b(xy) + 2$.
+            \\ \\
+            Now, note that $\#_a(bxy) = \#_a(xy)$, and $\#_b(bxy) = \#_b(xy) + 1$. We can conclude that $\#_a(bxy) \ge \#_b(bxy) + 1 > \#_b(bxy)$.
+            \\ \\
+            A similar argument applies for $P_4$ and $P_5$.
+          \end{proof}
+        \end{ex}
+
+      \subsubsection{Regular Languages}
+        For us, tasks will always be decision problems. That is, given $L \subseteq \set{a, b}^\star$ and input $x \in \set{a, b}^\star$, decide if $x \in L$.
+        \\ \\
+        The set of all possible tasks is $\set{L : L \subseteq \set{a, b}^\star}$. This set is an infinite set of finite strings.
+        \\ \\
+        Recall that not all infinite sets have the same size. The set of all finite strings $\set{a, b}^\star$ is a ``small'' infinite set, meaning it is \textbf{countable}. However, the set of all subsets of $\set{a, b}^\star$ is a ``large'' infinite set, which is \textbf{uncountable}.
+        \\ \\
+        The set of all possible computer programs is a subset of $\set{0, 1}^\star$. Note that since every program is a \emph{finite} string, the set of all possible programs is countable.
+        \\ \\
+        Notice that we have an uncountable number of tasks, but a countable number of programs. This implies that there are tasks for which a language does not exist. That is, there are some tasks that cannot be carried out by programs.
 \end{document}
