@@ -67,7 +67,7 @@
       \\ \\
       The professor's office is in DC 1311, and his office hours are on Tuesdays from 2:00 to 3:00 pm.
       \\ \\
-      This course is mathematical. The relevant background required is heavily logic-based, and requires (almost) no programming experience.
+      This course is mathematical. Consequently, relevant background courses are mainly mathematical (mostly logic) and  (almost) no programming.
 
     \subsection{Introduction}
       The goal of the course is to develop the theory of computation. We want to understand the mathematics that govern computers. We will explore questions like:
@@ -77,9 +77,9 @@
         \item Which tasks are easy or hard for computers?
       \end{itemize}
 
-      We make abstractions and use them as common properties that are relevant to many phenomenon. We aren't going to be focussing on any particular language, but instead, we'll focus on common properties.
+      We make abstractions and use them as common properties that are relevant to many phenomenon. We aren't going to be focussing on any particular programming language or machine architecture, but instead, we'll focus on issues that underlie any automated computation.
       \\ \\
-      We aim to create abstractions that will allow us to generalize with fundamental properties. These abstractions allow us to form conclusions that are relevant to computing in general, and not just for today's hardware and software.
+      These abstractions allow us to form conclusions that are relevant to computing in general, and not just for today's hardware and software.
       \\ \\
       This course has two key goals:
       \begin{enumerate}
@@ -87,9 +87,6 @@
         \item To develop the ability to reason formally and abstractly about computing.
       \end{enumerate}
 
-  \section{CS 245 Review}
-    We'll start off by reviewing some of the basics that were covered on CS 245, to ensure that everyone's on the same page.
-    \\ \\
     Throughout the course, we will follow two main threads concurrently: abstract models of computers, and computing tasks. We'll progress from simple models and simple tasks to complex models and complex tasks, and along the way connections will be made between the two.
 
     \subsection{Computing Tasks}
@@ -100,7 +97,7 @@
         \item Input: a graph. Decision: is it connected?
       \end{itemize}
 
-      We're interested in seeing which of these questions a computer can figure out.
+      We're interested in seeing which of these questions a computer can carry out and how difficult are such task.
 
       \subsubsection{Modelling Decision Problems}
         We model decision problems using \textbf{formal languages}. A decision problem has two components:
@@ -120,7 +117,7 @@
         \\ \\
         $\Sigma^\star$ represents the set of all finite strings over the alphabet $\Sigma$. In many cases, we define $X = \Sigma^\star$. For example, if $\Sigma = \set{0, 1}$ then $\Sigma^\star = \set{ \epsilon, 0, 1, 00, 11, 01, 10, \ldots }$. Note that $\Sigma^\star$ is an infinite set, but every member of $\Sigma^\star$ is finite.
         \\ \\
-        We will define just one operation for strings, for the time being: \textbf{concatenation}. Given two strings, $\sigma$ and $\eta$, we get $\sigma \eta$. That is,
+        For the time being, we will define just one operation for strings, : \textbf{concatenation}. Given two strings, $\sigma$ and $\eta$, we get $\sigma \eta$. That is,
           \AxiomC{$\sigma$}
           \AxiomC{$\eta$}
           \BinaryInfC{$\sigma \eta$}
@@ -134,45 +131,50 @@
           \item $L = \Sigma^\star$.
         \end{itemize}
 
-        Compilers use languages to check their input (the code of a program) to see if the program is valid (if the code is in the language).
+        Compilers task of checking their input (the code of a program) to see if the program is valid (if the code is in the language), can be readily seen as checking membership in such a language (namely, the language of all binary sequences that represent a valid code in the given programming language).
         \\ \\
-        We will discuss tasks that help us determine if a particular string belongs to a particular language or not.
+        %We will discuss tasks that help us determine if a particular string belongs to a particular language or not.
 
+  \section{Inductive definition of sets and Structural Induction (CS 245 Review)}
+    We'll start off by reviewing some basic notions that were covered on CS 245, to ensure that everyone's on the same page.
       \subsubsection{Formal Tools for Defining Sets}
         We want languages to model every computational task, some of which are complex. We need several different methods for formally defining sets, since all languages are sets.
 
         \begin{enumerate}
-          \item \textbf{List all members of the set}. This method is very precise and concrete, but it makes look-ups difficult ($O(n)$) and it fails if the set is infinitely large.
-          \item \textbf{Common property that characterizes the set}. For example, consider the set of all even numbers. This set is not definable by a list because it's an infinite set. However, there is a common property that's shared between all members of the set: if you divide by two and examine the remainder, every member in the set will have a remainder of zero.
-          \item \textbf{Induction}. Methods (1) and (2) don't offer us a way to define a set of all your blood relatives, since there's no common property. Instead, we could use induction to define that set.
+          \item \textbf{List all members of the set}. This method is precise and concrete, but it makes look-ups difficult ($O(n)$) and it fails if the set is infinitely large.
+          \item \textbf{Common property that characterizes the members of the set}. For example, consider the set of all even numbers. This set is not definable by a list because it's an infinite set. However, there is a common property that's shared between all members of the set: if you divide by two and examine the remainder, every member in the set will have a remainder of zero and only members of the set have this property.
+          \item \textbf{Inductive definitions}. Methods (1) and (2) don't offer us a way to define a set of all your blood relatives, since there's no property that characterizes that set. Instead, we could use \emph{inductive definitions}.
           \\ \\
-          Defining a set with induction requires three components:
+          Inductive definitions of sets requires three components:
           \begin{itemize}
             \item A domain set $X$ (sometimes omitted if it is obvious).
-            \item A finite core set $A$ (as in ``atoms''), such as $\set{ \text{me} }$.
-            \item A finite set of operations $P$, such as $\set{ \text{``son of''}, \text{``father of''}, \text{``mother of''}}$. This set is a set of functions from $X \to X$.
+            \item A core set $A$ (as in ``atoms''), such as $\set{ \text{me} }$.
+            \item A set of operations $P$, such as $\set{ \text{``son of''}, \text{``father of''}, \text{``mother of''}}$. This set is a set of functions from $X \to X$.
           \end{itemize}
 
-          Then, we would say that the \textbf{inductive set} $I(A, P)$, the set of blood relatives, is defined as all people that can be reached from the core set by applying a finite sequence of operations.
+          Given these components, we define the \textbf{inductive set} $I(A, P)$, (say, the set of blood relatives), as all domain elements that can be reached from the core set by applying a finite sequence of operations.
           \\ \\
-          More formally, we say that $I(A, P)$ is the inductive set defined by core $A$ and operations $P$, and that $I(A, P)$ is the smallest set which:
+          More formally,  $I(A, P)$ - the inductive set defined by core $A$ and operations $P$ - is the smallest set satisfying:
           \begin{itemize}
             \item Contains all members of $A$, and
-            \item Is closed under the operations in $P$.
+            \item Closed under the operations in $P$.
           \end{itemize}
 
-          Let's say we define the core set as $\set{2}$, and the set of operations as $\set{ \text{``add 2''}, \text{``subtract 2''}}$. The defined set is the set of all even numbers, both positive and negative.
-          \\ \\
-          Or, let's say we want to define the set of all algebraic expressions. Our core set would be $\set{x, y, z, 1, 2, 3, \ldots, a, b, c, \ldots}$. Our operations would be:
+          \noindent \textbf{Examples:}
+          \begin{itemize}
+          \item Let the domain be the set of all real numbers, the core set be $\set{2}$, and the set of operations be $\set{ \text{``add 2''}, \text{``subtract 2''}}$. The defined set is the set of all even numbers, both positive and negative.
+
+          \item To define the set of all algebraic expressions. Our core set would be $\set{x, y, z, 1, 2, 3, \ldots, a, b, c, \ldots}$. Our operations would be:
           \AxiomC{$\sigma$} \AxiomC{$\eta$} \BinaryInfC{$(\sigma + \eta)$} \DisplayProof,\AxiomC{$\sigma$} \AxiomC{$\eta$} \BinaryInfC{$(\sigma \cdot \eta)$} \DisplayProof.
-          \\ \\
-          Given a set (language) defined inductively, how can we tell if some $x \in X$ is in the language or not? We must provide a particular sequence of operations necessary to produce that $x$.
+          \end{itemize}
+          Given a set (language) defined inductively, how can we tell if some $x \in X$ is in the language or not?
+          %We must provide a particular sequence of operations necessary to produce that $x$.
 
           \begin{ex}
             \label{strConcatenationExample}
             Let $X = \set{a, b}^\star$, $A = \set{a}$, and $P = $ \bigg\{ \AxiomC{X} \UnaryInfC{aX} \DisplayProof, \AxiomC{X} \UnaryInfC{Xa} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{bXY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XbY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XYb} \DisplayProof \bigg\}.
             \\ \\
-            A typical question would be: is $abbaa \stackrel{?}{\in} I(A, P)$? The answer: yes! However, we must show how to generate $abbaa$ using the operations in $P$, in a finite number of steps.
+            A typical question would be: is $abbaa \stackrel{?}{\in} I(A, P)$? The answer: yes! However, we must show how to generate $abbaa$ from $a$, using the operations in $P$, in a finite number of steps.
 
             \begin{enumerate}[1.]
             \item $a$, belongs to the core $A$.
@@ -192,17 +194,17 @@
           \end{itemize}
         \end{enumerate}
 
-        Our definition of $I(A, P)$ is still somewhat informal, however. We haven't formally defined what it means for a subset to be the smallest subset, and we also haven't formally defined what it means for a set to be ``closed'' under a set of operations.
+        Our definition of $I(A, P)$ is still somewhat informal, however. We haven't formally defined what it means for a subset to be the \emph{smallest} subset, and we also haven't formally defined what it means for a set to be ``closed'' under a set of operations.
 
         \subsubsection{More on Inductive Sets and Structural Induction}
-        More formally, we say that a set $B$ is \textbf{closed under the operations of $\boldsymbol P$} if for every $f \in P$ and every $x, y \in B$, $f(x, y) \in B$. For example, the set of even numbers is closed under the operation +.
+        More formally, we say that a set $B$ is \textbf{closed under the operations of $\boldsymbol P$} if for every $f \in P$ and every $x, y \in B$, $f(x, y) \in B$ (for concreteness, we considered here an $f$ that accepts two inputs, but it may also be a unary function, $f(x)$ or ternary $f(x,y, z)$ etc.). For example, the set of even numbers is closed under the operation +.
         \\ \\
         Now, let's redefine $I(A, P)$ in a more formal way:
         $$
-          I(A, P) = \bigcap \left\{ B : A \subseteq B \text{ and } B \text{ is closed under } P \right\}
+          I(A, P) = \bigcap \left\{ B : A \subseteq B ~\text{ and } ~B ~\text{ is closed under } ~P \right\}
         $$
 
-        Note that $I(A, P)$ is a unique set which is the intersection over the \emph{entire} collection of sets.
+        Note that $I(A, P)$ is the intersection over the \emph{entire} collection of sets (and is therefore uniquely defined).
 
         \begin{ex}
           Let $X = \mathbb{N}, A = \set{10}, P = \set{+}$.
@@ -214,7 +216,7 @@
             \item $B_3 = \set{\text{all numbers divisible by 10}}$
           \end{itemize}
 
-          In this case, $I(A, P) = \set{10, 20, \ldots}$, since $I(A, P)$ must be the minimal set among all possible sets $B$.
+          In this case, $I(A, P) = \set{10, 20, 30, \ldots}$, since $I(A, P)$ must be the minimal set among all possible sets $B$ (or, in other words, the multiples of 10 are exactly the numbers that belong to each and every of these sets $B$).
         \end{ex}
 
         \begin{aside}
@@ -229,9 +231,9 @@
         The equivalence of the two definitions of $I(A, P)$ is not immediately clear. We claim that $I(A, P)$ is closed under the operations of $P$, and $A \subseteq I(A, P)$.
 
         \begin{proof}
-          Pick any $x, y \in I(A, P)$ and operation $f \in P$. Therefore, for every $B$ which contains $A$ and is closed under $P$, $x, y \in B$.
+          Pick any $x, y \in I(A, P)$ and operation $f \in P$. For every $B$ which contains $A$ and is closed under $P$, $x, y \in B$ (since $I(A,P)$ is the intersection of all such $B$'s).
           \\ \\
-          Since every such $B$ is closed under $P$, $f(x, y) \in B$ for every such $B$. Therefore, $f(x, y) \in \cap \set{ B : A \subseteq B \text{ and } B \text{ is closed under } P}$.
+          Since every such $B$ is closed under $P$, $f(x, y) \in B$ for every such $B$. Therefore, $f(x, y) \in \cap \set{ B : A \subseteq B \text{ and } B \text{ is closed under } P}$, so $f(x,y) \in I(A, P)$.
           \\ \\
           \underline{Exercise}: prove that $A \subseteq I(A, P)$.
         \end{proof}
@@ -246,7 +248,7 @@
           \item $B$ is closed under $P$.
         \end{itemize}
 
-      \subsubsection{Mathematical Induction}
+      \subsubsection{Proof by Structural Induction}
         Let's say we want to show that for every $n$, $n^2 + n$ is even. A proof by usual (mathematical) induction requires us to show two things:
         \begin{itemize}
           \item Prove the claim holds for $n = 1$. This is equivalent to showing that $A \subseteq B$.
@@ -281,7 +283,7 @@
               \item We flip two ``down'' cups. This causes us to add two (which is even) to an already even number, which gives us another even number of ``up'' cups.
             \end{itemize}
 
-            Note that these three cases show us that no matter which operation we use, it is not possible to obtain all three ``up'' cups, since the number of ``up'' cups must always be even.
+            Note that these three cases show us that no matter which operation we use, it is not possible to obtain all three ``up'' cups, since the number of ``up'' cups will always be even.
           \end{proof}
         \end{ex}
 
@@ -317,5 +319,5 @@
         \\ \\
         The set of all possible computer programs is a subset of $\set{0, 1}^\star$. Note that since every program is a \emph{finite} string, the set of all possible programs is countable.
         \\ \\
-        Notice that we have an uncountable number of tasks, but a countable number of programs. This implies that there are tasks for which a language does not exist. That is, there are some tasks that cannot be carried out by programs.
+        In summary, we have an uncountable number of tasks, but a countable number of programs (and each program is suitable for carrying out at most a single task). This implies that there are tasks (languages) for which no program exists (namely, for such languages, $L$, there exists no program that will figure out correctly for every string $x$ whether it is a member of $L$ or not).
 \end{document}
