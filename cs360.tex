@@ -137,7 +137,7 @@
 
   \section{Inductive definition of sets and Structural Induction (CS 245 Review)}
     We'll start off by reviewing some basic notions that were covered on CS 245, to ensure that everyone's on the same page.
-      \subsubsection{Formal Tools for Defining Sets}
+      \subsection{Formal Tools for Defining Sets}
         We want languages to model every computational task, some of which are complex. We need several different methods for formally defining sets, since all languages are sets.
 
         \begin{enumerate}
@@ -196,7 +196,7 @@
 
         Our definition of $I(A, P)$ is still somewhat informal, however. We haven't formally defined what it means for a subset to be the \emph{smallest} subset, and we also haven't formally defined what it means for a set to be ``closed'' under a set of operations.
 
-        \subsubsection{More on Inductive Sets and Structural Induction}
+        \subsection{More on Inductive Sets and Structural Induction}
         More formally, we say that a set $B$ is \textbf{closed under the operations of $\boldsymbol P$} if for every $f \in P$ and every $x, y \in B$, $f(x, y) \in B$ (for concreteness, we considered here an $f$ that accepts two inputs, but it may also be a unary function, $f(x)$ or ternary $f(x,y, z)$ etc.). For example, the set of even numbers is closed under the operation +.
         \\ \\
         Now, let's redefine $I(A, P)$ in a more formal way:
@@ -257,7 +257,7 @@
 
         How is this the same as structural induction? Usual induction shows that $\mathbb{N} = I(A, P)$, where $A = \set{1}$ and $P = \set{ \text{``+1''}}$. That is, mathematical induction is just one specific case of structural induction.
 
-      \subsubsection{Examples of Proofs by Structural Induction}
+      \subsection{Examples of Proofs by Structural Induction}
         \begin{ex}
           Imagine we have three paper cups placed on a desk, with two of them facing upwards and one upside down. You must flip exactly two cups at a time. We want to get all of the cups facing upwards. Can we prove that this goal is not achievable?
           \\ \\
@@ -310,7 +310,7 @@
           \end{proof}
         \end{ex}
 
-      \subsubsection{Regular Languages}
+      \subsection{Regular Languages}
         For us, tasks will always be decision problems. That is, given $L \subseteq \set{a, b}^\star$ and input $x \in \set{a, b}^\star$, decide if $x \in L$.
         \\ \\
         The set of all possible tasks is $\set{L : L \subseteq \set{a, b}^\star}$. This set is an infinite set of finite strings.
@@ -320,4 +320,148 @@
         The set of all possible computer programs is a subset of $\set{0, 1}^\star$. Note that since every program is a \emph{finite} string, the set of all possible programs is countable.
         \\ \\
         In summary, we have an uncountable number of tasks, but a countable number of programs (and each program is suitable for carrying out at most a single task). This implies that there are tasks (languages) for which no program exists (namely, for such languages, $L$, there exists no program that will figure out correctly for every string $x$ whether it is a member of $L$ or not).
+
+      \subsection{Defining Interesting Families of Tasks} \lecture{September 17, 2013}
+        \begin{aside}
+          The empty string can be denoted as either $\epsilon$ or $\lambda$.
+        \end{aside}
+
+        \subsubsection{Operations on Languages}
+          There are several operations that we can perform on languages.
+          \\ \\
+          We can use \textbf{standard set operations}, including $\bigcup, \bigcap$, complement ($\overline A$), and set difference ($A \textbackslash B$). You should be familiar with how these standard operations are defined.
+          \\ \\
+          Since we focus on subsets of the set of finite strings, $\Sigma^\star$, we can also use \textbf{operations on sets of such strings}. Let's go into more detail of how these string set operations are defined.
+
+          \begin{enumerate}
+            \item \textbf{The concatenation operation}. Given $L_1, L_2 \subseteq \Sigma^\star$, we define $L_1 L_2 = \set{ w_1 w_2 : w_1 \in L_1, w_2 \in L_2 }$.
+
+            \begin{ex}
+            Let $L_1 = \set{0, 011}$ and $L_2 = \set{ \epsilon, 110 }$. Then $L_1 L_2 = \set{0, 0110, 011, 011110 }$.
+            \end{ex}
+
+            Concatentation is not always commutative. Consider $L_1 = \set{0}$ and $L_2 = \set{1}$. We have $L_1 L_2 = \set{01}$ but $L_2 L_1 = \set{10}$, so $L_1 L_2 \ne L_2 L_1$.
+            \\ \\
+            Can $L_1 \subseteq L_1 L_2$? Yes, but only if $\epsilon \in L_2$. Otherwise, $L_1 \not \subseteq L_1 L_2$.
+
+            \item \textbf{The power operation}. Given any language $L$, define:
+              \begin{itemize}
+                \item $L^0 = \set{ \epsilon }$
+                \item $L^{n + 1} = L^n L$ for every $n > 0$
+              \end{itemize}
+
+              In particular, note that $L^1 = \set{ \epsilon} L = L$.
+
+              \begin{ex}
+                Let $L = \set{ 0, 1 }$. Then $L^n$ is the set of all ($\set{0, 1}$) strings.
+              \end{ex}
+
+            \item \textbf{The star (Kleene) operation}. For any language $L$, $L^\star = \displaystyle \bigcup_n L^n$. That is, $L^\star$ is the set of all finite concatenations of strings from $L$. Note that $L^\star$ includes $L^0$, which means $\epsilon \in L^\star$.
+          \end{enumerate}
+
+          \noindent \textbf{Examples:}
+            \begin{itemize}
+              \item $\set{1}^\star$ is the set of all finite strings of 1s.
+              \item $\set{0, 1}^\star$ is the set of all finite $\set{0, 1}$ strings.
+              \item Can $L^\star = L$? Yes. Consider $L = \set{ \epsilon }$, or $(L^\star)^\star = L^\star$ for any $L$.
+              \item Can $L^\star$ be finite? Yes. Consider $L = \set{ \epsilon }$ or $L = \emptyset$.
+            \end{itemize}
+
+        \subsubsection{The Set of Regular Languages}
+          Given some finite alphabet set $\Sigma$, let $X = \Sigma^\star$. We will also define our core set to be:
+          $$
+            A = \set{\emptyset, \set{\epsilon}} \cup \set{ \set{a} : a \in \Sigma }
+          $$
+
+          For instance, suppose $\Sigma = \set{0, 1}$. Then $A = \set{ \emptyset, \set{ \epsilon }, \set{ 0 }, \set{ 1 } }$. Finally, we'll define our set of operations $P$:
+          $$
+            P = \text{ \bigg\{ \AxiomC{$L_1$} \AxiomC{$L_2$} \BinaryInfC{$L_1 \cup L_2$} \DisplayProof, \AxiomC{$L_1$} \AxiomC{$L_2$} \BinaryInfC{$L_1 \cdot L_2$} \DisplayProof, \AxiomC{$L$} \UnaryInfC{$L^\star$} \DisplayProof \bigg\}}
+          $$
+
+          A language is said to be \textbf{regular} if it belongs to $I(A, P)$, for this $A$ and $P$.
+          \\ \\
+          To prove a language is regular, you must be able to show how to generate it.
+
+          \begin{ex}
+            $\set{0, 1, 01}$ is regular.
+            \begin{proof}
+              \begin{align}
+                \set{0} &\text{ core} \\
+                \set{1} &\text{ core} \\
+                \set{01} &\text{ product} \\
+                \set{0, 1} &\text{ union of (1) and (2)} \\
+                \set{0, 1, 01} &\text{ union of (3) and (4)}
+              \end{align}
+            \end{proof}
+          \end{ex}
+
+          \textbf{Claim 1}: for every (finite) string $\sigma$, $\set{\sigma}$ is a regular language. It's easy to see this is true, because you can generate the language by concatenating the languages that represent individual letters.
+          \\ \\
+          \textbf{Claim 2}: every finite language is regular. Since we know every $\set{\sigma}$ is regular, so is a finite unions of such.
+
+          \begin{ex}
+            Let $L_\text{even}$ be the language of all words of even length. $L_\text{even}$ is regular. We can form every word in $L_\text{even}$ using the expression $(\set{0, 1} \set{0, 1})^\star$.
+          \end{ex}
+
+          \begin{ex}
+            Let $L_\text{equal} = \set{ w : \#_0(w) = \#_1(w) }$. $L_\text{equal}$ is not regular. We can't prove this yet though.
+          \end{ex}
+
+      \subsection{Explicit Descriptions of Regular Languages: Regular Expressions}
+        A \textbf{regular expression} is just a word in a language that is designed to describe languages.
+
+        \subsubsection{Defining The Set of Regular Expressions}
+          Given some alphabet $\Sigma$, let $X$ be defined as
+          $$
+            X = (\Sigma \cup \set{+, \star, (, ), \emptyset, \epsilon})^\star
+          $$
+
+          We will define our core set $A$ as
+          $$
+            A = \set{\emptyset, \epsilon} \cup \set{ a : a \in \Sigma }
+          $$
+
+          Finally, we will define our set of operations $P$ as
+          $$
+            P = \left\{ \text{\AxiomC{$r_1$} \AxiomC{$r_2$} \BinaryInfC{$r_1 + r_2$} \DisplayProof, \AxiomC{$r_1$} \AxiomC{$r_2$} \BinaryInfC{$r_1 r_2$} \DisplayProof, \AxiomC{$r$} \UnaryInfC{$r^\star$} \DisplayProof, \AxiomC{$r$} \UnaryInfC{$(r)$} \DisplayProof } \right\}
+          $$
+
+          A regular expression is any member of this $I(A, P)$.
+          \\ \\
+          Suppose $\Sigma = \set{a, b}$. Some regular expressions over $\Sigma$ are $a$, $ab$, $a + b$, $a(a + \epsilon)^\star$, and $(a + b)(a + b)$.
+          \\ \\
+          \textbf{Claim}: in any regular expression, the number of $+$ symbols is at least one less than the number of symbols from the set $\Sigma \cup \set{ \epsilon, \emptyset }$. The proof of this (by structural induction) is left as an exercise.
+
+        \subsubsection{Mapping Regular Expressions to Languages}
+          We will define a mapping $L$ such that $L: \text{Regular Expression} \to \text{Language}$. We define such a mapping $L$ recursively over the definition of regular expressions.
+
+          \begin{itemize}
+            \item $L(\epsilon) = \set{ \epsilon }$
+            \item $L(a) = \set{ a }$ for every $a \in \Sigma$
+          \end{itemize}
+
+          Assume $L(r_1)$ and $L(r_2)$ are already defined. We then define the mappings for each operation:
+          \begin{itemize}
+            \item $L(r_1 r_2) = L(r_1) L(r_2)$
+            \item $L(r_1 + r_2) = L(r_1) \cup L(r_2)$
+            \item $L(r_1^\star) = (L(r_1))^\star$
+            \item $L((r_1)) = L(r_1)$
+          \end{itemize}
+
+          \noindent \textbf{Examples}:
+          \begin{itemize}
+            \item Let $r = (0 + 1)$. Then $L(r) = \set{0, 1}$.
+            \item Let $r = 01$. Then $L(r) = \set{01}$.
+            \item Let $r = (01)^\star$. Then $L(r) = \set{ \epsilon, 01, 010101, 01\ldots0101\ldots01, \ldots}$.
+            \item Let $r = (01)^\star + (10)^\star$. Then $L(r)$ is the set of all alternating strings that either start with 0 and end with 1, or start with 1 and end with 0.
+          \end{itemize}
+
+          Find an expression $r$ such that $L(r)$ is the set of \emph{all} alternating strings. One such expression is $r = (0 + \epsilon)(10)^\star(1 + \epsilon)$. Another expression to represent the same language is $r' = (01)^\star + (10)^\star + 1(01)^\star + 0(10)^\star$.
+          \\ \\
+          Since $L(r) = L(r')$ represent the same language, this shows that there is no \emph{unique} regular expression to describe a language. Multiple distinct regular expressions can represent the same language.
+
+        \subsubsection{Uses of Regular Expressions}
+          Regular expressions are often useful to search for patterns in code. For example, if you were looking for all strings that start with ``a'' and end with ``b'', you could use the regular expression $a(a + b)^\star b$.
+          \\ \\
+          Regular expressions are also used in compilers. Compilers need to find certain patterns in the code they're given to compile, in order to perform the parsing step of the compilation.
 \end{document}
