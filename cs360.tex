@@ -461,4 +461,146 @@
           Regular expressions are often useful to search for patterns in code. For example, if you were looking for all strings that start with ``a'' and end with ``b'', you could use the regular expression $a(a + b)^\star b$.
           \\ \\
           Regular expressions are also used in compilers. Compilers need to find certain patterns in the code they're given to compile, in order to perform the parsing step of the compilation.
+          \\ \lecture{September 19, 2013} \\
+        \emph{The lecture from September 19, 2013 is omitted. If you have notes from this lecture, feel free to email me (\href{mailto:chris@cthomson.ca}{chris@cthomson.ca}) and I'll include them here.}
+
+  \section{Computing Machines} \lecture{September 24, 2013}
+    \subsection{Deterministic Finite Automata}
+      The first model of computing machines that we'll discuss are \textbf{deterministic finite automata} (also known as \text{DFA}s). A DFA is denoted by $A = (\Sigma, Q, q_0, \delta, F)$, where
+      \begin{itemize}
+        \item $\Sigma$ is the alphabet (the set of letters) of the DFA.
+        \item $Q$ is the set of all states in the DFA.
+        \item $q_0$ is the initial state.
+        \item $\delta$ is the transition function.
+        \item $F$ is a set of accepting states. (Note that there can be more than one accepting state.)
+      \end{itemize}
+
+      Every DFA can be represented with a bubble diagram, to make it easier to visualize.
+      \begin{ex}
+        A bubble diagram that represents the DFA that accepts all strings with an even number of $0$s and an odd number of $1$s is as follows:
+
+        % http://madebyevan.com/fsm/ is a great tool for generating these.
+        % It generates somewhat verbose code, unfortunately.
+        \begin{center}
+          \begin{tikzpicture}[scale=0.2]
+          \tikzstyle{every node}+=[inner sep=0pt]
+          \draw [black] (11.1,-17.2) circle (3);
+          \draw (11.1,-17.2) node {$q_0$};
+          \draw [black] (38.2,-14.3) circle (3);
+          \draw (38.2,-14.3) node {$q_1$};
+          \draw [black] (38.2,-14.3) circle (2.4);
+          \draw [black] (55.8,-13.6) circle (3);
+          \draw (55.8,-13.6) node {$q_2$};
+          \draw [black] (27.5,-32.2) circle (3);
+          \draw (27.5,-32.2) node {$q_3$};
+          \draw [black] (13.215,-15.077) arc (130.7768:61.43928:19.862);
+          \fill [black] (35.68,-12.67) -- (35.22,-11.85) -- (34.74,-12.73);
+          \draw (23.86,-9.78) node [above] {$1$};
+          \draw [black] (35.507,-15.62) arc (-66.28802:-101.4959:35.741);
+          \fill [black] (14.01,-17.92) -- (14.7,-18.57) -- (14.89,-17.59);
+          \draw (25.15,-19.02) node [below] {$1$};
+          \draw [black] (24.505,-32.212) arc (-95.55965:-169.33456:14.845);
+          \fill [black] (24.51,-32.21) -- (23.76,-31.64) -- (23.66,-32.63);
+          \draw (14.91,-28.88) node [below] {$0$};
+          \draw [black] (52.963,-14.571) arc (-74.43247:-101.01232:25.813);
+          \fill [black] (52.96,-14.57) -- (52.06,-14.3) -- (52.33,-15.27);
+          \draw (47.09,-16.04) node [below] {$0$};
+          \draw [black] (54.064,-16.046) arc (-37.38097:-75.98969:42.768);
+          \fill [black] (30.43,-31.58) -- (31.33,-31.87) -- (31.09,-30.9);
+          \draw (44.57,-26.32) node [below] {$1$};
+          \draw [black] (55.342,-16.562) arc (-12.78146:-100.5892:21.52);
+          \fill [black] (55.34,-16.56) -- (54.68,-17.23) -- (55.65,-17.45);
+          \draw (47.18,-30.28) node [below] {$1$};
+          \draw [black] (40.512,-12.399) arc (122.65769:61.89753:12.697);
+          \fill [black] (40.51,-12.4) -- (41.46,-12.39) -- (40.92,-11.55);
+          \draw (46.83,-9.86) node [above] {$0$};
+          \draw [black] (13.954,-18.118) arc (68.51255:26.59325:23.447);
+          \fill [black] (13.95,-18.12) -- (14.52,-18.88) -- (14.88,-17.95);
+          \draw (22.2,-22.15) node [above] {$0$};
+          \end{tikzpicture}
+        \end{center}
+      \end{ex}
+
+      To define $L(A)$, we extend $\delta: Q \times \Sigma \to Q$, to: $\hat{\delta}: Q \times \Sigma^\star \to Q$. Now, we define the language accepted by DFA $A$ as:
+      $$
+        L(A) = \set{ w : \hat{\sigma}(q_0, w) \in F }
+      $$
+
+      \textbf{Claim}: or this automata, $L(A) = \set{ w : \#_0(w) \text{ is even, and } \#_1(w) \text{ is odd }}$. But how do we prove this?
+      \\ \\
+      Let's rephrase our claim. For every $w \in \set{0, 1}^\star$, if $\#_0(w)$ is even and the $\#_1(w)$ is odd, then $A$ accepts $w$, and otherwise, $A$ does not accept $w$.
+      \\ \\
+      Since we said ``for every $w \in \set{0, 1}^\star$'', that should be a giveaway that we should use structual induction for this proof.
+      \\ \\
+      Let's define $\set{0, 1}^\star$ inductively. Note that we are \emph{not} yet defining the set of accepted members for the DFA, but instead, we are aiming to inductively define the set of all possible words across the alphabet $\Sigma = \set{0, 1}$.
+      \\ \\
+      We have our core set $A = \set{ \epsilon }$ (not to be confused with the $A$ we're using to denote the DFA). We also have two operations for any string $\sigma$,
+      $$
+        P = \bigg\{ \text{\AxiomC{$\sigma$} \UnaryInfC{$\sigma 1$} \DisplayProof, \AxiomC{$\sigma$} \UnaryInfC{$\sigma 0$} \DisplayProof} \bigg\}
+      $$
+
+      Rather than proving our claim directly, it will be easier to prove a stronger claim, which characterizes every state of the machine. This stronger claim (four claims, in fact) will be easier to prove because we'll have more to work with in our induction hypothesis.
+      \\ \\
+      For every $w \in \set{0, 1}^\star$:
+
+      \begin{itemize}
+        \item If $\#_0(w)$ is even and $\#_1(w)$ is even, then $\hat{\delta}(q_0 w) = q_0$.
+        \item If $\#_0(w)$ is even and $\#_1(w)$ is odd, then $\hat{\delta}(q_0 w) = q_1$.
+        \item If $\#_0(w)$ is odd and $\#_1(w)$ is odd, then $\hat{\delta}(q_0 w) = q_2$.
+        \item If $\#_0(w)$ is odd and $\#_1(w)$ is even, then $\hat{\delta}(q_0 w) = q_3$.
+      \end{itemize}
+
+      \begin{proof}
+        We will prove the four claims using structural induction on $\set{0, 1}^\star$.
+        \\ \\
+        \textbf{Base case}: $w = \epsilon$. It's easy to see that $\#_0(w)$ is even, $\#_1(w)$ is even, and indeed, $\hat{\delta}(q_0 \epsilon) = q_0$.
+        \\ \\
+        \textbf{Induction step}: assume the four claims hold for $w$. We need to show they hold for $w_0$ and $w_1$.
+        \\ \\
+        \underline{The operation $w_0$}: if $\#_0(w_0)$ is even and $\#_1(w_0)$ is even, then $\#_0(w)$ is odd and $\#_1(w)$ is even. By the induction hypothesis, $\hat{\delta}{q_0 w} = q_3$.
+        \\ \\
+        By the definition of $\hat{\delta}$, $\hat{\delta}(q_0 w_0) = \delta( \hat{\delta}(q_0 w), 0) = \delta(q_3, 0) = q_0$.
+        \\ \\
+        In order to finish this proof, we still need to prove the other three cases for $w_0$ and all four cases for $w_1$.
+      \end{proof}
+
+      Every task carried out by a DFA $A$ has the general form: ``given some input string $w$, decide if $w \in L(A)$''. In particular, we can say each $A$ handles the decision problem of the language $L(A)$. DFAs perform this task by consuming one character of $w$ at a time.
+      \\ \\
+      Note that not every language can be represented by a DFA. Th efollowing languages can all be handled by a DFA:
+      \begin{itemize}
+        \item $\set{ \epsilon }$
+        \item $\Sigma^\star$
+        \item For every $a \in \Sigma, \set{a}$
+        \item For every $w \in \Sigma^\star, \set{w}$ (Note that in this case, $|w| + 2$ states are required.)
+      \end{itemize}
+
+      \subsubsection{Closure Operations}
+        Is the family of languages that can be computed by a DFA closed under $\cup, \cap$, set difference, concatenation, $L^\star$, etc?
+        \\ \\
+        \textbf{Claim}: if each of $L_1, L_2$ can be computed by some DFA, then so can $L_1 \cap L_2, L_1 \cup L_2$, and $L_1 \backslash L_2$.
+
+        \begin{proof}
+          Let $A_1$ and $A_2$ be DFAs such that $L(A_1) = L_1$ and $L(A_2) = L_2$. Let's construct some DFA $A_3$ such that $L(A_3) = L_1 \cap L_2$.
+          \\ \\
+          The general idea is to run the two machines, $A_1$ and $A_2$, in parallel, and if $w \in F$ in both machines, accept $w$ for $L_1 \cap L_2$.
+          \\ \\
+          Given any two automatons $A_1 = (\Sigma, Q_1, q_0^1, \delta_1, F_1)$ and $A_2 = (\Sigma, Q_2, q_0^2, \delta_2, F_2)$, we define the \textbf{product automaton} as
+          $$
+            A_1 \times A_2 = (\Sigma, Q_1 \times Q_2, (q_0^1, q_0^2), \delta_{A_1 \times A_2}, F_{A_1 \times A_2})
+          $$
+          where $\Sigma$ is the same alphabet as defined previously, $Q_1 \times Q_2 = \set{ (p, q) : p \in Q_1, q \in Q_2 }$, and $\delta_{A_1 \times A_2}((p, q), a) = (\delta_1(p, a), \delta_2(q, a))$.
+          \\ \\
+          $F$ will be defined differently depending on which combination we wish to compute. For example:
+          \begin{itemize}
+            \item $F_{A_1 \cap A_2} = \set{ (p, q) : p \in F_1 \text{ and } q \in F_2 }$
+            \item $F_{A_1 \cup A_2} = \set{ (p, q) : p \in F_1 \text{ or } q \in F_2 }$
+            \item $F_{A_1 \backslash A_2} = \set{ (p, q) : p \in F_1 \text{ and } q \not \in F_2 }$
+          \end{itemize}
+
+          \textbf{Conclusion}: if $L_1$ and $L_2$ both have DFAs, then so do $L_1 \cap L_2, L_1 \cup L_2, L_1 \backslash L_2, L_1 \Delta L_2$, etc. (any boolean operation on sets). However, note that the product automaton does not tell us if a language is closed under $L^\star$ or concatenation.
+          \\ \\
+          Is it true that whenever $L$ has a DFA, then so does its complement, $L^C = \Sigma^\star \backslash L$? Yes, its DFA is $L_{\Sigma^\star \times L}$. More simply, let $A = (\Sigma, Q, q_0, \delta, F)$ be a DFA such that $L(A) = L$, then let $A^C = (\Sigma, Q, q_0, \delta, Q \backslash F)$. Then, $L(A^C) = L^C$.
+          \\ \\
+          Since in our definition of a DFA we required that for every state $q \in Q$ and every letter $a \in \Sigma$, $q$ has some outgoing edge labelled by $a$ (we are never stuck).
+        \end{proof}
 \end{document}
