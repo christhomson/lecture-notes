@@ -544,29 +544,29 @@
       For every $w \in \set{0, 1}^\star$:
 
       \begin{itemize}
-        \item If $\#_0(w)$ is even and $\#_1(w)$ is even, then $\hat{\delta}(q_0 w) = q_0$.
-        \item If $\#_0(w)$ is even and $\#_1(w)$ is odd, then $\hat{\delta}(q_0 w) = q_1$.
-        \item If $\#_0(w)$ is odd and $\#_1(w)$ is odd, then $\hat{\delta}(q_0 w) = q_2$.
-        \item If $\#_0(w)$ is odd and $\#_1(w)$ is even, then $\hat{\delta}(q_0 w) = q_3$.
+        \item If $\#_0(w)$ is even and $\#_1(w)$ is even, then $\hat{\delta}(q_0, w) = q_0$.
+        \item If $\#_0(w)$ is even and $\#_1(w)$ is odd, then $\hat{\delta}(q_0, w) = q_1$.
+        \item If $\#_0(w)$ is odd and $\#_1(w)$ is odd, then $\hat{\delta}(q_0, w) = q_2$.
+        \item If $\#_0(w)$ is odd and $\#_1(w)$ is even, then $\hat{\delta}(q_0, w) = q_3$.
       \end{itemize}
 
       \begin{proof}
         We will prove the four claims using structural induction on $\set{0, 1}^\star$.
         \\ \\
-        \textbf{Base case}: $w = \epsilon$. It's easy to see that $\#_0(w)$ is even, $\#_1(w)$ is even, and indeed, $\hat{\delta}(q_0 \epsilon) = q_0$.
+        \textbf{Base case}: $w = \epsilon$. It's easy to see that $\#_0(w)$ is even, $\#_1(w)$ is even, and indeed, $\hat{\delta}(q_0, \epsilon) = q_0$.
         \\ \\
         \textbf{Induction step}: assume the four claims hold for $w$. We need to show they hold for $w_0$ and $w_1$.
         \\ \\
-        \underline{The operation $w_0$}: if $\#_0(w_0)$ is even and $\#_1(w_0)$ is even, then $\#_0(w)$ is odd and $\#_1(w)$ is even. By the induction hypothesis, $\hat{\delta}{q_0 w} = q_3$.
+        \underline{The operation $w_0$}: if $\#_0(w_0)$ is even and $\#_1(w_0)$ is even, then $\#_0(w)$ is odd and $\#_1(w)$ is even. By the induction hypothesis, $\hat{\delta}{q_0, w} = q_3$.
         \\ \\
-        By the definition of $\hat{\delta}$, $\hat{\delta}(q_0 w_0) = \delta( \hat{\delta}(q_0 w), 0) = \delta(q_3, 0) = q_0$.
+        By the definition of $\hat{\delta}$, $\hat{\delta}(q_0, w_0) = \delta( \hat{\delta}(q_0, w), 0) = \delta(q_3, 0) = q_0$.
         \\ \\
         In order to finish this proof, we still need to prove the other three cases for $w_0$ and all four cases for $w_1$.
       \end{proof}
 
       Every task carried out by a DFA $A$ has the general form: ``given some input string $w$, decide if $w \in L(A)$''. In particular, we can say each $A$ handles the decision problem of the language $L(A)$. DFAs perform this task by consuming one character of $w$ at a time.
       \\ \\
-      Note that not every language can be represented by a DFA. Th efollowing languages can all be handled by a DFA:
+      Note that not every language can be represented by a DFA. The following languages can all be handled by a DFA:
       \begin{itemize}
         \item $\set{ \epsilon }$
         \item $\Sigma^\star$
