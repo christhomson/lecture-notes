@@ -74,7 +74,7 @@
         \item Which tasks are easy or hard for computers?
       \end{itemize}
 
-      We make abstractions and use them as common properties that are relevant to many phenomenon. We aren't going to be focussing on any particular programming language or machine architecture, but instead, we'll focus on issues that underlie any automated computation.
+      We make abstractions and use them as common properties that are relevant to many phenomenon. We aren't going to be focusing on any particular programming language or machine architecture, but instead, we'll focus on issues that underlie any automated computation.
       \\ \\
       These abstractions allow us to form conclusions that are relevant to computing in general, and not just for today's hardware and software.
       \\ \\
@@ -96,7 +96,7 @@
 
       We're interested in seeing which of these questions a computer can carry out and how difficult are such task.
 
-      \subsubsection{Modelling Decision Problems}
+      \subsubsection{Modeling Decision Problems}
         We model decision problems using \textbf{formal languages}. A decision problem has two components:
         \begin{itemize}
           \item A domain set $X$.
@@ -129,8 +129,6 @@
         \end{itemize}
 
         Compilers task of checking their input (the code of a program) to see if the program is valid (if the code is in the language), can be readily seen as checking membership in such a language (namely, the language of all binary sequences that represent a valid code in the given programming language).
-        \\ \\
-        %We will discuss tasks that help us determine if a particular string belongs to a particular language or not.
 
   \section{Inductive definition of sets and Structural Induction (CS 245 Review)}
     We'll start off by reviewing some basic notions that were covered on CS 245, to ensure that everyone's on the same page.
@@ -337,7 +335,7 @@
             Let $L_1 = \set{0, 011}$ and $L_2 = \set{ \epsilon, 110 }$. Then $L_1 L_2 = \set{0, 0110, 011, 011110 }$.
             \end{ex}
 
-            Concatentation is not always commutative. Consider $L_1 = \set{0}$ and $L_2 = \set{1}$. We have $L_1 L_2 = \set{01}$ but $L_2 L_1 = \set{10}$, so $L_1 L_2 \ne L_2 L_1$.
+            Concatenation is not always commutative. Consider $L_1 = \set{0}$ and $L_2 = \set{1}$. We have $L_1 L_2 = \set{01}$ but $L_2 L_1 = \set{10}$, so $L_1 L_2 \ne L_2 L_1$.
             \\ \\
             Can $L_1 \subseteq L_1 L_2$? Yes, but only if $\epsilon \in L_2$. Otherwise, $L_1 \not \subseteq L_1 L_2$.
 
@@ -530,7 +528,7 @@
       \\ \\
       Let's rephrase our claim. For every $w \in \set{0, 1}^\star$, if $\#_0(w)$ is even and the $\#_1(w)$ is odd, then $A$ accepts $w$, and otherwise, $A$ does not accept $w$.
       \\ \\
-      Since we said ``for every $w \in \set{0, 1}^\star$'', that should be a giveaway that we should use structual induction for this proof.
+      Since we said ``for every $w \in \set{0, 1}^\star$'', that should be a giveaway that we should use structural induction for this proof.
       \\ \\
       Let's define $\set{0, 1}^\star$ inductively. Note that we are \emph{not} yet defining the set of accepted members for the DFA, but instead, we are aiming to inductively define the set of all possible words across the alphabet $\Sigma = \set{0, 1}$.
       \\ \\
@@ -601,6 +599,229 @@
           \\ \\
           Is it true that whenever $L$ has a DFA, then so does its complement, $L^C = \Sigma^\star \backslash L$? Yes, its DFA is $L_{\Sigma^\star \times L}$. More simply, let $A = (\Sigma, Q, q_0, \delta, F)$ be a DFA such that $L(A) = L$, then let $A^C = (\Sigma, Q, q_0, \delta, Q \backslash F)$. Then, $L(A^C) = L^C$.
           \\ \\
-          Since in our definition of a DFA we required that for every state $q \in Q$ and every letter $a \in \Sigma$, $q$ has some outgoing edge labelled by $a$ (we are never stuck).
+          Since in our definition of a DFA we required that for every state $q \in Q$ and every letter $a \in \Sigma$, $q$ has some outgoing edge labeled by $a$ (we are never stuck).
         \end{proof}
+
+      \subsubsection{The Relationship Between  Regular Expressions and DFAs} \lecture{September 26, 2013}
+        \textbf{Claim}: for every regular expression $r$, there exists some DFA $A$ such that $L(r) = L(A)$.
+
+        \begin{proof}
+          We will prove this claim by structural induction on the set of regular expressions.
+          \\ \\
+          \textbf{Base case}: the elements of the core set of regular expressions are $\set{ \epsilon, \underbrace{a, b, \ldots}_{\Sigma}, \emptyset}$. For each of these, we should show that there exists some DFA $A$ such that $L(A) = L(r)$.
+          \begin{itemize}
+            \item $L(\epsilon) = \set{ \epsilon }$. We have seen such an $A$.
+            \item $L(\emptyset) = \emptyset$. We have seen such an $A$.
+            \item For every $a \in \Sigma, L(a) = \set{a}$ and there exists some DFA $A$ such that $L(A) = \set{a}$.
+          \end{itemize}
+
+          \textbf{Inductive step}: we must show that under each operation the claim continues to hold. Recall the operations we defined on regular expressions to be
+          $$
+            P = \bigg\{ \text{\AxiomC{$r_1$} \AxiomC{$r_2$} \BinaryInfC{$r_1 + r_2$} \DisplayProof, \AxiomC{$r_1$} \AxiomC{$r_2$} \BinaryInfC{$r_1 r_2$} \DisplayProof, \AxiomC{$r$} \UnaryInfC{$r^\star$} \DisplayProof, \AxiomC{$r$} \UnaryInfC{$(r)$} \DisplayProof} \bigg\}
+          $$
+
+          \begin{enumerate}
+            \item \underline{Consider the + operation}. Assume there are automata $A_1, A_2$ such that $L(r_1) = L(A_1)$ and $L(r_2) = L(A_2)$. We need to show that there exists some $A_3$ such that $L(A_3) = L(r_1 + r_2)$.
+            \\ \\
+            Recall that $L(r_1 + r_2) = L(r_1) \cup L(r_2)$. We saw that given $A_1, A_2$ we can construct $A_3$ such that $L(A_3) = L(A_1) \cup L(A_2)$.
+
+            \item \underline{Consider the concatenation operation}. Assume $L(A_1) = L(r_1)$ and $L(A_2) = L(r_2)$. We need to define $A_3$ such that $L(A_3) = L(r_1 r_2) = L(A_1) L(A_2)$. Note that
+            $$
+              L(A_1) L(A_2) = \set{ w w' : w \in L(A_1), w' \in L(A_2) }
+            $$
+
+            One idea on how to approach this is to take DFAs $A_1$ and $A_2$ and merge each final state in $A_1$ with the initial state of $A_2$ (and make the states no longer final states). However, this approach will not suffice because we could then have multiple edges for the same letter, leading out of those newly-merged states.
+            \\ \\
+            In order to solve this problem, we need to take a detour to define a new family of machines. We'll return to this proof at a later point in time. \qedhere
+          \end{enumerate}
+        \end{proof}
+
+    \subsection{Non-deterministic Finite Automata (NFAs)}
+      The intuition behind NFAs is they're similar to deterministic finite automata, except they allow more edges on a state than there are letters in $\Sigma$. You can create multiple paths to be followed simultaneously.
+      \\ \\
+      We define an NFA $N$ as $N = (\Sigma, Q, q_0, \delta, F)$ where $\Sigma, Q, q_0$, and $F$ are exactly the same as in DFAs. However, for NFAs, we define $\Sigma: Q \times \Sigma \to \set{ B : B \subseteq Q }$.
+
+      \begin{ex}
+        Will this machine (an NFA) accept $a$?
+        \begin{center}
+          \begin{tikzpicture}[scale=0.2]
+            \tikzstyle{every node}+=[inner sep=0pt]
+            \draw [black] (10.5,-16.9) circle (3);
+            \draw (10.5,-16.9) node {$q_0$};
+            \draw [black] (24.6,-33) circle (3);
+            \draw (24.6,-33) node {$q_1$};
+            \draw [black] (39.3,-14.5) circle (3);
+            \draw (39.3,-14.5) node {$q_2$};
+            \draw [black] (39.3,-14.5) circle (2.4);
+            \draw [black] (13.278,-15.77) arc (110.16418:79.3631:43.633);
+            \fill [black] (36.37,-13.85) -- (35.68,-13.21) -- (35.49,-14.19);
+            \draw (24.57,-12.68) node [above] {$a$};
+            \draw [black] (9.177,-14.22) arc (234:-54:2.25);
+            \draw (10.5,-9.65) node [above] {$b$};
+            \fill [black] (11.82,-14.22) -- (12.7,-13.87) -- (11.89,-13.28);
+            \draw [black] (13.255,-18.082) arc (62.8233:19.59892:21.711);
+            \fill [black] (23.79,-30.11) -- (23.99,-29.19) -- (23.05,-29.53);
+            \draw (20.21,-21.64) node [right] {$a$};
+            \draw [black] (21.791,-31.955) arc (-114.74396:-162.83382:19.791);
+            \fill [black] (11.17,-19.82) -- (10.92,-20.73) -- (11.88,-20.44);
+            \draw (14.64,-28.47) node [left] {$b$};
+            \draw [black] (39.091,-17.489) arc (-8.58948:-68.35145:18.755);
+            \fill [black] (27.46,-32.12) -- (28.39,-32.29) -- (28.02,-31.36);
+            \draw (35.79,-27.78) node [right] {$b$};
+          \end{tikzpicture}
+          \end{center}
+
+          Whether this machine will accept $a$ is largely up to how we define acceptance. Generally, NFAs are defined so if there is \emph{any} valid path that leads to a final state, the string will be accepted.
+        \end{ex}
+
+        \subsubsection{Languages Accepted by an NFA}
+          Let's define the language $L(N)$ that is accepted by an NFA $N$. Intuitively, we will accept a string $w$ if and only if there is a path from $q_0$ following the letters of $w$ and ending inside $F$.
+          \\ \\
+          We will extend our formal definition of $\delta$ to $\hat{\delta}: Q \times \Sigma^\star \to \set{ B \subseteq Q }$. $\hat{\delta}(q, w)$ is the set of all states that can be reached from $q$ after reading $w$.
+          \\ \\
+          For $w = \epsilon$, $\hat{\delta}(q, \epsilon) = \set{q}$. Assume that $\hat{\delta}(q, w)$ is already defined; say $\hat{\delta}(q, w) = \set{q_{i_1}, q_{i_2}, \ldots, q_{i_k}} \subseteq Q$. Now, define $\hat{\delta}(q, wa)$ for any $a \in \Sigma$ as
+          $$
+            \hat{\delta}(q, wa) = \bigcup_{l = 1}^{k} \delta(q_{i_l}, a)
+          $$
+
+          We can then define the language accepted by a particular NFA $N$ as
+          $$
+            L(N) = \set{ w : \hat{\delta}(q_0, w) \cap F \ne \emptyset }
+          $$
+
+          Phrased another way, this set contains all words $w$ which, after reading all characters in $w$, ended up in at least one final state.
+
+        \subsubsection{Uses of NFAs}
+          NFAs sometimes give us a very compact representation of a language that would otherwise be complicated to define as a DFA.
+
+          \begin{ex}
+            NFAs could be used for keyword searches. For example, suppose we want to create an NFA that matches the keywords ``miley'' and ``britney'', and nothing else. We can form this NFA with the alphabet $\Sigma = {a, b, \ldots, z}$:
+            \begin{center}
+              \begin{tikzpicture}[scale=0.2]
+                \tikzstyle{every node}+=[inner sep=0pt]
+                \draw [black] (10.5,-16.9) circle (3);
+                \draw (10.5,-16.9) node {$q_0$};
+                \draw [black] (21.4,-17.3) circle (3);
+                \draw (21.4,-17.3) node {$q_1$};
+                \draw [black] (32.8,-17.3) circle (3);
+                \draw (32.8,-17.3) node {$q_2$};
+                \draw [black] (43.7,-17.3) circle (3);
+                \draw (43.7,-17.3) node {$q_3$};
+                \draw [black] (55,-17.3) circle (3);
+                \draw (55,-17.3) node {$q_4$};
+                \draw [black] (66,-17.3) circle (3);
+                \draw (66,-17.3) node {$q_5$};
+                \draw [black] (66,-17.3) circle (2.4);
+                \draw [black] (21.4,-27.7) circle (3);
+                \draw (21.4,-27.7) node {$q_6$};
+                \draw [black] (30.3,-27.7) circle (3);
+                \draw (30.3,-27.7) node {$q_7$};
+                \draw [black] (38.9,-27.7) circle (3);
+                \draw (38.9,-27.7) node {$q_8$};
+                \draw [black] (46.9,-27.7) circle (3);
+                \draw (46.9,-27.7) node {$q_9$};
+                \draw [black] (56.4,-27.7) circle (3);
+                \draw (56.4,-27.7) node {$q_{10}$};
+                \draw [black] (64.8,-27.7) circle (3);
+                \draw (64.8,-27.7) node {$q_{11}$};
+                \draw [black] (73.4,-27.7) circle (3);
+                \draw (73.4,-27.7) node {$q_{12}$};
+                \draw [black] (73.4,-27.7) circle (2.4);
+                \draw [black] (9.177,-14.22) arc (234:-54:2.25);
+                \draw (10.5,-9.65) node [above] {$a,\mbox{ }b,\mbox{ }\ldots,\mbox{ }z$};
+                \fill [black] (11.82,-14.22) -- (12.7,-13.87) -- (11.89,-13.28);
+                \draw [black] (13.247,-15.724) arc (104.33527:71.46142:9.724);
+                \fill [black] (18.75,-15.93) -- (18.15,-15.2) -- (17.83,-16.15);
+                \draw (16.05,-14.88) node [above] {$m$};
+                \draw [black] (24.091,-15.998) arc (107.31712:72.68288:10.11);
+                \fill [black] (30.11,-16) -- (29.49,-15.28) -- (29.2,-16.24);
+                \draw (27.1,-15.04) node [above] {$i$};
+                \draw [black] (35.544,-16.114) arc (105.09913:74.90087:10.387);
+                \fill [black] (40.96,-16.11) -- (40.31,-15.42) -- (40.05,-16.39);
+                \draw (38.25,-15.26) node [above] {$l$};
+                \draw [black] (46.433,-16.086) arc (105.88913:74.11087:10.656);
+                \fill [black] (52.27,-16.09) -- (51.63,-15.39) -- (51.36,-16.35);
+                \draw (49.35,-15.18) node [above] {$e$};
+                \draw [black] (57.63,-15.886) arc (108.67821:71.32179:8.962);
+                \fill [black] (63.37,-15.89) -- (62.77,-15.16) -- (62.45,-16.1);
+                \draw (60.5,-14.91) node [above] {$y$};
+                \draw [black] (18.453,-28.172) arc (-90.95847:-178.51347:8.544);
+                \fill [black] (18.45,-28.17) -- (17.66,-27.66) -- (17.64,-28.66);
+                \draw (11.56,-26.18) node [below] {$b$};
+                \draw [black] (23.705,-25.839) arc (113.15404:66.84596:5.455);
+                \fill [black] (27.99,-25.84) -- (27.46,-25.07) -- (27.06,-25.98);
+                \draw (25.85,-24.9) node [above] {$r$};
+                \draw [black] (32.633,-25.878) arc (111.77675:68.22325:5.302);
+                \fill [black] (36.57,-25.88) -- (36.01,-25.12) -- (35.64,-26.05);
+                \draw (34.6,-25) node [above] {$i$};
+                \draw [black] (41.4,-26.114) arc (106.30483:73.69517:5.343);
+                \fill [black] (44.4,-26.11) -- (43.77,-25.41) -- (43.49,-26.37);
+                \draw (42.9,-25.4) node [above] {$t$};
+                \draw [black] (49.53,-26.299) arc (106.51296:73.48704:7.458);
+                \fill [black] (53.77,-26.3) -- (53.14,-25.59) -- (52.86,-26.55);
+                \draw (51.65,-25.49) node [above] {$n$};
+                \draw [black] (58.643,-25.777) arc (113.25672:66.74328:4.956);
+                \fill [black] (62.56,-25.78) -- (62.02,-25) -- (61.62,-25.92);
+                \draw (60.6,-24.87) node [above] {$e$};
+                \draw [black] (67.387,-26.237) arc (105.81687:74.18313:6.286);
+                \fill [black] (70.81,-26.24) -- (70.18,-25.54) -- (69.91,-26.5);
+                \draw (69.1,-25.5) node [above] {$y$};
+              \end{tikzpicture}
+            \end{center}
+          \end{ex}
+
+          \begin{ex}
+            Suppose we want to define an NFA for the language $L_n$ = \{ $w$ : the $n$th before last letter in $w$ is 1\} on the alphabet $\Sigma = \set{0, 1}$. We could form the the following NFA to represent this:
+            \begin{center}
+              \begin{tikzpicture}[scale=0.2]
+                \tikzstyle{every node}+=[inner sep=0pt]
+                \draw [black] (12.3,-19.3) circle (3);
+                \draw (12.3,-19.3) node {$q_0$};
+                \draw [black] (23.5,-19.3) circle (3);
+                \draw (23.5,-19.3) node {$q_1$};
+                \draw [black] (34.8,-19.3) circle (3);
+                \draw (34.8,-19.3) node {$q_2$};
+                \draw (48.2,-19.3) node {$\ldots$};
+                \draw [black] (61.6,-19.3) circle (3);
+                \draw (61.6,-19.3) node {$q_n$};
+                \draw [black] (61.6,-19.3) circle (2.4);
+                \draw [black] (5.9,-19.3) -- (9.3,-19.3);
+                \fill [black] (9.3,-19.3) -- (8.5,-18.8) -- (8.5,-19.8);
+                \draw [black] (10.977,-16.62) arc (234:-54:2.25);
+                \draw (12.3,-12.05) node [above] {$0,\mbox{ }1$};
+                \fill [black] (13.62,-16.62) -- (14.5,-16.27) -- (13.69,-15.68);
+                \draw [black] (51.095,-18.525) arc (100.7586:79.2414:20.381);
+                \fill [black] (58.7,-18.53) -- (58.01,-17.88) -- (57.83,-18.87);
+                \draw (54.9,-17.67) node [above] {$0,\mbox{ }1$};
+                \draw [black] (37.713,-18.592) arc (99.80078:80.19922:22.248);
+                \fill [black] (45.29,-18.59) -- (44.58,-17.96) -- (44.41,-18.95);
+                \draw (41.5,-17.77) node [above] {$0,\mbox{ }1$};
+                \draw [black] (26.412,-18.595) arc (98.80333:81.19667:17.888);
+                \fill [black] (31.89,-18.59) -- (31.17,-17.98) -- (31.02,-18.97);
+                \draw (29.15,-17.88) node [above] {$0,\mbox{ }1$};
+                \draw [black] (15.143,-18.362) arc (101.85128:78.14872:13.424);
+                \fill [black] (20.66,-18.36) -- (19.98,-17.71) -- (19.77,-18.69);
+                \draw (17.9,-17.58) node [above] {$1$};
+              \end{tikzpicture}
+            \end{center}
+
+            When using an NFA to represent languages like $L_n$, we need just $n + 1$ states.
+            \\ \\
+            \textbf{Claim}: every DFA that accepts $L_n$ must have at least $2^n$ states. Why? For every word $w$ of length less than $n$, there should be a different state. In other words, if $w_1 \ne w_2$ and $\hat{\delta}(q_0, w_1) = \hat{\delta}(q_0, w_2)$, the DFA is bound to fail. Since $w_1 \ne w_2$, the last ``1'' must be in a different position in $w_1$ and $w_2$, which makes this DFA representation fail.
+          \end{ex}
+
+          \textbf{Claim}: a language $L$ has an NFA $N$ such that $L(N) = L$ if and only if there is a DFA $A$ such that $L(A) = A$. In other words, nondeterminism does not increase the power of a finite automata.
+
+          \begin{proof}
+            First, note that any DFA can also be viewed as an NFA. For every $q \in Q$ and $a \in \Sigma$, if $\delta_N(q, a) = p$, define $\delta_D(q, a) = \set{p}$. In other words, let $\delta_N(q, a) = \set{\delta_D(q, a)}$.
+            \\ \\
+            For the other direction, if we're given some NFA $N = (\Sigma^N, Q^N, q_0^N, \delta^N, F^N)$, we wish to define a DFA $A = (\Sigma^A, Q^A, q_0^A, \delta^A, F^A)$ such that $L(A) = L(N)$. In particular:
+            \begin{itemize}
+              \item $\Sigma^A = \Sigma^N$
+              \item $Q^A = \set{ B \subseteq Q^N }$
+              \item $q_0^A = \set{ q_0^N }$
+              \item $\delta^A(q, a) = \delta^N(q, a)$ (this is a subset of $Q^N$, which is an element of $Q^A$)
+              \item $F^A = \set{ B \subseteq Q^N : B \cap F^N \ne \emptyset }$
+            \end{itemize}
+          \end{proof}
 \end{document}
