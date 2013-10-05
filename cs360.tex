@@ -33,6 +33,7 @@
 \theoremstyle{definition}
 \newtheorem*{defn}{Definition}
 \newtheorem*{theorem}{Theorem}
+\newtheorem*{lemma}{Lemma}
 \newtheorem*{corollary}{Corollary}
 \newtheorem*{aside}{Aside}
 \newtheorem{ex}{Example}[section]
@@ -851,7 +852,7 @@
               \end{tikzpicture}
             \end{center}
 
-            $N$ accepts all strings where the second-to-last letter is 1. Note that $N$ is nondetermistic because $q_0$ has two edges for 1, and $q_2$ has no edges. By way of subset construction, we can construct an equivalent DFA:
+            $N$ accepts all strings where the second-to-last letter is 1. Note that $N$ is nondeterministic because $q_0$ has two edges for 1, and $q_2$ has no edges. By way of subset construction, we can construct an equivalent DFA:
             \begin{center}
               \begin{tikzpicture}[scale=0.2]
                 \tikzstyle{every node}+=[inner sep=0pt]
@@ -1480,5 +1481,109 @@
           \end{center}
 
           The rest of this construction is left as an exercise.
+        \end{ex}
+
+      \section{Overview of Regular Languages} \lecture{October 3, 2013}
+        The following definitions are equivalent:
+        \begin{itemize}
+          \item $L$ is regular if for some regular expression $r$, $L = L(r)$.
+          \item $L$ is regular if there exists some DFA, $A$, such that $L = L(A)$.
+          \item $L$ is regular if there exists some NFA, $N$, such that $L = L(N)$.
+          \item $L$ is regular if there exists some $\epsilon$-NFA, $N$, such that $L = L(N)$.
+        \end{itemize}
+
+        How can we show that some language $L$ is \underline{not} regular? Let's look at an example.
+        \begin{ex}
+          Let $L_0 = \set{ 0^n1^n : n \in \mathbb{N} }$. We claim that $L_0$ is not a regular language.
+
+          \begin{proof}
+            Assume by way of contradiction that $L_0$ is regular. Therefore, it is $L(A)$ for some DFA $A$. Say $A = (\set{0, 1}, Q, q_0, \delta, F)$. Let $k = |Q|$, the number of states in $A$.
+            \\ \\
+            Consider $w = 0^{k + 2}1^{k + 2}$. Clearly, $w \in L_0$. Notice that there must be some $i < j \le k + 2$ such that $\hat{\delta}(q_0, 0^i) = \hat{\delta}(q_0, 0^j)$, by the pigeonhole principle.
+            \\ \\
+            \textbf{The Pigeonhole Principle}: if you have more pigeons than holes, then you can't have every pigeon in its hole alone.
+            \\ \\
+            Note that
+            $$
+            0^{k + 2}1^{k+2} = \underbrace{0^i 0^{j - i}0^{k + 2 - j}}_{0^{k+2}} 1^{k+2}
+            $$
+
+            We can now see that $w' = 0^i 0^{j - i} 0^{j - i} 0^{k + 2 - j}1^{k + 2} \not \in L_0$. The general idea here is that if we take a long enough word, it must visit the same state again, which means we may accept members into our language that aren't supposed to be part of the language.
+          \end{proof}
+        \end{ex}
+
+       \begin{lemma}[The Pumping Lemma]
+          For every regular language $L$, there exists some number $n$ such that for every $w \in L$, if $|w| > n$, then there are $x, y, z$ so that
+          \begin{enumerate}
+            \item $xyz = w$,
+            \item $|xy| \le n$,
+            \item $y \ne \epsilon$, and
+            \item For every $k$, $xy^k z \in L$
+          \end{enumerate}
+        \end{lemma}
+
+        Note that the converse is \emph{not} true. There are languages that are not regular that still satisfy these properties.
+
+        Let's begin by looking at some positive examples.
+        \begin{ex}
+          Let $r = (0011)^\star$, and let $L = L(r)$. Pick $n = 5$. For every $w \in L$ such that $|w| > 5$, we have the general form
+          $$
+            \underbrace{0011}_{y} \underbrace{001100110011}_{z} \ldots
+          $$
+
+          Pick $x = \epsilon, y = 0011$, and $z = $ the rest of $w$.
+        \end{ex}
+
+        \begin{ex}
+          Let $L_{7a} = \set{ w \in \set{a, b}^\star : \text{ the 7th-to-last letter in } w \text{ is a}}$.
+          \\ \\
+          Let $x$ be the first letter in $w$, and let $y$ be the second letter in $w$. Note that pumping $y$ does not affect the last 7 letters, so the pumped words would still be in the language, as expected.
+        \end{ex}
+
+        Now, let's look at a couple of negative examples.
+        \begin{ex}
+          Let $L_\text{plus} = \set{0^s 1^t 0^r : s + t = r}$.
+          \\ \\
+          \textbf{Claim}: $L_\text{plus}$ is not regular. This is an intuitive claim since finite automata do not have memory. They only know which state they're currently in. Similarly, counting numbers $> 10$ on your finders (without using memory) can only determine the count modulus 10, since we only have 10 fingers.
+          \\ \\
+          We need to show that the claim of the Pumping Lemma fails. Pick any $n$, then consider
+          $$
+            w = 0^n 1 0^{n + 1} \in L_\text{plus}
+          $$
+
+          For every choice of $x, y, z$, satisfying requirements (1), (2), and (3), inevitably $x = 0^i, y = 0^j$ such that $i+j \le n$ and $j > 0$. Then we have $z = 0^{n - (i + j)} 1 0^{n + 1}$.
+          \\ \\
+          Pick $k = 2$. Then we have
+          \begin{align*}
+            xy^kz &= 0^i 0^{2j} 0^{n - (i + j)} 1 0^{n + 1} \\
+            &= 0^{n + j} 1 0^{n + 1}
+          \end{align*}
+          where $j > 0$, which is not in $L_\text{plus}$.
+        \end{ex}
+
+        We could rephrase the Pumping Lemma in terms of a game between two players, $R$ and $NR$. $R$ is the player who is trying to convince us that the language is regular, and $NR$ is the player who is trying to convince us otherwise.
+        \\ \\
+        First, $R$ chooses an $n$. $NR$ can then fire back with a word $w$ such that $w \in L$ and $|w| > n$. $R$ can then provide an $x, y, z$ such that $|xy \le n$, $xyz = w$, and $y \ne \epsilon$.
+        \\ \\
+        If $xy^kz \in L$, then $R$ wins. If $xy^kz \not \in L$, then $NR$ wins.
+        \\ \\
+        The Pumping Lemma states that if $L$ is regular, the player $R$ can guarantee that she wins.
+
+        \begin{ex}
+          Consider $L_\text{prime} = \set{\underbrace{a \ldots a}_{p \text{ times}} : p \text{ is prime}} = \set{ \underbrace{aa}_{2}, \underbrace{aaa}_3, \underbrace{aaaaa}_5, \underbrace{aaaaaaa}_7, \ldots}$.
+          \\ \\
+          \textbf{Claim}: $L_\text{prime}$ is not regular.
+          \\ \\
+          We wish to show that the player $NR$ can defeat the player $R$, regardless of how well $R$ plays the game. Let $n$ be the number picked by the player $R$. Let $p$ be a prime number greater than $n + 2$.
+          \\ \\
+          Pick $w = a^p \in L_\text{prime}$. Suppose $R$ picks some $xyz$ satisfying requirements (1), (2), and (3). Let $x = a^r, y = a^m$, and $z = a^{p - (r + m)}$ where $m \ge 1$ and $r + m \le n$.
+          \\ \\
+          Player $NR$ now picks $k = (p - m)$. Then we have
+          \begin{align*}
+            xy^k z &= a^r a^{m(p-m)} a^{p-(r + m)} \\
+            &= a^{m(p-m) + (p-m)}
+          \end{align*}
+
+          Note that $(p - m)(m + 1)$ is not prime, because it's two factors, where $p - m > 1$ (since $m < n < p$), and $m + 1 > 1$ (since $m \ge 1$). Therefore, this string cannot have a prime length, so $xy^k z \not \in L_\text{prime}$.
         \end{ex}
 \end{document}
