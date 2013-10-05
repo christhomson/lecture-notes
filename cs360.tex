@@ -820,8 +820,665 @@
               \item $\Sigma^A = \Sigma^N$
               \item $Q^A = \set{ B \subseteq Q^N }$
               \item $q_0^A = \set{ q_0^N }$
-              \item $\delta^A(q, a) = \delta^N(q, a)$ (this is a subset of $Q^N$, which is an element of $Q^A$)
+              \item $\delta^A(q, a) = $ the set of all states that can be reached from $q$ by reading $a$.
               \item $F^A = \set{ B \subseteq Q^N : B \cap F^N \ne \emptyset }$
             \end{itemize}
           \end{proof}
+
+          \begin{ex} \lecture{October 1, 2013}
+            Let's look at an example of converting an NFA to an equivalent DFA. Let $N$ be:
+            \begin{center}
+              \begin{tikzpicture}[scale=0.2]
+                \tikzstyle{every node}+=[inner sep=0pt]
+                \draw [black] (11.4,-14.5) circle (3);
+                \draw (11.4,-14.5) node {$q_0$};
+                \draw [black] (26,-14.4) circle (3);
+                \draw (26,-14.4) node {$q_1$};
+                \draw [black] (40.5,-14.4) circle (3);
+                \draw (40.5,-14.4) node {$q_2$};
+                \draw [black] (40.5,-14.4) circle (2.4);
+                \draw [black] (3.8,-13.1) -- (8.45,-13.96);
+                \fill [black] (8.45,-13.96) -- (7.75,-13.32) -- (7.57,-14.3);
+                \draw [black] (12.723,-17.18) arc (54:-234:2.25);
+                \draw (11.4,-21.75) node [below] {$0,\mbox{ }1$};
+                \fill [black] (10.08,-17.18) -- (9.2,-17.53) -- (10.01,-18.12);
+                \draw [black] (14.4,-14.48) -- (23,-14.42);
+                \fill [black] (23,-14.42) -- (22.2,-13.93) -- (22.2,-14.93);
+                \draw (18.7,-13.94) node [above] {$1$};
+                \draw [black] (29,-14.4) -- (37.5,-14.4);
+                \fill [black] (37.5,-14.4) -- (36.7,-13.9) -- (36.7,-14.9);
+                \draw (33.25,-13.9) node [above] {$0,\mbox{ }1$};
+              \end{tikzpicture}
+            \end{center}
+
+            $N$ accepts all strings where the second-to-last letter is 1. Note that $N$ is nondetermistic because $q_0$ has two edges for 1, and $q_2$ has no edges. By way of subset construction, we can construct an equivalent DFA:
+            \begin{center}
+              \begin{tikzpicture}[scale=0.2]
+                \tikzstyle{every node}+=[inner sep=0pt]
+                \draw [black] (11.4,-14.5) circle (3);
+                \draw (11.4,-14.5) node {$q_0$};
+                \draw [black] (26,-14.4) circle (3);
+                \draw (26,-14.4) node {$q_1^D$};
+                \draw [black] (40.5,-14.4) circle (3);
+                \draw (40.5,-14.4) node {$q_2^D$};
+                \draw [black] (40.5,-14.4) circle (2.4);
+                \draw [black] (40.5,-25.9) circle (3);
+                \draw (40.5,-25.9) node {$q_3^D$};
+                \draw [black] (40.5,-25.9) circle (2.4);
+                \draw [black] (3.8,-13.1) -- (8.45,-13.96);
+                \fill [black] (8.45,-13.96) -- (7.75,-13.32) -- (7.57,-14.3);
+                \draw [black] (12.723,-17.18) arc (54:-234:2.25);
+                \draw (11.4,-21.75) node [below] {$0$};
+                \fill [black] (10.08,-17.18) -- (9.2,-17.53) -- (10.01,-18.12);
+                \draw [black] (14.4,-14.48) -- (23,-14.42);
+                \fill [black] (23,-14.42) -- (22.2,-13.93) -- (22.2,-14.93);
+                \draw (18.7,-13.94) node [above] {$1$};
+                \draw [black] (37.875,-15.838) arc (-68.18865:-111.81135:12.449);
+                \fill [black] (37.88,-15.84) -- (36.95,-15.67) -- (37.32,-16.6);
+                \draw (33.25,-17.23) node [below] {$0$};
+                \draw [black] (28.785,-13.296) arc (106.2451:73.7549:15.962);
+                \fill [black] (28.78,-13.3) -- (29.69,-13.55) -- (29.41,-12.59);
+                \draw (33.25,-12.16) node [above] {$1$};
+                \draw [black] (13.144,-12.064) arc (139.32878:41.06501:16.924);
+                \fill [black] (13.14,-12.06) -- (14.04,-11.78) -- (13.29,-11.13);
+                \draw (25.92,-5.67) node [above] {$0$};
+                \draw [black] (41.823,-28.58) arc (54:-234:2.25);
+                \draw (40.5,-33.15) node [below] {$1$};
+                \fill [black] (39.18,-28.58) -- (38.3,-28.93) -- (39.11,-29.52);
+                \draw [black] (37.539,-26.328) arc (-89.29985:-167.53627:11.412);
+                \fill [black] (37.54,-26.33) -- (36.73,-25.84) -- (36.75,-26.84);
+                \draw (29.3,-24.35) node [below] {$1$};
+                \draw [black] (40.5,-22.9) -- (40.5,-17.4);
+                \fill [black] (40.5,-17.4) -- (40,-18.2) -- (41,-18.2);
+                \draw (41,-20.15) node [right] {$0$};
+              \end{tikzpicture}
+            \end{center}
+
+            where $q_0^D = \set{q_0}, q_1^D = \set{q_0, q_1}, q_2^D = \set{q_0, q_2}, q_3^D = \set{q_0, q_1, q_2}$.
+            \\ \\
+            The accepting states of this DFA are all states which contain at least one accepting state from the NFA.
+          \end{ex}
+
+          Note that in the worst case, an NFA with $n$ states could be equivalent to a DFA with $2^n$ states. This intuitively follows from the way we construct NFAs -- there are $2^n$ subsets of $n$ items.
+
+      \subsection{Nondeterministic Finite Automata with Epsilon Transitions}
+        We will now introduce a third type of machine, \textbf{the $\boldsymbol{\epsilon}$-NFA}. An $\epsilon$-transition is essentially a transition that can occur spontaneously. That is, an $\epsilon$-transition is a transition that can be followed without reading any characters.
+
+        \begin{ex}
+          This is what an $\epsilon$-NFA could look like:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (11.4,-14.5) circle (3);
+              \draw (11.4,-14.5) node {$q_0$};
+              \draw [black] (29,-14.5) circle (3);
+              \draw (29,-14.5) node {$q_1$};
+              \draw [black] (43.8,-7.3) circle (3);
+              \draw [black] (43.8,-18.8) circle (3);
+              \draw [black] (43.8,-30.3) circle (3);
+              \draw [black] (29,-26.6) circle (3);
+              \draw (29,-26.6) node {$q_2$};
+              \draw [black] (3.8,-13.1) -- (8.45,-13.96);
+              \fill [black] (8.45,-13.96) -- (7.75,-13.32) -- (7.57,-14.3);
+              \draw [black] (10.077,-11.82) arc (234:-54:2.25);
+              \draw (11.4,-7.25) node [above] {$b$};
+              \fill [black] (12.72,-11.82) -- (13.6,-11.47) -- (12.79,-10.88);
+              \draw [black] (14.4,-14.5) -- (26,-14.5);
+              \fill [black] (26,-14.5) -- (25.2,-14) -- (25.2,-15);
+              \draw (20.2,-15) node [below] {$a,\mbox{ }\epsilon$};
+              \draw [black] (31.7,-13.19) -- (41.1,-8.61);
+              \fill [black] (41.1,-8.61) -- (40.16,-8.51) -- (40.6,-9.41);
+              \draw (37.39,-11.41) node [below] {$b$};
+              \draw [black] (31.88,-15.34) -- (40.92,-17.96);
+              \fill [black] (40.92,-17.96) -- (40.29,-17.26) -- (40.01,-18.22);
+              \draw (35.58,-17.2) node [below] {$b$};
+              \draw [black] (41.308,-28.631) arc (-125.87866:-147.86483:41.443);
+              \fill [black] (41.31,-28.63) -- (40.95,-27.76) -- (40.37,-28.57);
+              \draw (34.82,-24.85) node [left] {$b$};
+              \draw [black] (13.87,-16.2) -- (26.53,-24.9);
+              \fill [black] (26.53,-24.9) -- (26.15,-24.04) -- (25.59,-24.86);
+              \draw (19.25,-21.05) node [below] {$a$};
+              \draw [black] (40.805,-30.418) arc (-91.63068:-116.44181:22.112);
+              \fill [black] (40.8,-30.42) -- (40.02,-29.9) -- (39.99,-30.9);
+              \draw (35.39,-30.33) node [below] {$\epsilon$};
+            \end{tikzpicture}
+          \end{center}
+        \end{ex}
+
+        Let's consider a more simplistic example to understand $\epsilon$-NFAs better.
+        \begin{ex}
+          Consider $N_1$:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (11.4,-14.5) circle (3);
+              \draw (11.4,-14.5) node {$q_0$};
+              \draw [black] (29,-14.5) circle (3);
+              \draw (29,-14.5) node {$q_1$};
+              \draw [black] (29,-14.5) circle (2.4);
+              \draw [black] (3.8,-13.1) -- (8.45,-13.96);
+              \fill [black] (8.45,-13.96) -- (7.75,-13.32) -- (7.57,-14.3);
+              \draw [black] (14.4,-14.5) -- (26,-14.5);
+              \fill [black] (26,-14.5) -- (25.2,-14) -- (25.2,-15);
+              \draw (20.2,-15) node [below] {$1$};
+            \end{tikzpicture}
+          \end{center}
+
+          It's trivial to see that $L(N_1) = \set{1}$. Now, consider $N_2$, the same NFA but adding an $\epsilon$-transition:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (11.4,-14.5) circle (3);
+              \draw (11.4,-14.5) node {$q_0$};
+              \draw [black] (29,-14.5) circle (3);
+              \draw (29,-14.5) node {$q_1$};
+              \draw [black] (29,-14.5) circle (2.4);
+              \draw [black] (3.8,-13.1) -- (8.45,-13.96);
+              \fill [black] (8.45,-13.96) -- (7.75,-13.32) -- (7.57,-14.3);
+              \draw [black] (14.4,-14.5) -- (26,-14.5);
+              \fill [black] (26,-14.5) -- (25.2,-14) -- (25.2,-15);
+              \draw (20.2,-15) node [below] {$1, \epsilon$};
+            \end{tikzpicture}
+          \end{center}
+
+          Note that now, $L(N_2) = \set{\epsilon, 1}$. That is, $L(N_2)$ contains the empty string, and the string that is just a single 1.
+          \\ \\
+          Let's now consider a different NFA, $N_3$:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (11.4,-14.5) circle (3);
+              \draw (11.4,-14.5) node {$q_0$};
+              \draw [black] (29,-14.5) circle (3);
+              \draw (29,-14.5) node {$q_1$};
+              \draw [black] (29,-14.5) circle (2.4);
+              \draw [black] (3.8,-13.1) -- (8.45,-13.96);
+              \fill [black] (8.45,-13.96) -- (7.75,-13.32) -- (7.57,-14.3);
+              \draw [black] (26.19,-15.545) arc (-73.64114:-106.35886:21.269);
+              \fill [black] (26.19,-15.54) -- (25.28,-15.29) -- (25.56,-16.25);
+              \draw (20.2,-16.91) node [below] {$0$};
+              \draw [black] (14.221,-13.487) arc (105.83465:74.16535:21.911);
+              \fill [black] (14.22,-13.49) -- (15.13,-13.75) -- (14.85,-12.79);
+              \draw (20.2,-12.16) node [above] {$0$};
+              \draw [black] (10.077,-11.82) arc (234:-54:2.25);
+              \draw (11.4,-7.25) node [above] {$1$};
+              \fill [black] (12.72,-11.82) -- (13.6,-11.47) -- (12.79,-10.88);
+              \draw [black] (27.677,-11.82) arc (234:-54:2.25);
+              \draw (29,-7.25) node [above] {$1$};
+              \fill [black] (30.32,-11.82) -- (31.2,-11.47) -- (30.39,-10.88);
+            \end{tikzpicture}
+          \end{center}
+
+          $L(N_3) = \set{ w : \#_0(w) \text{ is odd}}$. Finally, let's consider $N_4$, the same NFA but with an $\epsilon$-transition added:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (11.4,-14.5) circle (3);
+              \draw (11.4,-14.5) node {$q_0$};
+              \draw [black] (29,-14.5) circle (3);
+              \draw (29,-14.5) node {$q_1$};
+              \draw [black] (29,-14.5) circle (2.4);
+              \draw [black] (3.8,-13.1) -- (8.45,-13.96);
+              \fill [black] (8.45,-13.96) -- (7.75,-13.32) -- (7.57,-14.3);
+              \draw [black] (26.19,-15.545) arc (-73.64114:-106.35886:21.269);
+              \fill [black] (26.19,-15.54) -- (25.28,-15.29) -- (25.56,-16.25);
+              \draw (20.2,-16.91) node [below] {$0,\epsilon$};
+              \draw [black] (14.221,-13.487) arc (105.83465:74.16535:21.911);
+              \fill [black] (14.22,-13.49) -- (15.13,-13.75) -- (14.85,-12.79);
+              \draw (20.2,-12.16) node [above] {$0$};
+              \draw [black] (10.077,-11.82) arc (234:-54:2.25);
+              \draw (11.4,-7.25) node [above] {$1$};
+              \fill [black] (12.72,-11.82) -- (13.6,-11.47) -- (12.79,-10.88);
+              \draw [black] (27.677,-11.82) arc (234:-54:2.25);
+              \draw (29,-7.25) node [above] {$1$};
+              \fill [black] (30.32,-11.82) -- (31.2,-11.47) -- (30.39,-10.88);
+            \end{tikzpicture}
+          \end{center}
+
+          $N_4$ accepts everything. That is, $L(N_4) = \set{0, 1}^\star$. In $N_4$, we can spontaneously move to $q_1$ initially. Then, either $1$ loops in $q_1$ or you follow $0$ to $q_0$, but in that case you can spontaneously move back to $q_1$ again.
+        \end{ex}
+
+        We can define an $\epsilon$-NFA as follows. For such a machine $N$, $L(N)$ = \{ $w$ : there is a way that upon reading $w$ and using $\epsilon$-transitions, $q_0$ leads to some accepting state \}.
+        \\ \\
+        \textbf{Claim}: a language is accepted by an $\epsilon$-NFA if and only if it is accepted by some DFA.
+        \\ \\
+        The proof of this claim is the same as before, except additionally taking the $\epsilon$-transitions into account when performing the subset construction of the DFA.
+        \\ \\
+        Recall the theorem we discussed a few weeks ago:
+        \begin{theorem}
+          For every regular expression $r$, there exists a DFA $A$ such that $L(r) = L(A)$.
+        \end{theorem}
+
+        \begin{proof}
+          We will prove this theorem by structural induction on the set of regular expressions.
+          \\ \\
+          Let's prove an equivalent claim:
+          \\ \\
+          \textbf{Claim}: for every $r$, there is a DFA $A$ such that $A$ has only a single accepting state, no edges leading out of the accepting state, but $A$ may have $\epsilon$-transitions, and $L(r) = L(A)$. (Note that this isn't formally a DFA, since we allow $\epsilon$-transitions and missing edges, but since every $\epsilon$-NFA is equivalent to a DFA, we know that a corresponding \textbf{proper} DFA exists.)
+          \\ \\
+          \textbf{Induction basis}: $\emptyset, \epsilon$, and $a$ for $a \in \Sigma$.
+          \\ \\
+          An $\epsilon$-DFA for $L(\emptyset) = \emptyset$ is:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (11.4,-14.5) circle (3);
+              \draw (11.4,-14.5) node {$q_0$};
+              \draw [black] (25,-14.5) circle (3);
+              \draw (25,-14.5) node {$q_1$};
+              \draw [black] (25,-14.5) circle (2.4);
+              \draw [black] (3.8,-13.1) -- (8.45,-13.96);
+              \fill [black] (8.45,-13.96) -- (7.75,-13.32) -- (7.57,-14.3);
+            \end{tikzpicture}
+          \end{center}
+
+          An $\epsilon$-DFA for $L(\epsilon) = \set{\epsilon}$ is:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (11.4,-14.5) circle (3);
+              \draw (11.4,-14.5) node {$q_0$};
+              \draw [black] (25,-14.5) circle (3);
+              \draw (25,-14.5) node {$q_1$};
+              \draw [black] (25,-14.5) circle (2.4);
+              \draw [black] (3.8,-13.1) -- (8.45,-13.96);
+              \fill [black] (8.45,-13.96) -- (7.75,-13.32) -- (7.57,-14.3);
+              \draw [black] (14.4,-14.5) -- (22,-14.5);
+              \fill [black] (22,-14.5) -- (21.2,-14) -- (21.2,-15);
+              \draw (18.2,-15) node [below] {$\epsilon$};
+            \end{tikzpicture}
+          \end{center}
+
+          An $\epsilon$-DFA for $L(a) = \set{a}$ is:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (11.4,-14.5) circle (3);
+              \draw (11.4,-14.5) node {$q_0$};
+              \draw [black] (25,-14.5) circle (3);
+              \draw (25,-14.5) node {$q_1$};
+              \draw [black] (25,-14.5) circle (2.4);
+              \draw [black] (3.8,-13.1) -- (8.45,-13.96);
+              \fill [black] (8.45,-13.96) -- (7.75,-13.32) -- (7.57,-14.3);
+              \draw [black] (14.4,-14.5) -- (22,-14.5);
+              \fill [black] (22,-14.5) -- (21.2,-14) -- (21.2,-15);
+              \draw (18.2,-15) node [below] {$a$};
+            \end{tikzpicture}
+          \end{center}
+
+          \textbf{Induction step}: assume $r_1, r_2$ are regular expressions such that there are $A_1, A_2$ for which $L(r_1) = L(A_1)$ and $L(r_2) = L(A_2)$. Recall the operations that we defined on regular expressions:
+
+          \begin{center}
+            $P = $ \bigg\{ \AxiomC{$r_1$} \AxiomC{$r_2$} \BinaryInfC{$r_1 + r_2$} \DisplayProof, \AxiomC{$r_1$} \AxiomC{$r_2$} \BinaryInfC{$r_1 r_2$} \DisplayProof, \AxiomC{$r_1$} \UnaryInfC{$(r_1)$} \DisplayProof, \AxiomC{$r_1$} \UnaryInfC{$r_1^\star$} \DisplayProof \bigg\}
+          \end{center}
+
+          We must show that our claim holds for each of these operations.
+          \\ \\
+          Let's consider the first operation, \AxiomC{$r_1$} \AxiomC{$r_2$} \BinaryInfC{$r_1 + r_2$} \DisplayProof. We need to construct an automata $A_3$ such that $L(A_3) = L(A_1) \cup L(A_2)$. Essentially, we want to introduce a new $q_0$ that is connected via $\epsilon$-transitions to the $q_0$ states of $A_1$ and $A_2$. Then, convert the single final state of each of $A_1$ and $A_2$ into a non-final state, but connect that state via an $\epsilon$-transition to a new accepting state. Here's a visualization of this construction:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (13.5,-28.5) circle (3);
+              \draw (13.5,-28.5) node {$q_0$};
+              \draw [black] (25,-17.6) circle (3);
+              \draw (25,-17.6) node {$q_0^1$};
+              \draw [black] (40.7,-17.6) circle (3);
+              \draw [black] (55.6,-17.6) circle (3);
+              \draw [black] (47.7,-23.8) circle (3);
+              \draw [black] (33.1,-23.8) circle (3);
+              \draw [black] (47.7,-11.2) circle (3);
+              \draw [black] (33.1,-11.2) circle (3);
+              \draw [black] (25,-41) circle (3);
+              \draw (25,-41) node {$q_0^2$};
+              \draw [black] (33.1,-33.8) circle (3);
+              \draw [black] (33.1,-48.5) circle (3);
+              \draw [black] (40.7,-41) circle (3);
+              \draw [black] (48.3,-33.8) circle (3);
+              \draw [black] (48.3,-48.5) circle (3);
+              \draw [black] (56.5,-41) circle (3);
+              \draw [black] (70.8,-28.5) circle (3);
+              \draw [black] (70.8,-28.5) circle (2.4);
+              \draw [black] (5,-28.5) -- (10.5,-28.5);
+              \fill [black] (10.5,-28.5) -- (9.7,-28) -- (9.7,-29);
+              \draw [black] (15.68,-26.44) -- (22.82,-19.66);
+              \fill [black] (22.82,-19.66) -- (21.9,-19.85) -- (22.59,-20.58);
+              \draw (20.22,-23.53) node [below] {$\epsilon$};
+              \draw [black] (15.53,-30.71) -- (22.97,-38.79);
+              \fill [black] (22.97,-38.79) -- (22.8,-37.86) -- (22.06,-38.54);
+              \draw (18.72,-36.21) node [left] {$\epsilon$};
+              \draw [black] (27.35,-15.74) -- (30.75,-13.06);
+              \fill [black] (30.75,-13.06) -- (29.81,-13.16) -- (30.43,-13.95);
+              \draw [black] (27.38,-19.42) -- (30.72,-21.98);
+              \fill [black] (30.72,-21.98) -- (30.39,-21.09) -- (29.78,-21.89);
+              \draw [black] (35.42,-21.9) -- (38.38,-19.5);
+              \fill [black] (38.38,-19.5) -- (37.44,-19.61) -- (38.07,-20.39);
+              \draw [black] (36.1,-23.8) -- (44.7,-23.8);
+              \fill [black] (44.7,-23.8) -- (43.9,-23.3) -- (43.9,-24.3);
+              \draw [black] (36.1,-11.2) -- (44.7,-11.2);
+              \fill [black] (44.7,-11.2) -- (43.9,-10.7) -- (43.9,-11.7);
+              \draw [black] (42.91,-15.58) -- (45.49,-13.22);
+              \fill [black] (45.49,-13.22) -- (44.56,-13.4) -- (45.23,-14.13);
+              \draw [black] (50.03,-13.09) -- (53.27,-15.71);
+              \fill [black] (53.27,-15.71) -- (52.96,-14.82) -- (52.33,-15.6);
+              \draw [black] (50.06,-21.95) -- (53.24,-19.45);
+              \fill [black] (53.24,-19.45) -- (52.3,-19.55) -- (52.92,-20.34);
+              \draw [black] (27.24,-39.01) -- (30.86,-35.79);
+              \fill [black] (30.86,-35.79) -- (29.93,-35.95) -- (30.59,-36.7);
+              \draw [black] (28,-41) -- (37.7,-41);
+              \fill [black] (37.7,-41) -- (36.9,-40.5) -- (36.9,-41.5);
+              \draw [black] (38.56,-43.11) -- (35.24,-46.39);
+              \fill [black] (35.24,-46.39) -- (36.16,-46.19) -- (35.45,-45.47);
+              \draw [black] (36.1,-48.5) -- (45.3,-48.5);
+              \fill [black] (45.3,-48.5) -- (44.5,-48) -- (44.5,-49);
+              \draw [black] (36.1,-33.8) -- (45.3,-33.8);
+              \fill [black] (45.3,-33.8) -- (44.5,-33.3) -- (44.5,-34.3);
+              \draw [black] (42.88,-38.94) -- (46.12,-35.86);
+              \fill [black] (46.12,-35.86) -- (45.2,-36.05) -- (45.89,-36.78);
+              \draw [black] (50.55,-35.78) -- (54.25,-39.02);
+              \fill [black] (54.25,-39.02) -- (53.97,-38.12) -- (53.31,-38.87);
+              \draw [black] (50.51,-46.48) -- (54.29,-43.02);
+              \fill [black] (54.29,-43.02) -- (53.36,-43.2) -- (54.03,-43.93);
+              \draw [black] (46.16,-46.39) -- (42.84,-43.11);
+              \fill [black] (42.84,-43.11) -- (43.05,-44.03) -- (43.76,-43.31);
+              \draw [black] (58.76,-39.03) -- (68.54,-30.47);
+              \fill [black] (68.54,-30.47) -- (67.61,-30.62) -- (68.27,-31.38);
+              \draw (64.61,-35.24) node [below] {$\epsilon$};
+              \draw [black] (58.04,-19.35) -- (68.36,-26.75);
+              \fill [black] (68.36,-26.75) -- (68,-25.88) -- (67.42,-26.69);
+              \draw (62.25,-23.55) node [below] {$\epsilon$};
+              \draw [black] (30.9,-46.46) -- (27.2,-43.04);
+              \fill [black] (27.2,-43.04) -- (27.45,-43.95) -- (28.13,-43.21);
+              \draw [black] (48.3,-36.8) -- (48.3,-45.5);
+              \fill [black] (48.3,-45.5) -- (48.8,-44.7) -- (47.8,-44.7);
+              \draw [black] (45.45,-21.81) -- (42.95,-19.59);
+              \fill [black] (42.95,-19.59) -- (43.21,-20.49) -- (43.88,-19.75);
+              \draw [black] (47.7,-14.2) -- (47.7,-20.8);
+              \fill [black] (47.7,-20.8) -- (48.2,-20) -- (47.2,-20);
+              \draw [black] (35.28,-35.86) -- (38.52,-38.94);
+              \fill [black] (38.52,-38.94) -- (38.29,-38.02) -- (37.6,-38.75);
+              \draw [black] (38.41,-15.67) -- (35.39,-13.13);
+              \fill [black] (35.39,-13.13) -- (35.68,-14.03) -- (36.33,-13.27);
+              \draw [black] (33.1,-14.2) -- (33.1,-20.8);
+              \fill [black] (33.1,-20.8) -- (33.6,-20) -- (32.6,-20);
+            \end{tikzpicture}
+          \end{center}
+
+          Next, let's look at the operation \AxiomC{$r_1$} \AxiomC{$r_2$} \BinaryInfC{$r_1 r_2$} \DisplayProof. We need to construct an automata $A_4$ such that $L(A_4) = L(A_1) L(A_2)$. Essentially, we want to make the final states of $A_1$ and $A_2$ non-final, then connect the final state of $A_1$ to the $q_0$ of $A_2$, through an $\epsilon$-transition. Then, the previously-final state of $A_2$ should connect to a new final state through an $\epsilon$-transition. Here's a visualization of this construction:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (9.9,-27.9) circle (3);
+              \draw (9.9,-27.9) node {$q_0^1$};
+              \draw [black] (24.8,-27.9) circle (3);
+              \draw [black] (38.5,-27.9) circle (3);
+              \draw [black] (32.1,-33.8) circle (3);
+              \draw [black] (17.4,-33.8) circle (3);
+              \draw [black] (32.1,-21.8) circle (3);
+              \draw [black] (17.4,-21.8) circle (3);
+              \draw [black] (47.9,-27.9) circle (3);
+              \draw (47.9,-27.9) node {$q_0^2$};
+              \draw [black] (53.3,-21.8) circle (3);
+              \draw [black] (53.3,-34.4) circle (3);
+              \draw [black] (57.9,-27.9) circle (3);
+              \draw [black] (62.8,-21.8) circle (3);
+              \draw [black] (62.8,-34.4) circle (3);
+              \draw [black] (68,-28.5) circle (3);
+              \draw [black] (76.6,-28.5) circle (3);
+              \draw [black] (76.6,-28.5) circle (2.4);
+              \draw [black] (12.23,-26.01) -- (15.07,-23.69);
+              \fill [black] (15.07,-23.69) -- (14.14,-23.81) -- (14.77,-24.59);
+              \draw [black] (12.26,-29.75) -- (15.04,-31.95);
+              \fill [black] (15.04,-31.95) -- (14.72,-31.06) -- (14.1,-31.84);
+              \draw [black] (19.75,-31.93) -- (22.45,-29.77);
+              \fill [black] (22.45,-29.77) -- (21.52,-29.88) -- (22.14,-30.66);
+              \draw [black] (20.4,-33.8) -- (29.1,-33.8);
+              \fill [black] (29.1,-33.8) -- (28.3,-33.3) -- (28.3,-34.3);
+              \draw [black] (20.4,-21.8) -- (29.1,-21.8);
+              \fill [black] (29.1,-21.8) -- (28.3,-21.3) -- (28.3,-22.3);
+              \draw [black] (27.1,-25.98) -- (29.8,-23.72);
+              \fill [black] (29.8,-23.72) -- (28.86,-23.85) -- (29.5,-24.62);
+              \draw [black] (34.27,-23.87) -- (36.33,-25.83);
+              \fill [black] (36.33,-25.83) -- (36.09,-24.92) -- (35.4,-25.64);
+              \draw [black] (34.31,-31.77) -- (36.29,-29.93);
+              \fill [black] (36.29,-29.93) -- (35.37,-30.11) -- (36.04,-30.84);
+              \draw [black] (49.89,-25.65) -- (51.31,-24.05);
+              \fill [black] (51.31,-24.05) -- (50.41,-24.31) -- (51.16,-24.98);
+              \draw [black] (50.9,-27.9) -- (54.9,-27.9);
+              \fill [black] (54.9,-27.9) -- (54.1,-27.4) -- (54.1,-28.4);
+              \draw [black] (56.17,-30.35) -- (55.03,-31.95);
+              \fill [black] (55.03,-31.95) -- (55.9,-31.59) -- (55.09,-31.01);
+              \draw [black] (56.3,-34.4) -- (59.8,-34.4);
+              \fill [black] (59.8,-34.4) -- (59,-33.9) -- (59,-34.9);
+              \draw [black] (56.3,-21.8) -- (59.8,-21.8);
+              \fill [black] (59.8,-21.8) -- (59,-21.3) -- (59,-22.3);
+              \draw [black] (59.78,-25.56) -- (60.92,-24.14);
+              \fill [black] (60.92,-24.14) -- (60.03,-24.45) -- (60.81,-25.08);
+              \draw [black] (64.64,-24.17) -- (66.16,-26.13);
+              \fill [black] (66.16,-26.13) -- (66.07,-25.19) -- (65.28,-25.8);
+              \draw [black] (64.78,-32.15) -- (66.02,-30.75);
+              \fill [black] (66.02,-30.75) -- (65.11,-31.02) -- (65.86,-31.68);
+              \draw [black] (60.99,-32) -- (59.71,-30.3);
+              \fill [black] (59.71,-30.3) -- (59.79,-31.24) -- (60.59,-30.63);
+              \draw [black] (51.38,-32.09) -- (49.82,-30.21);
+              \fill [black] (49.82,-30.21) -- (49.94,-31.14) -- (50.71,-30.5);
+              \draw [black] (62.8,-24.8) -- (62.8,-31.4);
+              \fill [black] (62.8,-31.4) -- (63.3,-30.6) -- (62.3,-30.6);
+              \draw [black] (29.77,-31.91) -- (27.13,-29.79);
+              \fill [black] (27.13,-29.79) -- (27.44,-30.68) -- (28.07,-29.9);
+              \draw [black] (32.1,-24.8) -- (32.1,-30.8);
+              \fill [black] (32.1,-30.8) -- (32.6,-30) -- (31.6,-30);
+              \draw [black] (55.11,-24.2) -- (56.09,-25.5);
+              \fill [black] (56.09,-25.5) -- (56.01,-24.56) -- (55.21,-25.17);
+              \draw [black] (22.49,-25.99) -- (19.71,-23.71);
+              \fill [black] (19.71,-23.71) -- (20.01,-24.6) -- (20.65,-23.83);
+              \draw [black] (17.4,-24.8) -- (17.4,-30.8);
+              \fill [black] (17.4,-30.8) -- (17.9,-30) -- (16.9,-30);
+              \draw [black] (71,-28.5) -- (73.6,-28.5);
+              \fill [black] (73.6,-28.5) -- (72.8,-28) -- (72.8,-29);
+              \draw (72.3,-29) node [below] {$\epsilon$};
+              \draw [black] (41.5,-27.9) -- (44.9,-27.9);
+              \fill [black] (44.9,-27.9) -- (44.1,-27.4) -- (44.1,-28.4);
+              \draw (43.2,-28.4) node [below] {$\epsilon$};
+              \draw [black] (2,-27.9) -- (6.9,-27.9);
+              \fill [black] (6.9,-27.9) -- (6.1,-27.4) -- (6.1,-28.4);
+            \end{tikzpicture}
+          \end{center}
+
+          The operation \AxiomC{$r_1$} \UnaryInfC{$(r_1)$} \DisplayProof is trivially true. The DFA for this operation is the same as the DFA for $r_1$.
+          \\ \\
+          Finally, let's look at our last operation, \AxiomC{$r_1$} \UnaryInfC{$r_1^\star$} \DisplayProof. Assume $L(A) = L(r)$. We will define $A^\star$, an $\epsilon$-DFA such that $L(A^\star) = L(r^\star) = (L(r))^\star$.
+          \\ \\
+          We will introduce a new initial state, $q_0$, and a new accepting state. We will connect $q_0$ and our new accepting state by an $\epsilon$-transition, since $\epsilon \in L(r^\star)$. We will connect our $q_0$ to the initial state of $A$ by an $\epsilon$-transition. We will make the final state of $A$ non-final, and connect it back to $A$'s previously-initial state ($A$'s $q_0$) by an $\epsilon$-transition, to allow repetition. Finally, we will connect the previously-final state of $A$ to our new accepting state by an $\epsilon$-transition. Here's a visualization of this construction:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (27.9,-27.9) circle (3);
+              \draw (27.9,-27.9) node {$q_0^1$};
+              \draw [black] (45.2,-27.9) circle (3);
+              \draw [black] (61.9,-27.9) circle (3);
+              \draw [black] (54.1,-33.8) circle (3);
+              \draw [black] (35.9,-33.8) circle (3);
+              \draw [black] (54.1,-21.8) circle (3);
+              \draw [black] (35.9,-21.8) circle (3);
+              \draw [black] (75.1,-27.9) circle (3);
+              \draw [black] (75.1,-27.9) circle (2.4);
+              \draw [black] (12.4,-27.9) circle (3);
+              \draw (12.4,-27.9) node {$q_0$};
+              \draw [black] (30.29,-26.08) -- (33.51,-23.62);
+              \fill [black] (33.51,-23.62) -- (32.58,-23.71) -- (33.18,-24.5);
+              \draw [black] (30.31,-29.68) -- (33.49,-32.02);
+              \fill [black] (33.49,-32.02) -- (33.14,-31.14) -- (32.54,-31.95);
+              \draw [black] (38.43,-32.19) -- (42.67,-29.51);
+              \fill [black] (42.67,-29.51) -- (41.72,-29.51) -- (42.26,-30.36);
+              \draw [black] (38.9,-33.8) -- (51.1,-33.8);
+              \fill [black] (51.1,-33.8) -- (50.3,-33.3) -- (50.3,-34.3);
+              \draw [black] (38.9,-21.8) -- (51.1,-21.8);
+              \fill [black] (51.1,-21.8) -- (50.3,-21.3) -- (50.3,-22.3);
+              \draw [black] (47.67,-26.2) -- (51.63,-23.5);
+              \fill [black] (51.63,-23.5) -- (50.68,-23.54) -- (51.25,-24.36);
+              \draw [black] (56.46,-23.65) -- (59.54,-26.05);
+              \fill [black] (59.54,-26.05) -- (59.21,-25.17) -- (58.6,-25.95);
+              \draw [black] (56.49,-31.99) -- (59.51,-29.71);
+              \fill [black] (59.51,-29.71) -- (58.57,-29.79) -- (59.17,-30.59);
+              \draw [black] (51.6,-32.14) -- (47.7,-29.56);
+              \fill [black] (47.7,-29.56) -- (48.09,-30.42) -- (48.64,-29.58);
+              \draw [black] (54.1,-24.8) -- (54.1,-30.8);
+              \fill [black] (54.1,-30.8) -- (54.6,-30) -- (53.6,-30);
+              \draw [black] (42.69,-26.25) -- (38.41,-23.45);
+              \fill [black] (38.41,-23.45) -- (38.8,-24.3) -- (39.35,-23.47);
+              \draw [black] (35.9,-24.8) -- (35.9,-30.8);
+              \fill [black] (35.9,-30.8) -- (36.4,-30) -- (35.4,-30);
+              \draw [black] (15.4,-27.9) -- (24.9,-27.9);
+              \fill [black] (24.9,-27.9) -- (24.1,-27.4) -- (24.1,-28.4);
+              \draw (20.15,-28.4) node [below] {$\epsilon$};
+              \draw [black] (62.163,-30.885) arc (0.06123:-180.06123:17.263);
+              \fill [black] (27.64,-30.88) -- (27.14,-31.68) -- (28.14,-31.69);
+              \draw (44.9,-48.67) node [below] {$\epsilon$};
+              \draw [black] (14.121,-25.443) arc (142.68364:37.31636:37.256);
+              \fill [black] (73.38,-25.44) -- (73.29,-24.5) -- (72.5,-25.11);
+              \draw (43.75,-10.27) node [above] {$\epsilon$};
+              \draw [black] (64.9,-27.9) -- (72.1,-27.9);
+              \fill [black] (72.1,-27.9) -- (71.3,-27.4) -- (71.3,-28.4);
+              \draw (68.5,-28.4) node [below] {$\epsilon$};
+            \end{tikzpicture}
+          \end{center}
+        \end{proof}
+
+        \begin{ex}
+          Consider the regular expression $r = (0 + 1)^\star 1(0 + 1)$. This expression matches all strings with their second-to-last character being 1.
+          \\ \\
+          Let's construct an $\epsilon$-DFA $A$ such that $L(A) = L(r)$, by following the steps of the previous proof.
+          \\ \\
+          We would typically generate the regular expression $r$ in the following order:
+          \begin{align*}
+            0 \\
+            1 \\
+            (0 + 1) \\
+            (0 + 1)^\star \\
+            (0 + 1)^\star 1 \\
+            (0 + 1)^\star 1(0 + 1)
+          \end{align*}
+
+          We will construct the automata in this order as well. Let's start with an automata for matching 0:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (29.8,-21.7) circle (3);
+              \draw (29.8,-21.7) node {$q_0$};
+              \draw [black] (45.1,-21.7) circle (3);
+              \draw [black] (45.1,-21.7) circle (2.4);
+              \draw [black] (21.5,-21.7) -- (26.8,-21.7);
+              \fill [black] (26.8,-21.7) -- (26,-21.2) -- (26,-22.2);
+              \draw [black] (32.8,-21.7) -- (42.1,-21.7);
+              \fill [black] (42.1,-21.7) -- (41.3,-21.2) -- (41.3,-22.2);
+              \draw (37.45,-22.2) node [below] {$0$};
+            \end{tikzpicture}
+          \end{center}
+
+
+          Next, we'll create an automata for matching 1:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (29.8,-21.7) circle (3);
+              \draw (29.8,-21.7) node {$q_0$};
+              \draw [black] (45.1,-21.7) circle (3);
+              \draw [black] (45.1,-21.7) circle (2.4);
+              \draw [black] (21.5,-21.7) -- (26.8,-21.7);
+              \fill [black] (26.8,-21.7) -- (26,-21.2) -- (26,-22.2);
+              \draw [black] (32.8,-21.7) -- (42.1,-21.7);
+              \fill [black] (42.1,-21.7) -- (41.3,-21.2) -- (41.3,-22.2);
+              \draw (37.45,-22.2) node [below] {$1$};
+            \end{tikzpicture}
+          \end{center}
+
+          Next, we'll combine these two machines to create an automata that matches $(0 + 1)$:
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (32.4,-21.7) circle (3);
+              \draw (32.4,-21.7) node {$q_0^0$};
+              \draw [black] (47,-21.7) circle (3);
+              \draw [black] (32.4,-33) circle (3);
+              \draw (32.4,-33) node {$q_0^1$};
+              \draw [black] (47,-33) circle (3);
+              \draw [black] (20.3,-26.8) circle (3);
+              \draw (20.3,-26.8) node {$q_0$};
+              \draw [black] (58.7,-26.8) circle (3);
+              \draw (58.7,-26.8) node {$q_2$};
+              \draw [black] (58.7,-26.8) circle (2.4);
+              \draw [black] (35.4,-21.7) -- (44,-21.7);
+              \fill [black] (44,-21.7) -- (43.2,-21.2) -- (43.2,-22.2);
+              \draw (39.7,-22.2) node [below] {$0$};
+              \draw [black] (35.4,-33) -- (44,-33);
+              \fill [black] (44,-33) -- (43.2,-32.5) -- (43.2,-33.5);
+              \draw (39.7,-33.5) node [below] {$1$};
+              \draw [black] (22.678,-24.975) arc (123.26628:102.44336:20.284);
+              \fill [black] (29.43,-22.13) -- (28.54,-21.81) -- (28.76,-22.79);
+              \draw (25.01,-22.73) node [above] {$\epsilon$};
+              \draw [black] (29.426,-32.639) arc (-102.401:-131.8599:15.681);
+              \fill [black] (29.43,-32.64) -- (28.75,-31.98) -- (28.54,-32.96);
+              \draw (24.7,-31.78) node [below] {$\epsilon$};
+              \draw [black] (49.993,-21.77) arc (82.19121:50.70427:13.305);
+              \fill [black] (56.61,-24.66) -- (56.31,-23.76) -- (55.68,-24.54);
+              \draw (54.43,-22.24) node [above] {$\epsilon$};
+              \draw [black] (56.715,-29.042) arc (-47.2781:-76.88237:14.938);
+              \fill [black] (56.71,-29.04) -- (55.79,-29.22) -- (56.47,-29.95);
+              \draw (54.52,-31.77) node [below] {$\epsilon$};
+            \end{tikzpicture}
+          \end{center}
+
+          Next, we'll introduce the $\star$. We'll form an automata that matches $(0 + 1)^\star$.
+          \begin{center}
+            \begin{tikzpicture}[scale=0.2]
+              \tikzstyle{every node}+=[inner sep=0pt]
+              \draw [black] (32.4,-21.7) circle (3);
+              \draw (32.4,-21.7) node {$q_0^0$};
+              \draw [black] (47,-21.7) circle (3);
+              \draw [black] (32.4,-33) circle (3);
+              \draw (32.4,-33) node {$q_0^1$};
+              \draw [black] (47,-33) circle (3);
+              \draw [black] (20.3,-26.8) circle (3);
+              \draw (20.3,-26.8) node {$q_0'$};
+              \draw [black] (58.7,-26.8) circle (3);
+              \draw (58.7,-26.8) node {$q_2$};
+              \draw [black] (72.4,-26.8) circle (3);
+              \draw (72.4,-26.8) node {$q_3$};
+              \draw [black] (6.8,-26.8) circle (3);
+              \draw (6.8,-26.8) node {$q_0$};
+              \draw [black] (35.4,-21.7) -- (44,-21.7);
+              \fill [black] (44,-21.7) -- (43.2,-21.2) -- (43.2,-22.2);
+              \draw (39.7,-22.2) node [below] {$0$};
+              \draw [black] (35.4,-33) -- (44,-33);
+              \fill [black] (44,-33) -- (43.2,-32.5) -- (43.2,-33.5);
+              \draw (39.7,-33.5) node [below] {$1$};
+              \draw [black] (22.678,-24.975) arc (123.26628:102.44336:20.284);
+              \fill [black] (29.43,-22.13) -- (28.54,-21.81) -- (28.76,-22.79);
+              \draw (25.01,-22.73) node [above] {$\epsilon$};
+              \draw [black] (29.426,-32.639) arc (-102.401:-131.8599:15.681);
+              \fill [black] (29.43,-32.64) -- (28.75,-31.98) -- (28.54,-32.96);
+              \draw (24.7,-31.78) node [below] {$\epsilon$};
+              \draw [black] (49.993,-21.77) arc (82.19121:50.70427:13.305);
+              \fill [black] (56.61,-24.66) -- (56.31,-23.76) -- (55.68,-24.54);
+              \draw (54.43,-22.24) node [above] {$\epsilon$};
+              \draw [black] (56.715,-29.042) arc (-47.2781:-76.88237:14.938);
+              \fill [black] (56.71,-29.04) -- (55.79,-29.22) -- (56.47,-29.95);
+              \draw (54.52,-31.77) node [below] {$\epsilon$};
+              \draw [black] (9.8,-26.8) -- (17.3,-26.8);
+              \fill [black] (17.3,-26.8) -- (16.5,-26.3) -- (16.5,-27.3);
+              \draw (13.55,-27.3) node [below] {$\epsilon$};
+              \draw [black] (8.879,-24.638) arc (134.17141:45.82859:44.088);
+              \fill [black] (70.32,-24.64) -- (70.1,-23.72) -- (69.4,-24.44);
+              \draw (39.6,-11.67) node [above] {$\epsilon$};
+              \draw [black] (61.7,-26.8) -- (69.4,-26.8);
+              \fill [black] (69.4,-26.8) -- (68.6,-26.3) -- (68.6,-27.3);
+              \draw (65.55,-27.3) node [below] {$\epsilon$};
+              \draw [black] (58.414,-29.783) arc (-9.95975:-170.04025:19.203);
+              \fill [black] (20.59,-29.78) -- (20.23,-30.66) -- (21.22,-30.48);
+              \draw (39.5,-46.16) node [below] {$\epsilon$};
+            \end{tikzpicture}
+          \end{center}
+
+          The rest of this construction is left as an exercise.
+        \end{ex}
 \end{document}
