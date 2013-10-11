@@ -1512,6 +1512,7 @@
           \end{proof}
         \end{ex}
 
+      \subsection{The Pumping Lemma}
        \begin{lemma}[The Pumping Lemma]
           For every regular language $L$, there exists some number $n$ such that for every $w \in L$, if $|w| > n$, then there are $x, y, z$ so that
           \begin{enumerate}
@@ -1586,4 +1587,120 @@
 
           Note that $(p - m)(m + 1)$ is not prime, because it's two factors, where $p - m > 1$ (since $m < n < p$), and $m + 1 > 1$ (since $m \ge 1$). Therefore, this string cannot have a prime length, so $xy^k z \not \in L_\text{prime}$.
         \end{ex}
+
+        \begin{ex} \lecture{October 8, 2013}
+          Let $L_{klk} = \set{ 0^k 1^l 0^k : k, l \in \mathbb{N}}$. Intuitively, this language is not regular because a machine with finite memory cannot remember how many zeroes it counted for the first run of 0s.
+          \\ \\
+          \textbf{Claim}: $L_{klk}$ is not a regular language.
+
+          \begin{proof}
+            We will prove this claim with the Pumping Lemma. We need to show that player $NR$ can win, regardless of what player $R$ does.
+            \\ \\
+            Given some $n$ (chosen by player $R$), our first try is to choose $w = 0^{2n}$. In this case, we may attempt to construct $x = \epsilon, z = \epsilon, y = 0^{2n}$, but that violates the second condition of the Pumping Lemma. We may also try $x = \epsilon, y = 00, z = 0^{2n - 2}$ the rest of the word. For any $k$ that $NR$ picks, $xy^kz = (00)^k 0^{2n - 2} = 0^{2(k + n - 1)} \in L_{klk}$. $R$ won in this case, which is not what we want. Note that just because $R$ won in this case, does not prove that $L_{klk}$ is regular.
+            \\ \\
+            Let's try another word. Given some $n$ (chosen by player $R$), we will choose $w = 0^n 1^n 0^n$. Any choice of $x, y$ such that string $|xy| \le n$ will have $z = 0^i 1^n 0^n$. Now pick $k$ arbitrarily, say $k = 2$. Then since $0^j$ for some $j \ge 1$, $xy^2z = 0^{n + j}1^n0^n \not \in L_{klk}$.
+          \end{proof}
+        \end{ex}
+
+        \begin{ex}
+          Let $L_< = \set{w : \#_0(w) > \#_1(w) }$. Intuitively, this language is non-regular because we can't check this condition with unbounded memory. In some \emph{particular} cases, such as $w = 0101010101$, we \emph{can} verify membership with bounded memory. Such words would not be good candidates for $w$ in our proof.
+          \\ \\
+          \textbf{Claim}: $L_<$ is not regular.
+
+          \begin{proof}
+            We will prove this claim with the Pumping Lemma. We need to show that player $NR$ always wins.
+            \\ \\
+            Given some $n$, pick $w = 1^n 0^{n + 1}$. Now, since $|xy| \le n$, player $R$ is forced to choose $x = 1^j, y = 1^i, z = 1^{n - (i + j)} 0^{n + 1}$, for $i \ge 1$. Any $k > 1$ will then result in $xy^kz \not \in L_<$.
+          \end{proof}
+        \end{ex}
+
+        \textbf{Claim}: let $L$ be a non-empty language that for some $s \in N$ accepts no words of length $\le s$. Then, if a DFA $A$ computes $L$ (that is, $L = L(A)$), then inevitably, $A$ has more than $s$ states.
+        \\ \\
+        For example, $L_{> 6} = \set{ w : |w| > 6 }$ is not $L(A)$ for any DFA with at most 6 states.
+        \\ \\
+        Note that languages of this form \emph{are} regular. We only need to count up to $s$, which would require $s$ states. For instance, $L_{> 6}$ is regular because the following DFA computes it:
+        \begin{center}
+          \begin{tikzpicture}[scale=0.2]
+            \tikzstyle{every node}+=[inner sep=0pt]
+            \draw [black] (20.2,-26.8) circle (3);
+            \draw (20.2,-26.8) node {$q_1$};
+            \draw [black] (6.8,-26.8) circle (3);
+            \draw (6.8,-26.8) node {$q_0$};
+            \draw [black] (34.2,-26.8) circle (3);
+            \draw (34.2,-26.8) node {$q_2$};
+            \draw (47.5,-26.8) node {$\ldots$};
+            \draw [black] (60.9,-26.8) circle (3);
+            \draw (60.9,-26.8) node {$q_7$};
+            \draw [black] (60.9,-26.8) circle (2.4);
+            \draw [black] (9.633,-25.825) arc (103.71876:76.28124:16.307);
+            \fill [black] (17.37,-25.83) -- (16.71,-25.15) -- (16.47,-26.12);
+            \draw (13.5,-24.86) node [above] {$0,\mbox{ }1$};
+            \draw [black] (23.07,-25.936) arc (102.31525:77.68475:19.364);
+            \fill [black] (31.33,-25.94) -- (30.66,-25.28) -- (30.44,-26.25);
+            \draw (27.2,-24.99) node [above] {$0,\mbox{ }1$};
+            \draw [black] (36.922,-25.556) arc (107.85352:72.14648:12.811);
+            \fill [black] (44.78,-25.56) -- (44.17,-24.83) -- (43.86,-25.79);
+            \draw (40.85,-24.44) node [above] {$0,\mbox{ }1$};
+            \draw [black] (50.146,-25.403) arc (110.43363:69.56637:11.613);
+            \fill [black] (58.25,-25.4) -- (57.68,-24.66) -- (57.33,-25.59);
+            \draw (54.2,-24.17) node [above] {$0,\mbox{ }1$};
+            \draw [black] (59.577,-24.12) arc (234:-54:2.25);
+            \draw (60.9,-19.55) node [above] {$0,\mbox{ }1$};
+            \fill [black] (62.22,-24.12) -- (63.1,-23.77) -- (62.29,-23.18);
+            \draw [black] (1.2,-26.8) -- (3.8,-26.8);
+            \fill [black] (3.8,-26.8) -- (3,-26.3) -- (3,-27.3);
+          \end{tikzpicture}
+        \end{center}
+
+        \begin{proof}
+          Note that if $L = L(A)$ for some DFA $A$, then in the Pumping Lemma, one can pick $n = |Q^A|$ (the number of states in $A$).
+          \\ \\
+          Assume by way of contradiction that for some $A$ with $n < s$ states, $L = L(A)$. Apply the Pumping Lemma where player $R$ chooses $n = |Q^A|$. Let $w$ be a word of shortest length in $L$. Note that $|W| > s > n$, which makes this a legal choice.
+          \\ \\
+          Given a decomposition $x, y, z$, choose $k = 0$. Since $xyz = w, |xy^0z| < |w|$. This is a contradiction since we assumed we selected the smallest word in $L$, and then we made it shorter.
+        \end{proof}
+
+      \subsection{Equivalent Descriptions of Languages}
+        Earlier in the course, we stated a basic theorem that we didn't prove fully. We'd like to complete that proof now.
+        \\ \\
+        \begin{theorem}
+          The following conditions on a language are equivalent:
+          \begin{enumerate}
+            \item $L = L(r)$ for some regular expression $r$.
+            \item $L = L(A)$ for some DFA $A$.
+            \item $L = L(N)$ for some NFA $N$.
+            \item $L = L(N)$ for some $\epsilon$-NFA $N$.
+          \end{enumerate}
+        \end{theorem}
+
+        We've shown $(1) \implies (2)$ and $(3) \implies (2)$ in class previously. $(2) \implies (3) \implies (4)$ is trivial. We're still missing $(2) \implies (1)$, so we'll prove that now.
+
+        \begin{lemma}
+          For every DFA, $A$, there exists a regular expression $r$, such that $L(r) = L(A)$.
+        \end{lemma}
+
+        \begin{proof}
+          Let $A = (\Sigma, Q, q_0, \delta, F)$. Without loss of generality, redefine $Q = \set{ q_1, \ldots, q_n }$ for some $n$.
+          \\ \\
+          By induction on $k$, we will show that for every $i, j \le n$, there exists a regular expression $R_{ij}^k$ such that $L(R_{ij}^k) = \set{ w : \text{ on } A, w \text{ takes us from } q_i \text{ to } q_j \text{ without visitng any state of index } > k}$.
+          \\ \\
+          Note that
+          $$
+            L(A) = \bigcup_{q_j \in F} L(R_{ij}^n)
+          $$
+
+          \textbf{Base case}: $k = 0$. $L_{ij}^0 = \set{ w : \text{ go from } q_i \text{ to } q_j \text{ without touching any other state}}$. We have two cases.
+
+          \begin{enumerate}
+            \item $i \ne j$. If there is an edge between the two states, let $a_1, \ldots, a_k$ we all letters on this edge, and $R_{ij}^0 = a_1 + \ldots + a_k$. If there is no direct edge from $q_i$ to $q_j$, then $R_{ij}^0 = \emptyset$ (i.e. there is no way to go from $q_i$ to $q_j$ without touching any other state).
+            \item $i = j$. If there is a self-edge labelled $a_1, \ldots, a_k$, then $R_{ii}^0 = a_1 + \ldots + a_k + \epsilon$. Note that $\epsilon$ is added here because you can also go from a state to itself without reading any letters. If there is no self loop on $q_i$, then $R_{ii}^0 = \epsilon$.
+          \end{enumerate}
+
+          \textbf{Induction step}: assume we have regular expressions $R_{ij}^l$ for $i, j \le n$, and $l < k$. Construct $R_{ij}^k$ for all such $i, j$. We then have:
+          $$
+            R_{ij}^k = R_{ik}^{k - 1} (R_{kk}^{k - 1})^\star R_{kj}^{k - 1} + R_{ij}^{k - 1}
+          $$
+
+          $R_{ik}^{k - 1}$ and $R_{kj}^{k - 1}$ indicate the cases where we aren't stepping on state $k$. $(R_{kk}^{k - 1})^\star$ indicates that we can step on state $k$ as many times as we want (or not at all). Finally, $R_{ij}^{k - 1}$ represents the case where we go from state $q_i$ to $q_j$ without stepping on $q_k$ at all.
+        \end{proof}
 \end{document}
