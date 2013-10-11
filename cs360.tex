@@ -1589,7 +1589,7 @@
         \end{ex}
 
         \begin{ex} \lecture{October 8, 2013}
-          Let $L_{klk} = \set{ 0^k 1^l 0^k : k, l \in \mathbb{N}}$. Intuitively, this language is not regular because a machine with finite memory cannot remember how many zeroes it counted for the first run of 0s.
+          Let $L_{klk} = \set{ 0^k 1^l 0^k : k, l \in \mathbb{N}}$. Intuitively, this language is not regular because a machine with finite memory cannot remember how many zeros it counted for the first run of 0s.
           \\ \\
           \textbf{Claim}: $L_{klk}$ is not a regular language.
 
@@ -1682,7 +1682,7 @@
         \begin{proof}
           Let $A = (\Sigma, Q, q_0, \delta, F)$. Without loss of generality, redefine $Q = \set{ q_1, \ldots, q_n }$ for some $n$.
           \\ \\
-          By induction on $k$, we will show that for every $i, j \le n$, there exists a regular expression $R_{ij}^k$ such that $L(R_{ij}^k) = \set{ w : \text{ on } A, w \text{ takes us from } q_i \text{ to } q_j \text{ without visitng any state of index } > k}$.
+          By induction on $k$, we will show that for every $i, j \le n$, there exists a regular expression $R_{ij}^k$ such that $L(R_{ij}^k) = \set{ w : \text{ on } A, w \text{ takes us from } q_i \text{ to } q_j \text{ without visiting any state of index } > k}$.
           \\ \\
           Note that
           $$
@@ -1693,7 +1693,7 @@
 
           \begin{enumerate}
             \item $i \ne j$. If there is an edge between the two states, let $a_1, \ldots, a_k$ we all letters on this edge, and $R_{ij}^0 = a_1 + \ldots + a_k$. If there is no direct edge from $q_i$ to $q_j$, then $R_{ij}^0 = \emptyset$ (i.e. there is no way to go from $q_i$ to $q_j$ without touching any other state).
-            \item $i = j$. If there is a self-edge labelled $a_1, \ldots, a_k$, then $R_{ii}^0 = a_1 + \ldots + a_k + \epsilon$. Note that $\epsilon$ is added here because you can also go from a state to itself without reading any letters. If there is no self loop on $q_i$, then $R_{ii}^0 = \epsilon$.
+            \item $i = j$. If there is a self-edge labeled $a_1, \ldots, a_k$, then $R_{ii}^0 = a_1 + \ldots + a_k + \epsilon$. Note that $\epsilon$ is added here because you can also go from a state to itself without reading any letters. If there is no self loop on $q_i$, then $R_{ii}^0 = \epsilon$.
           \end{enumerate}
 
           \textbf{Induction step}: assume we have regular expressions $R_{ij}^l$ for $i, j \le n$, and $l < k$. Construct $R_{ij}^k$ for all such $i, j$. We then have:
@@ -1703,4 +1703,158 @@
 
           $R_{ik}^{k - 1}$ and $R_{kj}^{k - 1}$ indicate the cases where we aren't stepping on state $k$. $(R_{kk}^{k - 1})^\star$ indicates that we can step on state $k$ as many times as we want (or not at all). Finally, $R_{ij}^{k - 1}$ represents the case where we go from state $q_i$ to $q_j$ without stepping on $q_k$ at all.
         \end{proof}
+
+      \subsection{Algorithms on Languages and Finite Automata} \lecture{October 10, 2013}
+        Let's look at a number of algorithms that you should be able to carry out on languages and automata.
+
+        \begin{enumerate}
+          \item \textbf{Given $\boldsymbol{w}$ and DFA (or NFA, or $\boldsymbol{\epsilon}$-NFA) $M$, decide if $\boldsymbol{w \in L(M)}$.}
+          \item \textbf{Given a regular expression $\boldsymbol{r}$, construct a ($\boldsymbol{\epsilon}$-)NFA, $\boldsymbol{M}$, such that $\boldsymbol{L(M) = L(r)}$.}
+          \begin{ex}
+            Let $r = (a + b) a^\star + b(a + \epsilon)$.
+            \\ \\
+            Start by constructing an automaton for atoms $a, b$, and $\epsilon$, then move on to more complex expressions like $(a + b), (a + \epsilon)$ by combining the automata created previously.
+          \end{ex}
+
+          \item \textbf{Given $\boldsymbol{w}$ and $\boldsymbol{r}$, is $\boldsymbol{w \in L(r)}$?} Note that this is difficult to do in general without converting the regular expression to an automaton.
+
+          \item \textbf{Given an NFA, $\boldsymbol{M}$, find some DFA $\boldsymbol{A}$ such that $\boldsymbol{L(M) = L(A)}$.} Recall that states in the equivalent DFA each represent a set of states from the NFA.
+
+          \item \textbf{Given a DFA, $\boldsymbol{A}$, construct a regular expression $\boldsymbol{r}$ such that $\boldsymbol{L(r) = L(A)}$.} We briefly touched on this before, so we'll do a more in-depth example.
+          \\ \\
+          \textbf{General idea}:
+          \begin{enumerate}
+            \item Rename the states of $A$ as $\set{ q_1, \ldots, q_n }$ for some $n$.
+            \item For every $k, i, j \le n$, let $R_{ij}^k = $\{ $w$ : if we read $w$ starting in state $i$, we will end in state $j$, and, along the path, we step on no state whose index is $> k$\}.
+            \item By induction on $k$, construct regular expressions $r_{ij}^k$ such that $L(r_{ij}^k) = R_{ij}^k$ (for all $i, j$)
+            \item Finally, to get a regular expression for $L(A)$, let $r = \sum \{ r_{ij}^n : i \in F \}$.
+          \end{enumerate}
+
+          \begin{ex}
+            Let $A$ be the following DFA:
+            \begin{center}
+              \begin{tikzpicture}[scale=0.2]
+                \tikzstyle{every node}+=[inner sep=0pt]
+                \draw [black] (20.2,-26.8) circle (3);
+                \draw (20.2,-26.8) node {$q_2$};
+                \draw [black] (20.2,-26.8) circle (2.4);
+                \draw [black] (6.8,-26.8) circle (3);
+                \draw (6.8,-26.8) node {$q_1$};
+                \draw [black] (9.633,-25.825) arc (103.71876:76.28124:16.307);
+                \fill [black] (17.37,-25.83) -- (16.71,-25.15) -- (16.47,-26.12);
+                \draw (13.5,-24.86) node [above] {$0$};
+                \draw [black] (1.2,-26.8) -- (3.8,-26.8);
+                \fill [black] (3.8,-26.8) -- (3,-26.3) -- (3,-27.3);
+                \draw [black] (18.877,-24.12) arc (234:-54:2.25);
+                \draw (20.2,-19.55) node [above] {$0,\mbox{ }1$};
+                \fill [black] (21.52,-24.12) -- (22.4,-23.77) -- (21.59,-23.18);
+                \draw [black] (5.477,-24.12) arc (234:-54:2.25);
+                \draw (6.8,-19.55) node [above] {$1$};
+                \fill [black] (8.12,-24.12) -- (9,-23.77) -- (8.19,-23.18);
+              \end{tikzpicture}
+            \end{center}
+
+            Notice that $L(A) = \set{ w : w \text{ contains a } 0}$. We can also see that a regular expression for this language is $r = 1^\star 0(0 + 1)^\star$, but determining this was only possible because this automaton is simple.
+            \\ \\
+            If we couldn't determine the regular expression like this, we could alternatively follow the translation procedure. The translation procedure requires much more work, but no creativity or luck.
+            \\ \\
+            We need the following tables in order to carry out the translation procedure:
+            \begin{center}
+              \begin{tabular}{c|c}
+                0 & regular expression \\ \hline
+                $R_{11}^0$ & $(1 + \epsilon)$ \\
+                $R_{12}^0$ & $0$ \\
+                $R_{21}^0$ & $\emptyset$ \\
+                $R_{22}^0$ & $0 + 1 + \epsilon$
+              \end{tabular}
+              \begin{tabular}{c|c}
+                1 & regular expression \\ \hline
+                $R_{11}^1$ & $r_{11}^0 (r_{11}^0)^\star r_{11}^0 + r_{11}^0$ \\
+                $R_{12}^1$ & $r_{11}^0  (r_{11}^0)^\star r_{12}^0 + r_{12}^0$ \\
+                $R_{21}^1$ & \\
+                $R_{22}^1$ & \\
+              \end{tabular}
+              \begin{tabular}{c|c}
+                2 & regular expression \\ \hline
+                $R_{11}^0$ & \\
+                $R_{12}^0$ & \\
+                $R_{21}^0$ & \\
+                $R_{22}^0$ & \\
+              \end{tabular}
+            \end{center}
+
+            The 0, 1, and 2 in the headers of these tables represent the superscript. You need to fill out these tables fully, although we have omitted some of that here.
+            \\ \\
+            How do we construct $r_{ij}^k$ from the expressions $\set{ r_{ij}^{k - 1} : i, j \le m }$? You can use the recursive formula:
+            $$
+              r_{ij}^k = r_{ik}^{k - 1} (r_{kk}^{k - 1})^\star r_{kj}^{k - 1} + r_{ij}^{k - 1}
+            $$
+
+            Here's a visualization:
+            \begin{center}
+              \begin{tikzpicture}[scale=0.2]
+                \tikzstyle{every node}+=[inner sep=0pt]
+                \draw [black] (10.8,-26.6) circle (3);
+                \draw (10.8,-26.6) node {$q_i$};
+                \draw [black] (26.1,-26.6) circle (3);
+                \draw (26.1,-26.6) node {$q_k$};
+                \draw [black] (43.1,-26.6) circle (3);
+                \draw (43.1,-26.6) node {$q_j$};
+                \draw [black] (4.1,-26.6) -- (7.8,-26.6);
+                \fill [black] (7.8,-26.6) -- (7,-26.1) -- (7,-27.1);
+                \draw [black] (13.511,-25.328) arc (109.35982:70.64018:14.898);
+                \fill [black] (23.39,-25.33) -- (22.8,-24.59) -- (22.47,-25.53);
+                \draw (18.45,-23.99) node [above] {$R_{ik}^{k-1}$};
+                \draw [black] (28.811,-25.324) arc (110.10822:69.89178:16.84);
+                \fill [black] (40.39,-25.32) -- (39.81,-24.58) -- (39.47,-25.52);
+                \draw (34.6,-23.8) node [above] {$R_{kj}^{k-1}$};
+                \draw [black] (24.777,-23.92) arc (234:-54:2.25);
+                \draw (26.1,-19.35) node [above] {$R_{kk}^{k-1}$};
+                \fill [black] (27.42,-23.92) -- (28.3,-23.57) -- (27.49,-22.98);
+                \draw [black] (42.328,-29.495) arc (-20.18023:-159.81977:16.384);
+                \fill [black] (42.33,-29.49) -- (41.58,-30.07) -- (42.52,-30.42);
+                \draw (26.95,-40.73) node [below] {$R_{ij}^{k-1}$};
+              \end{tikzpicture}
+            \end{center}
+          \end{ex}
+
+
+          \item \textbf{Given a DFA $\boldsymbol{A = (\Sigma, Q, q_0, \delta, F)}$, decide whether $\boldsymbol{L(A) = \emptyset}$ or not.}
+          \\ \\
+          We can't just use a regular expression representation of $A$ to determine this, since $L(\emptyset) = \emptyset$, but there are also other regular expressions $r$ such that $L(r) = \emptyset$. For example, $\emptyset + \emptyset$, $(\emptyset + \emptyset)(\emptyset + \emptyset)$, or $((a + b)b^\star + b)\emptyset$.
+          \\ \\
+          \underline{Algorithm 1}: recall that if $L(A)$ contains no strings of length $\le |Q|$ then $L(A) = \emptyset$, by the Pumping Lemma.
+          \\ \\
+          Now, list all strings of length $\le |Q|$: say, $w_0, w_1, \ldots, w_{2^{|Q|}}$. For each such $w_i$, check whether $w_i \in L(A)$. If all these words are rejected, then we can conclude that $L(A)$ is empty.
+          \\ \\
+          \underline{Algorithm 2}: check if there's a path that starts in $q_0$ and ends in an accepting state. This uses the concept of \textbf{reachability}. Construct:
+          \begin{align*}
+            \set{q_0} &= \text{ all states reachable from } q_0 \text{ with 0 edges} \\
+            \vdots & \\
+            A_k &= \text{ all states reachable from } q_0 \text{ traversing at most } k \text{ edges} \\
+            A_{k + 1} &= A_k \cup \set{ \text{all neighbors}}
+          \end{align*}
+
+          Finally, check $A_n \cap F$. If this set is empty, then $L(A) = \emptyset$. Otherwise, a path exists which means $L(A)$ is non-empty.
+
+          \item \textbf{Given two DFAs, $\boldsymbol{A_1, A_2}$, decide whether $\boldsymbol{L(A_1) = L(A_2)}$.} Note that these languages could be arbitrarily large. Also, keep in mind that there could be different regular expressions, graphs, and automata that all compute the same language.
+          \\ \\
+          \textbf{Claim}: $L(A_1) = L(A_2)$ if and only if $L(A_1) \backslash L(A_2) = \emptyset$ and $L(A_2) \backslash L(A_1) = \emptyset$.
+          \\ \\
+          We need to construct $A_3$ such that $L(A_3) = L(A_1) \backslash L(A_2)$ (using the product automata). Similarly, we need to construct $A_4$ such that $L(A_4) = L(A_2) \backslash L(A_1)$.
+          \\ \\
+          We then check for emptiness in both $L(A_3)$ and $L(A_4)$. If both are empty, then we can conclude that $L(A_1) = L(A_2)$. Otherwise, $L(A_1) \ne L(A_2)$.
+          \\ \\
+          Recall that if $A_1 = (\Sigma, Q^1, q_0^1, \delta^1, F^1), A_2 = (\Sigma, Q^2, q_0^2, \delta^2, F^2)$, then $A_3 = (\Sigma, Q^1 \times Q^2, (q_0^1, q_0^2), \delta^1 \times \delta^2, \set{ (q, p) : q \in F_1, p \not \in F_2 })$.
+          \\ \\
+          Alternatively, we could check all strings of length at most $|Q^1| \cdot |Q^2|$. If the machines agree on all of those strings, then they will always agree and are therefore equivalent machines.
+
+          \item \textbf{Given a DFA $\boldsymbol{A}$, decide whether $\boldsymbol{L(A)}$ is infinite.}
+          \\ \\
+          A possible algorithm for this is to check the graph, looking for cycles that are reachable from $q_0$ and can eventually reach an accepting state.
+          \\ \\
+          \textbf{Claim}: let $A = (\Sigma, Q, q_0, \delta, F)$. $L(A)$ is finite if and only if it contains no $w$ of length $|Q| < |w| \le 2|Q|$.
+          \\ \\
+          The Pumping Lemma could be used to prove this claim.
+        \end{enumerate}
 \end{document}
