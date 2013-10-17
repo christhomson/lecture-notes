@@ -1565,7 +1565,7 @@
 
         We could rephrase the Pumping Lemma in terms of a game between two players, $R$ and $NR$. $R$ is the player who is trying to convince us that the language is regular, and $NR$ is the player who is trying to convince us otherwise.
         \\ \\
-        First, $R$ chooses an $n$. $NR$ can then fire back with a word $w$ such that $w \in L$ and $|w| > n$. $R$ can then provide an $x, y, z$ such that $|xy \le n$, $xyz = w$, and $y \ne \epsilon$.
+        First, $R$ chooses an $n$. $NR$ can then fire back with a word $w$ such that $w \in L$ and $|w| > n$. $R$ can then provide an $x, y, z$ such that $|xy| \le n$, $xyz = w$, and $y \ne \epsilon$.
         \\ \\
         If $xy^kz \in L$, then $R$ wins. If $xy^kz \not \in L$, then $NR$ wins.
         \\ \\
@@ -1597,7 +1597,7 @@
           \begin{proof}
             We will prove this claim with the Pumping Lemma. We need to show that player $NR$ can win, regardless of what player $R$ does.
             \\ \\
-            Given some $n$ (chosen by player $R$), our first try is to choose $w = 0^{2n}$. In this case, we may attempt to construct $x = \epsilon, z = \epsilon, y = 0^{2n}$, but that violates the second condition of the Pumping Lemma. We may also try $x = \epsilon, y = 00, z = 0^{2n - 2}$ the rest of the word. For any $k$ that $NR$ picks, $xy^kz = (00)^k 0^{2n - 2} = 0^{2(k + n - 1)} \in L_{klk}$. $R$ won in this case, which is not what we want. Note that just because $R$ won in this case, does not prove that $L_{klk}$ is regular.
+            Given some $n$ (chosen by player $R$), our first try is to choose $w = 0^{2n}$. In this case, we may attempt to construct $x = \epsilon, z = \epsilon, y = 0^{2n}$, but that violates the second condition of the Pumping Lemma. We may also try $x = \epsilon, y = 00, z = 0^{2n - 2}$ = the rest of the word. For any $k$ that $NR$ picks, $xy^kz = (00)^k 0^{2n - 2} = 0^{2(k + n - 1)} \in L_{klk}$. $R$ won in this case, which is not what we want. Note that just because $R$ won in this case, does not prove that $L_{klk}$ is regular.
             \\ \\
             Let's try another word. Given some $n$ (chosen by player $R$), we will choose $w = 0^n 1^n 0^n$. Any choice of $x, y$ such that string $|xy| \le n$ will have $z = 0^i 1^n 0^n$. Now pick $k$ arbitrarily, say $k = 2$. Then since $0^j$ for some $j \ge 1$, $xy^2z = 0^{n + j}1^n0^n \not \in L_{klk}$.
           \end{proof}
