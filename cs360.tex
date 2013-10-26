@@ -2118,4 +2118,128 @@
       \begin{defn}
         $(p, \gamma, w)$ is an \textbf{instantaneous description} (\textbf{ID}), meaning at this point we are in state $p$, we have $\gamma$ in the stack, and ahead of us, the input is $w$.
       \end{defn}
+
+      \lecture{October 22, 2013}
+        \emph{The lecture from October 22, 2013 is omitted. If you have notes from this lecture, feel free to email me (\href{mailto:chris@cthomson.ca}{chris@cthomson.ca}) and I'll include them here.}
+
+        \begin{ex} \lecture{October 24, 2013}
+          Consider $L = \set{a^n b^n : n \in \mathbb{N}}$. The context-free grammar for $L$ would have rules $S \to aSb$ and $S \to \epsilon$.
+          \\ \\
+          The corresponding machine that could accept this language $L$ is a pushdown automaton with transitions:
+          \begin{align*}
+            \delta(q_0, a, z_0) &= (q_1, A) \\
+            \delta(q_1, a, A) &= (q_1, AA)
+          \end{align*}
+        \end{ex}
+
+        We aim to show three things:
+        \begin{itemize}
+          \item The equivalence of a context-free grammar (CFG) to a pushdown automaton (PDA).
+          \item A Pumping Lemma for context-free languages.
+          \item Closure properties of context-free languages.
+        \end{itemize}
+
+        Last time, we considered two ways of defining the language of a pushdown automaton:
+        \begin{itemize}
+          \item $L_E(D)$, by emptying the stack leading to acceptance.
+          \item $L_f(D)$, with finite acceptance states.
+        \end{itemize}
+
+        Last time, we showed that for every PDA $D_1$, there exists a PDA $D_2$ such that $L_f(D_1) = L_E(D_2)$.
+        \\ \\
+        \textbf{Claim}: for every PDA $D_1$, there exists a PDA $D_2$ such that $L_E(D_1) = L_f(D_2)$.
+
+        \begin{proof}
+          Given $D_1 = (\Sigma, \Gamma, Q, q_0, z_0, \delta, F)$, we wish to define $D_2$ such that for every $w \in \Sigma^\star$, $D_1$ empties the stack on $w$ if and only if $D_2$ on $w$ reaches a final state.
+          \\ \\
+          Let $D_2 = (\Sigma, \Gamma \cup \set{z^\star}, Q \cup \set{q_0', q_F}, \delta', \set{q_F})$. The new start state will be $q_0'$. We will define a transition with our new transition function $\delta'$:
+          $$
+            \delta'(q_0, \epsilon, z_0) = \delta(q_0, z_0, z^\star)
+          $$
+
+          Now, for every rule in $D_1$, $\delta(q, a, z) = \set{ (p, \gamma), \ldots }$, we copy the rule into $D_2$. We also define another rule:
+          $$
+            \delta'(p, \epsilon, z^\star) = (q_F, \epsilon)
+          $$
+
+          The intuition here is when the old machine empties the stack, it will push $z^\star$ onto the stack of $D_2$. Then, whenever we see $z^\star$, we accept.
+          \\ \\
+          If $P_1$ was the set of instructions of $D_1$, the set of instructions for $D_2$ will be
+          $$
+            P_2 = P_1 \cup \set{ \delta'(q_0', \epsilon, z_0) = (q_0, z_0z^\star), \delta'(p, \epsilon, z^\star) = (q_F, \epsilon) ~\forall p \in Q}
+          $$
+        \end{proof}
+
+        \begin{theorem}
+          For every language $L$, there exists a PDA, $D$, such that $L_E(D) = L$, if and only if there exists a context-free grammar $G$ such that $L = L(G)$.
+        \end{theorem}
+
+        In order to prove this theorem, we need to show two directions:
+        \begin{itemize}
+          \item Given a grammar $G$, construct a PDA $D$ such that $L(D) = L(G)$.
+          \item Given a PDA $D$, construct a grammar $G$ for $L(D)$.
+        \end{itemize}
+
+        \begin{proof}
+          Recall that a context-free grammar is $G = (V, T, P, S)$ with each rule of $P$ having the form $A \to w$ for some $w \in (V \cup T)^\star$.
+          $$
+            L(G) = \set{w \in T^\star : s \underset{G}{\overset{\star}{\vdash}} w}
+          $$
+
+          How should we construct a PDA for $L(G)$? Essentially, we want to replace a variable $A$ by $w$ on the stack.
+          \\ \\
+          Construct $D_G = (\Sigma, \Gamma, Q, \delta, q_0, z_0)$, where
+          \begin{itemize}
+            \item $\Sigma = T_G$
+            \item $Q = \set{q_0, q_1}$
+            \item $\Gamma = T \cup V \cup \set{z_0}$
+            \item $\delta$ has the rules:
+              \begin{itemize}
+                \item $\delta(q_0, \epsilon, z_0) = \set{(q, S)}$
+                \item $\delta(q_1, \epsilon, A) = \set{ (q, w) : A \to w \in P_G}$
+                \item $\delta(q, a, a) = (q, \epsilon)$ for every $a \in \Sigma$
+              \end{itemize}
+          \end{itemize}
+
+          We have now proven one direction of this theorem. We will accept, without proof, the claim that for every PDA, there is a grammar for the same language.
+        \end{proof}
+
+      \subsection{Ogden's Lemma: Pumping Lemma for Context-Free Languages}
+        We need a tool for showing that a given language is \emph{not} context-free. First, we will state a pumping lemma for such languages, followed by a proof of the lemma. After, we will apply it to show that some languages are not context-free.
+
+        \begin{lemma}[Ogden's Lemma]
+          For every context-free language $L$, there exists some $n \in \mathbb{N}$ such that for every $w \in L$, if $|w| \ge n$, then there exists a decomposition $w = X_1 X_2 X_3 X_4 X_5$ such that
+          \begin{itemize}
+            \item $|X_2 X_3 X_4| \le n$,
+            \item $X_2 X_4 \ne \epsilon$ (at least one of $X_2, X_4$ is not empty), and,
+            \item For every $k$, $X_1 X_2^k X_3 X_4^k X_5 \in L$
+          \end{itemize}
+        \end{lemma}
+
+        Let's look at an application of this new Pumping Lemma to show that a language is not context-free.
+        \begin{ex}
+          Consider $L = \set{ a^n b^n c^n : n \in \mathbb{N} }$.
+          \\ \\
+          \textbf{Claim}: $L$ is not context-free. Intuitively, $a^n b^n$ would be context-free (since we could use a stack to keep track of $n$), but that is not possible for $n > 2$.
+
+          \begin{proof}
+            Let us show that $L$ fails the new Pumping Lemma.
+            \\ \\
+            Given $n$ as the lemma requires, pick $w = a^n b^n c^n$ (for the same $n$). Clearly, $|w| \ge n$, and $w \in L$.
+            \\ \\
+            Now, the first player decomposes my $w$ as
+            $$
+              a^n b^n c^n = X_1 X_2 X_3 X_4 X_5
+            $$
+            such that the three decomposition requirements are satisfied.
+            \\ \\
+            By the requirement that $|X_2 X_3 X_4| \le n$, $X_2 X_3 X_4$ can either contain only $a$'s and $b$'s, or only $b$'s and $c$'s. In particular, $X_2 X_3 X_4$ can contain one or two different letters, but not $a$ and $c$ at the same time.
+            \\ \\
+            Regardless of what the decomposition was, pick any $k \ne 1$. Consider $X_1 X_2^k X_3 X_4^k X_5$ compared to $X_1 X_2 X_3 X_4 X_5 = a^n b^n c^n$. $k$ has changed the number of occurrences of at least one letter and at most two letters (the letters in $X_2$ and $X_4$).
+            \\ \\
+            Therefore, $X_1 X_2^k X_3 X_4^k X_5$ does no longer have the same number of occurrences of $a$, $b$, and $c$. So, $X_1 X_2^k X_3 X_4^k X_5 \not \in L$. $L$ fails the Pumping Lemma, which shows that $L$ is not context-free.
+          \end{proof}
+        \end{ex}
+
+        We will look at the proof of Ogden's Lemma next time.
 \end{document}
