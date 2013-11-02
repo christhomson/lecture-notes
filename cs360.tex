@@ -2332,4 +2332,81 @@
         \\ \\
         We will conclude this proof once we establish that indeed $|X_2 X_4| \ge 1$ and $|X_2 X_3 X_4| \le n$. We establish this by picking the lowest repetition of a variable along the longest branch in $T$.
       \end{proof}
+
+      \subsection{Deciding Membership in a Context-Free Language} \lecture{October 31, 2013}
+        \textbf{Recall}: for a regular language $L$, there is a corresponding DFA $D$, and to check if a particular word $w$ is in $L$ or not, we simply run $w$ through $D$ and see if $D$ accepts $w$.
+        \\ \\
+        Can we repeat this idea for a context-free language? Not really. The problem is that pushdown automata are inherently non-deterministic. There is no clear way to simulate the run of a non-deterministic pushdown automata. Unlike finite automata, there is a potentially unbounded number of possible states for the stack, due to the PDA's non-determinism.
+        \\ \\
+        We can still find a way to decide membership in context-free languages though! We can do this by using a grammar for $L$, rather than using an automaton for $L$.
+        \subsubsection{Method 1: Brute Force}
+          Assume, without loss of generality, that $G$ is in Chomsky form.
+          \\ \\
+          Each $w \in L$ has a parse tree, which is a binary tree, and all its internal nodes are labeled by variables in $V$. The number of internal nodes in a binary tree with $n$ leaves in $\le 2n - 1$.
+          \\ \\
+          \textbf{Decision algorithm}: list all binary trees with at most $2|w| - 1$ internal nodes, and check if any of them is a legal $G$-parse tree for $w$. There are at most $|V|^{2|w| - 1}$ trees to check.
+          \\ \\
+          The downside to this approach is that's a lot of trees to check. For example, if we have just three variables and the word is of length 10, we would need to check up to $3^19 = 1,162,261,467$ trees. Luckily, there are more efficient algorithms.
+
+        \subsubsection{Method 2: Tableau Method}
+          Let $w = a_1 \ldots a_n$. We're going to build an $n \times n$ table. Let $i$ represent the column number and $j$ represent the row number.
+          \\ \\
+          \textbf{Filling out the table}: in each $X_{ij}$ entry, for $i \le j$, we aim to have all variables $A \in V$ (that is, a finite set of variables) such that $A \underset{G}{\overset{\star}{\implies}} a_i \ldots a_j$. Then, $w \in L(G)$ if and only if $S \in X_{1n}$.
+          \\ \\
+          \textbf{Bottom row}: for each $X{ii}$, we need to find all $A \in V$ such that $A \underset{G}{\overset{\star}{\implies}} a_i$.
+          \\ \\
+          \textbf{Higher rows}: assume the $i$-th row has been filled in already. Given any $X_{ij}$ in the $i+1$-th row, find all $A$s such that $A \underset{G}{\overset{\star}{\implies}} \underbrace{a_k \ldots a_j}_{i + 1}$. For every $l$ such that $k \le l \le j$, check all combinations $A, B, C$ such that $A \to BC \in P$, $B \in X_{kl}$ and $C \in X_{(l + 1)j}$. (We are looking for all ways to cut a string $a_k \ldots a_j$ in two.)
+          \\ \\
+          This algorithm runs in $\frac{n^2}{2} \times n = \theta(n^3)$ time.
+
+      \subsection{Closure Properties of Context-Free Languages}
+        For regular languages, we could use almost any operation on a language (or multiple regular languages) and the result would still be regular. Is the story similar for context-free languages?
+        \\ \\
+        Assume $L_1$ and $L_2$ are context-free languages. Is it guaranteed that so are $L_1 \cup L_2, L_1 \cap L_2, L_1^\star, L_1 \backslash L_2$, $L_1 L_2$, etc?
+
+        \subsubsection{Non-closure of Context-Free Languages Under Intersection}
+          \textbf{Claim}: context-free languages are not closed under the intersection operation.
+
+          \begin{proof}
+            Let $L_1 = \set{a^n b^n c^m : n, m \in \mathbb{N}}$. $L_1$ is context-free because we can come up with the following context-free grammar for $L$:
+            \begin{itemize}
+              \item $S \to aS' bA$
+              \item $S \to \epsilon$
+              \item $S' \to aS'b$
+              \item $A \to cA$
+            \end{itemize}
+
+            It's also easy to see that a pushdown automata would also be possible. We would simply push onto the stack for every $a$, and pop for every $b$.
+            \\ \\
+            Let $L_2 = \set{a^m b^n c^n : n, m \in \mathbb{N}}$. This is also clearly a context-free language.
+            \\ \\
+            What is $L_1 \cap L_2$? $L_1 \cap L_2 = \set{a^n b^n c^n : n \in \mathbb{N}}$, which is not context-free. This serves as a counterexample.
+          \end{proof}
+
+          What went wrong with the argument we used to show closure of intersection for regular languages? For regular languages, we used the product automaton to run both DFAs in parallel. If both accepted a particular word, then the product automaton would also accept the word.
+          \\ \\
+          Each state in our product DFA was a set of two states -- one for each machine. However, for context-free languages, we cannot combine our stacks in a similar way. We can't just simulate a double stack with one stack, the same way we simulated two states with one.
+          \\ \\
+          \textbf{Claim}: if $L_1$ is a context-free language and $L_2$ is regular, then $L_1 \cap L_2$ is context-free.
+          \\ \\
+          This claim could be proven by building a product automaton containing a PDA for $L_1$ and a DFA for $L_2$. This is possible since only one stack is needed (for $L_2$).
+
+      \subsection{Substitution of Languages}
+        Given some $w = a_1 \ldots a_n \in \Sigma^\star$, and languages $L_{a_1} \ldots L_{a_n}$, let $L(w)$ denote $L_{a_1} L_{a_2} \ldots L_{a_n}$.
+        \\ \\
+        Given a language $L_a$ for every $a \in \Sigma$, and some language $R \subseteq \Sigma^\star$, let $L(R) = \displaystyle \bigcup_{w \in R} L(w)$.
+
+        \begin{ex}
+          Let $L_1 = a^\star$, $L_0 = b^\star$, $R = \set{0, 1, 01}$.
+          \\ \\
+          We say $L(R) = a^\star \cup b^\star \cup a^\star b^\star = \set{ w : w = a^i b^j \text{ for some } i, j}$.
+        \end{ex}
+
+        \textbf{Claim}: for every context-free $R$ and $L(A)$ for all $a \in \Sigma$, the language $L(R)$ is also context-free.
+
+        \begin{proof}
+          Let $G = (V, T, P, S)$ be a grammar for $R$, and for each $a$, let $G_a = (V_a, T_a, P_a, S_a)$ be a grammar for $L_a$.
+          \\ \\
+          We define a new set of variables $\set{ S_a : a \in \Sigma}$. Replace every rule of a form similar to $A \to V_1 V_2 a_1 a_2 a_3 V_3 \ldots$ by a corresponding rule similar to $A \to V_1 V_2 S_{a_1} S_{a_2} S_{a_3} V_3 \ldots$. Finally, add in all the rules from $G_a$'s with $S_a$ replacing $S$.
+        \end{proof}
 \end{document}
