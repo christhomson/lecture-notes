@@ -96,7 +96,7 @@
         \item Input: a graph. Decision: is it connected?
       \end{itemize}
 
-      We're interested in seeing which of these questions a computer can carry out and how difficult are such task.
+      We're interested in seeing which of these questions a computer can carry out and how difficult are such tasks.
 
       \subsubsection{Modeling Decision Problems}
         We model decision problems using \textbf{formal languages}. A decision problem has two components:
@@ -116,7 +116,7 @@
         \\ \\
         $\Sigma^\star$ represents the set of all finite strings over the alphabet $\Sigma$. In many cases, we define $X = \Sigma^\star$. For example, if $\Sigma = \set{0, 1}$ then $\Sigma^\star = \set{ \epsilon, 0, 1, 00, 11, 01, 10, \ldots }$. Note that $\Sigma^\star$ is an infinite set, but every member of $\Sigma^\star$ is finite.
         \\ \\
-        For the time being, we will define just one operation for strings, : \textbf{concatenation}. Given two strings, $\sigma$ and $\eta$, we get $\sigma \eta$. That is,
+        For the time being, we will define just one operation for strings: \textbf{concatenation}. Given two strings, $\sigma$ and $\eta$, we get $\sigma \eta$. That is,
           \AxiomC{$\sigma$}
           \AxiomC{$\eta$}
           \BinaryInfC{$\sigma \eta$}
@@ -125,14 +125,14 @@
         \textbf{Languages} are subsets of $\Sigma^\star$ (that is, a language is a collection of strings). Some examples of languages include:
         \begin{itemize}
           \item $L = \emptyset$. This is the \textbf{empty language}, which no strings belong to. Note that $|L| = 0$. This is analogous to an empty fridge.
-          \item $L = \set{ \epsilon }$. This is a non-empty language that contains one element ($|L| = 1$), which just happens to be $\epsilon$. This is analogous to having a fridge that contains only an empty can.
+          \item $L = \set{ \epsilon }$. This is a non-empty language that contains one element ($|L| = 1$), which just happens to be $\epsilon$. This is analogous to having a fridge that contains only an empty pop can.
           \item $L = \set{\epsilon, 0, 01, 11111}$.
           \item $L = \Sigma^\star$.
         \end{itemize}
 
-        Compilers task of checking their input (the code of a program) to see if the program is valid (if the code is in the language), can be readily seen as checking membership in such a language (namely, the language of all binary sequences that represent a valid code in the given programming language).
+        A compiler's task of checking their input (the code of a program) to see if the program is valid (if the code is in the language), can be readily seen as checking membership in such a language (namely, the language of all binary sequences that represent valid code in the given programming language).
 
-  \section{Inductive definition of sets and Structural Induction (CS 245 Review)}
+  \section{Inductive Definition of Sets and Structural Induction}
     We'll start off by reviewing some basic notions that were covered on CS 245, to ensure that everyone's on the same page.
       \subsection{Formal Tools for Defining Sets}
         We want languages to model every computational task, some of which are complex. We need several different methods for formally defining sets, since all languages are sets.
@@ -140,7 +140,7 @@
         \begin{enumerate}
           \item \textbf{List all members of the set}. This method is precise and concrete, but it makes look-ups difficult ($O(n)$) and it fails if the set is infinitely large.
           \item \textbf{Common property that characterizes the members of the set}. For example, consider the set of all even numbers. This set is not definable by a list because it's an infinite set. However, there is a common property that's shared between all members of the set: if you divide by two and examine the remainder, every member in the set will have a remainder of zero and only members of the set have this property.
-          \item \textbf{Inductive definitions}. Methods (1) and (2) don't offer us a way to define a set of all your blood relatives, since there's no property that characterizes that set. Instead, we could use \emph{inductive definitions}.
+          \item \textbf{Inductive definitions}. Methods (1) and (2) don't offer us a way to define a set of all your blood relatives, since there's no common property that characterizes that set. Instead, we could use \emph{inductive definitions}.
           \\ \\
           Inductive definitions of sets requires three components:
           \begin{itemize}
@@ -149,9 +149,9 @@
             \item A set of operations $P$, such as $\set{ \text{``son of''}, \text{``father of''}, \text{``mother of''}}$. This set is a set of functions from $X \to X$.
           \end{itemize}
 
-          Given these components, we define the \textbf{inductive set} $I(A, P)$, (say, the set of blood relatives), as all domain elements that can be reached from the core set by applying a finite sequence of operations.
+          Given these components, we define the \textbf{inductive set} $I(A, P)$, (say, the set of blood relatives), as all domain elements that can be reached from the core set by applying a finite sequence of operations from $P$.
           \\ \\
-          More formally,  $I(A, P)$ - the inductive set defined by core $A$ and operations $P$ - is the smallest set satisfying:
+          More formally,  $I(A, P)$ -- the inductive set defined by core $A$ and operations $P$ -- is the smallest set satisfying:
           \begin{itemize}
             \item Contains all members of $A$, and
             \item Closed under the operations in $P$.
@@ -159,7 +159,7 @@
 
           \noindent \textbf{Examples:}
           \begin{itemize}
-          \item Let the domain be the set of all real numbers, the core set be $\set{2}$, and the set of operations be $\set{ \text{``add 2''}, \text{``subtract 2''}}$. The defined set is the set of all even numbers, both positive and negative.
+          \item Let the domain be the set of all real numbers ($\mathbb{R}$), the core set be $\set{2}$, and the set of operations be $\set{ \text{``add 2''}, \text{``subtract 2''}}$. The defined set is the set of all even numbers, both positive and negative.
 
           \item To define the set of all algebraic expressions. Our core set would be $\set{x, y, z, 1, 2, 3, \ldots, a, b, c, \ldots}$. Our operations would be:
           \AxiomC{$\sigma$} \AxiomC{$\eta$} \BinaryInfC{$(\sigma + \eta)$} \DisplayProof,\AxiomC{$\sigma$} \AxiomC{$\eta$} \BinaryInfC{$(\sigma \cdot \eta)$} \DisplayProof.
@@ -194,7 +194,7 @@
         Our definition of $I(A, P)$ is still somewhat informal, however. We haven't formally defined what it means for a subset to be the \emph{smallest} subset, and we also haven't formally defined what it means for a set to be ``closed'' under a set of operations.
 
         \subsection{More on Inductive Sets and Structural Induction}
-        More formally, we say that a set $B$ is \textbf{closed under the operations of $\boldsymbol P$} if for every $f \in P$ and every $x, y \in B$, $f(x, y) \in B$ (for concreteness, we considered here an $f$ that accepts two inputs, but it may also be a unary function, $f(x)$ or ternary $f(x,y, z)$ etc.). For example, the set of even numbers is closed under the operation +.
+        More formally, we say that a set $B$ is \textbf{closed under the operations of $\boldsymbol P$} if for every $f \in P$ and every $x, y \in B$, $f(x, y) \in B$ (for concreteness, we considered here an $f$ that accepts two inputs, but it may also be a unary function, $f(x)$ or ternary $f(x,y, z)$, etc.). For example, the set of even numbers is closed under the operation +.
         \\ \\
         Now, let's redefine $I(A, P)$ in a more formal way:
         $$
@@ -395,7 +395,7 @@
 
           \textbf{Claim 1}: for every (finite) string $\sigma$, $\set{\sigma}$ is a regular language. It's easy to see this is true, because you can generate the language by concatenating the languages that represent individual letters.
           \\ \\
-          \textbf{Claim 2}: every finite language is regular. Since we know every $\set{\sigma}$ is regular, so is a finite unions of such.
+          \textbf{Claim 2}: every finite language is regular. Since we know every $\set{\sigma}$ is regular, so is any finite unions of such languages.
 
           \begin{ex}
             Let $L_\text{even}$ be the language of all words of even length. $L_\text{even}$ is regular. We can form every word in $L_\text{even}$ using the expression $(\set{0, 1} \set{0, 1})^\star$.
@@ -524,14 +524,14 @@
 
       To define $L(A)$, we extend $\delta: Q \times \Sigma \to Q$, to: $\hat{\delta}: Q \times \Sigma^\star \to Q$. Now, we define the language accepted by DFA $A$ as:
       $$
-        L(A) = \set{ w : \hat{\sigma}(q_0, w) \in F }
+        L(A) = \set{ w : \hat{\delta}(q_0, w) \in F }
       $$
 
-      \textbf{Claim}: or this automata, $L(A) = \set{ w : \#_0(w) \text{ is even, and } \#_1(w) \text{ is odd }}$. But how do we prove this?
+      \textbf{Claim}: For this automata, $L(A) = \set{ w : \#_0(w) \text{ is even, and } \#_1(w) \text{ is odd }}$. But how do we prove this?
       \\ \\
       Let's rephrase our claim. For every $w \in \set{0, 1}^\star$, if $\#_0(w)$ is even and the $\#_1(w)$ is odd, then $A$ accepts $w$, and otherwise, $A$ does not accept $w$.
       \\ \\
-      Since we said ``for every $w \in \set{0, 1}^\star$'', that should be a giveaway that we should use structural induction for this proof.
+      Since we said ``for every $w \in \set{0, 1}^\star$'', that should be a give away that we should use structural induction for this proof.
       \\ \\
       Let's define $\set{0, 1}^\star$ inductively. Note that we are \emph{not} yet defining the set of accepted members for the DFA, but instead, we are aiming to inductively define the set of all possible words across the alphabet $\Sigma = \set{0, 1}$.
       \\ \\
@@ -558,7 +558,7 @@
         \\ \\
         \textbf{Induction step}: assume the four claims hold for $w$. We need to show they hold for $w_0$ and $w_1$.
         \\ \\
-        \underline{The operation $w_0$}: if $\#_0(w_0)$ is even and $\#_1(w_0)$ is even, then $\#_0(w)$ is odd and $\#_1(w)$ is even. By the induction hypothesis, $\hat{\delta}{q_0, w} = q_3$.
+        \underline{The operation $w_0$}: if $\#_0(w_0)$ is even and $\#_1(w_0)$ is even, then $\#_0(w)$ is odd and $\#_1(w)$ is even. By the induction hypothesis, $\hat{\delta}({q_0, w}) = q_3$.
         \\ \\
         By the definition of $\hat{\delta}$, $\hat{\delta}(q_0, w_0) = \delta( \hat{\delta}(q_0, w), 0) = \delta(q_3, 0) = q_0$.
         \\ \\
@@ -591,7 +591,7 @@
           $$
           where $\Sigma$ is the same alphabet as defined previously, $Q_1 \times Q_2 = \set{ (p, q) : p \in Q_1, q \in Q_2 }$, and $\delta_{A_1 \times A_2}((p, q), a) = (\delta_1(p, a), \delta_2(q, a))$.
           \\ \\
-          $F$ will be defined differently depending on which combination we wish to compute. For example:
+          $F$ will be defined differently depending on which combination of $L_1$ and $L_2$ we wish to compute. For example:
           \begin{itemize}
             \item $F_{A_1 \cap A_2} = \set{ (p, q) : p \in F_1 \text{ and } q \in F_2 }$
             \item $F_{A_1 \cup A_2} = \set{ (p, q) : p \in F_1 \text{ or } q \in F_2 }$
@@ -600,12 +600,12 @@
 
           \textbf{Conclusion}: if $L_1$ and $L_2$ both have DFAs, then so do $L_1 \cap L_2, L_1 \cup L_2, L_1 \backslash L_2, L_1 \Delta L_2$, etc. (any boolean operation on sets). However, note that the product automaton does not tell us if a language is closed under $L^\star$ or concatenation.
           \\ \\
-          Is it true that whenever $L$ has a DFA, then so does its complement, $L^C = \Sigma^\star \backslash L$? Yes, its DFA is $L_{\Sigma^\star \times L}$. More simply, let $A = (\Sigma, Q, q_0, \delta, F)$ be a DFA such that $L(A) = L$, then let $A^C = (\Sigma, Q, q_0, \delta, Q \backslash F)$. Then, $L(A^C) = L^C$.
+          Is it true that whenever $L$ has a DFA, then so does its complement, $L^C = \Sigma^\star \backslash L$? Yes, its DFA is $A_{\Sigma^\star \times L}$. More simply, let $A = (\Sigma, Q, q_0, \delta, F)$ be a DFA such that $L(A) = L$, then let $A^C = (\Sigma, Q, q_0, \delta, Q \backslash F)$. Then, $L(A^C) = L^C$.
           \\ \\
           Since in our definition of a DFA we required that for every state $q \in Q$ and every letter $a \in \Sigma$, $q$ has some outgoing edge labeled by $a$ (we are never stuck).
         \end{proof}
 
-      \subsubsection{The Relationship Between  Regular Expressions and DFAs} \lecture{September 26, 2013}
+      \subsubsection{The Relationship Between Regular Expressions and DFAs} \lecture{September 26, 2013}
         \textbf{Claim}: for every regular expression $r$, there exists some DFA $A$ such that $L(r) = L(A)$.
 
         \begin{proof}
@@ -640,7 +640,7 @@
         \end{proof}
 
     \subsection{Non-deterministic Finite Automata (NFAs)}
-      The intuition behind NFAs is they're similar to deterministic finite automata, except they allow more edges on a state than there are letters in $\Sigma$. You can create multiple paths to be followed simultaneously.
+      NFAs are similar to deterministic finite automata, except they allow more edges on a state than there are letters in $\Sigma$. You can create multiple paths to be followed simultaneously.
       \\ \\
       We define an NFA $N$ as $N = (\Sigma, Q, q_0, \delta, F)$ where $\Sigma, Q, q_0$, and $F$ are exactly the same as in DFAs. However, for NFAs, we define $\Sigma: Q \times \Sigma \to \set{ B : B \subseteq Q }$.
 
@@ -674,7 +674,7 @@
           \end{tikzpicture}
           \end{center}
 
-          Whether this machine will accept $a$ is largely up to how we define acceptance. Generally, NFAs are defined so if there is \emph{any} valid path that leads to a final state, the string will be accepted.
+          Whether this machine will accept $a$ is largely up to how we define acceptance. Generally, NFAs are defined so if there is \emph{any} valid path that leads to a final state, the string will be accepted. So, in this case, $a$ would be accepted by this NFA.
         \end{ex}
 
         \subsubsection{Languages Accepted by an NFA}
@@ -774,7 +774,7 @@
           \end{ex}
 
           \begin{ex}
-            Suppose we want to define an NFA for the language $L_n$ = \{ $w$ : the $n$th before last letter in $w$ is 1\} on the alphabet $\Sigma = \set{0, 1}$. We could form the the following NFA to represent this:
+            Suppose we want to define an NFA for the language $L_n$ = \{ $w$ : the $n$th-before-last letter in $w$ is 1\} on the alphabet $\Sigma = \set{0, 1}$. We could form the following NFA to represent this:
             \begin{center}
               \begin{tikzpicture}[scale=0.2]
                 \tikzstyle{every node}+=[inner sep=0pt]
@@ -813,7 +813,7 @@
             \textbf{Claim}: every DFA that accepts $L_n$ must have at least $2^n$ states. Why? For every word $w$ of length less than $n$, there should be a different state. In other words, if $w_1 \ne w_2$ and $\hat{\delta}(q_0, w_1) = \hat{\delta}(q_0, w_2)$, the DFA is bound to fail. Since $w_1 \ne w_2$, the last ``1'' must be in a different position in $w_1$ and $w_2$, which makes this DFA representation fail.
           \end{ex}
 
-          \textbf{Claim}: a language $L$ has an NFA $N$ such that $L(N) = L$ if and only if there is a DFA $A$ such that $L(A) = A$. In other words, nondeterminism does not increase the power of a finite automata.
+          \textbf{Claim}: a language $L$ has an NFA $N$ such that $L(N) = L$ if and only if there is a DFA $A$ such that $L(A) = A$. In other words, nondeterminism does not increase the power of finite automata.
 
           \begin{proof}
             First, note that any DFA can also be viewed as an NFA. For every $q \in Q$ and $a \in \Sigma$, if $\delta_N(q, a) = p$, define $\delta_D(q, a) = \set{p}$. In other words, let $\delta_N(q, a) = \set{\delta_D(q, a)}$.
@@ -1117,7 +1117,7 @@
 
           We must show that our claim holds for each of these operations.
           \\ \\
-          Let's consider the first operation, \AxiomC{$r_1$} \AxiomC{$r_2$} \BinaryInfC{$r_1 + r_2$} \DisplayProof. We need to construct an automata $A_3$ such that $L(A_3) = L(A_1) \cup L(A_2)$. Essentially, we want to introduce a new $q_0$ that is connected via $\epsilon$-transitions to the $q_0$ states of $A_1$ and $A_2$. Then, convert the single final state of each of $A_1$ and $A_2$ into a non-final state, but connect that state via an $\epsilon$-transition to a new accepting state. Here's a visualization of this construction:
+          Let's consider the first operation, \AxiomC{$r_1$} \AxiomC{$r_2$} \BinaryInfC{$r_1 + r_2$} \DisplayProof. We need to construct an automaton $A_3$ such that $L(A_3) = L(A_1) \cup L(A_2)$. Essentially, we want to introduce a new $q_0$ that is connected via $\epsilon$-transitions to the $q_0$ states of $A_1$ and $A_2$. Then, convert the single final state of each of $A_1$ and $A_2$ into a non-final state, but connect that state via an $\epsilon$-transition to a new accepting state. Here's a visualization of this construction:
           \begin{center}
             \begin{tikzpicture}[scale=0.2]
               \tikzstyle{every node}+=[inner sep=0pt]
@@ -1206,7 +1206,7 @@
             \end{tikzpicture}
           \end{center}
 
-          Next, let's look at the operation \AxiomC{$r_1$} \AxiomC{$r_2$} \BinaryInfC{$r_1 r_2$} \DisplayProof. We need to construct an automata $A_4$ such that $L(A_4) = L(A_1) L(A_2)$. Essentially, we want to make the final states of $A_1$ and $A_2$ non-final, then connect the final state of $A_1$ to the $q_0$ of $A_2$, through an $\epsilon$-transition. Then, the previously-final state of $A_2$ should connect to a new final state through an $\epsilon$-transition. Here's a visualization of this construction:
+          Next, let's look at the operation \AxiomC{$r_1$} \AxiomC{$r_2$} \BinaryInfC{$r_1 r_2$} \DisplayProof. We need to construct an automaton $A_4$ such that $L(A_4) = L(A_1) L(A_2)$. Essentially, we want to make the final states of $A_1$ and $A_2$ non-final, then connect the final state of $A_1$ to the $q_0$ of $A_2$, through an $\epsilon$-transition. Then, the previously-final state of $A_2$ should connect to a new final state through an $\epsilon$-transition. Here's a visualization of this construction:
           \begin{center}
             \begin{tikzpicture}[scale=0.2]
               \tikzstyle{every node}+=[inner sep=0pt]
@@ -1362,7 +1362,7 @@
             (0 + 1)^\star 1(0 + 1)
           \end{align*}
 
-          We will construct the automata in this order as well. Let's start with an automata for matching 0:
+          We will construct the automaton in this order as well. Let's start with an automaton for matching 0:
           \begin{center}
             \begin{tikzpicture}[scale=0.2]
               \tikzstyle{every node}+=[inner sep=0pt]
@@ -1379,7 +1379,7 @@
           \end{center}
 
 
-          Next, we'll create an automata for matching 1:
+          Next, we'll create an automaton for matching 1:
           \begin{center}
             \begin{tikzpicture}[scale=0.2]
               \tikzstyle{every node}+=[inner sep=0pt]
@@ -1395,7 +1395,7 @@
             \end{tikzpicture}
           \end{center}
 
-          Next, we'll combine these two machines to create an automata that matches $(0 + 1)$:
+          Next, we'll combine these two machines to create an automaton that matches $(0 + 1)$:
           \begin{center}
             \begin{tikzpicture}[scale=0.2]
               \tikzstyle{every node}+=[inner sep=0pt]
@@ -1431,7 +1431,7 @@
             \end{tikzpicture}
           \end{center}
 
-          Next, we'll introduce the $\star$. We'll form an automata that matches $(0 + 1)^\star$.
+          Next, we'll introduce the $\star$. We'll form an automaton that matches $(0 + 1)^\star$.
           \begin{center}
             \begin{tikzpicture}[scale=0.2]
               \tikzstyle{every node}+=[inner sep=0pt]
@@ -1526,7 +1526,7 @@
         \end{lemma}
 
         Note that the converse is \emph{not} true. There are languages that are not regular that still satisfy these properties.
-
+        \\ \\
         Let's begin by looking at some positive examples.
         \begin{ex}
           Let $r = (0011)^\star$, and let $L = L(r)$. Pick $n = 5$. For every $w \in L$ such that $|w| > 5$, we have the general form
@@ -1534,7 +1534,7 @@
             \underbrace{0011}_{y} \underbrace{001100110011}_{z} \ldots
           $$
 
-          Pick $x = \epsilon, y = 0011$, and $z = $ the rest of $w$.
+          Pick $x = \epsilon, y = 0011$, and $z = $ the rest of $w$. Remember: just because a language satisfies these properties, does \emph{not} prove it is regular.
         \end{ex}
 
         \begin{ex}
@@ -1547,9 +1547,9 @@
         \begin{ex}
           Let $L_\text{plus} = \set{0^s 1^t 0^r : s + t = r}$.
           \\ \\
-          \textbf{Claim}: $L_\text{plus}$ is not regular. This is an intuitive claim since finite automata do not have memory. They only know which state they're currently in. Similarly, counting numbers $> 10$ on your finders (without using memory) can only determine the count modulus 10, since we only have 10 fingers.
+          \textbf{Claim}: $L_\text{plus}$ is not regular. This is an intuitive claim since finite automata do not have memory. They only know which state they're currently in. Similarly, counting numbers $> 10$ on your fingers (without using memory) can only determine the count modulus 10, since we only have 10 fingers.
           \\ \\
-          We need to show that the claim of the Pumping Lemma fails. Pick any $n$, then consider
+          We need to show that the claim of the Pumping Lemma fails. Pick any $n$, and consider
           $$
             w = 0^n 1 0^{n + 1} \in L_\text{plus}
           $$
@@ -1600,7 +1600,7 @@
             \\ \\
             Given some $n$ (chosen by player $R$), our first try is to choose $w = 0^{2n}$. In this case, we may attempt to construct $x = \epsilon, z = \epsilon, y = 0^{2n}$, but that violates the second condition of the Pumping Lemma. We may also try $x = \epsilon, y = 00, z = 0^{2n - 2}$ = the rest of the word. For any $k$ that $NR$ picks, $xy^kz = (00)^k 0^{2n - 2} = 0^{2(k + n - 1)} \in L_{klk}$. $R$ won in this case, which is not what we want. Note that just because $R$ won in this case, does not prove that $L_{klk}$ is regular.
             \\ \\
-            Let's try another word. Given some $n$ (chosen by player $R$), we will choose $w = 0^n 1^n 0^n$. Any choice of $x, y$ such that string $|xy| \le n$ will have $z = 0^i 1^n 0^n$. Now pick $k$ arbitrarily, say $k = 2$. Then since $0^j$ for some $j \ge 1$, $xy^2z = 0^{n + j}1^n0^n \not \in L_{klk}$.
+            Let's try another word. Given some $n$ (chosen by player $R$), we will choose $w = 0^n 1^n 0^n$. Any choice of $x, y$ such that string $|xy| \le n$ will have $z = 0^i 1^n 0^n$. Now pick $k$ arbitrarily; say $k = 2$. Then since $0^j$ for some $j \ge 1$, $xy^2z = 0^{n + j}1^n0^n \not \in L_{klk}$.
           \end{proof}
         \end{ex}
 
@@ -1616,7 +1616,7 @@
           \end{proof}
         \end{ex}
 
-        \textbf{Claim}: let $L$ be a non-empty language that for some $s \in N$ accepts no words of length $\le s$. Then, if a DFA $A$ computes $L$ (that is, $L = L(A)$), then inevitably, $A$ has more than $s$ states.
+        \textbf{Claim}: let $L$ be a non-empty language that for some $s \in \mathbb{N}$ accepts no words of length $\le s$. Then, if a DFA $A$ computes $L$ (that is, $L = L(A)$), then inevitably, $A$ has more than $s$ states.
         \\ \\
         For example, $L_{> 6} = \set{ w : |w| > 6 }$ is not $L(A)$ for any DFA with at most 6 states.
         \\ \\
@@ -1694,7 +1694,7 @@
           \textbf{Base case}: $k = 0$. $L_{ij}^0 = \set{ w : \text{ go from } q_i \text{ to } q_j \text{ without touching any other state}}$. We have two cases.
 
           \begin{enumerate}
-            \item $i \ne j$. If there is an edge between the two states, let $a_1, \ldots, a_k$ we all letters on this edge, and $R_{ij}^0 = a_1 + \ldots + a_k$. If there is no direct edge from $q_i$ to $q_j$, then $R_{ij}^0 = \emptyset$ (i.e. there is no way to go from $q_i$ to $q_j$ without touching any other state).
+            \item $i \ne j$. If there is an edge between the two states, let $a_1, \ldots, a_k$ be all letters on this edge, and $R_{ij}^0 = a_1 + \ldots + a_k$. If there is no direct edge from $q_i$ to $q_j$, then $R_{ij}^0 = \emptyset$ (i.e. there is no way to go from $q_i$ to $q_j$ without touching any other state).
             \item $i = j$. If there is a self-edge labeled $a_1, \ldots, a_k$, then $R_{ii}^0 = a_1 + \ldots + a_k + \epsilon$. Note that $\epsilon$ is added here because you can also go from a state to itself without reading any letters. If there is no self loop on $q_i$, then $R_{ii}^0 = \epsilon$.
           \end{enumerate}
 
@@ -1710,7 +1710,7 @@
         Let's look at a number of algorithms that you should be able to carry out on languages and automata.
 
         \begin{enumerate}
-          \item \textbf{Given $\boldsymbol{w}$ and DFA (or NFA, or $\boldsymbol{\epsilon}$-NFA) $M$, decide if $\boldsymbol{w \in L(M)}$.}
+          \item \textbf{Given $\boldsymbol{w}$ and DFA (or NFA, or $\boldsymbol{\epsilon}$-NFA) $\boldsymbol{M}$, decide if $\boldsymbol{w \in L(M)}$.}
           \item \textbf{Given a regular expression $\boldsymbol{r}$, construct a ($\boldsymbol{\epsilon}$-)NFA, $\boldsymbol{M}$, such that $\boldsymbol{L(M) = L(r)}$.}
           \begin{ex}
             Let $r = (a + b) a^\star + b(a + \epsilon)$.
@@ -1936,7 +1936,7 @@
 
       In the example of generating palindromes, $V = \set{S},~ T = \set{0, 1},~ S = S$, and $P = \set{S \to \epsilon, S \to 0, S \to 1, S \to 0S0, S \to 1S1 }$.
       \\ \\
-      You might be wondering why we call these languages ``context-free.'' The rules in a CFG may only consider the variable at hand -- not the context of its neighbours in a larger string. Context-free grammars are limited by requiring that a variable generates the same expression regardless of the word the variable is embedded in.
+      You might be wondering why we call these languages ``context-free.'' The rules in a CFG can only consider the variable at hand -- not the context of its neighbours in a larger string. Context-free grammars are limited by requiring that a variable generates the same expression regardless of the word the variable is embedded in.
 
       \subsubsection{Defining The Languages Generated By Such Grammars}
         Given a CFG $G = (V, T, P, S)$, we wish to define $L(G)$, the language described by $G$. But first, we have a couple of preliminary technical definitions of some notation.
@@ -1978,7 +1978,7 @@
             \item $S = S$
           \end{itemize}
 
-          Note that including $S \mapsto 1$ in $P$ would be redundant because our we could use our last rule, $S \mapsto S1$, in conjunction with our first rule, $S \mapsto \epsilon$.
+          Note that including $S \mapsto 1$ in $P$ would be redundant because we could use our last rule, $S \mapsto S1$, in conjunction with our first rule, $S \mapsto \epsilon$.
           \\ \\
           Let's now look at another grammar that describes the same language:
           \begin{itemize}
@@ -2099,7 +2099,7 @@
       Let's discuss pushdown automata more formally.
 
       \begin{defn}
-        A \textbf{pushdown automata} (\textbf{PDA}) is a tuple $D = (\Sigma, \Gamma, Q, q_0, z_0, \delta, F)$, where
+        A \textbf{pushdown automaton} (\textbf{PDA}s) is a tuple $D = (\Sigma, \Gamma, Q, q_0, z_0, \delta, F)$, where
         \begin{itemize}
           \item $\Sigma$ is the alphabet of the language we want to accept.
           \item $\Gamma$ is the set of characters we could store in memory (on the stack) -- and this isn't necessarily equal to $\Sigma$.
@@ -2237,7 +2237,7 @@
             \\ \\
             Regardless of what the decomposition was, pick any $k \ne 1$. Consider $X_1 X_2^k X_3 X_4^k X_5$ compared to $X_1 X_2 X_3 X_4 X_5 = a^n b^n c^n$. $k$ has changed the number of occurrences of at least one letter and at most two letters (the letters in $X_2$ and $X_4$).
             \\ \\
-            Therefore, $X_1 X_2^k X_3 X_4^k X_5$ does no longer have the same number of occurrences of $a$, $b$, and $c$. So, $X_1 X_2^k X_3 X_4^k X_5 \not \in L$. $L$ fails the Pumping Lemma, which shows that $L$ is not context-free.
+            Therefore, $X_1 X_2^k X_3 X_4^k X_5$ no longer has the same number of occurrences of $a$, $b$, and $c$. So, $X_1 X_2^k X_3 X_4^k X_5 \not \in L$. $L$ fails the Pumping Lemma, which shows that $L$ is not context-free.
           \end{proof}
         \end{ex}
 
@@ -2283,7 +2283,7 @@
       We want to prove the Pumping Lemma for context-free languages (Ogden's Lemma). But first, we have to introduce a number of additional lemmas.
 
       \begin{lemma}[Noam Chomsky's Generative Grammar]
-        Every context-free language can be generated by a grammar of the following restricted form. Every generation rule in the language is of one of these forms:
+        Every context-free language can be generated by a grammar of the following restricted form. Every generation rule in the grammar is of one of these forms:
         \begin{itemize}
           \item $A \to BC$ for some $A, B, C \in V$
           \item $A \to a$ for some $A \in V$ and $a \in T$
@@ -2321,7 +2321,7 @@
         \\ \\
         Pick $n = 2^{|V| + 2}$. Let $w \in L$ be of length $|w| \ge n$. Since $w \in L(G)$, there is some $G$-tree that generates $w$.
         \\ \\
-        Since depth($T$) $\ge \log(|w|)$ (by the second lemma) and $|w| \ge n = 2^{|V| + 2}$, depth($T$) $> |V| + 1$.
+        Since depth($T$) $\ge \log_2(|w|)$ (by the second lemma) and $|w| \ge n = 2^{|V| + 2}$, depth($T$) $> |V| + 1$.
         \\ \\
         Therefore, for some branch (root-to-leaf) in the tree, some $A \in V$ occurs at least twice along the branch. Notice:
         $$
@@ -2346,14 +2346,14 @@
           \\ \\
           \textbf{Decision algorithm}: list all binary trees with at most $2|w| - 1$ internal nodes, and check if any of them is a legal $G$-parse tree for $w$. There are at most $|V|^{2|w| - 1}$ trees to check.
           \\ \\
-          The downside to this approach is that's a lot of trees to check. For example, if we have just three variables and the word is of length 10, we would need to check up to $3^19 = 1,162,261,467$ trees. Luckily, there are more efficient algorithms.
+          The downside to this approach is that's a lot of trees to check. For example, if we have just three variables and the word is of length 10, we would need to check up to $3^{19} = 1,162,261,467$ trees. Luckily, there are more efficient algorithms.
 
         \subsubsection{Method 2: Tableau Method}
           Let $w = a_1 \ldots a_n$. We're going to build an $n \times n$ table. Let $i$ represent the column number and $j$ represent the row number.
           \\ \\
           \textbf{Filling out the table}: in each $X_{ij}$ entry, for $i \le j$, we aim to have all variables $A \in V$ (that is, a finite set of variables) such that $A \underset{G}{\overset{\star}{\implies}} a_i \ldots a_j$. Then, $w \in L(G)$ if and only if $S \in X_{1n}$.
           \\ \\
-          \textbf{Bottom row}: for each $X{ii}$, we need to find all $A \in V$ such that $A \underset{G}{\overset{\star}{\implies}} a_i$.
+          \textbf{Bottom row}: for each $X_{ii}$, we need to find all $A \in V$ such that $A \underset{G}{\overset{\star}{\implies}} a_i$.
           \\ \\
           \textbf{Higher rows}: assume the $i$-th row has been filled in already. Given any $X_{ij}$ in the $i+1$-th row, find all $A$s such that $A \underset{G}{\overset{\star}{\implies}} \underbrace{a_k \ldots a_j}_{i + 1}$. For every $l$ such that $k \le l \le j$, check all combinations $A, B, C$ such that $A \to BC \in P$, $B \in X_{kl}$ and $C \in X_{(l + 1)j}$. (We are looking for all ways to cut a string $a_k \ldots a_j$ in two.)
           \\ \\
@@ -2376,7 +2376,7 @@
               \item $A \to cA$
             \end{itemize}
 
-            It's also easy to see that a pushdown automata would also be possible. We would simply push onto the stack for every $a$, and pop for every $b$.
+            It's also easy to see that a pushdown automata would exist that can compute $L_1$. We would simply push onto the stack for every $a$, and pop for every $b$.
             \\ \\
             Let $L_2 = \set{a^m b^n c^n : n, m \in \mathbb{N}}$. This is also clearly a context-free language.
             \\ \\
