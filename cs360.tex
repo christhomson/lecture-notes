@@ -40,6 +40,7 @@
 \theoremstyle{definition}
 \newtheorem*{defn}{Definition}
 \newtheorem*{theorem}{Theorem}
+\newtheorem*{thesis}{Thesis}
 \newtheorem*{lemma}{Lemma}
 \newtheorem*{corollary}{Corollary}
 \newtheorem*{aside}{Aside}
@@ -2415,4 +2416,140 @@
           \\ \\
           We define a new set of variables $\set{ S_a : a \in \Sigma}$. Replace every rule of a form similar to $A \to V_1 V_2 a_1 a_2 a_3 V_3 \ldots$ by a corresponding rule similar to $A \to V_1 V_2 S_{a_1} S_{a_2} S_{a_3} V_3 \ldots$. Finally, add in all the rules from $G_a$'s with $S_a$ replacing $S$.
         \end{proof}
+
+  \section{Turing Machines} \lecture{November 12, 2013}
+    \begin{thesis}[Church Thesis]
+      Every task that can be computed can be computed by a Turing machine.
+    \end{thesis}
+
+    We call this a thesis rather than a theorem because it's not particularly clear what it means to be ``computed.'' This thesis is more of a philosophical statement than it is a factual, concrete theorem.
+    \\ \\
+    In particular, any task that can be carried out by a computer (any task you can write a program for) can be carried out by a Turing mcahine.
+    \\ \\
+    Turing machines were introduced by Alan Turing in 1936 and have not changed since. Even if we consider futuristic models of computing, such as quantum computing, we do not need to look at machines any more complex than Turing machines.
+
+    \subsection{Defining Turing Machines}
+      Intuitively, the Turing machine is an extension to what we have seen before. In particular, Turing machines are similar to pushdown automata but the memory of Turing machines looks a bit different. Like pushdown automata and finite automata, Turing machines are purely theoretical constructs.
+      \\ \\
+      A Turing machine has a finite set of states and a memory in the form of a one-sided tape, with a read head. The read head can read or write any arbitrary position in memory, but can only be moved left, right in sequence.
+
+      \begin{defn}
+        A \textbf{Turing machine} is defined as $T = (Q, \Sigma, \Gamma, q_0, q_a, q_r, \delta)$, where
+        \begin{itemize}
+          \item $Q$ is a finite set of states.
+          \item $\Sigma$ is a finite set of characters, called the input alphabet.
+          \item $\Gamma$ is a finite set of characters, called the tape alphabet. $\Sigma \subseteq \Gamma$ and there also exists some special symbol $\Delta \in \Gamma \backslash \Sigma$. This special symbol is useful for various purposes, such as denoting the beginning, end, or middle of a string -- it depends on the use case.
+          \item $q_0 \in Q$ is the initial state.
+          \item $q_a \in Q$ is the accept state.
+          \item $q_r \in Q$ is the reject state.
+          \item $\delta$ is the transition function, defined by $\delta : Q \times \Gamma \to Q \times \Gamma \times \set{L, R, S}$, where $\set{L, R, S}$ are possible moves for the tape head (move left, move right, or stay).
+        \end{itemize}
+      \end{defn}
+
+      Recall that the definition of a pushdown automaton was arbitrary in some ways. For instance, why could the language of palindromes be computed by a PDA but not the language of all strings containing the same word twice in a row? We could've changed many things about the definition of pushdown automata, but any of those changes would change the types of languages that PDAs could accept. That is not the case here. Making arbitrary changes to the Turing machine construct, such as making the tape two-sided or adding multiple tapes, would not change the languages computable by Turing machines.
+
+      \begin{defn}
+        The \textbf{instantaneous description} (\textbf{ID}) of a Turing machine is $(q, x \underline{a}z)$, where
+        \begin{itemize}
+          \item $q$ is the current state.
+          \item $a$ is the character under the reading head.
+          \item $x$ is the string to the left of $a$ on the tape.
+          \item $z$ is the string to the right of $a$ on the tape.
+        \end{itemize}
+
+        \begin{center}
+          \begin{tabular}{|ccccc|c|ccccc|}
+            \hline
+            & & $x$ & & & $\underline{a}$ & & & $z$ & & \\ \hline
+          \end{tabular}
+        \end{center}
+      \end{defn}
+
+    Next, we're interesting in defining the ``legal next ID'' relation.
+
+    \begin{defn}
+      $(q, x\underline{a}z) \underset{T}{\overset{1}{\implies}} (p, y\underline{b}w)$ if some instruction in $\delta$ caused the move from the first ID, $(q, x\underline{a}z)$, to the second, $(p, y\underline{b}w)$.
+    \end{defn}
+
+    For example, if $\delta(q, a) = (p, b, L)$, then $(q, x\underline{a}z) \underset{T}{\overset{\star}{\implies}} (p, x'\underline{d}bz)$ where $d$ is the rightmost character in $x$ and $x = x'd$.
+    \\ \\
+    Next, we want to extend our ``legal next ID'' relation to be an accessibility relation.
+
+    \begin{defn}
+      $(q, x\underline{a}z) \underset{T}{\overset{\star}{\implies}} (p, y\underline{b}w)$. The ID on the right is said to be \textbf{accessible} from the ID on the left if there is some finite sequence of instantaneous descriptions $I_0, I_1, \ldots, I_n$ such that $I_0 = (q, x\underline{a}z)$ and for each $i$, $I_i \underset{T}{\overset{1}{\implies}} I_{i + 1}$, and $I_n = (p, y\underline{b}w)$.
+    \end{defn}
+
+    Let's now look at how to define the language that a particular Turing machine accepts.
+    \begin{defn}
+      Given a Turing machine $T = (Q, \Sigma, \Gamma, q_0, q_a, q_r, \delta)$, we define the language it accepts as
+      $$
+        L(T) = \set{w \in \Sigma^\star : (q_0, \epsilon \underline{\Delta}w) \underset{T}{\overset{\star}{\implies}} (q_a, x\underline{a}z) \text{ for any } x, z \in \Gamma^\star \text{ and } a \in \Gamma }
+      $$
+    \end{defn}
+
+    A run of our machine will start with the tape looking like this, while in state $q_0$:
+    \begin{center}
+      \begin{tabular}{|c|ccccccc|}
+        \hline
+        $\underline{\Delta}$ & & & & $w$ & & & \\ \hline
+      \end{tabular}
+    \end{center}
+
+    When our machine accepts, the tape will look like this, while in state $q_a$:
+    \begin{center}
+      \begin{tabular}{|ccccc|c|ccccc|}
+        \hline
+        & & $x$ & & & $\underline{a}$ & & & $z$ & & \\ \hline
+      \end{tabular}
+    \end{center}
+
+    \begin{ex}
+      Define a Turing machine $T$ such that $L(T)$ is the set of all palindromes over $\set{a, b}^\star$.
+      \\ \\
+      A Turing machine can compute this in a way that is very similar to how a human would do it. We check the first letter, go to the end of the word, and check the last letter to see if it's the same as the first letter or not.
+      \\ \\
+      Let's construct our Turing machine so that the tape begins with our special symbol $\Delta$, followed by our input word $w$, and then followed by $\Delta$ again:
+      \begin{center}
+        \begin{tabular}{|c|ccccccc|c|c}
+          \hline
+          $\underline{\Delta}$ & & & & $w$ & & & & $\Delta$ & $\ldots$ \\ \hline
+        \end{tabular}
+      \end{center}
+
+      We will now define our transitions.
+      \begin{align*}
+        \delta(q_0, \Delta) &= (q_1, \Delta, R) \\
+        \delta(q_1, a) &= (q_2, \Delta, R) \\
+        \delta(q_2, a) &= (q_2, a, R) \\
+        \delta(q_2, b) &= (q_2, b, R) \\
+        \delta(q_2, \Delta) &= (q_3, \Delta, L) \\
+        \delta(q_3, a) &= (q_4, \Delta, L) \\
+        \delta(q_3, b) &= (q_r, \ldots) \\
+        \delta(q_4, a) &= (q_4, a, L) \\
+        \delta(q_4, b) &= (q_4, b, L) \\
+        \delta(q_4, \Delta) &= (q_1, \Delta, R) \\
+        \delta(q_1, b) &= (q_5, \Delta, R) \\
+        \vdots &= \vdots \\
+        \delta(q_3, \Delta) &= (q_a, \ldots) \\
+        \delta(q_6, \Delta) &= (q_a, \ldots)
+      \end{align*}
+
+      The $q_2$ state indicates that we have just read an $a$ on the left, and are currently searching for the right end of the string. The transitions on $q_2$ are moving right until we reach our end-of-string symbol, $\Delta$.
+      \\ \\
+      The $q_3$ state indicates that the last symbol we read on the left end was an $a$ and we have now reached the right end of the string on the tape.
+      \\ \\
+      The $q_4$ state indicates that we are moving left, looking for the beginning of the string, indicated by running into $\Delta$ on the left.
+      \\ \\
+      The $q_5$ state indicates that we saw $b$ on the left end and are moving to the right, looking for the end of the string. $q_5$ is similar to $q_2$. We need to define additional transitions for $b$ using $q_5, \ldots$ that match the corresponding states $q_2, q_3, q_4$.
+      \\ \\
+      Any instantaneous descriptions for states $q_a$ and $q_r$ do not need to fill in the character to write to the tape, or the direction of the tape head's travel, since the computation has finished.
+    \end{ex}
+
+    \begin{ex}
+      Construct a Turing machine $T$ such that $L(T) = \set{ ww : w \in \set{a, b}^\star }$. Recall that this language is not computable by a pushdown automaton.
+      \\ \\
+      $T$ must use some sort of trick to mark the middle of the string. We could swap each letter in the string, starting at the two ends, with its uppercase counterpart. We know we reach the middle when we have just changed a letter to its uppercase equivalent, and then move only to immediately find another uppercase letter.
+      \\ \\
+      Once we locate the middle character, we somehow need to mark it. Note that we can't arbitrarily insert a \emph{new} element into the tape, without losing any data. We could move to some set of states that collectively indicate where the middle point is in the string. Alternatively, we could leave the middle character in a different case (upper/lowercase) than the rest of the string. There are lots of possibilities for how we could mark the middle character.
+    \end{ex}
 \end{document}
