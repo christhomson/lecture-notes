@@ -2449,7 +2449,7 @@
       Recall that the definition of a pushdown automaton was arbitrary in some ways. For instance, why could the language of palindromes be computed by a PDA but not the language of all strings containing the same word twice in a row? We could've changed many things about the definition of pushdown automata, but any of those changes would change the types of languages that PDAs could accept. That is not the case here. Making arbitrary changes to the Turing machine construct, such as making the tape two-sided or adding multiple tapes, would not change the languages computable by Turing machines.
 
       \begin{defn}
-        The \textbf{instantaneous description} (\textbf{ID}) of a Turing machine is $(q, x \underline{a}z)$, where
+        The \textbf{instantaneous description} (or \textbf{ID} or \textbf{configuration}) of a Turing machine is $(q, x \underline{a}z)$, where
         \begin{itemize}
           \item $q$ is the current state.
           \item $a$ is the character under the reading head.
@@ -2468,22 +2468,22 @@
     Next, we're interesting in defining the ``legal next ID'' relation.
 
     \begin{defn}
-      $(q, x\underline{a}z) \underset{T}{\overset{1}{\implies}} (p, y\underline{b}w)$ if some instruction in $\delta$ caused the move from the first ID, $(q, x\underline{a}z)$, to the second, $(p, y\underline{b}w)$.
+      $(q, x\underline{a}z) \underset{T}{\vdash} (p, y\underline{b}w)$ if some instruction in $\delta$ caused the move from the first ID, $(q, x\underline{a}z)$, to the second, $(p, y\underline{b}w)$.
     \end{defn}
 
-    For example, if $\delta(q, a) = (p, b, L)$, then $(q, x\underline{a}z) \underset{T}{\overset{\star}{\implies}} (p, x'\underline{d}bz)$ where $d$ is the rightmost character in $x$ and $x = x'd$.
+    For example, if $\delta(q, a) = (p, b, L)$, then $(q, x\underline{a}z) \underset{T}{\vdash} (p, x'\underline{d}bz)$ where $d$ is the rightmost character in $x$ and $x = x'd$.
     \\ \\
     Next, we want to extend our ``legal next ID'' relation to be an accessibility relation.
 
     \begin{defn}
-      $(q, x\underline{a}z) \underset{T}{\overset{\star}{\implies}} (p, y\underline{b}w)$. The ID on the right is said to be \textbf{accessible} from the ID on the left if there is some finite sequence of instantaneous descriptions $I_0, I_1, \ldots, I_n$ such that $I_0 = (q, x\underline{a}z)$ and for each $i$, $I_i \underset{T}{\overset{1}{\implies}} I_{i + 1}$, and $I_n = (p, y\underline{b}w)$.
+      $(q, x\underline{a}z) \underset{T}{\overset{\star}{\vdash}} (p, y\underline{b}w)$. The ID on the right is said to be \textbf{accessible} from the ID on the left if there is some finite sequence of instantaneous descriptions $I_0, I_1, \ldots, I_n$ such that $I_0 = (q, x\underline{a}z)$ and for each $i$, $I_i \underset{T}{\implies} I_{i + 1}$, and $I_n = (p, y\underline{b}w)$.
     \end{defn}
 
     Let's now look at how to define the language that a particular Turing machine accepts.
     \begin{defn}
       Given a Turing machine $T = (Q, \Sigma, \Gamma, q_0, q_a, q_r, \delta)$, we define the language it accepts as
       $$
-        L(T) = \set{w \in \Sigma^\star : (q_0, \epsilon \underline{\Delta}w) \underset{T}{\overset{\star}{\implies}} (q_a, x\underline{a}z) \text{ for any } x, z \in \Gamma^\star \text{ and } a \in \Gamma }
+        L(T) = \set{w \in \Sigma^\star : (q_0, \epsilon \underline{\Delta}w) \underset{T}{\overset{\star}{\vdash}} (q_a, x\underline{a}z) \text{ for any } x, z \in \Gamma^\star \text{ and } a \in \Gamma }
       $$
     \end{defn}
 
@@ -2552,4 +2552,93 @@
       \\ \\
       Once we locate the middle character, we somehow need to mark it. Note that we can't arbitrarily insert a \emph{new} element into the tape, without losing any data. We could move to some set of states that collectively indicate where the middle point is in the string. Alternatively, we could leave the middle character in a different case (upper/lowercase) than the rest of the string. There are lots of possibilities for how we could mark the middle character.
     \end{ex}
+
+    \subsection{Decidability of Turing Machines} \lecture{November 14, 2013}
+      For $w \not \in L(T)$, it could either be the case the upon reading $w$, $T$ reaches the reject state $q_r$, or $T$ loops indefinitely.
+
+      \begin{defn}
+        $L$ is \textbf{recognizable} if there exists a Turing machine $T$ such that $L(T) = L$.
+      \end{defn}
+
+      \begin{defn}
+        $L$ is \textbf{decidable} if there exists a Turing machine $T$ such that $L(T) = L$ and $T$ halts on every input.
+      \end{defn}
+
+      \begin{ex}
+        Let $L_\text{exp} = \set{a^{2^n} : n \ge 0}$. Recall that $L_\text{exp}$ is not context-free, and is therefore not regular either.
+        \\ \\
+        \textbf{Claim}: $L_\text{exp}$ is a decidable language.
+        \\ \\
+        The general idea for a Turing machine that can compute this language is to repeatedly divide the number of $a$'s by two, and then check if the result is 1 (in which case, accept) or an odd number that is not 1 (in which case, reject).
+        \\ \\
+        We can use the capital letter strategy as we have discussed before, to split the input in half each time. Or, we could remove every second symbol by replacing it with some new symbol, \#.
+      \end{ex}
+
+      \begin{ex}
+        Let $L_\text{times} = \set{a^ib^jc^k : k = i \cdot j}$.
+        \\ \\
+        \textbf{Claim}: $L_\text{times}$ is decidable.
+
+        \begin{proof}
+          Let us give a high-level description of a Turing machine that decides this language.
+          \\ \\
+          \textbf{First step}: before we start counting the $a$'s, $b$'s, and $c$', we should check the input $w$ to ensure it is a member of $a^\star b^\star c^\star$. If not, we want to reject immediately.
+          \\ \\
+          We can check the basic format of $w$ using only a finite automaton. We would define states $q_1, q_2$, etc., and transitions like $\delta(q_1, a) = (q_1, a, R)$, $\delta(q_1, b) = (q_2, b, R)$.
+          \\ \\
+          \textbf{Next step}: we want to now check the counts of $a$'s, $b$'s, and $c$'s.
+          \\ \\
+          We will mark an $a$ by changing it to $A$, and then proceed to the end of the string and remove a $c$. When all $A$'s are uppercase, we capitalize one $b$ and make all $A$'s lowercase again and re-run this algorithm. Once all $b$'s have been replaced by $B$'s, check to see if there are any $c$'s left. If so, reject. Otherwise, we can accept.
+        \end{proof}
+      \end{ex}
+
+    \subsection{Computing Functions with Turing Machines}
+      So far, we have used Turing machines as language recognizers. Our output was just ``accept'' or ``reject.'' However, Turing machines can be readily used to compute functions.
+
+      \begin{defn}
+        Let $r : \Sigma^\star \to \Sigma^\star$. A Turing machine $T$ is said to \text{compute} $f$ if for every $w$ in the domain of $f$,
+        $$
+          (q_0, \epsilon \underline{\Delta}w) \underset{T}{\overset{\star}{\vdash}} (q_a, \epsilon \underline{\Delta} f(w))
+        $$
+
+        That is, once the Turing machine $T$ accepts the word $w$, it replaces $w$ on the input tape with the result of applying the function $f$ to $w$, $f(w)$.
+      \end{defn}
+
+      \begin{ex}
+        $f_\text{double}$ is defined by $f_\text{double}(w) = ww$.
+        \\ \\
+        \textbf{Claim}: for every $w \in \Sigma^\star$, $f_\text{double}$ is computable. That is, we claim that there exists some Turing machine $T$ such that for every $w \in \Sigma^\star$, $T$ can compute $f_\text{double}$.
+        \\ \\
+        We can construct a Turing machine that computes $f_\text{double}$. Make the first letter in the input string uppercase, then proceed to the end of the string and write the letter in lowercase, after some delimiter \#. Once all letters in the original string are uppercase, we can move the second $w$ over by removing the \#. Alternatively, we could copy the second word in uppercase and then transform it into lowercase once we're done, eliminating the need for the \# symbol.
+      \end{ex}
+
+      \subsubsection{Computing Functions over Natural Numbers}
+        \begin{defn}
+          The natural number $n$ will be represented by the word $a^n$, for simplicity.
+        \end{defn}
+
+        To compute a function $f : \mathbb{N}^k \to \mathbb{N}$, we construct a Turing machine that on input $a^{n_1} \# a^{n_2} \# \ldots a^{n_k}$ outputs the string $a^{f(n_1, n_2, \ldots, n_k)}$. This allows us to accept multiple natural numbers as input.
+        \\ \\
+        It is easy to verify that each of the following functions are computable: $f(n) = n$, $f(n, m) = n + m$, $f(n, m) = n \cdot m$, and $f(n, m) = n^m$.
+        \\ \\
+        We could use capital letters to represent negative numbers, if desired.
+
+      \subsubsection{Computing the Composition of Computable Functions}
+        Let $T_1$ be a Turing machine that computes some function $f_1$, and let $T_2$ be a Turing machine that computes some function $f_2$. For simplicity, we'll assume that $f_1$ and $f_2$ are both functions from $\mathbb{N} \to \mathbb{N}$. There exists a Turing machine $T_3$ that computes their decomposition, $f_2(f_1(n))$.
+        \\ \\
+        It's easy to see that once $f_1(n)$ has finished computing, it leaves itself as input for $f_2$. $T_3$ will contain both the finite states of $T_1$ and $T_2$, and without loss of generality we can assume they are distinct. Upon reaching $q_a^1$, we will switch to $q_0^2$, and run $T_2$.
+
+      \subsubsection{The Relationship Between Computing Functions \& Accepting Languages}
+
+        \begin{defn}
+          Given a language $L \subseteq \Sigma^\star$, let $\chi(w) = 1$ if $w \in L$ or $0$ otherwise.
+        \end{defn}
+
+        This gives us a way to translate accepting a language into a function that produces either zero or one. Analogously, given any function $f: \Sigma^\star \to \set{0, 1}$, we can define a language $L_f = \set{w : f(w) = 1}$. So, we have a way of converting languages to functions, and a way of converting functions into languages.
+        \\ \\
+        Note that for every language $L$, $L_{\chi_L} = L$. Also, note that whenever a function $f: \Sigma^\star \to \set{0, 1}$ is computable, the language $L_f$ is decidable.
+        \\ \\
+        Let $T_1$ be a Turing machine that computes $f$. Let $T_2$ accept $w$ if $T_1(w) = 1$, and reject if $T_1(w) = 0$. So, $T_2$ decides the language $L_f$.
+        \\ \\
+        In the other direction, if $L$ is decidable, then $\chi_L$ is computable. Importantly, note that $L$ must be \emph{decidable} -- being recognizable is not sufficient. If $T$ recognizes $L$ but does not necessarily halt on every input $w$, it is not clear how to compute the function $\chi_L$. Indeed, some such functions are not computable.
 \end{document}
