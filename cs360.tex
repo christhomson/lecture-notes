@@ -2446,7 +2446,7 @@
         \end{itemize}
       \end{defn}
 
-      Recall that the definition of a pushdown automaton was arbitrary in some ways. For instance, why could the language of palindromes be computed by a PDA but not the language of all strings containing the same word twice in a row? We could've changed many things about the definition of pushdown automata, but any of those changes would change the types of languages that PDAs could accept. That is not the case here. Making arbitrary changes to the Turing machine construct, such as making the tape two-sided or adding multiple tapes, would not change the languages computable by Turing machines.
+      Recall that the definition of a pushdown automaton was arbitrary in some ways. For instance, why could the language of palindromes be computed by a PDA but not the language of all strings containing the same word twice in a row? We could've changed many things about the definition of pushdown automata, but any of those changes would change the types of languages that PDAs could accept. That is not the case here. Making arbitrary changes to the Turing machine construct, such as making the tape two-sided or adding multiple tapes, would not change the languages computable by Turing machines. We'll look into this in more detail later.
 
       \begin{defn}
         The \textbf{instantaneous description} (or \textbf{ID} or \textbf{configuration}) of a Turing machine is $(q, x \underline{a}z)$, where
@@ -2641,4 +2641,120 @@
         Let $T_1$ be a Turing machine that computes $f$. Let $T_2$ accept $w$ if $T_1(w) = 1$, and reject if $T_1(w) = 0$. So, $T_2$ decides the language $L_f$.
         \\ \\
         In the other direction, if $L$ is decidable, then $\chi_L$ is computable. Importantly, note that $L$ must be \emph{decidable} -- being recognizable is not sufficient. If $T$ recognizes $L$ but does not necessarily halt on every input $w$, it is not clear how to compute the function $\chi_L$. Indeed, some such functions are not computable.
+
+    \subsection{The Power of Variations of Turing Machines} \lecture{November 19, 2013}
+      The Turing machine model of computation is robust to variations in the sense that any \emph{reasonable} change in its definition does not effect the scope of tasks that can be computed by such machines.
+
+      \subsubsection{A Machine With a Two-Sided Tape}
+        The definition of Turing machines states that the machine's tape is one-sided, and the other side is not bounded. But what if we consider a two-sided tape which is unbounded on both ends?
+        \begin{center}
+          \begin{tabular}{c|c|c|c|ccccc|c|c|c}
+            \hline
+            $\cdots$ & $\Delta$ & $\Delta$ & $\Delta$ & & & $w$ & & & $\Delta$ & $\Delta$ & $\cdots$ \\ \hline
+          \end{tabular}
+        \end{center}
+
+        The two-sided tape variation is clearly at least as potent as the first, since we can simply ignore the unboundedness of the left end. But the other direction holds as well. Namely, any computation of a machine with a two-sided tape can be simulated by a regular Turing machine with a one-sided tape.
+        \\ \\
+        With our one-sided tape, whenever we want to move off the left bound of the tape, we can enter a different finite state that indicates that we want to shift everything over to the right by one position. We can then perform that shift, then finally return to accessing the newly-allocated location on the left end of the tape.
+        \\ \\
+        We are not concerned with how wasteful this approach may seem. Above all, we care to describe any procedure that works, preferably one that makes the most logical sense, even if it is wasteful.
+
+      \subsubsection{A Machine With Multiple Tapes}
+        Suppose we modified Turing machines to support multiple tapes. These tapes could all store different information, and we would have a tape head for each tape.
+        \\ \\
+        We might want to use a machine like this because in some circumstances it is more natural. For example, we may want to keep the input intact on one of the tapes. We could also simulate multiple programs running in parallel with a machine like this.
+        \\ \\
+        We would define a multi-tape machine as $M = (\Sigma, \Gamma, Q, q_0, q_a, q_r, \delta)$ (the same as before), but where $\delta$ has a new definition:
+        $$
+          \delta: Q \times \underbrace{\Gamma \times \Gamma \times \ldots \times \Gamma}_{k \text{ times}} \to Q \times \underbrace{\Gamma \times \Gamma \times \ldots \times \Gamma}_{k \text{ times}} \times \underbrace{\set{L, R, S} \times \ldots \times \set{L, R, S}}_{k \text{ times}}
+        $$
+
+        \textbf{Claim}: any computation on a multi-tape machine can be carried out by a standard one-sided, one-tape Turing machine.
+
+        \begin{proof}
+          The idea of this proof is similar to that of the machine with the two-sided tape.
+          \begin{center}
+          \begin{tabular}{|c|c|c|c|c|c|c|c|c|c|c|cccc}
+            \hline
+            $\Delta$ & a & b & a & b & A & $\#$ & a & a & A & $\#$ & & $\cdots$ & & $\cdots$ \\
+            \hline
+          \end{tabular}
+        \end{center}
+
+        We store all of the tapes on a single tape, delimited by a special symbol such as $\#$. Whenever we want to write into a tape, we must first shift everything to the right of that position over. To keep track of where each tape head is, we could capitalize the letter that each tape head is currently on.
+        \end{proof}
+
+      \subsubsection{A Non-Deterministic Machine}
+        Modify a Turing machine so that at each step, if you're at some state $q \in Q$ and see some input $\gamma \in \Gamma$, you have finitely many options of your next step, but you are not dictated which option to choose.
+        \\ \\
+        We define a machine like this as $M = (\Sigma, \Gamma, Q, q_0, q_a, q_r, \delta)$ (as before). The only difference with respect to standard, deterministic Turing machines is that now, for every state $q \in Q$ and tape letter $\gamma \in \Gamma$, $\delta(q, \gamma)$ is a finite set of ``options,'' each a member of $Q \times \Gamma \times \set{L, R, S}$. In other words,
+        $$
+          \delta: Q \times \Gamma \to \set{A : A \text{ is a finite subset of } Q \times \Gamma \times \set{L, R, S}}
+        $$
+
+        The languages accepted by such a machine $T$ are $L(T) = $\{ $w$ : there is a finite sequence of legal moves leading from $(q_0, \epsilon \underline{\Delta} w)$ to some $(q_a, x \underline{y}z)\}$.
+        \\ \\
+        We say $(q, x \underline{y}z) \underset{T}{\vdash} (p, x'\underline{y'}z')$ if $(p, x'\underline{y'}z')$ is the result of applying one of the transition instructions in $\delta(q, y)$ to $(q, x\underline{y}z)$.
+
+  \section{Turing-Recognizable Languages}
+    Recall that we mentioned two types of tasks:
+    \begin{itemize}
+      \item \textbf{Decision problems}. Given some input $w \in \Sigma^\star$ and some language $L \subseteq \Sigma^\star$, decide if $w \in L$ or not.
+      \item \textbf{Function computations}. Given some input $w \in \Sigma^\star$ and some function $f: \Sigma^\star \to \Sigma^\star$, output the string $f(w)$.
+    \end{itemize}
+
+    We have focused mainly on decision problems so far, and will continue to do so.
+    \\ \\
+    We will define the notion of a decidable language and the notion of a recognizable language in different terms than before.
+    \begin{defn}
+      $L$ is \textbf{decidable} if there exists a Turing machine $M$ such that on every input $w \in \Sigma^\star$, $M$ halts, and if $w \in L$ it halts in state $q_a$, and if $w \not \in L$, it halts in state $q_r$. $L(M) = L$.
+    \end{defn}
+
+    \begin{defn}
+      $L$ is \textbf{recognizable} if there exists a Turing machine $M$ such that for every $w \in L$, $M$ halts on input $w$ in state $q_a$, but if $w \not \in L$, $M$ either halts in state $q_r$ or loops indefinitely. $L(M) = L$.
+    \end{defn}
+
+    There are different levels of complexity when it comes to languages:
+    \begin{enumerate}
+      \item Finite languages are simplest.
+      \item Regular languages.
+      \item Context-free languages.
+      \item Turing-decidable languages.
+      \item Turing-recognizable languages.
+      \item Other languages that are not even Turing-recognizable.
+    \end{enumerate}
+
+    At each of these levels, there exists a language that is not included in the previous level. Our next goal is to examine Turing-recognizable languages, and languages that are not even recognizable by a Turing machine.
+
+    \subsection{Cantor's Diagonalization Argument}
+      Cantor asked: ``are all infinite sets equivalent?''
+
+      \begin{defn}
+        Sets $A$ and $B$ are \textbf{equivalent} if there exists a function $f: A \to B$ that is one-to-one and onto. We denote this equivalent as $A \sim B$. We call such an $f$ a \textbf{matching}.
+      \end{defn}
+
+      We're interested in knowing if such a matching \emph{exists} between the two sets. We don't necessarily need to exhibit a specific mapping.
+
+      \begin{ex}
+        Let $A = \mathbb{N} = \set{0, 1, 2, 3, \ldots}$ and let $B = \set{0, 2, 4, 6, \ldots}$ be the set of even numbers.
+        \\ \\
+        These two sets are equivalent. We can use the mapping $n \mapsto 2n$ to show that $A \sim B$. That is, every number in the natural numbers can be mapped to its double, and since both sets are infinite, we will never run out of elements to match with.
+      \end{ex}
+
+      \begin{ex}
+        Is $\mathbb{N} = \set{0, 1, 2, 3, \ldots}$ equivalent to $\mathbb{Z} = \set{\ldots, -3, -2, -1, 0, 1, 2, 3, \ldots}$?
+        \\ \\
+        Yes, these two sets are equivalent. You could map the even numbers to the positive integers in $\mathbb{Z}$, and the odd numbers with the negative integers in $\mathbb{Z}$.
+      \end{ex}
+
+      In fact, it's the case that any infinite subset of $\mathbb{N}$ is equivalent to $\mathbb{N}$. It also turns out that $\mathbb{N} \sim \mathbb{Q}$ (the set of rational numbers).
+
+      \begin{ex}
+        Let $A = (0, 1)$ and $B = (0, 100)$ be intervals. Are $A$ and $B$ equivalent?
+        \\ \\
+        Yes, these two intervals are equivalent, by the function $f(x) = 100x$.
+        \\ \\
+        Furthermore, both are equivalent to the full real line $\mathbb{R}$. Notice that the tangent function $tg(x)$ maps $(\frac{-\pi}{2}, \frac{+\pi}{2}) \to \mathbb{R}$. We've seen that any two intervals are equivalent, so therefore all intervals are equivalent to $\mathbb{R}$.
+      \end{ex}
 \end{document}
