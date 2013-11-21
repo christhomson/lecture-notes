@@ -2816,9 +2816,55 @@
       There are many classes of infinite sets. The infinite sets $\mathbb{N}, \mathbb{Q}, \mathbb{Z}$, the set of all even numbers, etc., are \textbf{countable} sets. The infinite sets $\mathbb{R}, [0, 1], \mathbb{R}^2, \mathbb{R}^n$ are \textbf{uncountable} sets.
       \\ \\
       Not only are there countable and uncountable sets, but there are many classes of uncountable sets. The set of uncountable classes is itself an uncountable infinite set. We enumerate these classes as $\aleph_i$.
-
+      \\ \\
       In 1960, Paul Cohen made an interesting observation:
       \begin{theorem}
         $\mathbb{R} = \aleph_1$ cannot be proven nor refuted.
       \end{theorem}
+
+      For every finite $\Sigma, \Sigma^\star$ is countable. The set of all Turing machines is countable, since every Turing machine (and therefore every program) can be coded as some finite string. However, the set of all languages $\set{L : L \subseteq \Sigma^\star }$ is uncountable.
+      \\ \\
+      It's easy to see that the set of all languages is uncountable if you list off every word $\sigma_i \in \Sigma^\star$, then for each language, you assign ``0'' or ``1'' indicating whether that word $\sigma_i$ is included in the language or not. This is a set of infinite strings, which cannot be counted.
+      \\ \\
+      Notice that the set of all Turing machines is countable, but the set of all languages is not. This implies that there exists some language $L$ that is not recognizable by a Turing machine.
+      \begin{ex}
+        Consider $L_\text{verify} = $ \{ $(P, S)$ : $P$ is a C program, $S$ is a specification, and $P$ satisfies $S$ \}.
+        \\ \\
+        \underline{Input}: A program $P$ and a specification $S$.
+        \\ \\
+        \underline{Output}: does $(P, S) \in L_\text{verify}$?
+        \\ \\
+        $L_\text{verify}$ is not recognizable by a Turing machine.
+      \end{ex}
+
+  \subsection{Undecidability: The Halting Problem}
+    As input, you're given $\langle M \rangle$, which is a description of a Turing machine (as a string of characters), and $w \in \Sigma^\star$. The machine must decide if $M$ halts on the input $w$. We could equivalently state this as problem $H$ = \{ ($\langle M \rangle$, w): $M$ halts on input $w$ \}.
+
+    \begin{theorem}
+      The halting problem $H$ is not a decidable language.
+    \end{theorem}
+
+    In other words, there is no Turing machine that halts on every input of the form $(\langle M \rangle, w)$ and accepts if and only if $(\langle M \rangle, w) \in H$.
+
+     \begin{proof}
+      We will prove that $H$ is undecidable by way of contradiction.
+      \\ \\
+      Assume that some Turing machine decides $H$. Now, define a new Turing machine $D$. $D$ takes a description of a Turing machine as input, and:
+      $$
+        D(\langle M \rangle) = \begin{cases}
+          \text{accept } & \text{if } (\langle M \rangle, \langle M \rangle) \not \in H \\
+          \text{reject } & \text{if } (\langle M \rangle, \langle M \rangle) \in H
+        \end{cases}
+      $$
+
+      If $H$ was decidable, then there would also be a Turing machine that implements $D$.
+      \\ \\
+      Let us examine what this last machine will do on the input $\langle D \rangle$. If $D$ accepts $\langle D \rangle$, then $(\langle D \rangle, \langle D \rangle) \in H$, but then $D(\langle D \rangle)$ should reject. Similarly, if $D$ rejects $\langle D \rangle$ then $(\langle D \rangle, \langle D \rangle) \not \in H$, so $D(\langle D \rangle)$ should accept. This is a contradiction.
+    \end{proof}
+
+    We could also use a diagonalization argument to prove this theorem. The machine $D$ constantly flips the diagonal, which similarly results in a contradiction when we consider the machine $D$ and its intersection with the diagonal.
+    \\ \\
+    So, we have established one example of a concrete language ($H$) that is not decidable.
+    \\ \\
+    Is $H$ recognizable though? For that, we need a Turing machine that can simulate the run of every Turing machine $M$ on any input $w$. Such a machine is called a \textbf{universal Turing machine}, and it just reads the code and runs it. This is what a regular computer does.
 \end{document}
