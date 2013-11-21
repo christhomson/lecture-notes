@@ -2727,7 +2727,7 @@
 
     At each of these levels, there exists a language that is not included in the previous level. Our next goal is to examine Turing-recognizable languages, and languages that are not even recognizable by a Turing machine.
 
-    \subsection{Cantor's Diagonalization Argument}
+    \subsection{The Equivalence of Infinite Sets}
       Cantor asked: ``are all infinite sets equivalent?''
 
       \begin{defn}
@@ -2757,4 +2757,68 @@
         \\ \\
         Furthermore, both are equivalent to the full real line $\mathbb{R}$. Notice that the tangent function $tg(x)$ maps $(\frac{-\pi}{2}, \frac{+\pi}{2}) \to \mathbb{R}$. We've seen that any two intervals are equivalent, so therefore all intervals are equivalent to $\mathbb{R}$.
       \end{ex}
+
+      \subsubsection{Cantor's Diagonalization Argument} \lecture{November 21, 2013}
+      It's important to note that it is not the case that all infinite sets are equivalent to each other. In order to show this, we must show that every trick (every mapping) is bound to fail.
+
+      \begin{theorem}[Cantor's Theorem (1905)]
+        $\mathbb{N} \not \sim \mathbb{R}$.
+      \end{theorem}
+
+      \begin{proof}
+        Let $f$ be any function from $\mathbb{N}$ to $\mathbb{R}$. We will show that $f$ is not onto. Namely, there exists some number $r \in [0, 1]$ such that for any $n \in \mathbb{N}$, $f(n) = r$.
+        \\ \\
+        Without loss of generality, assume that we are only trying to cover the unit interval $[0, 1]$.  (If we can't even cover $[0, 1]$ with our mapping, then we can't cover all of $\mathbb{R}$.)
+        \\ \\
+        Given any $f: \mathbb{N} \to [0, 1]$, construct a table for $f$:
+        \begin{center}
+          \begin{tabular}{cccccccc}
+            $f(0)$ = & 0 & . & \textbf{1} & 7 & 2 & 3 & \ldots \\
+            $f(1)$ = & 0 & . & 1 & \textbf{1} & 1 & 2 & \ldots \\
+            $f(2)$ = & 0 & . & 2 & 3 & \textbf{4} & 5 & \ldots \\
+            $f(3)$ = & 0 & . & 9 & 8 & 7 & \textbf{0} & \ldots \\
+            \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots
+          \end{tabular}
+        \end{center}
+
+        We want to construct a number that is not in this list. Consider the number on the diagonal of the table (bolded). In our case, it is $d = 0.1140\ldots$. Let $d'$ be such that for every $i$, $d'(i) \not = d(i)$. For example, we could let $d'(i)$ be 2 when $d(i) = 1$ and 1 otherwise, so we would have $d' = 0.2211\ldots$.
+        \\ \\
+        \textbf{Claim}: $d'$ is not in the range of $f$.
+        \\ \\
+        Assume by way of contradiction that for some $n \in \mathbb{N}$, $f(n) = d'$. Examine the $n$-th digit of $f(n)$, which is where the diagonal intersects $f(n)$.
+        \\ \\
+        By our construction of the number $d$, the $n$-th digit of $f(n)$ is $d(n)$. However, $d'(n) \not = d(n)$ by our definition of $d'$.
+        \\ \\
+        So, $d'(n)$ is not the $n$-th digit of $f(n)$. So, $d' \not = f(n)$.
+      \end{proof}
+
+      We could also prove Cantor's theorem without the diagonalization argument, if that confuses you.
+      \begin{proof}
+        Recall:
+        $$
+          \sum_{n = 2}^{\infty} \frac{1}{2^n} = \frac{1}{4} + \frac{1}{8} + \frac{1}{16} + \frac{1}{32} + \ldots = \frac{1}{2}
+        $$
+
+        Given any $f: \mathbb{N} \to [0, 1]$, define a sequence of intervals $I_0, I_1, I_2, \ldots, I_n$, where
+        $$
+          I_n = \left[f(n) - \frac{1}{2^{n + 3}}, f(n) + + \frac{1}{2^{n + 3}}\right]
+        $$
+
+        $I_n$ is an interval centered at $f(n)$, and $|I_n| = \frac{1}{2^{n + 2}}$. Clearly, $\displaystyle \bigcup_{n = 0}^{\infty} I_n$ covers the entire range of $f$. But:
+        $$
+          \left|\bigcup_{n = 0}^{\infty} I_n\right| \le \sum_{n = 0}^{\infty} \frac{1}{2^{n + 2}} = \frac{1}{2}
+        $$
+
+        In particular, we (supposedly) used length $\frac{1}{2}$ to cover the entire unit interval, which has length 1. This is not possible.
+      \end{proof}
+
+    \subsubsection{Countable and Uncountable Sets}
+      There are many classes of infinite sets. The infinite sets $\mathbb{N}, \mathbb{Q}, \mathbb{Z}$, the set of all even numbers, etc., are \textbf{countable} sets. The infinite sets $\mathbb{R}, [0, 1], \mathbb{R}^2, \mathbb{R}^n$ are \textbf{uncountable} sets.
+      \\ \\
+      Not only are there countable and uncountable sets, but there are many classes of uncountable sets. The set of uncountable classes is itself an uncountable infinite set. We enumerate these classes as $\aleph_i$.
+
+      In 1960, Paul Cohen made an interesting observation:
+      \begin{theorem}
+        $\mathbb{R} = \aleph_1$ cannot be proven nor refuted.
+      \end{theorem}
 \end{document}
