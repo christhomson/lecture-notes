@@ -2865,6 +2865,88 @@
     We could also use a diagonalization argument to prove this theorem. The machine $D$ constantly flips the diagonal, which similarly results in a contradiction when we consider the machine $D$ and its intersection with the diagonal.
     \\ \\
     So, we have established one example of a concrete language ($H$) that is not decidable.
-    \\ \\
-    Is $H$ recognizable though? For that, we need a Turing machine that can simulate the run of every Turing machine $M$ on any input $w$. Such a machine is called a \textbf{universal Turing machine}, and it just reads the code and runs it. This is what a regular computer does.
+
+    \subsubsection{Recognizability of the Halting Problem} \lecture{November 16, 2013}
+      In order to determine if $H$ is recognizable or not, we need a Turing machine that can simulate the run of every Turing machine $M$ on any input $w$. Such a machine is called a \textbf{universal Turing machine}, and it just reads the code and runs it. This is what a regular computer does.
+      \\ \\
+      Construct a universal Turing machine $U$ that simulates the run of $M$ on $w$ for every input $(\langle M \rangle, w)$.
+      \\ \\
+      Note that if $(\langle M \rangle, w) \in H$, then $U(\langle M \rangle, w)$ will accept, and if $(\langle M \rangle, w) \not \in H$, then will either halt and reject, if $M$ does so, or $U$ will not halt. In any case, $U$ will not accept such $(\langle M \rangle, w)$.
+      \\ \\
+      Observe that $L(U) = H$. Therefore, $U$ is a recognizer for $H$, so $H$ is recognizable.
+      \\ \\
+      Recall that we have discussed how there \emph{are} actually languages that are not recognizable. We came to this conclusion by a counting argument -- there are uncountably-many languages but only countably-many Turing machines (programs). The mapping from the set of all Turing machines to the set of all languages is a function, but it cannot be onto.
+
+      \begin{theorem}
+        A language $L$ is decidable if and only if both $L$ and its complement $\Sigma^\star \backslash L = \overline{L}$ are recognizable.
+      \end{theorem}
+
+      Earlier in the course, we discussed how if a language is regular, its complement was also regular. But it is not the case that if $L$ is finite, that $\overline{L}$ is also finite.
+      \\ \\
+      \textbf{Claim}: If $L$ is decidable, then so is $\overline{L}$.
+      \begin{proof}
+        If $M$ accepts $L$ and halts on every input, we can define $\overline{M}$ that accepts if and only if $M$ rejects. So, $L(\overline{M}) = \overline{L}$.
+        \\ \\
+        This argument \emph{relies} on $M$ halting on every input, because for $\overline{M}$ to accept or reject some input, it must simulate $M$, wait for accept/reject, and then take the opposite action.
+        \\ \\
+        To prove the other direction of the theorem, we need to show that if some $M$ recognizes $L$ and some $\overline{M}$ recognizes $\overline{L}$, then we can construct some $M^\star$ that decides $L$. That is, we can construct some $M^\star$ such that $L(M^\star) = L$ where $M^\star$ halts on every input.
+        \\ \\
+        $M^\star$ will run both $M$ and $\overline{M}$ in parallel, on each input $w$. Since every $w$ either is in $L$ or is in $\overline{L}$, we have a guarantee that for every $w$, at least one of $M$ or $\overline{M}$ will halt. If $M$ halts first, $M^\star$ copies its accept/reject decision. If $\overline{M}$ halts first, $M^\star$ flips its decision.
+      \end{proof}
+
+      \begin{corollary}
+        $\overline{H}$ is not recognizable.
+      \end{corollary}
+
+      We know this corollary to be true because we know $H$ is recognizable but not decidable. $\overline{H}$ not being recognizable is also very logical since in some ways, $\overline{H}$ is a more complex language to reason about than $H$, since $\overline{H} = $ \{ $(\langle M \rangle, w)$ : $M$ does not accept $w$ \}.
+
+    \subsection{Proving Undecidability: The Reduction Technique}
+      We can use the diagonalization trick to show that a language is undecidable. In many cases though, we can more simply use \textbf{the reduction technique}. A reduction is a proof by contradiction, which aims to show that \emph{if} we had a black box that decides an undecidable problem, we could use it to decide another problem that we know to be undecidable (such as the halting problem), which is a contradiction.
+
+      \begin{ex}
+        Let $A_\text{Halt} = $ \{ $(\langle M \rangle, w)$ : $M$ halts on $w$ \}.
+        \\ \\
+        \textbf{Claim}: $A_\text{Halt}$ is not decidable.
+
+        \begin{proof}
+          Assume by way of contradiction that some Turing machine $M$ decides $A_\text{Halt}$, and use $M$ to construct $M^\star$ that decides $H$.
+          \\ \\
+          We feed the input of $H$, $(\langle D \rangle, w)$ into $M$ and if $(\langle D \rangle, w) \in L(M)$, then we can run $w$ on the \emph{actual} machine $D$ and check that decision, since we know $D$ will halt on input $w$. Otherwise, if  $(\langle D \rangle, w) \not \in L(M)$, we can reject immediately.
+        \end{proof}
+      \end{ex}
+
+      \begin{ex}
+        Let $E_\text{mpt}$ = \{ $\langle M \rangle$ : $L(M) = \emptyset$ \}.
+        \\ \\
+        \textbf{Claim}: $E_\text{mpt}$ is not decidable. This is intuitive when you consider a question like ``will I ever fall in love?'', and we define a language of all people you will fall in love with. But clearly, this question is not easily answered.
+
+        \begin{proof}
+          We wish to construct some $M^\star$, that uses any hypothetical $M$ that decides $E_\text{mpt}$, to solve $H$.
+          \\ \\
+          Given any input $(\langle M \rangle, w)$ for $H$, construct a new Turing machine $M_w$ such that:
+          $$
+            M_w(x) = \begin{cases}
+              \text{run } M \text{ on } x & \text{ if } x = w \\
+              \text{reject} & \text{ otherwise}
+            \end{cases}
+          $$
+
+          Note that if $(\langle M \rangle, w) \in H$, then $L(M_w) = \set{w}$ and if $(\langle M \rangle, w) \not \in H$, then $L(M_w) = \emptyset$.
+        \end{proof}
+      \end{ex}
+
+      \begin{ex}
+        Let $EQ = \set{(\langle M_1 \rangle, \langle M_2 \rangle) : L(M_1) = L(M_2)}$.
+        \\ \\
+        \textbf{Claim}: $EQ$ is not decidable. Note that $\overline{EQ}$ is recognizable, since we can just start running the machines on various inputs, then the moment they disagree on some input, we can instantly say that they are not equivalent.
+
+        \begin{proof}
+          We will reduce the undecidable emptiness problem to $EQ$. Recall that $E_\text{mpt}$ takes one machine, $M$, as input and accepts if the language is empty, or rejects otherwise.
+          \\ \\
+          Pick some simple $M_0$ that rejects every input. $(\langle M \rangle, \langle M_0 \rangle)$ as input into $EQ$. If $EQ$ accepts, then $L(M)$ is empty, so we should accept. Otherwise, if $EQ$ rejects, then $L(M)$ is not empty, so we should reject.
+          \\ \\
+          We know $E_\text{mpt}$ is undecidable, so this is a contradiction. Therefore, $EQ$ is not decidable.
+        \end{proof}
+
+      \end{ex}
 \end{document}
