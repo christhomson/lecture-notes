@@ -2936,17 +2936,112 @@
       \end{ex}
 
       \begin{ex}
-        Let $EQ = \set{(\langle M_1 \rangle, \langle M_2 \rangle) : L(M_1) = L(M_2)}$.
+        Let $EQ_\text{TM} = \set{(\langle M_1 \rangle, \langle M_2 \rangle) : L(M_1) = L(M_2)}$.
         \\ \\
-        \textbf{Claim}: $EQ$ is not decidable. Note that $\overline{EQ}$ is recognizable, since we can just start running the machines on various inputs, then the moment they disagree on some input, we can instantly say that they are not equivalent.
+        \textbf{Claim}: $EQ_{TM}$ is not decidable. Note that $\overline{EQ_\text{TM}}$ is recognizable, since we can just start running the machines on various inputs, then the moment they disagree on some input, we can instantly say that they are not equivalent.
 
         \begin{proof}
-          We will reduce the undecidable emptiness problem to $EQ$. Recall that $E_\text{mpt}$ takes one machine, $M$, as input and accepts if the language is empty, or rejects otherwise.
+          We will reduce the undecidable emptiness problem to $EQ_\text{TM}$. Recall that $E_\text{mpt}$ takes one machine, $M$, as input and accepts if the language is empty, or rejects otherwise.
           \\ \\
-          Pick some simple $M_0$ that rejects every input. $(\langle M \rangle, \langle M_0 \rangle)$ as input into $EQ$. If $EQ$ accepts, then $L(M)$ is empty, so we should accept. Otherwise, if $EQ$ rejects, then $L(M)$ is not empty, so we should reject.
+          Pick some simple $M_0$ that rejects every input. $(\langle M \rangle, \langle M_0 \rangle)$ as input into $EQ_\text{TM}$. If $EQ_\text{TM}$ accepts, then $L(M)$ is empty, so we should accept. Otherwise, if $EQ_\text{TM}$ rejects, then $L(M)$ is not empty, so we should reject.
           \\ \\
-          We know $E_\text{mpt}$ is undecidable, so this is a contradiction. Therefore, $EQ$ is not decidable.
+          We know $E_\text{mpt}$ is undecidable, so this is a contradiction. Therefore, $EQ_\text{TM}$ is not decidable.
+        \end{proof}
+      \end{ex}
+
+      \begin{ex}
+        Let Regular$_\text{TM}$ = \{ $\langle M \rangle$ : $L(M)$ is a regular language \}.
+        \\ \\
+        \textbf{Claim}: Regular$_\text{TM}$ is not decidable.
+
+        \begin{proof}
+          Assume by way of contradiction that some Turing machine $M_\text{Regular}$ decides the language Regular$_\text{TM}$. We will use this hypothetical $M_\text{Regular}$ to decide $H$.
+          \\ \\
+          On input $(\langle M \rangle, w)$, construct a machine $M_w$, defined as:
+          $$
+            M_w(x) = \begin{cases}
+              \text{accept} & \text{ if } x = a^n b^n \text{ for some } n \\
+              \text{run } M \text{ on } W & \text{ otherwise}
+            \end{cases}
+          $$
+
+          Note that if $M$ accepts $w$, $L(M_w) = \Sigma^\star$ is regular, and we can accept this input for $H$. On the other hand, if $M$ does not accept $w$, then $L(M_w) = \set{ a^n b^n : n \in \mathbb{N} }$ is not regular, and we can reject this input for $H$.
         \end{proof}
 
+        Similarly, let CF$_\text{TM}$ = \{ $\langle M \rangle$ : $L(M)$ is a context-free language \}. We can use the same idea that we used for Regular$_\text{TM}$, except instead of using $\Sigma^\star$ and $\set{a^n b^n : n \in \mathbb{N} }$, we should use $\Sigma^\star$ and $\set{a^n b^n c^n : n \in \mathbb{N} }$, since the latter is not context-free.
+      \end{ex}
+
+    \subsection{Some Well-Known Undecidable Problems}
+      We will take a brief look at some well-known undecidable problems, but we won't prove that they're undecidable.
+
+      \subsubsection{Post Correspondence Problem (PCP)}
+        Given a finite set of dominoes, with a string on the top and bottom of each, can you arrange them such that the word on the top equals the word on the bottom?
+        \\ \\
+        If you can use each of the dominoes exactly once, this is decidable. However, if you're allowed to use each of them as a template, meaning you can use each domino as many times as you'd like, then this is an undecidable problem.
+
+      \subsubsection{Hilbert's 10th Problem}
+        Given a polynomial equation, where $a_i \in \mathbb{Z}$ for all $0 \le i \le n$:
+        $$
+          a_n x^n + a_{n - 1} x^{n - 1} + \ldots + a_0 = 0
+        $$
+
+        Hilbert's 10th problem asks if there exists an \underline{integer} solution to a given polynomial equation.
+        \\ \\
+        To determine if \emph{any} solution (including non-integer solutions) exists, you just have to look for a point where the polynomial is positive and a point where it is negative. That's easy -- and decidable. But to find an \underline{integer} solution is undecidable.
+        \\ \\
+        For example, can you determine if there exists an integer solution to $2x^4 - 4x^3 + 3x^2 - 2x + 7$? It's not easy.
+
+    \subsection{Rice's Theorem}
+      \begin{theorem}[Rice's Theorem]
+        Every nontrivial problem about Turing machines is undecidable.
+      \end{theorem}
+
+      \begin{defn}
+        A set $P$ of Turing machines is \textbf{nontrivial} if:
+        \begin{itemize}
+          \item For all $M_1, M_2$, if $M_1 \in P$ and $L(M_1) = L(M_2)$, then $M_2 \in P$, and
+          \item There is some $M$ such that $M \not \in P$, and
+          \item There is some $M$ such that $M \in P$.
+        \end{itemize}
+      \end{defn}
+
+      Note that we're only talking about problems involving the language that the Turing machine computes -- not the Turing machine's code itself.
+      \\ \\
+      You cannot cite Rice's Theorem on assignments or on exams in this course. It would trivialize many questions.
+
+    \subsection{Decidable Languages}
+      We have spent a lot of time discussing undecidable languages. It's important to remember that there are many useful languages that are decidable. Let's look at two last examples of relevant languages that are decidable.
+
+      \begin{ex}
+        Let $E_\text{DFA} = $ \{ $D$ : $D$ is a DFA and $L(D) = \emptyset$ \}. That is, $E_\text{DFA}$ represents the language of deterministic finite automata that compute the empty language.
+        \\ \\
+        \textbf{Claim}: $E_\text{DFA}$ is decidable.
+        \\ \\
+        \textbf{Decision algorithm}: we could perform a reachability analysis on the graph of $D$ to see if any element of $F$ can be reached from $q_0$ by following valid transitions in $\delta$.
+        \\ \\
+        Alternatively, we could use the Pumping Lemma to show this.
+      \end{ex}
+
+      \begin{ex}
+        Let $E_\text{CFG} = $ \{ $G$ : $G$ is a context-free grammar and $L(G) = \emptyset$ \}.
+        \\ \\
+        \textbf{Claim}: $E_\text{CFG}$ is decidable.
+        \\ \\
+        \textbf{Decision algorithm}: mark all members of $T$. Let $M_i$ be the set of all members of $T \cup V$, marked at step $i$. Then let $M_i + 1 = M_i \cup $ \{ $A \in V$ : some rule in $P$ starting with $A$ generates a string in $M_i^\star$ \}. Repeat this process until we no longer can mark anything, at which point we check if the last marked set contains $S$ or not.
+        \\ \\
+        For example, consider the following context-free grammar:
+        \begin{align*}
+          S &\to AB \\
+          A &\to aB \\
+          B &\to b
+        \end{align*}
+
+        We would have:
+        \begin{align*}
+          M_1 &= \set{a, b} \\
+          M_2 &= \set{a, b} \cup \set{B} \\
+          M_3 &= \set{a, b, B} \cup \set{A} \\
+          M_4 &= \set{a, b, B, A} \cup \set{S}
+        \end{align*}
       \end{ex}
 \end{document}
