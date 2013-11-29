@@ -1523,7 +1523,7 @@
 
       \subsection{The Pumping Lemma}
        \begin{lemma}[The Pumping Lemma]
-          For every regular language $L$, there exists some number $n$ such that for every $w \in L$, if $|w| > n$, then there are $x, y, z$ so that
+          For every regular language $L$, there exists some number $n$ such that for every $w \in L$, if $|w| \ge n$, then there are $x, y, z$ so that
           \begin{enumerate}
             \item $xyz = w$,
             \item $|xy| \le n$,
@@ -1556,7 +1556,7 @@
           \\ \\
           \textbf{Claim}: $L_\text{plus}$ is not regular. This is an intuitive claim since finite automata do not have memory. They only know which state they're currently in. Similarly, counting numbers $> 10$ on your fingers (without using memory) can only determine the count modulus 10, since we only have 10 fingers.
           \\ \\
-          We need to show that the claim of the Pumping Lemma fails. Pick any $n$, and consider
+          We need to show that the claim of the Pumping Lemma fails. Given some $n$, consider
           $$
             w = 0^n 1 0^{n + 1} \in L_\text{plus}
           $$
@@ -1573,7 +1573,7 @@
 
         We could rephrase the Pumping Lemma in terms of a game between two players, $R$ and $NR$. $R$ is the player who is trying to convince us that the language is regular, and $NR$ is the player who is trying to convince us otherwise.
         \\ \\
-        First, $R$ chooses an $n$. $NR$ can then fire back with a word $w$ such that $w \in L$ and $|w| > n$. $R$ can then provide an $x, y, z$ such that $|xy| \le n$, $xyz = w$, and $y \ne \epsilon$.
+        First, $R$ chooses an $n$. $NR$ can then fire back with a word $w$ such that $w \in L$ and $|w| \ge n$. $R$ can then provide an $x, y, z$ such that $|xy| \le n$, $xyz = w$, and $y \ne \epsilon$.
         \\ \\
         If $xy^kz \in L$, then $R$ wins. If $xy^kz \not \in L$, then $NR$ wins.
         \\ \\
@@ -1889,7 +1889,7 @@
       \textbf{Claim}: $L_p$ is not a regular language.
 
       \begin{proof}
-        We will apply the Pumping Lemma. Given $n$, consider $w = 0^n 1 0^n \in L_p$. Note that $|w| > n$ and $xyz$ exist such that $|xy| \le n$, so $xy = 0^k$ for some $k \le n$. So, $xy^2z = 0^m 1 0^n$ for some $m > n$, so $w \not \in L_p$.
+        We will apply the Pumping Lemma. Given $n$, consider $w = 0^n 1 0^n \in L_p$. Note that $|w| \ge n$ and $xyz$ exist such that $|xy| \le n$, so $xy = 0^k$ for some $k \le n$. So, $xy^2z = 0^m 1 0^n$ for some $m > n$, so $w \not \in L_p$.
       \end{proof}
     \end{ex}
 
@@ -2249,14 +2249,14 @@
         \end{ex}
 
       \begin{ex} \lecture{October 29, 2013}
-        Let $L_\text{exp} = \set{a^(2^n) : n \in \mathbb{N} }$. In particular, $L_\text{exp} = \set{ a, aa, \underbrace{aa \ldots a}_8, \underbrace{aa \ldots a}_{16}, \ldots }$. (This is what we call a \textbf{unary language} -- a language over one letter.)
+        Let $L_\text{exp} = \set{a^{(2^n)} : n \in \mathbb{N} }$. In particular, $L_\text{exp} = \set{ a, aa, \underbrace{aa \ldots a}_8, \underbrace{aa \ldots a}_{16}, \ldots }$. (This is what we call a \textbf{unary language} -- a language over one letter.)
         \\ \\
         \textbf{Claim}: $L_\text{exp}$ is not context-free.
 
         \begin{proof}
           We'll show that $L_\text{exp}$ violates the Pumping Lemma for context-free languages.
           \\ \\
-          We're given any $n$, we pick $w = a^{2^n} = \overbrace{a \ldots a}^{2^n} \in L$, and given any legal decomposition (satisfying the first two conditions of the Pumping Lemma), $w = X_1 X_2 X_3 X_4 X_5$.
+          We're given some $n$, we pick $w = a^{2^n} = \overbrace{a \ldots a}^{2^n} \in L$, and given any legal decomposition (satisfying the first two conditions of the Pumping Lemma), $w = X_1 X_2 X_3 X_4 X_5$.
           \\ \\
           Pick $k = 2$. Let's examine $X_1 X_2^2 X_3 X_4^2 X_5 = a^m$ for some $m$. First, note that $m = 2^n + |X_2 X_4| > 2^n$ since $|X_2 X_4| \ge 1$. Also, $m < 2^n + n$. This implies:
           $$
@@ -2279,7 +2279,7 @@
         \begin{proof}
           Let us show that $L_\text{double}$ violates the Pumping Lemma for context-free languages.
           \\ \\
-          Given any number $n$, pick $w = a^n b^n a^n b^n \in L_\text{double}$. For any decomposition $w = X_1 X_2 X_3 X_4 X_5$, if $|X_2 X_3 X_4| \le n$, this part intersects at most two of the four blocks, so $X_2 X_3 X_4 = a^i b^j$ or $a_i$ or $b^i a^j$ or $b^i$.
+          Given some $n$, pick $w = a^n b^n a^n b^n \in L_\text{double}$. For any decomposition $w = X_1 X_2 X_3 X_4 X_5$, if $|X_2 X_3 X_4| \le n$, this part intersects at most two of the four blocks, so $X_2 X_3 X_4 = a^i b^j$ or $a_i$ or $b^i a^j$ or $b^i$.
           \\ \\
           Pick $k = 2$. In any case, $X_1 X_2^2 X_3 X_4^2 X_5$ is not of the form $w' w'$, so it is not in $L_\text{double}$.
         \end{proof}
