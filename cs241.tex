@@ -4034,7 +4034,7 @@
 		We'll aim to \emph{improve} our compilers as much as possible, using a proxy measurement technique of some sort.
 
 		\subsection{Folding}
-			Folding is the act of evaluating constant expressions at compile-time. For example, \verb|x = 1 + 2 + 3;| could be replaced by \verb|x = 7;|. Similarly, \verb|y = x + 2;| could be replaced by \verb|y = 9;|, but only if we know that $x$ is not changed between the two expressions involving it.
+			Folding is the act of evaluating constant expressions at compile-time. For example, \verb|x = 1 + 2 + 3;| could be replaced by \verb|x = 6;|. Similarly, \verb|y = x + 2;| could be replaced by \verb|y = 8;|, but only if we know that $x$ is not changed between the two expressions involving it.
 			\\ \\
 			Code(expr) implicitly returns a tuple containing (encoding, value). Up until this point, we've always returned (register, 3), because we've always placed the result of the expression in \$3.
 			\\ \\
