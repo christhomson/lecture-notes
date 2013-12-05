@@ -168,14 +168,12 @@
           \begin{itemize}
           \item Let the domain be the set of all real numbers ($\mathbb{R}$), the core set be $\set{2}$, and the set of operations be $\set{ \text{``add 2''}, \text{``subtract 2''}}$. The defined set is the set of all even numbers, both positive and negative.
 
-          \item To define the set of all algebraic expressions. Our core set would be $\set{x, y, z, 1, 2, 3, \ldots, a, b, c, \ldots}$. Our operations would be:
+          \item To define the set of all algebraic expressions, our core set would be $\set{x, y, z, 1, 2, 3, \ldots, a, b, c, \ldots}$, and our operations would be:
           \AxiomC{$\sigma$} \AxiomC{$\eta$} \BinaryInfC{$(\sigma + \eta)$} \DisplayProof,\AxiomC{$\sigma$} \AxiomC{$\eta$} \BinaryInfC{$(\sigma \cdot \eta)$} \DisplayProof.
           \end{itemize}
           Given a set (language) defined inductively, how can we tell if some $x \in X$ is in the language or not?
-          %We must provide a particular sequence of operations necessary to produce that $x$.
 
           \begin{ex}
-            \label{strConcatenationExample}
             Let $X = \set{a, b}^\star$, $A = \set{a}$, and $P = $ \bigg\{ \AxiomC{X} \UnaryInfC{aX} \DisplayProof, \AxiomC{X} \UnaryInfC{Xa} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{bXY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XbY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XYb} \DisplayProof \bigg\}.
             \\ \\
             A typical question would be: is $abbaa \stackrel{?}{\in} I(A, P)$? The answer: yes! However, we must show how to generate $abbaa$ from $a$, using the operations in $P$, in a finite number of steps.
@@ -292,7 +290,7 @@
         \end{ex}
 
         \begin{ex}
-          Recall in \ref{strConcatenationExample} we defined $X = \set{a, b}^\star$, $A = \set{a}$, and $P = $ \bigg\{ \AxiomC{X} \UnaryInfC{aX} \DisplayProof, \AxiomC{X} \UnaryInfC{Xa} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{bXY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XbY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XYb} \DisplayProof \bigg\}.
+          Earlier, we defined $X = \set{a, b}^\star$, $A = \set{a}$, and $P = $ \bigg\{ \AxiomC{X} \UnaryInfC{aX} \DisplayProof, \AxiomC{X} \UnaryInfC{Xa} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{bXY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XbY} \DisplayProof, \AxiomC{X} \AxiomC{Y} \BinaryInfC{XYb} \DisplayProof \bigg\}.
           \\ \\
           For this example, let $\#_a(x)$ denote the number of ``a''s in the string $x$ and similarly, let $\#_b(x)$ denote the number of ``b''s in the string $x$.
           \\ \\
@@ -326,9 +324,9 @@
         In summary, we have an uncountable number of tasks, but a countable number of programs (and each program is suitable for carrying out at most a single task). This implies that there are tasks (languages) for which no program exists (namely, for such languages, $L$, there exists no program that will figure out correctly for every string $x$ whether it is a member of $L$ or not).
 
       \subsection{Defining Interesting Families of Tasks} \lecture{September 17, 2013}
-        \begin{aside}
-          The empty string can be denoted as either $\epsilon$ or $\lambda$.
-        \end{aside}
+        \begin{defn}
+          The \textbf{empty string} can be denoted as either $\epsilon$ or $\lambda$.
+        \end{defn}
 
         \subsubsection{Operations on Languages}
           There are several operations that we can perform on languages.
@@ -377,7 +375,7 @@
             A = \set{\emptyset, \set{\epsilon}} \cup \set{ \set{a} : a \in \Sigma }
           $$
 
-          For instance, suppose $\Sigma = \set{0, 1}$. Then $A = \set{ \emptyset, \set{ \epsilon }, \set{ 0 }, \set{ 1 } }$. Finally, we'll define our set of operations $P$:
+          For instance, suppose $\Sigma = \set{0, 1}$. Then $A = \set{ \emptyset, \set{ \epsilon }, \set{ 0 }, \set{ 1 } }$. Next, we'll define our set of operations $P$:
           $$
             P = \text{ \bigg\{ \AxiomC{$L_1$} \AxiomC{$L_2$} \BinaryInfC{$L_1 \cup L_2$} \DisplayProof, \AxiomC{$L_1$} \AxiomC{$L_2$} \BinaryInfC{$L_1 \cdot L_2$} \DisplayProof, \AxiomC{$L$} \UnaryInfC{$L^\star$} \DisplayProof \bigg\}}
           $$
@@ -480,7 +478,7 @@
         \item $Q$ is the set of all states in the DFA.
         \item $q_0$ is the initial state.
         \item $\delta$ is the transition function.
-        \item $F$ is a set of accepting states. (Note that there can be more than one accepting state.)
+        \item $F$ is the set of accepting states. (Note that there can be more than one accepting state.)
       \end{itemize}
 
       Every DFA can be represented with a bubble diagram, to make it easier to visualize.
@@ -534,7 +532,7 @@
         L(A) = \set{ w : \hat{\delta}(q_0, w) \in F }
       $$
 
-      \textbf{Claim}: For this automata, $L(A) = \set{ w : \#_0(w) \text{ is even, and } \#_1(w) \text{ is odd }}$. But how do we prove this?
+      \textbf{Claim}: For this automaton, $L(A) = \set{ w : \#_0(w) \text{ is even, and } \#_1(w) \text{ is odd}}$. But how do we prove this?
       \\ \\
       Let's rephrase our claim. For every $w \in \set{0, 1}^\star$, if $\#_0(w)$ is even and the $\#_1(w)$ is odd, then $A$ accepts $w$, and otherwise, $A$ does not accept $w$.
       \\ \\
@@ -579,7 +577,7 @@
         \item $\set{ \epsilon }$
         \item $\Sigma^\star$
         \item For every $a \in \Sigma, \set{a}$
-        \item For every $w \in \Sigma^\star, \set{w}$ (Note that in this case, $|w| + 2$ states are required.)
+        \item For every $w \in \Sigma^\star, \set{w}$
       \end{itemize}
 
       \subsubsection{Closure Operations}
@@ -592,7 +590,7 @@
           \\ \\
           The general idea is to run the two machines, $A_1$ and $A_2$, in parallel, and if $w \in F$ in both machines, accept $w$ for $L_1 \cap L_2$.
           \\ \\
-          Given any two automatons $A_1 = (\Sigma, Q_1, q_0^1, \delta_1, F_1)$ and $A_2 = (\Sigma, Q_2, q_0^2, \delta_2, F_2)$, we define the \textbf{product automaton} as
+          Given any two automata $A_1 = (\Sigma, Q_1, q_0^1, \delta_1, F_1)$ and $A_2 = (\Sigma, Q_2, q_0^2, \delta_2, F_2)$, we define the \textbf{product automaton} as
           $$
             A_1 \times A_2 = (\Sigma, Q_1 \times Q_2, (q_0^1, q_0^2), \delta_{A_1 \times A_2}, F_{A_1 \times A_2})
           $$
@@ -607,7 +605,7 @@
 
           \textbf{Conclusion}: if $L_1$ and $L_2$ both have DFAs, then so do $L_1 \cap L_2, L_1 \cup L_2, L_1 \backslash L_2, L_1 \Delta L_2$, etc. (any boolean operation on sets). However, note that the product automaton does not tell us if a language is closed under $L^\star$ or concatenation.
           \\ \\
-          Is it true that whenever $L$ has a DFA, then so does its complement, $L^C = \Sigma^\star \backslash L$? Yes, its DFA is $A_{\Sigma^\star \times L}$. More simply, let $A = (\Sigma, Q, q_0, \delta, F)$ be a DFA such that $L(A) = L$, then let $A^C = (\Sigma, Q, q_0, \delta, Q \backslash F)$. Then, $L(A^C) = L^C$.
+          Is it true that whenever $L$ has a DFA, then so does its complement, $L^C = \Sigma^\star \backslash L$? Yes, its DFA is $A_{\Sigma^\star \times L}$. Let $A = (\Sigma, Q, q_0, \delta, F)$ be a DFA such that $L(A) = L$, then let $A^C = (\Sigma, Q, q_0, \delta, Q \backslash F)$. Then, $L(A^C) = L^C$.
           \\ \\
           Since in our definition of a DFA we required that for every state $q \in Q$ and every letter $a \in \Sigma$, $q$ has some outgoing edge labeled by $a$ (we are never stuck).
         \end{proof}
@@ -681,7 +679,7 @@
           \end{tikzpicture}
           \end{center}
 
-          Whether this machine will accept $a$ is largely up to how we define acceptance. Generally, NFAs are defined so if there is \emph{any} valid path that leads to a final state, the string will be accepted. So, in this case, $a$ would be accepted by this NFA.
+          Whether this machine will accept $a$ is largely up to how we define acceptance. Generally, NFAs are defined so if there is \emph{any} valid path that leads to a final state, the string will be accepted. So, under that definition, $a$ would be accepted by this NFA.
         \end{ex}
 
         \subsubsection{Languages Accepted by an NFA}
@@ -699,10 +697,10 @@
             L(N) = \set{ w : \hat{\delta}(q_0, w) \cap F \ne \emptyset }
           $$
 
-          Phrased another way, this set contains all words $w$ which, after reading all characters in $w$, ended up in at least one final state.
+          Phrased another way, this set contains all words $w$ which, after reading all characters in $w$, ended up in \emph{at least} one accepting state.
 
         \subsubsection{Uses of NFAs}
-          NFAs sometimes give us a very compact representation of a language that would otherwise be complicated to define as a DFA.
+          NFAs sometimes give us a very compact representation of a language that would otherwise be complicated to describe as a DFA.
 
           \begin{ex}
             NFAs could be used for keyword searches. For example, suppose we want to create an NFA that matches the keywords ``miley'' and ``britney'', and nothing else. We can form this NFA with the alphabet $\Sigma = {a, b, \ldots, z}$:
@@ -781,7 +779,7 @@
           \end{ex}
 
           \begin{ex}
-            Suppose we want to define an NFA for the language $L_n$ = \{ $w$ : the $n$th-before-last letter in $w$ is 1\} on the alphabet $\Sigma = \set{0, 1}$. We could form the following NFA to represent this:
+            Suppose we want to define an NFA for the language $L_n$ = \{$w$ : the $n$th-before-last letter in $w$ is 1\} on the alphabet $\Sigma = \set{0, 1}$. We could form the following NFA to represent this:
             \begin{center}
               \begin{tikzpicture}[scale=0.2]
                 \tikzstyle{every node}+=[inner sep=0pt]
@@ -1048,7 +1046,7 @@
           $N_4$ accepts everything. That is, $L(N_4) = \set{0, 1}^\star$. In $N_4$, we can spontaneously move to $q_1$ initially. Then, either $1$ loops in $q_1$ or you follow $0$ to $q_0$, but in that case you can spontaneously move back to $q_1$ again.
         \end{ex}
 
-        We can define an $\epsilon$-NFA as follows. For such a machine $N$, $L(N)$ = \{ $w$ : there is a way that upon reading $w$ and using $\epsilon$-transitions, $q_0$ leads to some accepting state \}.
+        We can define an $\epsilon$-NFA as follows. For such a machine $N$, $L(N)$ = \{$w$ : there is a way that upon reading $w$ and using $\epsilon$-transitions, $q_0$ leads to some accepting state\}.
         \\ \\
         \textbf{Claim}: a language is accepted by an $\epsilon$-NFA if and only if it is accepted by some DFA.
         \\ \\
@@ -1064,7 +1062,7 @@
           \\ \\
           Let's prove an equivalent claim:
           \\ \\
-          \textbf{Claim}: for every $r$, there is a DFA $A$ such that $A$ has only a single accepting state, no edges leading out of the accepting state, but $A$ may have $\epsilon$-transitions, and $L(r) = L(A)$. (Note that this isn't formally a DFA, since we allow $\epsilon$-transitions and missing edges, but since every $\epsilon$-NFA is equivalent to a DFA, we know that a corresponding \textbf{proper} DFA exists.)
+          \textbf{Claim}: for every $r$, there is a DFA $A$ such that $A$ has only a single accepting state, no edges leading out of the accepting state, but $A$ may have $\epsilon$-transitions, and $L(r) = L(A)$. (Note that this isn't formally a DFA, since we allow $\epsilon$-transitions and missing edges, but since every $\epsilon$-NFA is equivalent to a DFA, we know that a corresponding \emph{proper} DFA exists.)
           \\ \\
           \textbf{Induction basis}: $\emptyset, \epsilon$, and $a$ for $a \in \Sigma$.
           \\ \\
@@ -1575,7 +1573,7 @@
         \\ \\
         First, $R$ chooses an $n$. $NR$ can then fire back with a word $w$ such that $w \in L$ and $|w| \ge n$. $R$ can then provide an $x, y, z$ such that $|xy| \le n$, $xyz = w$, and $y \ne \epsilon$.
         \\ \\
-        If $xy^kz \in L$, then $R$ wins. If $xy^kz \not \in L$, then $NR$ wins.
+        If $xy^kz \in L$ for all $k$, then $R$ wins. If $xy^kz \not \in L$ for some $k$, then $NR$ wins.
         \\ \\
         The Pumping Lemma states that if $L$ is regular, the player $R$ can guarantee that she wins.
 
@@ -1664,7 +1662,7 @@
         \begin{proof}
           Note that if $L = L(A)$ for some DFA $A$, then in the Pumping Lemma, one can pick $n = |Q^A|$ (the number of states in $A$).
           \\ \\
-          Assume by way of contradiction that for some $A$ with $n < s$ states, $L = L(A)$. Apply the Pumping Lemma where player $R$ chooses $n = |Q^A|$. Let $w$ be a word of shortest length in $L$. Note that $|W| > s > n$, which makes this a legal choice.
+          Assume by way of contradiction that for some $A$ with $n < s$ states, $L = L(A)$. Apply the Pumping Lemma where player $R$ chooses $n = |Q^A|$. Let $w$ be a word of shortest length in $L$. Note that $|w| > s > n$, which makes this a legal choice.
           \\ \\
           Given a decomposition $x, y, z$, choose $k = 0$. Since $xyz = w, |xy^0z| < |w|$. This is a contradiction since we assumed we selected the smallest word in $L$, and then we made it shorter.
         \end{proof}
@@ -1691,7 +1689,7 @@
         \begin{proof}
           Let $A = (\Sigma, Q, q_0, \delta, F)$. Without loss of generality, redefine $Q = \set{ q_1, \ldots, q_n }$ for some $n$.
           \\ \\
-          By induction on $k$, we will show that for every $i, j \le n$, there exists a regular expression $R_{ij}^k$ such that $L(R_{ij}^k) = \set{ w : \text{ on } A, w \text{ takes us from } q_i \text{ to } q_j \text{ without visiting any state of index } > k}$.
+          By induction on $k$, we will show that for every $i, j \le n$, there exists a regular expression $R_{ij}^k$ such that $L(R_{ij}^k) = \set{ w : \text{ on } A,~ w \text{ takes us from } q_i \text{ to } q_j \text{ without visiting any state of index } > k}$.
           \\ \\
           Note that
           $$
@@ -1727,14 +1725,14 @@
 
           \item \textbf{Given $\boldsymbol{w}$ and $\boldsymbol{r}$, is $\boldsymbol{w \in L(r)}$?} Note that this is difficult to do in general without converting the regular expression to an automaton.
 
-          \item \textbf{Given an NFA, $\boldsymbol{M}$, find some DFA $\boldsymbol{A}$ such that $\boldsymbol{L(M) = L(A)}$.} Recall that states in the equivalent DFA each represent a set of states from the NFA.
+          \item \textbf{Given an NFA, $\boldsymbol{M}$, construct a DFA $\boldsymbol{A}$ such that $\boldsymbol{L(M) = L(A)}$.} Recall that states in the equivalent DFA each represent a set of states from the NFA.
 
-          \item \textbf{Given a DFA, $\boldsymbol{A}$, construct a regular expression $\boldsymbol{r}$ such that $\boldsymbol{L(r) = L(A)}$.} We briefly touched on this before, so we'll do a more in-depth example.
+          \item \textbf{Given a DFA, $\boldsymbol{A}$, construct a regular expression $\boldsymbol{r}$ such that $\boldsymbol{L(r) = L(A)}$.} We briefly touched on this before, so we'll do a more in-depth example now.
           \\ \\
           \textbf{General idea}:
           \begin{enumerate}
             \item Rename the states of $A$ as $\set{ q_1, \ldots, q_n }$ for some $n$.
-            \item For every $k, i, j \le n$, let $R_{ij}^k = $\{ $w$ : if we read $w$ starting in state $i$, we will end in state $j$, and, along the path, we step on no state whose index is $> k$\}.
+            \item For every $k, i, j \le n$, let $R_{ij}^k = $\{$w$ : if we read $w$ starting in state $i$, we will end in state $j$, and, along the path, we step on no state whose index is $> k$\}.
             \item By induction on $k$, construct regular expressions $r_{ij}^k$ such that $L(r_{ij}^k) = R_{ij}^k$ (for all $i, j$)
             \item Finally, to get a regular expression for $L(A)$, let $r = \sum \{ r_{ij}^n : i \in F \}$.
           \end{enumerate}
@@ -1765,7 +1763,7 @@
 
             Notice that $L(A) = \set{ w : w \text{ contains a } 0}$. We can also see that a regular expression for this language is $r = 1^\star 0(0 + 1)^\star$, but determining this was only possible because this automaton is simple.
             \\ \\
-            If we couldn't determine the regular expression like this, we could alternatively follow the translation procedure. The translation procedure requires much more work, but no creativity or luck.
+            If we couldn't determine the regular expression like this, we could alternatively follow the translation procedure. The translation procedure requires much more work, but no creativity or luck is necessary.
             \\ \\
             We need the following tables in order to carry out the translation procedure:
             \begin{center}
@@ -1854,7 +1852,7 @@
           \\ \\
           We then check for emptiness in both $L(A_3)$ and $L(A_4)$. If both are empty, then we can conclude that $L(A_1) = L(A_2)$. Otherwise, $L(A_1) \ne L(A_2)$.
           \\ \\
-          Recall that if $A_1 = (\Sigma, Q^1, q_0^1, \delta^1, F^1), A_2 = (\Sigma, Q^2, q_0^2, \delta^2, F^2)$, then $A_3 = (\Sigma, Q^1 \times Q^2, (q_0^1, q_0^2), \delta^1 \times \delta^2, \set{ (q, p) : q \in F_1, p \not \in F_2 })$.
+          Recall that if $A_1 = (\Sigma, Q^1, q_0^1, \delta^1, F^1), A_2 = (\Sigma, Q^2, q_0^2, \delta^2, F^2)$, then $A_3 = (\Sigma, Q^1 \times Q^2, (q_0^1, q_0^2), \delta^1 \times \delta^2, \set{ (q, p) : q \in F_1, p \not \in F_2 })$. The construction of $A_4$ is similar.
           \\ \\
           Alternatively, we could check all strings of length at most $|Q^1| \cdot |Q^2|$. If the machines agree on all of those strings, then they will always agree and are therefore equivalent machines.
 
@@ -1871,7 +1869,7 @@
     There are some languages that are more complex than regular languages. Let's look at a couple of examples of such languages.
 
     \begin{ex}
-      Let $\Sigma = \set{a, b, +, (, )}$. Let $L = \{ w  \in \Sigma^\star : w $ has the same number of left brackets as right brackets \}.
+      Let $\Sigma = \set{a, b, +, (, )}$. Let $L = \{w  \in \Sigma^\star : w $ has the same number of left brackets as right brackets\}.
       \\ \\
       \textbf{Claim}: $L$ is not a regular language. This is intuitively clear because a finite amount of memory cannot be used to count the number of left parentheses to compare to the number of right parentheses.
 
@@ -1884,7 +1882,7 @@
     \end{ex}
 
     \begin{ex}
-      Let $\Sigma = \set{0, 1}$ and $L_p = \{ w \in \set{0, 1}^\star : w $ is a palindrome \}. Namely, $w = w^R$ ($w$ is equal to $w$ reversed). For example, ``MALAYALAM'' and ``MADAM'' are palindromes.
+      Let $\Sigma = \set{0, 1}$ and $L_p = \{w \in \set{0, 1}^\star : w $ is a palindrome\}. Namely, $w = w^R$ ($w$ is equal to $w$ reversed). For example, ``MALAYALAM'' and ``MADAM'' are palindromes.
       \\ \\
       \textbf{Claim}: $L_p$ is not a regular language.
 
@@ -1935,8 +1933,8 @@
         A \textbf{context-free grammar} (or \textbf{CFG}) is a tuple $G = (V, T, P, S)$, where
         \begin{itemize}
           \item $V$ is a finite set of variables.
-          \item $T$ is a finite set, disjoint from $V$, of terminal symbols.
-          \item $P$ is a finite set of rules, where each rule of $P$ has the form $X \to \sigma$, where $X \in V$ and $\sigma \in (V \cup T)^\star$.
+          \item $T$ is a finite set of terminal symbols, disjoint from $V$.
+          \item $P$ is a finite set of rules. Each rule of $P$ has the form $X \to \sigma$, where $X \in V$ and $\sigma \in (V \cup T)^\star$.
           \item $S \in V$ is the start symbol.
         \end{itemize}
       \end{defn}
@@ -1955,7 +1953,7 @@
         For instance, in the grammar for $L_p$, we can say $S \underset{G}{\overset{\star}{\implies}} 0$, $S \underset{G}{\overset{\star}{\implies}} 0S0$, $S \underset{G}{\overset{\star}{\implies}} 01S10$, etc.
 
         \begin{defn}
-          $r \underset{G}{\overset{n}{\implies}} u$ denotes that $r$ entails $u$ in $n$ steps. $r \underset{G}{\overset{1}{\implies}} u$ if and only if $r = u$. By induction, we say $r \underset{G}{\overset{n+1}{\vdash}} u$ if and only if for some $v$, $r \underset{G}{\overset{n}{\implies}} v$ and $v \underset{G}{\overset{1}{\implies}} u$.
+          $r \underset{G}{\overset{n}{\implies}} u$ denotes that $r$ entails $u$ in $n$ steps. $r \underset{G}{\overset{1}{\implies}} u$ if and only if $r = u$. By induction, we say $r \underset{G}{\overset{n+1}{\implies}} u$ if and only if for some $v$, $r \underset{G}{\overset{n}{\implies}} v$ and $v \underset{G}{\overset{1}{\implies}} u$.
         \end{defn}
 
         This leads to a reworded definition of $r \underset{G}{\overset{\star}{\implies}} u$.
@@ -2007,13 +2005,13 @@
       \begin{defn}
         A parse tree for a grammar $G = (V, T, P, S)$ is a tree where
         \begin{itemize}
-          \item Its vertices are labeled by a member of $V$,
-          \item Its root is labeled $S$, and,
+          \item Each vertex is labeled by a member of $V$,
+          \item The root is labeled $S$, and,
           \item For every internal node, the set of its immediate children read (from left-to-right) $\sigma$, for $\sigma$ such that $X \to \sigma \in P$, where $X$ is the label of the parent node.
         \end{itemize}
       \end{defn}
 
-      Note that any subtree of a parse tree is \emph{also} a valid parse tree. In particular, parse trees that don't resolve to legitimate words in the language are still considered valid parse trees.
+      % Note that any subtree of a parse tree is \emph{also} a valid parse tree. In particular, parse trees that don't resolve to legitimate words in the language are still considered valid parse trees.
 
       \begin{defn}
         Given a parse tree $G$ for some grammar $G$, the \textbf{sentential} described by $T$ is the sequence $\sigma$ of its leaf nodes, read from left-to-right.
@@ -2059,7 +2057,7 @@
       \end{proof}
 
       \lecture{October 17, 2013}
-      Parse trees do not care about the order of the application of the rules at each step. However, they do let you see the history of how the rules were applied to each part to derive a particular string (by looking at the levels of the tree above the leaves).
+      Parse trees do not concern themselves with the order of application of the rules at each step. However, they do let you see the history of how the rules were applied to each part to derive a particular string (by looking at the levels of the tree above the leaves).
 
       \begin{corollary}
         $w \in L(G)$ if and only if there exists a parse tree for $G$ whose leaves are labelled by the symbols of $w$.
@@ -2092,10 +2090,10 @@
         \item \{$w$ : $w$ is of the form $w' w'^R$ for some $w'$\}
       \end{itemize}
 
-      However, \{ $w$ : for some $w'$, $w = w'w'$ \} over $\set{a, b}$ is \emph{not} a context-free language.
+      However, \{$w$ : for some $w'$, $w = w'w'$\} over $\set{a, b}$ is \emph{not} a context-free language.
 
     \subsection{Pushdown Automata}
-      The machines corresponding to context-free languages are called \textbf{pushdown automata} (also referred to as $\textbf{PDA}$). They are finite automata but with stack memory.
+      The machines corresponding to context-free languages are called \textbf{pushdown automata} (also referred to as \textbf{PDA}s). They are finite automata but with stack memory.
       \\ \\
       Intuitively, it is trivial for a pushdown automaton to compute a language of words like $w = w' w'^R$. You can form a non-deterministic machine that pushes each letter it reads onto the stack, while simultaneously guessing that the top of the stack currently represents the center character of the string. We don't know where the center of the string is, but the nondeterminism will eventually ``guess'' the center correctly. Before we reach the center of the string, we want to push each character we read onto the stack. After the center, we want to compare the next character of the input with the top of the stack. If they're equal, continue, otherwise lead to a blackhole state.
       \\ \\
@@ -2106,7 +2104,7 @@
       Let's discuss pushdown automata more formally.
 
       \begin{defn}
-        A \textbf{pushdown automaton} (\textbf{PDA}s) is a tuple $D = (\Sigma, \Gamma, Q, q_0, z_0, \delta, F)$, where
+        A \textbf{pushdown automaton} (\textbf{PDA}) is a tuple $D = (\Sigma, \Gamma, Q, q_0, z_0, \delta, F)$, where
         \begin{itemize}
           \item $\Sigma$ is the alphabet of the language we want to accept.
           \item $\Gamma$ is the set of characters we could store in memory (on the stack) -- and this isn't necessarily equal to $\Sigma$.
@@ -2148,7 +2146,7 @@
 
         Last time, we considered two ways of defining the language of a pushdown automaton:
         \begin{itemize}
-          \item $L_E(D)$, by emptying the stack leading to acceptance.
+          \item $L_E(D)$, with the emptying of the stack leading to acceptance.
           \item $L_f(D)$, with finite acceptance states.
         \end{itemize}
 
@@ -2274,7 +2272,7 @@
         \\ \\
         \textbf{Claim}: $L_\text{double} = \set{ ww : w  \in \Sigma^\star }$ is not context-free.
         \\ \\
-        Intuitively, $L_p$ and $L_\text{double}$ should be equally complex languages to compute. However, due to the somewhat arbitrary definition of pushdown automata, we cannot compute $L_\text{double}$, but we can compute $L_p$.
+        Intuitively, $L_p$ and $L_\text{double}$ should be equally complex languages to compute. However, due to the somewhat arbitrary definition of context-free languages and pushdown automata, we cannot compute $L_\text{double}$, but we can compute $L_p$.
 
         \begin{proof}
           Let us show that $L_\text{double}$ violates the Pumping Lemma for context-free languages.
@@ -2298,7 +2296,7 @@
         \end{itemize}
       \end{lemma}
 
-      Let's think about the intuition behind this lemma. An arbitrary generation rule looks like $A \to abAaBCd \in (V \cup T)^\star$. How do we get from this arbitrary form to the restricted Chomsky form?
+      Let's think about the intuition behind this lemma. An arbitrary generation rule looks similar to $A \to abAaBCd \in (V \cup T)^\star$. How do we get from this arbitrary form to the restricted Chomsky form?
       \\ \\
       Analyzing the rule from left to right, we would introduce the rule $A_1 \to a$ and replace the arbitrary rule with $A \to A_1 bAaBCd$. Then, we would replace this rule (again) by $A \to A_1 A_2$ and introduce $A_2 \to bAaBCd$. You continue to make these replacements until all rules are legitimate rules in Chomsky form.
 
@@ -2343,7 +2341,7 @@
       \subsection{Deciding Membership in a Context-Free Language} \lecture{October 31, 2013}
         \textbf{Recall}: for a regular language $L$, there is a corresponding DFA $D$, and to check if a particular word $w$ is in $L$ or not, we simply run $w$ through $D$ and see if $D$ accepts $w$.
         \\ \\
-        Can we repeat this idea for a context-free language? Not really. The problem is that pushdown automata are inherently non-deterministic. There is no clear way to simulate the run of a non-deterministic pushdown automata. Unlike finite automata, there is a potentially unbounded number of possible states for the stack, due to the PDA's non-determinism.
+        Can we repeat this idea for a context-free language? Not really. The problem is that pushdown automata are inherently non-deterministic. There is no clear way to simulate the run of a non-deterministic pushdown automaton. Unlike finite automata, there is a potentially unbounded number of possible states for the stack, due to the PDA's non-determinism.
         \\ \\
         We can still find a way to decide membership in context-free languages though! We can do this by using a grammar for $L$, rather than using an automaton for $L$.
         \subsubsection{Method 1: Brute Force}
@@ -2392,7 +2390,7 @@
 
           What went wrong with the argument we used to show closure of intersection for regular languages? For regular languages, we used the product automaton to run both DFAs in parallel. If both accepted a particular word, then the product automaton would also accept the word.
           \\ \\
-          Each state in our product DFA was a set of two states -- one for each machine. However, for context-free languages, we cannot combine our stacks in a similar way. We can't just simulate a double stack with one stack, the same way we simulated two states with one.
+          Each state in our product DFA was a set of two states -- one for each machine. However, for context-free languages, we cannot combine our stacks in a similar way. We can't simply simulate a double stack with one stack, the same way we simulated two states with one.
           \\ \\
           \textbf{Claim}: if $L_1$ is a context-free language and $L_2$ is regular, then $L_1 \cap L_2$ is context-free.
           \\ \\
@@ -2424,14 +2422,14 @@
 
     We call this a thesis rather than a theorem because it's not particularly clear what it means to be ``computed.'' This thesis is more of a philosophical statement than it is a factual, concrete theorem.
     \\ \\
-    In particular, any task that can be carried out by a computer (any task you can write a program for) can be carried out by a Turing machine.
+    The intent behind this thesis is that any task that can be carried out by a computer (any task you can write a program for) can be carried out by a Turing machine.
     \\ \\
     Turing machines were introduced by Alan Turing in 1936 and have not changed since. Even if we consider futuristic models of computing, such as quantum computing, we do not need to look at machines any more complex than Turing machines.
 
     \subsection{Defining Turing Machines}
       Intuitively, the Turing machine is an extension to what we have seen before. In particular, Turing machines are similar to pushdown automata but the memory of Turing machines looks a bit different. Like pushdown automata and finite automata, Turing machines are purely theoretical constructs.
       \\ \\
-      A Turing machine has a finite set of states and a memory in the form of a one-sided tape, with a read head. The read head can read or write any arbitrary position in memory, but can only be moved left, right in sequence.
+      A Turing machine has a finite set of states and a memory in the form of a one-sided tape, with a read head. The read head can read or write any arbitrary position in memory, but can only be moved left or right in sequence.
 
       \begin{defn}
         A \textbf{Turing machine} is defined as $T = (Q, \Sigma, \Gamma, q_0, q_a, q_r, \delta)$, where
@@ -2446,13 +2444,13 @@
         \end{itemize}
       \end{defn}
 
-      Recall that the definition of a pushdown automaton was arbitrary in some ways. For instance, why could the language of palindromes be computed by a PDA but not the language of all strings containing the same word twice in a row? We could've changed many things about the definition of pushdown automata, but any of those changes would change the types of languages that PDAs could accept. That is not the case here. Making arbitrary changes to the Turing machine construct, such as making the tape two-sided or adding multiple tapes, would not change the languages computable by Turing machines. We'll look into this in more detail later.
+      Recall that the definition of a pushdown automaton was arbitrary in some ways. For instance, why could the language of palindromes be computed by a PDA but not the language of all strings containing the same word twice in a row? We could've changed many things about the definition of pushdown automata, but any of those changes would change the types of languages that PDAs could accept. That is not the case here. Making arbitrary changes to the definition of Turing machines, such as making the tape two-sided or adding multiple tapes, would not change the languages computable by Turing machines. We'll look into this in more detail later.
 
       \begin{defn}
         The \textbf{instantaneous description} (or \textbf{ID} or \textbf{configuration}) of a Turing machine is $(q, x \underline{a}z)$, where
         \begin{itemize}
           \item $q$ is the current state.
-          \item $a$ is the character under the reading head.
+          \item $\underline{a}$ is the character under the reading head, as indicated by an underline.
           \item $x$ is the string to the left of $a$ on the tape.
           \item $z$ is the string to the right of $a$ on the tape.
         \end{itemize}
@@ -2465,7 +2463,7 @@
         \end{center}
       \end{defn}
 
-    Next, we're interesting in defining the ``legal next ID'' relation.
+    Next, we're interested in defining the ``legal next ID'' relation.
 
     \begin{defn}
       $(q, x\underline{a}z) \underset{T}{\vdash} (p, y\underline{b}w)$ if some instruction in $\delta$ caused the move from the first ID, $(q, x\underline{a}z)$, to the second, $(p, y\underline{b}w)$.
@@ -2609,7 +2607,7 @@
         \\ \\
         \textbf{Claim}: for every $w \in \Sigma^\star$, $f_\text{double}$ is computable. That is, we claim that there exists some Turing machine $T$ such that for every $w \in \Sigma^\star$, $T$ can compute $f_\text{double}$.
         \\ \\
-        We can construct a Turing machine that computes $f_\text{double}$. Make the first letter in the input string uppercase, then proceed to the end of the string and write the letter in lowercase, after some delimiter \#. Once all letters in the original string are uppercase, we can move the second $w$ over by removing the \#. Alternatively, we could copy the second word in uppercase and then transform it into lowercase once we're done, eliminating the need for the \# symbol.
+        We can construct a Turing machine that computes $f_\text{double}$. The machine would make the first letter in the input string uppercase, then proceed to the end of the string and write the letter in lowercase, after some delimiter \#. Once all letters in the original string are uppercase, we can move the second $w$ over by removing the \#. Alternatively, we could copy the second word in uppercase and then transform it into lowercase once we're done, eliminating the need for the \# symbol.
       \end{ex}
 
       \subsubsection{Computing Functions over Natural Numbers}
@@ -2693,7 +2691,7 @@
           \delta: Q \times \Gamma \to \set{A : A \text{ is a finite subset of } Q \times \Gamma \times \set{L, R, S}}
         $$
 
-        The languages accepted by such a machine $T$ are $L(T) = $\{ $w$ : there is a finite sequence of legal moves leading from $(q_0, \epsilon \underline{\Delta} w)$ to some $(q_a, x \underline{y}z)\}$.
+        The languages accepted by such a machine $T$ are $L(T) = $\{$w$ : there is a finite sequence of legal moves leading from $(q_0, \epsilon \underline{\Delta} w)$ to some $(q_a, x \underline{y}z)\}$.
         \\ \\
         We say $(q, x \underline{y}z) \underset{T}{\vdash} (p, x'\underline{y'}z')$ if $(p, x'\underline{y'}z')$ is the result of applying one of the transition instructions in $\delta(q, y)$ to $(q, x\underline{y}z)$.
 
@@ -2759,7 +2757,7 @@
       \end{ex}
 
       \subsubsection{Cantor's Diagonalization Argument} \lecture{November 21, 2013}
-      It's important to note that it is not the case that all infinite sets are equivalent to each other. In order to show this, we must show that every trick (every mapping) is bound to fail.
+      It's important to note that it is not the case that all infinite sets are equivalent to each other. In order to show this, we must show that every trick (every mapping) is bound to fail for $\mathbb{N} \to \mathbb{R}$.
 
       \begin{theorem}[Cantor's Theorem (1905)]
         $\mathbb{N} \not \sim \mathbb{R}$.
@@ -2777,7 +2775,7 @@
             $f(1)$ = & 0 & . & 1 & \textbf{1} & 1 & 2 & \ldots \\
             $f(2)$ = & 0 & . & 2 & 3 & \textbf{4} & 5 & \ldots \\
             $f(3)$ = & 0 & . & 9 & 8 & 7 & \textbf{0} & \ldots \\
-            \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots
+            \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & \vdots & $\boldsymbol{\ddots}$
           \end{tabular}
         \end{center}
 
@@ -2815,20 +2813,20 @@
     \subsubsection{Countable and Uncountable Sets}
       There are many classes of infinite sets. The infinite sets $\mathbb{N}, \mathbb{Q}, \mathbb{Z}$, the set of all even numbers, etc., are \textbf{countable} sets. The infinite sets $\mathbb{R}, [0, 1], \mathbb{R}^2, \mathbb{R}^n$ are \textbf{uncountable} sets.
       \\ \\
-      Not only are there countable and uncountable sets, but there are many classes of uncountable sets. The set of uncountable classes is itself an uncountable infinite set. We enumerate these classes as $\aleph_i$.
+      Not only are there countable and uncountable sets, but there are many different classes of uncountable sets. The set of uncountable classes is itself an uncountable infinite set. We enumerate these classes as $\aleph_i$.
       \\ \\
       In 1960, Paul Cohen made an interesting observation:
       \begin{theorem}
         $\mathbb{R} = \aleph_1$ cannot be proven nor refuted.
       \end{theorem}
 
-      For every finite $\Sigma, \Sigma^\star$ is countable. The set of all Turing machines is countable, since every Turing machine (and therefore every program) can be coded as some finite string. However, the set of all languages $\set{L : L \subseteq \Sigma^\star }$ is uncountable.
+      For every finite $\Sigma,~ \Sigma^\star$ is countable. The set of all Turing machines is countable, since every Turing machine (and therefore every program) can be coded as some finite string. However, the set of all languages $\set{L : L \subseteq \Sigma^\star}$ is uncountable.
       \\ \\
       It's easy to see that the set of all languages is uncountable if you list off every word $\sigma_i \in \Sigma^\star$, then for each language, you assign ``0'' or ``1'' indicating whether that word $\sigma_i$ is included in the language or not. This is a set of infinite strings, which cannot be counted.
       \\ \\
       Notice that the set of all Turing machines is countable, but the set of all languages is not. This implies that there exists some language $L$ that is not recognizable by a Turing machine.
       \begin{ex}
-        Consider $L_\text{verify} = $ \{ $(P, S)$ : $P$ is a C program, $S$ is a specification, and $P$ satisfies $S$ \}.
+        Consider $L_\text{verify} = $\{$(P, S)$ : $P$ is a C program, $S$ is a specification, and $P$ satisfies $S$\}.
         \\ \\
         \underline{Input}: A program $P$ and a specification $S$.
         \\ \\
@@ -2838,7 +2836,7 @@
       \end{ex}
 
   \subsection{Undecidability: The Halting Problem}
-    As input, you're given $\langle M \rangle$, which is a description of a Turing machine (as a string of characters), and $w \in \Sigma^\star$. The machine must decide if $M$ halts on the input $w$. We could equivalently state this as problem $H$ = \{ ($\langle M \rangle$, w): $M$ halts on input $w$ \}.
+    As input, you're given $\langle M \rangle$, which is a description of a Turing machine (as a string of characters), and $w \in \Sigma^\star$. The machine must decide if $M$ halts on the input $w$. We could equivalently state this as problem $H$ = \{($\langle M \rangle$, w): $M$ halts on input $w$\}.
 
     \begin{theorem}
       The halting problem $H$ is not a decidable language.
@@ -2849,7 +2847,7 @@
      \begin{proof}
       We will prove that $H$ is undecidable by way of contradiction.
       \\ \\
-      Assume that some Turing machine decides $H$. Now, define a new Turing machine $D$. $D$ takes a description of a Turing machine as input, and:
+      Assume that some Turing machine decides $H$. Now, define a new Turing machine $D$. $D$ takes a description of a Turing machine $M$ as input, and:
       $$
         D(\langle M \rangle) = \begin{cases}
           \text{accept } & \text{if } (\langle M \rangle, \langle M \rangle) \not \in H \\
@@ -2887,7 +2885,7 @@
       \begin{proof}
         If $M$ accepts $L$ and halts on every input, we can define $\overline{M}$ that accepts if and only if $M$ rejects. So, $L(\overline{M}) = \overline{L}$.
         \\ \\
-        This argument \emph{relies} on $M$ halting on every input, because for $\overline{M}$ to accept or reject some input, it must simulate $M$, wait for accept/reject, and then take the opposite action.
+        This argument \emph{relies} on $M$ halting on every input, because for $\overline{M}$ to accept or reject some input, it must simulate $M$, wait for accept/reject, and then make the opposite decision.
         \\ \\
         To prove the other direction of the theorem, we need to show that if some $M$ recognizes $L$ and some $\overline{M}$ recognizes $\overline{L}$, then we can construct some $M^\star$ that decides $L$. That is, we can construct some $M^\star$ such that $L(M^\star) = L$ where $M^\star$ halts on every input.
         \\ \\
@@ -2898,13 +2896,13 @@
         $\overline{H}$ is not recognizable.
       \end{corollary}
 
-      We know this corollary to be true because we know $H$ is recognizable but not decidable. $\overline{H}$ not being recognizable is also very logical since in some ways, $\overline{H}$ is a more complex language to reason about than $H$, since $\overline{H} = $ \{ $(\langle M \rangle, w)$ : $M$ does not accept $w$ \}.
+      We know this corollary to be true because we know $H$ is recognizable but not decidable. $\overline{H}$ not being recognizable is also very logical since in some ways, $\overline{H}$ is a more complex language to reason about than $H$, since $\overline{H} = $\{$(\langle M \rangle, w)$ : $M$ does not accept $w$\}.
 
     \subsection{Proving Undecidability: The Reduction Technique}
       We can use the diagonalization trick to show that a language is undecidable. In many cases though, we can more simply use \textbf{the reduction technique}. A reduction is a proof by contradiction, which aims to show that \emph{if} we had a black box that decides an undecidable problem, we could use it to decide another problem that we know to be undecidable (such as the halting problem), which is a contradiction.
 
       \begin{ex}
-        Let $A_\text{Halt} = $ \{ $(\langle M \rangle, w)$ : $M$ halts on $w$ \}.
+        Let $A_\text{Halt} = $\{$(\langle M \rangle, w)$ : $M$ halts on $w$\}.
         \\ \\
         \textbf{Claim}: $A_\text{Halt}$ is not decidable.
 
@@ -2916,9 +2914,9 @@
       \end{ex}
 
       \begin{ex}
-        Let $E_\text{mpt}$ = \{ $\langle M \rangle$ : $L(M) = \emptyset$ \}.
+        Let $E_\text{mpt}$ = \{$\langle M \rangle$ : $L(M) = \emptyset$\}.
         \\ \\
-        \textbf{Claim}: $E_\text{mpt}$ is not decidable. This is intuitive when you consider a question like ``will I ever fall in love?'', and we define a language of all people you will fall in love with. But clearly, this question is not easily answered.
+        \textbf{Claim}: $E_\text{mpt}$ is not decidable. This is intuitive when you consider a question like ``will I ever fall in love?'', and we define a language of all people you will fall in love with. But clearly, the question of whether or not that set is empty is not easily answered.
 
         \begin{proof}
           We wish to construct some $M^\star$, that uses any hypothetical $M$ that decides $E_\text{mpt}$, to solve $H$.
@@ -2950,7 +2948,7 @@
       \end{ex}
 
       \begin{ex}
-        Let Regular$_\text{TM}$ = \{ $\langle M \rangle$ : $L(M)$ is a regular language \}.
+        Let Regular$_\text{TM}$ = \{$\langle M \rangle$ : $L(M)$ is a regular language\}.
         \\ \\
         \textbf{Claim}: Regular$_\text{TM}$ is not decidable.
 
@@ -2968,7 +2966,7 @@
           Note that if $M$ accepts $w$, $L(M_w) = \Sigma^\star$ is regular, and we can accept this input for $H$. On the other hand, if $M$ does not accept $w$, then $L(M_w) = \set{ a^n b^n : n \in \mathbb{N} }$ is not regular, and we can reject this input for $H$.
         \end{proof}
 
-        Similarly, let CF$_\text{TM}$ = \{ $\langle M \rangle$ : $L(M)$ is a context-free language \}. We can use the same idea that we used for Regular$_\text{TM}$, except instead of using $\Sigma^\star$ and $\set{a^n b^n : n \in \mathbb{N} }$, we should use $\Sigma^\star$ and $\set{a^n b^n c^n : n \in \mathbb{N} }$, since the latter is not context-free.
+        Similarly, let CF$_\text{TM}$ = \{$\langle M \rangle$ : $L(M)$ is a context-free language\}. We can use the same idea that we used for Regular$_\text{TM}$, except instead of using $\Sigma^\star$ and $\set{a^n b^n : n \in \mathbb{N} }$, we should use $\Sigma^\star$ and $\set{a^n b^n c^n : n \in \mathbb{N} }$, since the latter is not context-free.
       \end{ex}
 
     \subsection{Some Well-Known Undecidable Problems}
@@ -2977,7 +2975,7 @@
       \subsubsection{Post Correspondence Problem (PCP)}
         Given a finite set of dominoes, with a string on the top and bottom of each, can you arrange them such that the word on the top equals the word on the bottom?
         \\ \\
-        If you can use each of the dominoes exactly once, this is decidable. However, if you're allowed to use each of them as a template, meaning you can use each domino as many times as you'd like, then this is an undecidable problem.
+        If you can use each of the dominoes exactly once, this is decidable. However, if you're allowed to use each of them as a template, meaning you can use each domino as many times as you'd like, then this is an undecidable problem. This undecidable problem is known as the \textbf{post correspondence problem} (or \textbf{PCP} for short).
 
       \subsubsection{Hilbert's 10th Problem}
         Given a polynomial equation, where $a_i \in \mathbb{Z}$ for all $0 \le i \le n$:
@@ -3013,7 +3011,7 @@
       We have spent a lot of time discussing undecidable languages. It's important to remember that there are many useful languages that are decidable. Let's look at two last examples of relevant languages that are decidable.
 
       \begin{ex}
-        Let $E_\text{DFA} = $ \{ $D$ : $D$ is a DFA and $L(D) = \emptyset$ \}. That is, $E_\text{DFA}$ represents the language of deterministic finite automata that compute the empty language.
+        Let $E_\text{DFA} = $ \{$D$ : $D$ is a DFA and $L(D) = \emptyset$\}. That is, $E_\text{DFA}$ represents the language of deterministic finite automata that compute the empty language.
         \\ \\
         \textbf{Claim}: $E_\text{DFA}$ is decidable.
         \\ \\
@@ -3023,11 +3021,11 @@
       \end{ex}
 
       \begin{ex}
-        Let $E_\text{CFG} = $ \{ $G$ : $G$ is a context-free grammar and $L(G) = \emptyset$ \}.
+        Let $E_\text{CFG} = $ \{$G$ : $G$ is a context-free grammar and $L(G) = \emptyset$\}.
         \\ \\
         \textbf{Claim}: $E_\text{CFG}$ is decidable.
         \\ \\
-        \textbf{Decision algorithm}: mark all members of $T$. Let $M_i$ be the set of all members of $T \cup V$, marked at step $i$. Then let $M_i + 1 = M_i \cup $ \{ $A \in V$ : some rule in $P$ starting with $A$ generates a string in $M_i^\star$ \}. Repeat this process until we no longer can mark anything, at which point we check if the last marked set contains $S$ or not.
+        \textbf{Decision algorithm}: mark all members of $T$. Let $M_i$ be the set of all members of $T \cup V$, marked at step $i$. Then let $M_i + 1 = M_i \cup $ \{$A \in V$ : some rule in $P$ starting with $A$ generates a string in $M_i^\star$\}. Repeat this process until we no longer can mark anything, at which point we check if the last marked set contains $S$ or not.
         \\ \\
         For example, consider the following context-free grammar:
         \begin{align*}
