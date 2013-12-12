@@ -2803,7 +2803,7 @@
 
         Given any $f: \mathbb{N} \to [0, 1]$, define a sequence of intervals $I_0, I_1, I_2, \ldots, I_n$, where
         $$
-          I_n = \left[f(n) - \frac{1}{2^{n + 3}}, f(n) + + \frac{1}{2^{n + 3}}\right]
+          I_n = \left[f(n) - \frac{1}{2^{n + 3}}, f(n) + \frac{1}{2^{n + 3}}\right]
         $$
 
         $I_n$ is an interval centered at $f(n)$, and $|I_n| = \frac{1}{2^{n + 2}}$. Clearly, $\displaystyle \bigcup_{n = 0}^{\infty} I_n$ covers the entire range of $f$. But:
@@ -2815,7 +2815,7 @@
       \end{proof}
 
     \subsubsection{Countable and Uncountable Sets}
-      There are many classes of infinite sets. The infinite sets $\mathbb{N}, \mathbb{Q}, \mathbb{Z}$, the set of all even numbers, etc., are \textbf{countable} sets. The infinite sets $\mathbb{R}, [0, 1], \mathbb{R}^2, \mathbb{R}^n$ are \textbf{uncountable} sets.
+      There are many classes of infinite sets. The infinite sets $\mathbb{N},~ \mathbb{Q},~ \mathbb{Z}$, the set of all even numbers, etc., are \textbf{countable} sets. The infinite sets $\mathbb{R},~ [0, 1],~ \mathbb{R}^2,~ \mathbb{R}^n$ are \textbf{uncountable} sets.
       \\ \\
       Not only are there countable and uncountable sets, but there are many different classes of uncountable sets. The set of uncountable classes is itself an uncountable infinite set. We enumerate these classes as $\aleph_i$.
       \\ \\
@@ -2883,7 +2883,7 @@
         A language $L$ is decidable if and only if both $L$ and its complement $\Sigma^\star \backslash L = \overline{L}$ are recognizable.
       \end{theorem}
 
-      Earlier in the course, we discussed how if a language is regular, its complement was also regular. But it is not the case that if $L$ is finite, that $\overline{L}$ is also finite.
+      Earlier in the course, we discussed how if a language is regular, its complement was also regular. But it is not the case that if $L$ is finite, then $\overline{L}$ is also finite.
       \\ \\
       \textbf{Claim}: If $L$ is decidable, then so is $\overline{L}$.
       \begin{proof}
@@ -2903,7 +2903,7 @@
       We know this corollary to be true because we know $H$ is recognizable but not decidable. $\overline{H}$ not being recognizable is also very logical since in some ways, $\overline{H}$ is a more complex language to reason about than $H$, since $\overline{H} = $\{$(\langle M \rangle, w)$ : $M$ does not accept $w$\}.
 
     \subsection{Proving Undecidability: The Reduction Technique}
-      We can use the diagonalization trick to show that a language is undecidable. In many cases though, we can more simply use \textbf{the reduction technique}. A reduction is a proof by contradiction, which aims to show that \emph{if} we had a black box that decides an undecidable problem, we could use it to decide another problem that we know to be undecidable (such as the halting problem), which is a contradiction.
+      We can use the diagonalization trick to show that a language is undecidable. In many cases though, we can more simply use \textbf{the reduction technique}. A reduction is a proof by contradiction, which aims to show that \emph{if} we had a black box that decides an undecidable problem, we could use it to decide another problem that we know to be undecidable (such as the halting problem), which would be a contradiction.
 
       \begin{ex}
         Let $A_\text{Halt} = $\{$(\langle M \rangle, w)$ : $M$ halts on $w$\}.
@@ -2913,7 +2913,7 @@
         \begin{proof}
           Assume by way of contradiction that some Turing machine $M$ decides $A_\text{Halt}$, and use $M$ to construct $M^\star$ that decides $H$.
           \\ \\
-          We feed the input of $H$, $(\langle D \rangle, w)$ into $M$ and if $(\langle D \rangle, w) \in L(M)$, then we can run $w$ on the \emph{actual} machine $D$ and check that decision, since we know $D$ will halt on input $w$. Otherwise, if  $(\langle D \rangle, w) \not \in L(M)$, we can reject immediately.
+          We feed the input of $H$, $(\langle D \rangle, w)$, into $M$ and if $(\langle D \rangle, w) \in L(M)$, then we can run $w$ on the \emph{actual} machine $D$ and check that decision, since we know $D$ will halt on input $w$. Otherwise, if  $(\langle D \rangle, w) \not \in L(M)$, we can reject immediately.
         \end{proof}
       \end{ex}
 
@@ -2940,7 +2940,7 @@
       \begin{ex}
         Let $EQ_\text{TM} = \set{(\langle M_1 \rangle, \langle M_2 \rangle) : L(M_1) = L(M_2)}$.
         \\ \\
-        \textbf{Claim}: $EQ_{TM}$ is not decidable. Note that $\overline{EQ_\text{TM}}$ is recognizable, since we can just start running the machines on various inputs, then the moment they disagree on some input, we can instantly say that they are not equivalent.
+        \textbf{Claim}: $EQ_{TM}$ is not decidable. Note that $\overline{EQ_\text{TM}}$ is recognizable, since we can just start running the machines on various inputs, then the moment they disagree on an input, we can instantly say that they are not equivalent.
 
         \begin{proof}
           We will reduce the undecidable emptiness problem to $EQ_\text{TM}$. Recall that $E_\text{mpt}$ takes one machine, $M$, as input and accepts if the language is empty, or rejects otherwise.
@@ -3030,7 +3030,7 @@
         \\ \\
         \textbf{Claim}: $E_\text{CFG}$ is decidable.
         \\ \\
-        \textbf{Decision algorithm}: mark all members of $T$. Let $M_i$ be the set of all members of $T \cup V$, marked at step $i$. Then let $M_i + 1 = M_i \cup $ \{$A \in V$ : some rule in $P$ starting with $A$ generates a string in $M_i^\star$\}. Repeat this process until we no longer can mark anything, at which point we check if the last marked set contains $S$ or not.
+        \textbf{Decision algorithm}: mark all members of $T$. Let $M_i$ be the set of all members of $T \cup V$, marked at step $i$. Then let $M_{i + 1} = M_i~ \cup $ \{$A \in V$ : some rule in $P$ starting with $A$ generates a string in $M_i^\star$\}. Repeat this process until we no longer can mark anything, at which point we check if the last marked set contains $S$ or not.
         \\ \\
         For example, consider the following context-free grammar:
         \begin{align*}
