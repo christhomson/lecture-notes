@@ -156,13 +156,15 @@
             \item A set of operations $P$, such as $\set{ \text{``son of''}, \text{``father of''}, \text{``mother of''}}$. This set is a set of functions from $X \to X$.
           \end{itemize}
 
-          Given these components, we define the \textbf{inductive set} $I(A, P)$, (say, the set of blood relatives), as all domain elements that can be reached from the core set by applying a finite sequence of operations from $P$.
-          \\ \\
-          More formally,  $I(A, P)$ -- the inductive set defined by core $A$ and operations $P$ -- is the smallest set satisfying:
-          \begin{itemize}
-            \item Contains all members of $A$, and
-            \item Closed under the operations in $P$.
-          \end{itemize}
+          Given these components, we define the \textbf{inductive set} $I(A, P)$ (say, the set of blood relatives), as all domain elements that can be reached from the core set by applying a finite sequence of operations from $P$.
+
+          \begin{defn}
+            $I(A, P)$ -- the \textbf{inductive set} defined by core $A$ and operations $P$ -- is the smallest set satisfying:
+            \begin{itemize}
+              \item Contains all members of $A$, and
+              \item Closed under the operations in $P$.
+            \end{itemize}
+          \end{defn}
 
           \noindent \textbf{Examples:}
           \begin{itemize}
@@ -189,17 +191,19 @@
             Is $\epsilon \in I(A, P)$? No. We could use simple reasoning to show that $\epsilon \not \in I(A, P)$ (each function in $P$ increases the length). However, in general, it is more difficult to prove non-membership of an element than it is to prove membership of another element.
           \end{ex}
 
-          A \textbf{certificate} (or \textbf{generating sequence}) for $x$ is a sequence of elements of $X, \theta_1, \theta_2, \theta_3, \ldots, \theta_n$ such that:
-          \begin{itemize}
-            \item $\theta_n = x$, and
-            \item Every $\theta_i$ in the sequence is either an element of the core set $A$ or is the result of applying an operation from $P$ to a $\theta_j, \theta_l$ that appeared earlier in the sequence ($j < i$ and $l < i$). \lecture{September 12, 2013}
-          \end{itemize}
+          \begin{defn}
+            A \textbf{certificate} (or \textbf{generating sequence}) for $x$ is a sequence of elements of $X, \theta_1, \theta_2, \theta_3, \ldots, \theta_n$ such that:
+            \begin{itemize}
+              \item $\theta_n = x$, and
+              \item Every $\theta_i$ in the sequence is either an element of the core set $A$ or is the result of applying an operation from $P$ to a $\theta_j, \theta_l$ that appeared earlier in the sequence ($j < i$ and $l < i$). \lecture{September 12, 2013}
+            \end{itemize}
+          \end{defn}
         \end{enumerate}
 
         Our definition of $I(A, P)$ is still somewhat informal, however. We haven't formally defined what it means for a subset to be the \emph{smallest} subset, and we also haven't formally defined what it means for a set to be ``closed'' under a set of operations.
 
         \subsection{More on Inductive Sets and Structural Induction}
-        More formally, we say that a set $B$ is \textbf{closed under the operations of $\boldsymbol P$} if for every $f \in P$ and every $x, y \in B$, $f(x, y) \in B$ (for concreteness, we considered here an $f$ that accepts two inputs, but it may also be a unary function, $f(x)$ or ternary $f(x,y, z)$, etc.). For example, the set of even numbers is closed under the operation +.
+        We say that a set $B$ is \textbf{closed under the operations of $\boldsymbol P$} if for every $f \in P$ and every $x, y \in B$, $f(x, y) \in B$ (for concreteness, we considered here an $f$ that accepts two inputs, but it may also be a unary function, $f(x)$ or ternary $f(x,y, z)$, etc.). For example, the set of even numbers is closed under the operation +.
         \\ \\
         Now, let's redefine $I(A, P)$ in a more formal way:
         $$
@@ -304,7 +308,7 @@
             \\ \\
             It is clear that for $P_1$ and $P_2$, one ``a'' is being added to a string that must already include more ``a''s than ``b''s, so this trivially holds true.
             \\ \\
-            The case of $P_3$ isn't as immediately obvious. Assume $\#_a(x) > \#_b(x)$, and $\#_a(y) > \#_b(y)$. So, $\#_a(x) \ge \#_b(x) + 1$ and $\#a(y) \ge \#_b(y) + 1$. This gives us $\#_a(xy) \ge \#_b(xy) + 2$.
+            The case of $P_3$ isn't as immediately obvious. Assume $\#_a(x) > \#_b(x)$, and $\#_a(y) > \#_b(y)$. So, $\#_a(x) \ge \#_b(x) + 1$ and $\#_a(y) \ge \#_b(y) + 1$. This gives us $\#_a(xy) \ge \#_b(xy) + 2$.
             \\ \\
             Now, note that $\#_a(bxy) = \#_a(xy)$, and $\#_b(bxy) = \#_b(xy) + 1$. We can conclude that $\#_a(bxy) \ge \#_b(bxy) + 1 > \#_b(bxy)$.
             \\ \\
@@ -1664,7 +1668,7 @@
           \\ \\
           Assume by way of contradiction that for some $A$ with $n < s$ states, $L = L(A)$. Apply the Pumping Lemma where player $R$ chooses $n = |Q^A|$. Let $w$ be a word of shortest length in $L$. Note that $|w| > s > n$, which makes this a legal choice.
           \\ \\
-          Given a decomposition $x, y, z$, choose $k = 0$. Since $xyz = w, |xy^0z| < |w|$. This is a contradiction since we assumed we selected the smallest word in $L$, and then we made it shorter.
+          Given a decomposition $x, y, z$, choose $k = 0$. Since $xyz = w,~ |xy^0z| < |w|$. This is a contradiction since we assumed we selected the smallest word in $L$, and then we made it shorter.
         \end{proof}
 
       \subsection{Equivalent Descriptions of Languages}
@@ -1720,7 +1724,7 @@
           \begin{ex}
             Let $r = (a + b) a^\star + b(a + \epsilon)$.
             \\ \\
-            Start by constructing an automaton for atoms $a, b$, and $\epsilon$, then move on to more complex expressions like $(a + b), (a + \epsilon)$ by combining the automata created previously.
+            Start by constructing an automaton for atoms $a, b$, and $\epsilon$, then move on to more complex expressions like $(a + b)$ or $(a + \epsilon)$ by combining the automata created previously.
           \end{ex}
 
           \item \textbf{Given $\boldsymbol{w}$ and $\boldsymbol{r}$, is $\boldsymbol{w \in L(r)}$?} Note that this is difficult to do in general without converting the regular expression to an automaton.
@@ -1848,7 +1852,7 @@
           \\ \\
           \textbf{Claim}: $L(A_1) = L(A_2)$ if and only if $L(A_1) \backslash L(A_2) = \emptyset$ and $L(A_2) \backslash L(A_1) = \emptyset$.
           \\ \\
-          We need to construct $A_3$ such that $L(A_3) = L(A_1) \backslash L(A_2)$ (using the product automata). Similarly, we need to construct $A_4$ such that $L(A_4) = L(A_2) \backslash L(A_1)$.
+          We need to construct $A_3$ such that $L(A_3) = L(A_1) \backslash L(A_2)$ (using the product automaton). Similarly, we need to construct $A_4$ such that $L(A_4) = L(A_2) \backslash L(A_1)$.
           \\ \\
           We then check for emptiness in both $L(A_3)$ and $L(A_4)$. If both are empty, then we can conclude that $L(A_1) = L(A_2)$. Otherwise, $L(A_1) \ne L(A_2)$.
           \\ \\
@@ -1866,7 +1870,7 @@
         \end{enumerate}
 
   \section{Context-Free Grammars} \lecture{October 15, 2013}
-    There are some languages that are more complex than regular languages. Let's look at a couple of examples of such languages.
+    There are some languages that are more complex than regular languages. Let's look at a few examples of such languages.
 
     \begin{ex}
       Let $\Sigma = \set{a, b, +, (, )}$. Let $L = \{w  \in \Sigma^\star : w $ has the same number of left brackets as right brackets\}.
@@ -2068,7 +2072,7 @@
         \begin{itemize}
           \item $V = \set{S}$
           \item $T = \set{p, q, \to, \vee, \wedge, \neg, (, )}$
-          \item $P = \set{S \vdash p, S \vdash q, S \vdash (S \to S), S \vdash (S \vee S), S \vdash (S \wedge S), (\neg S)}$
+          \item $P = \set{S \vdash p,~ S \vdash q,~ S \vdash (S \to S),~ S \vdash (S \vee S),~ S \vdash (S \wedge S),~ (\neg S)}$
           \item $S = S$
         \end{itemize}
 
@@ -2090,7 +2094,7 @@
         \item \{$w$ : $w$ is of the form $w' w'^R$ for some $w'$\}
       \end{itemize}
 
-      However, \{$w$ : for some $w'$, $w = w'w'$\} over $\set{a, b}$ is \emph{not} a context-free language.
+      However, \{$w$ : $w$ is of the form $w' w'$ for some $w'$ \} is \emph{not} a context-free language.
 
     \subsection{Pushdown Automata}
       The machines corresponding to context-free languages are called \textbf{pushdown automata} (also referred to as \textbf{PDA}s). They are finite automata but with stack memory.
@@ -2130,7 +2134,7 @@
         \begin{ex} \lecture{October 24, 2013}
           Consider $L = \set{a^n b^n : n \in \mathbb{N}}$. The context-free grammar for $L$ would have rules $S \to aSb$ and $S \to \epsilon$.
           \\ \\
-          The corresponding machine that could accept this language $L$ is a pushdown automaton with transitions:
+          The corresponding machine that could accept this language $L$ is a pushdown automaton with these transitions:
           \begin{align*}
             \delta(q_0, a, z_0) &= (q_1, A) \\
             \delta(q_1, a, A) &= (q_1, AA)
@@ -2176,13 +2180,13 @@
         \end{proof}
 
         \begin{theorem}
-          For every language $L$, there exists a PDA, $D$, such that $L_E(D) = L$, if and only if there exists a context-free grammar $G$ such that $L = L(G)$.
+          For every language $L$, there exists a PDA $D$ such that $L_E(D) = L$ if and only if there exists a context-free grammar $G$ such that $L = L(G)$.
         \end{theorem}
 
         In order to prove this theorem, we need to show two directions:
         \begin{itemize}
-          \item Given a grammar $G$, construct a PDA $D$ such that $L(D) = L(G)$.
-          \item Given a PDA $D$, construct a grammar $G$ for $L(D)$.
+          \item Given a grammar $G$, we can construct a PDA $D$ such that $L(D) = L(G)$.
+          \item Given a PDA $D$, we can construct a grammar $G$ for $L(D)$.
         \end{itemize}
 
         \begin{proof}
@@ -2264,11 +2268,11 @@
           Therefore, $m$ is not a power of two, and consequently, $X_1 X_2^2 X_3 X_4^2 X_5 \not \in L$.
         \end{proof}
 
-        Note that applying the Pumping Lemma for regular languages would follow the same argument to show that $L_\text{exp}$ is not regular either.
+        We could follow a similar argument with the Pumping Lemma for regular languages to show that $L_\text{exp}$ is not regular either.
       \end{ex}
 
       \begin{ex}
-        Let $\Sigma = \set{a, b}$. We saw that $L_p = \set{w w^R : w \in \Sigma^\star}$ is context-free, but not regular.
+        Let $\Sigma = \set{a, b}$. Earlier, we saw that $L_p = \set{w w^R : w \in \Sigma^\star}$ is context-free, but not regular. Now, let's take a look at a similar language, $L_\text{double}$, which is not context-free or regular.
         \\ \\
         \textbf{Claim}: $L_\text{double} = \set{ ww : w  \in \Sigma^\star }$ is not context-free.
         \\ \\
@@ -2277,7 +2281,7 @@
         \begin{proof}
           Let us show that $L_\text{double}$ violates the Pumping Lemma for context-free languages.
           \\ \\
-          Given some $n$, pick $w = a^n b^n a^n b^n \in L_\text{double}$. For any decomposition $w = X_1 X_2 X_3 X_4 X_5$, if $|X_2 X_3 X_4| \le n$, this part intersects at most two of the four blocks, so $X_2 X_3 X_4 = a^i b^j$ or $a_i$ or $b^i a^j$ or $b^i$.
+          Given some $n$, pick $w = a^n b^n a^n b^n \in L_\text{double}$. For any decomposition $w = X_1 X_2 X_3 X_4 X_5$, if $|X_2 X_3 X_4| \le n$, this part intersects at most two of the four blocks, so $X_2 X_3 X_4 = a^i b^j$ or $a^i$ or $b^i a^j$ or $b^i$.
           \\ \\
           Pick $k = 2$. In any case, $X_1 X_2^2 X_3 X_4^2 X_5$ is not of the form $w' w'$, so it is not in $L_\text{double}$.
         \end{proof}
@@ -2347,7 +2351,7 @@
         \subsubsection{Method 1: Brute Force}
           Assume, without loss of generality, that $G$ is in Chomsky form.
           \\ \\
-          Each $w \in L$ has a parse tree, which is a binary tree, and all its internal nodes are labeled by variables in $V$. The number of internal nodes in a binary tree with $n$ leaves in $\le 2n - 1$.
+          Each $w \in L$ has a parse tree, which is a binary tree, and all its internal nodes are labeled by variables in $V$. The number of internal nodes in a binary tree with $n$ leaves is $\le 2n - 1$.
           \\ \\
           \textbf{Decision algorithm}: list all binary trees with at most $2|w| - 1$ internal nodes, and check if any of them is a legal $G$-parse tree for $w$. There are at most $|V|^{2|w| - 1}$ trees to check.
           \\ \\
@@ -2381,7 +2385,7 @@
               \item $A \to cA$
             \end{itemize}
 
-            It's also easy to see that a pushdown automata would exist that can compute $L_1$. We would simply push onto the stack for every $a$, and pop for every $b$.
+            It's also easy to see that a pushdown automaton would exist that can compute $L_1$. We would simply push onto the stack for every $a$, and pop for every $b$.
             \\ \\
             Let $L_2 = \set{a^m b^n c^n : n, m \in \mathbb{N}}$. This is also clearly a context-free language.
             \\ \\
@@ -2420,7 +2424,7 @@
       Every task that can be computed can be computed by a Turing machine.
     \end{thesis}
 
-    We call this a thesis rather than a theorem because it's not particularly clear what it means to be ``computed.'' This thesis is more of a philosophical statement than it is a factual, concrete theorem.
+    We call this a thesis rather than a theorem because it's not particularly clear what it means for a task to be ``computed.'' This thesis is more of a philosophical statement than it is a factual, concrete theorem.
     \\ \\
     The intent behind this thesis is that any task that can be carried out by a computer (any task you can write a program for) can be carried out by a Turing machine.
     \\ \\
@@ -2436,7 +2440,7 @@
         \begin{itemize}
           \item $Q$ is a finite set of states.
           \item $\Sigma$ is a finite set of characters, called the input alphabet.
-          \item $\Gamma$ is a finite set of characters, called the tape alphabet. $\Sigma \subseteq \Gamma$ and there also exists some special symbol $\Delta \in \Gamma \backslash \Sigma$. This special symbol is useful for various purposes, such as denoting the beginning, end, or middle of a string -- it depends on the use case.
+          \item $\Gamma$ is a finite set of characters, called the tape alphabet. $\Sigma \subseteq \Gamma$ and conventionally there also exists some special symbol $\Delta \in \Gamma \backslash \Sigma$. This special symbol is useful for various purposes, such as denoting the beginning, end, or middle of a string -- it depends on the use case. Other special symbols are also permitted.
           \item $q_0 \in Q$ is the initial state.
           \item $q_a \in Q$ is the accept state.
           \item $q_r \in Q$ is the reject state.
@@ -2540,7 +2544,7 @@
       \\ \\
       The $q_5$ state indicates that we saw $b$ on the left end and are moving to the right, looking for the end of the string. $q_5$ is similar to $q_2$. We need to define additional transitions for $b$ using $q_5, \ldots$ that match the corresponding states $q_2, q_3, q_4$.
       \\ \\
-      Any instantaneous descriptions for states $q_a$ and $q_r$ do not need to fill in the character to write to the tape, or the direction of the tape head's travel, since the computation has finished.
+      The instantaneous descriptions for states $q_a$ and $q_r$ do not need to specify the character to write to the tape, or the direction of the tape head's travel, since the computation has finished.
     \end{ex}
 
     \begin{ex}
@@ -2548,7 +2552,7 @@
       \\ \\
       $T$ must use some sort of trick to mark the middle of the string. We could swap each letter in the string, starting at the two ends, with its uppercase counterpart. We know we reach the middle when we have just changed a letter to its uppercase equivalent, and then move only to immediately find another uppercase letter.
       \\ \\
-      Once we locate the middle character, we somehow need to mark it. Note that we can't arbitrarily insert a \emph{new} element into the tape, without losing any data. We could move to some set of states that collectively indicate where the middle point is in the string. Alternatively, we could leave the middle character in a different case (upper/lowercase) than the rest of the string. There are lots of possibilities for how we could mark the middle character.
+      Once we locate the middle character, we need to mark it in some way. Note that we can't arbitrarily insert a \emph{new} element into the tape without losing any data. We could move to some set of states that collectively indicate where the middle point is in the string. Alternatively, we could leave the middle character in a different case (upper/lowercase) than the rest of the string. There are lots of possibilities for how we could mark the middle character.
     \end{ex}
 
     \subsection{Decidability of Turing Machines} \lecture{November 14, 2013}
@@ -2580,11 +2584,11 @@
         \begin{proof}
           Let us give a high-level description of a Turing machine that decides this language.
           \\ \\
-          \textbf{First step}: before we start counting the $a$'s, $b$'s, and $c$', we should check the input $w$ to ensure it is a member of $a^\star b^\star c^\star$. If not, we want to reject immediately.
+          \textbf{First step}: before we start counting the $a$'s, $b$'s, and $c$'s, we should check the input $w$ to ensure it is a member of $a^\star b^\star c^\star$. If not, we want to reject immediately.
           \\ \\
           We can check the basic format of $w$ using only a finite automaton. We would define states $q_1, q_2$, etc., and transitions like $\delta(q_1, a) = (q_1, a, R)$, $\delta(q_1, b) = (q_2, b, R)$.
           \\ \\
-          \textbf{Next step}: we want to now check the counts of $a$'s, $b$'s, and $c$'s.
+          \textbf{Next step}: we want to check the counts of $a$'s, $b$'s, and $c$'s.
           \\ \\
           We will mark an $a$ by changing it to $A$, and then proceed to the end of the string and remove a $c$. When all $A$'s are uppercase, we capitalize one $b$ and make all $A$'s lowercase again and re-run this algorithm. Once all $b$'s have been replaced by $B$'s, check to see if there are any $c$'s left. If so, reject. Otherwise, we can accept.
         \end{proof}
