@@ -51,17 +51,24 @@
 \setlength{\marginparwidth}{1.5in}
 \newcommand{\lecture}[1]{\marginpar{{\footnotesize $\leftarrow$ \underline{#1}}}}
 
-\stepcounter{footnote} % because daggers are cool
+\makeatletter
+\def\blfootnote{\gdef\@thefnmark{}\@footnotetext}
+\makeatother
 
 \begin{document}
 	\let\ref\Cref
 
 	\title{\bf{CS 360: Introduction to the Theory of Computing}}
 	\author{Professor Shai Ben-David \\ \\ Fall 2013, University of Waterloo}
-  \date{Notes taken by Chris Thomson\thanks{See \href{http://cthomson.ca/notes}{cthomson.ca/notes}.
-	\ifdefined\sha % Also, \commitDateTime should be defined.
-		Last modified: \commitDateTime{} ({\href{https://github.com/christhomson/lecture-notes/commit/\sha}{\sha}}).
-	\fi}}
+  \date{Notes taken by Chris Thomson}
+
+  \blfootnote{I'd love to hear your feedback. Feel free to email me at \href{mailto:chris@cthomson.ca}{chris@cthomson.ca}.}
+
+  \blfootnote{See \href{http://cthomson.ca/notes}{cthomson.ca/notes} for updates.
+    \ifdefined\sha % Also, \commitDateTime should be defined.
+    Last modified: \commitDateTime{} ({\href{https://github.com/christhomson/lecture-notes/commit/\sha}{\sha}}).
+    \fi
+  }
 
   \maketitle
   \newpage
