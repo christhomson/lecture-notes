@@ -3454,7 +3454,7 @@
 				sw $3, 4($29)
 				\end{verbatim}
 
-				Note that the representation for NULL is conventionally zero. This is \emph{okay}, but ideally we'd choose a NULL representation that is not a power of four, so as not to confuse it with an actual memory address.
+				Note that the representation for NULL is conventionally zero. This is \emph{okay}, but ideally we'd choose a NULL representation that is not a multiple of four, so as not to confuse it with an actual memory address.
 				\\ \\
 				When representing variables of type int*, there are a few possibilities. You could store a word number, or an offset in an array, but it's highly recommended that you store the RAM address itself.
 				\\ \\
