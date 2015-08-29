@@ -896,7 +896,7 @@
 				\end{ex}
 
 				\begin{defn}
-					The \textbf{golden ratio} is a pair of integers $a$ and $b$ such that $\frac{a + b}{a} = {a}{b}$. It's a ratio that comes up in nature a lot, and is aesthetically pleasing.
+					The \textbf{golden ratio} is a pair of integers $a$ and $b$ such that $\frac{a + b}{a} = \frac{a}{b}$. It's a ratio that comes up in nature a lot, and is aesthetically pleasing.
 				\end{defn}
 
 				You can approximate the golden ratio with the Fibonacci numbers. $\frac{a_n}{a_{n - 1}}$ approaches the golden ratio as $n \to \infty$.
@@ -1132,7 +1132,7 @@
 			\subsubsection{Recursive String Definitions}
 				There's another way of constructing binary strings: recursive definitions.
 				\begin{ex} \lecture{February 1, 2013}
-					Let $S$ be the set of all binary strings. We can define $S$ recursively as $S = \set{\epsilon } \cup \set{0, 1}$. Whenever you write an expression like this, you should take great care to ensure that both sides are actually equal.
+					Let $S$ be the set of all binary strings. We can define $S$ recursively as $S = \set{\epsilon } \cup \set{0, 1} S$. Whenever you write an expression like this, you should take great care to ensure that both sides are actually equal.
 					\\ \\
 					One might attempt to describe $S$ as $\set{\epsilon, 0, 1 }S$, however that is ambiguous. $S = \set{\epsilon } \cup \set{0, 1 } S$ is unambiguous. Since there are two terms of length 1, applying the sum \& product lemmas, we get:
 					\begin{align*}
@@ -1450,7 +1450,7 @@
 			\\ \\
 			We have:
 			\begin{align*}
-				p(x) &= x^2 + 3x^2 - 4 \\
+				p(x) &= x^3 + 3x^2 - 4 \\
 				&= (x + 2)^2 (x - 1)
 			\end{align*}
 
@@ -1513,7 +1513,7 @@
 
 		\subsection{Non-homogeneous Recurrences}
 			\begin{ex}
-				Suppose we have the recurrence relation $(\star_1) = a_n + 3a_{n - 1} + 4a_{n - 3} = 6 \times 2^n$ for $n \ge 3$. The initial conditions are $a_0 = 5, a_1 = 3$, and $a_3 = 25$.
+				Suppose we have the recurrence relation $(\star_1) = a_n + 3a_{n - 1} - 4a_{n - 3} = 6 \times 2^n$ for $n \ge 3$. The initial conditions are $a_0 = 5, a_1 = 3$, and $a_3 = 25$.
 				\\ \\
 				Let's ignore the initial conditions for now. Let's take a guess and pick $a_n = \alpha 2^n$, where $\alpha$ is some constant that we'll decide on later.
 				\begin{align*}
@@ -1537,7 +1537,7 @@
 
 				Therefore, the general form for $(\star_1)$ is:
 				\begin{align*}
-					a_n + b_n = (A + B_n) - 2^n + C + 3 \times 2^n
+					a_n + b_n = (A + B_n) (-2)^n + C + 3 \times 2^n
 				\end{align*}
 
 				Using the initial conditions, we can solve to get $A = 1, B = 1$, and $C = 1$. \\
